@@ -1,0 +1,45 @@
+
+echo "Processing /etc/profile..."
+
+stty brkint
+#export PATH=.:$PATH
+
+#echo "OpenLGTV_BCM-INFO: variables initialization"
+#export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:.
+export PATH=.:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin
+#export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib:/mnt/lg/res/lgres
+export LD_LIBRARY_PATH=.:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
+export LOG_CALLER=NO
+export OSAMEM_SIZE=0x200000
+export LOAD_SYM=1
+export HOOK_SEGV=YES
+export IS_NFS=NO
+#export TERM=vt100
+export ADDON_SYS_PATH=/mnt/addon
+export ADDON_RES_PATH=/mnt/lg/res/lgfont
+export ADDON_APP_CTRL=addon_mgr
+export ADDON_APP_BATCH_LIST=addon_mgr.bat
+export FLASH_APP_NAME=/mnt/addon/stagecraft/bin/stagecraft
+export FLASH_YOUTUBE_PATH=/mnt/addon/contents/youtube/exec_youtube.swf
+export FLASH_PICASA_PATH=/mnt/addon/contents/picasa/exec_picasa.swf
+export FLASH_EMANUAL_PATH=/mnt/addon/contents/emanual/emmanager.swf
+export ADDON_PRELOADED_PATH=/mnt/addon/contents
+export HOME=/home
+export DEPLOY_DIR=/mnt/browser
+
+alias ll="ls -al"
+alias dir="ls -al"
+
+alias vim="vi"
+alias screen="tmux"
+alias scr="tmux"
+
+#alias unmount="for i in /mnt/usb*/*; do /bin/busybox2 umount $i 2>&1 | grep -v 'Invalid argument'; done"
+alias unmount="/bin/busybox2 hush -c \"echo umount /mnt/usb{1,2}/Drive{1,2,3,4} 2>&1 | grep -v 'Invalid argument'\""
+
+alias reboot="unmount; sync; sleep 1; reboot"
+
+if [ -f /mnt/user/etc/profile ]
+then
+    source /mnt/user/etc/profile
+fi

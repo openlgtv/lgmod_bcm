@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ $# == 0 ]; then
+echo p > /proc/bbminfo
+else
+	if [ $1 == "setup" ]; then
+	echo c > /proc/bbminfo
+	else
+	echo $1 > /proc/bbminfo
+	fi
+fi

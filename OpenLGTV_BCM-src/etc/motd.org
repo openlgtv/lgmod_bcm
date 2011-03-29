@@ -1,0 +1,15 @@
+
+
+             Welcome to OpenLGTV BCM ver. 0.0.3!
+                  http://openlgtv.org.ru/
+
+    After first login change root password for yours TV!
+       After this you should be able to login via SSH!
+ Be sure to not leave TV without password set in LAN or WAN!
+
+            You might add some custom users, too.
+    Encrypted passwords are permanently keept in firmware!
+
+                          Regards,
+                           xeros
+

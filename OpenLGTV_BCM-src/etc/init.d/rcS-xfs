@@ -1,0 +1,128 @@
+#! /bin/sh
+
+# Set the path
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:.
+
+# Mount /proc
+echo "Mount /proc fs"
+mount -t proc none /proc
+
+echo "Mount /sys fs"
+mount -t sysfs none /sys
+
+# Enable hotplug
+echo "/sbin/hotplug" > /proc/sys/kernel/hotplug
+
+# USB/SATA/ENET are loadable modules when power management is enabled
+if [ -e /proc/driver/brcm-pm ]; then
+	modprobe ehci-hcd &
+	modprobe sata_svw &
+	modprobe bcmemacnet &
+	modprobe ohci-hcd &
+fi
+
+echo "Mount /sys fs"
+mount -t sysfs none /sys
+
+# Mount /dev/pts
+echo "Mount /dev/pts"
+mount -t devpts none /dev/pts
+
+# Setup up /etc/mtab link
+ln -sf /proc/mounts /etc/mtab
+
+# This parameter gets changed to "mount" in the HD version
+mount_all="###mount"
+
+if [ "$mount_all" = "mount" ]; then
+	mount -a
+	swapon -a
+else
+# Turn off VM overcommit if there is no swap partition (PR31081)
+	echo 2 > /proc/sys/vm/overcommit_memory
+fi
+
+# Now allow user interrupt
+# stty brkint
+
+# Clean up utmp/wtmp
+echo "Cleaning up utmp and wtmp"
+cat /dev/null > /var/run/utmp
+cat /dev/null > /var/log/wtmp
+chgrp utmp /var/run/utmp /var/log/wtmp
+chmod 0664 /var/run/utmp /var/log/wtmp
+
+# Start syslogd
+echo "Start syslog daemon"
+syslogd &
+
+# Configure network interface
+echo "Configure Network interface"
+# For bcm97110-docsis only
+###insmod /lib/modules/`uname -r`/kernel/drivers/net/et.o
+# sleep 6
+
+
+# If we boot from NFS, then we don't need the Network, use whatever
+# was set up by NFS, 
+# otherwise look at the kernel parameter netconf=<device>,<ip>
+#
+if [ -z "`cat /proc/mounts |grep /dev/root |grep '\<nfs\>'`" ]; then
+	if [ -z "$netconf" ]; then
+		ifconfig lo 127.0.0.1 netmask 255.0.0.0
+    rm -f /etc/resolv.conf
+	if [ -f /var/run/dhcpcd-eth0.pid ]; then
+		rm -f /var/run/dhcpcd-eth0.pid
+	fi
+    # PR21492 - new dhcpcd use different dir to store *.pid
+    if [ -f /etc/config/dhcpc/dhcpcd-eth0.pid ]; then
+        rm -f /etc/config/dhcpc/dhcpcd-eth0.pid
+    fi
+	echo "dhcpcd -Hd eth0"
+    dhcpcd -Hd eth0 &
+	else
+		netdev=`echo "$netconf" | cut -f1 -d','`
+		ip=`echo "$netconf" | cut -f2 -d','`
+		case "$ip" in
+		none)
+			echo "Network not started"
+			;;
+		dhcp)
+			ifconfig lo 127.0.0.1 netmask 255.0.0.0
+			rm -f /etc/resolv.conf
+			if [ -f /var/run/dhcpcd-${netdev}.pid ]; then
+				rm -f /var/run/dhcpcd-${netdev}.pid
+			fi
+            # PR21492 - new dhcpcd use different dir to store *.pid
+            if [ -f /etc/config/dhcpc/dhcpcd-${netdev}.pid ]; then
+                rm -f /etc/config/dhcpc/dhcpcd-${netdev}.pid
+            fi
+			echo "dhcpcd -Hd $netdev"
+    		dhcpcd -Hd "$netdev" &
+			;;
+	
+		*)	# If the user specifies the wrong syntax, there is nothing we can do
+			ipaddr=`echo "$ip" | cut -f1 -d':'`
+			netmask=`echo "$ip" | cut -f2 -d':'`
+			echo "ifconfig $netdev $ipaddr netmask $netmask up"
+			ifconfig "$netdev" "$ipaddr" netmask "$netmask" up
+			ifconfig lo 127.0.0.1 netmask 255.0.0.0
+			;;
+		esac
+	fi
+fi
+
+
+# Start up services
+echo "start services"
+portmap &
+# PR17638: Use daemon option for utelnetd
+utelnetd -d
+
+#Start user service if it exists
+if [ -f /root/rc.user ]; then
+	echo "start user services"
+	/bin/sh /root/rc.user
+fi
+
+
