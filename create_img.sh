@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # OpenLGTV BCM rootfs image creation script by xeros
 size=3145728
 dir=OpenLGTV_BCM-src
@@ -24,10 +24,11 @@ then
 else
     if [ "$osize" -lt "$size" ]
     then
-	echo "Partition image size is small, adding some bytes to fill the partition up to the end."
-	for i in `seq $(($size-$osize))`
+	abytes=$(($size-$osize))
+	echo "Partition image size ( $osize ) is small, adding $abytes bytes to fill the partition up to the end ( $size )."
+	for i in `seq $abytes`
 	do
-	    printf "\xff" >> $ofile.sqf
+	    printf '\xff' >> $ofile.sqf
 	done
     fi
 fi
