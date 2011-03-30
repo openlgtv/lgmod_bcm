@@ -3,6 +3,8 @@
 size=3145728
 dir=OpenLGTV_BCM-src
 ver=`cat $dir/etc/ver2`
+perl -pi -e "s/^ver=.*/ver=$ver/g" install.sh
+perl -pi -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd.org
 cp -r $dir squashfs-root
 cd squashfs-root
 tar xzvf dev.tar.gz
