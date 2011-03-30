@@ -1,6 +1,6 @@
 
 
-             Welcome to OpenLGTV BCM ver. 0.1.1
+             Welcome to OpenLGTV BCM ver. 0.1.1-devel
                   http://openlgtv.org.ru/
 
     After first login change root password for yours TV!
