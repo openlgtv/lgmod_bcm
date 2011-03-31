@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.2
+# OpenLGTV BCM installation script by xeros, ver. 0.3
 
 # it needs $file.sqf and $file.md5 files in the same dir as this script
 
@@ -15,6 +15,7 @@ file=OpenLGTV_BCM-v$ver
 size=3145728
 mtd=3
 magic=hsqs
+magic_clean=377377377377
 lginit=4
 lginit_size=262144
 
@@ -263,6 +264,22 @@ then
     warnr=1
 fi
 sync
+# comparing magic bytes of lginit dump
+if [ "`head -c4 $dir/$file-lginit-$backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" = "$magic_clean" ]
+then
+    echo "Gathered dump header from /dev/mtd$mtd partition shows that the lginit partition is already erased - good." | tee -a $log
+    date 2>&1 | tee -a $log
+    echo "" | tee -a $log
+    sync
+    if [ "$rebooting" = "1" ]
+    then
+	echo "Rebooting TV..." | tee -a $log
+	reboot
+    else
+	echo "You may now poweroff and poweron TV" | tee -a $log
+    fi
+    exit 0
+fi
 # question
 echo "Do you really want to erase the /dev/mtd$lginit (`cat /proc/mtd | grep mtd$lginit: | awk '{print $4}'`) device?" | tee -a $log
 echo "Type \"YES\" or \"NO\"" | tee -a $log
