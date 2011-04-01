@@ -55,6 +55,15 @@ mount -t devpts devpts /dev/pts
 mount -t tmpfs none /usr/etc
 mount -t tmpfs bt /mnt/lg/bt -o size=10M
 
+if [ "`cat /proc/mtd | wc -l`" = "39" -a "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
+then
+    echo "OpenLGTV_BCM-INFO: setting country_model to US..." | tee -a /tmp/OpenLGTV_BCM.log
+    export country_model=US
+else
+    echo "OpenLGTV_BCM-INFO: setting country_model to EU..." | tee -a /tmp/OpenLGTV_BCM.log
+    export country_model=EU
+fi
+
 echo "OpenLGTV_BCM-INFO: mtdblock partitions mounts..." | tee -a /tmp/OpenLGTV_BCM.log
 mount -t squashfs /dev/mtdblock5 /mnt/lg/model
 mount -t squashfs /dev/mtdblock10 /mnt/lg/res/lgres
@@ -63,8 +72,13 @@ mount -t squashfs /dev/mtdblock13 /mnt/lg/res/estreamer
 mount -t squashfs /dev/mtdblock14 /usr/local
 mount -t tmpfs tmpfs /usr/local/etc -o size=1M
 mount -t squashfs /dev/mtdblock15 /mnt/addon
-mount -t squashfs /dev/mtdblock23 /mnt/lg/ciplus/cert
-mount -t yaffs2 /dev/mtdblock24 /mnt/lg/ciplus/authcxt
+
+if [ "$country_model" = "EU" ]
+then
+    mount -t squashfs /dev/mtdblock23 /mnt/lg/ciplus/cert
+    mount -t yaffs2 /dev/mtdblock24 /mnt/lg/ciplus/authcxt
+fi
+
 mount -t yaffs2 /dev/mtdblock7 /mnt/lg/cmn_data -o noatime
 if [ "$?" -ne "0" ]
 then
@@ -73,8 +87,15 @@ then
     mount -t yaffs2 /dev/mtdblock7 /mnt/lg/cmn_data -o noatime
 fi
 mount --bind /mnt/lg/cmn_data /mnt/flash/data
-mount -t jffs2 /dev/mtdblock25 /mnt/user
-mount -t squashfs /dev/mtdblock22 /mnt/idfile     # empty on EU fw, but lginit still tries to mount it
+
+if [ "$country_model" = "EU" ]
+then
+    mount -t jffs2 /dev/mtdblock25 /mnt/user
+    mount -t squashfs /dev/mtdblock22 /mnt/idfile     # empty on EU fw, but lginit still tries to mount it
+else
+    mount -t jffs2 /dev/mtdblock18 /mnt/user
+    mount -t squashfs /dev/mtdblock20 /mnt/idfile
+fi
 mount -t squashfs /dev/mtdblock16 /mnt/game
 mount -t yaffs2 /dev/mtdblock17 /mnt/cache/flash -o noatime
 if [ "$?" -ne "0" ]
@@ -83,21 +104,27 @@ then
     flash_eraseall /dev/mtd17 >/dev/null 2>&1
     mount -t yaffs2 /dev/mtdblock17 /mnt/cache/flash -o noatime
 fi
-mount -t squashfs /dev/mtdblock18 /mnt/browser
-mount -t yaffs2 /dev/mtdblock19 /mnt/cache/browser
-if [ "$?" -ne "0" ]
+
+if [ "$country_model" = "EU" ]
 then
-    echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd19 - erasing it and trying again..." | tee -a /tmp/OpenLGTV_BCM.log
-    flash_eraseall /dev/mtd19 >/dev/null 2>&1
+    mount -t squashfs /dev/mtdblock18 /mnt/browser
     mount -t yaffs2 /dev/mtdblock19 /mnt/cache/browser
-fi
-mount --bind /mnt/cache/browser /home
-ln -sf /mnt/browser/.mozilla /mnt/cache/browser/.mozilla
-if [ -f "/mnt/cache/browser/browser_application.txt" ]
-then
-    echo "OpenLGTV_BCM-INFO: found /mnt/cache/browser/browser_application.txt file, copying from /mnt/browser/ ..." | tee -a /tmp/OpenLGTV_BCM.log
-    rm -f /mnt/cache/browser/browser_application.txt
-    cp /mnt/browser/browser_application.txt /mnt/cache/browser/ #shouldnt be addon instead of browser? but thats from the lginit code (lginit bug?)
+    if [ "$?" -ne "0" ]
+    then
+	echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd19 - erasing it and trying again..." | tee -a /tmp/OpenLGTV_BCM.log
+	flash_eraseall /dev/mtd19 >/dev/null 2>&1
+	mount -t yaffs2 /dev/mtdblock19 /mnt/cache/browser
+    fi
+    mount --bind /mnt/cache/browser /home
+    ln -sf /mnt/browser/.mozilla /mnt/cache/browser/.mozilla
+    if [ -f "/mnt/cache/browser/browser_application.txt" ]
+    then
+	echo "OpenLGTV_BCM-INFO: found /mnt/cache/browser/browser_application.txt file, copying from /mnt/browser/ ..." | tee -a /tmp/OpenLGTV_BCM.log
+	rm -f /mnt/cache/browser/browser_application.txt
+	cp /mnt/browser/browser_application.txt /mnt/cache/browser/ #shouldnt be addon instead of browser? but thats from the lginit code (lginit bug?)
+    fi
+else
+    mount -t yaffs2 /dev/mtdblock19 /mnt/widget.data # US fw lginit does not handle erasing ywedata if it's not mountable
 fi
 
 if [ -n "`grep appxip_addr /proc/cmdline`" ]
@@ -130,13 +157,13 @@ fi
 #export LOAD_SYM=1		# rcS default
 #export OSAMEM_SIZE=0x200000	# rcS default
 
-if [ ! -f /mnt/flash/data/resolv.conf ]
+if [ ! -f "/mnt/flash/data/resolv.conf" ]
 then
     echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/resolv.conf file" | tee -a /tmp/OpenLGTV_BCM.log
     touch /mnt/flash/data/resolv.conf
 fi
 
-if [ ! -f /mnt/flash/data/hosts ]
+if [ ! -f "/mnt/flash/data/hosts" ]
 then
     echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/hosts file" | tee -a /tmp/OpenLGTV_BCM.log
     touch /mnt/flash/data/hosts
@@ -166,7 +193,7 @@ then
     NETMASK=$(cat /proc/cmdline | awk 'BEGIN { RS="[ ]"; FS=":"; } /ip=/ { print $4 } END {}')
     network_set=1
 else
-    if [ -f /mnt/flash/data/nm.rc ]
+    if [ -f "/mnt/flash/data/nm.rc" ]
     then
 	if [ "`cat /mnt/flash/data/nm.rc | grep DHCP | awk -F= '{print $2}'`" -eq "0" ]
 	then
@@ -210,10 +237,10 @@ then
     echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a /var/log/OpenLGTV_BCM.log
     mount -t tmpfs tmpfs /mnt/user
 fi
-if [ ! -f /usr/etc/passwd ]
+if [ ! -f "/usr/etc/passwd" ]
 then
     #mount -t tmpfs none /usr/etc
-    if [ -f /mnt/user/etc/passwd ]
+    if [ -f "/mnt/user/etc/passwd" ]
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/passwd file" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /mnt/user/etc/passwd /usr/etc/passwd
@@ -225,9 +252,9 @@ then
 	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
     fi
 fi
-if [ ! -f /usr/etc/shadow ]
+if [ ! -f "/usr/etc/shadow" ]
 then
-    if [ -f /mnt/user/etc/shadow ]
+    if [ -f "/mnt/user/etc/shadow" ]
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/shadow file" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /mnt/user/etc/shadow /usr/etc/shadow
@@ -255,9 +282,9 @@ then
 	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
     fi
 fi
-if [ ! -f /usr/etc/motd ]
+if [ ! -f "/usr/etc/motd" ]
 then
-    if [ -f /mnt/user/etc/motd ]
+    if [ -f "/mnt/user/etc/motd" ]
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/motd file" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /mnt/user/etc/shadow /usr/etc/shadow
@@ -269,7 +296,7 @@ then
 	ln -sf /mnt/user/etc/motd /usr/etc/motd
     fi
 fi
-if [ -f /mnt/user/etc/motd ]
+if [ -f "/mnt/user/etc/motd" ]
 then
     ver_old=`cat /mnt/user/etc/motd | grep "Welcome to OpenLGTV BCM ver." | awk -F"ver. " '{print $2}' | sed 's/!//g'`
     if [ -n "$ver_old" ]
@@ -290,44 +317,83 @@ echo "OpenLGTV_BCM-INFO: starting telnet server..." | tee -a /var/log/OpenLGTV_B
 telnetd &
 echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..." | tee -a /var/log/OpenLGTV_BCM.log
 dropbear
-echo "OpenLGTV_BCM-INFO: setting hostname to bcm35xx..." | tee -a /var/log/OpenLGTV_BCM.log
-hostname bcm35xx
+echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..." | tee -a /var/log/OpenLGTV_BCM.log
+hostname OpenLGTV_BCM
 
 # Mount-binding btusb.ko from /mnt/user/modules/
-if [ -f /mnt/user/modules/btusb.ko ]
+if [ -f "/mnt/user/modules/btusb.ko" ]
 then
     echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/btusb.ko to /mnt/lg/res/lgres/btusb.ko..." | tee -a /var/log/OpenLGTV_BCM.log
     mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko
 fi
 
 # Mount-binding NetCast services configs
-if [ ! -h /mnt/addon/browser/browser_application.txt -a ! -h /mnt/browser/browser_application.txt -a ! -h /mnt/addon/contents/config.xml -a ! -h /mnt/addon/bin/addon_mgr.bat ]
+if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" ]
 then
     if [ ! -d /mnt/user/netcast ]
     then
 	echo "OpenLGTV_BCM-INFO: creating /mnt/user/netcast dir for NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
 	mkdir -p /mnt/user/netcast
     fi
-    if [ ! -f /mnt/user/netcast/browser_application.txt ]
+    if [ ! -d /mnt/user/ywe ]
     then
-	cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
+	echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe dir for Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
+	mkdir -p /mnt/user/ywe
     fi
-    if [ ! -f /mnt/user/netcast/config.xml ]
+    if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
     then
+	if [ -f "/mnt/browser/browser_application.txt" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: making browser config copy - /mnt/browser/browser_application.txt..." | tee -a /var/log/OpenLGTV_BCM.log
+	    cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
+	fi
+    fi
+    if [ ! -f "/mnt/user/netcast/config.xml" ]
+    then
+	echo "OpenLGTV_BCM-INFO: making StageCraft config copy - /mnt/addon/contents/config.xml..." | tee -a /var/log/OpenLGTV_BCM.log
 	cp /mnt/addon/contents/config.xml /mnt/user/netcast/config.xml
     fi
-    if [ ! -f /mnt/user/netcast/addon_mgr.bat ]
+    if [ ! -f "/mnt/user/netcast/addon_mgr.bat" ]
     then
+	echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..." | tee -a /var/log/OpenLGTV_BCM.log
 	cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat
     fi
-    if [ -f /mnt/user/netcast/browser_application.txt -a -f /mnt/user/netcast/config.xml -a -f /mnt/user/netcast/addon_mgr.bat ]
+    if [ ! -f "/mnt/user/ywe/config-oem.xml" ]
     then
-	echo "OpenLGTV_BCM-INFO: setting links to NetCast configs on addon and browser partitions..." | tee -a /var/log/OpenLGTV_BCM.log
-	mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt
-	mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
+	if [ -f "/mnt/addon/ywe/config-oem.xml" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine config copy - /mnt/addon/ywe/config-oem.xml..." | tee -a /var/log/OpenLGTV_BCM.log
+	    cp /mnt/addon/ywe/config-oem.xml /mnt/user/ywe/config-oem.xml
+	fi
+    fi
+    if [ ! -f "/mnt/user/ywe/konfabulator.sh" ]
+    then
+	if [ -f "/mnt/addon/ywe/bin/konfabulator.sh" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine startup script copy - /mnt/addon/ywe/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
+	    cp /mnt/addon/ywe/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh
+	fi
+    fi
+    if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
+    then
+	echo "OpenLGTV_BCM-INFO: setting links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
 	mount --bind /mnt/user/netcast/config.xml              /mnt/addon/contents/config.xml
 	mount --bind /mnt/user/netcast/addon_mgr.bat           /mnt/addon/bin/addon_mgr.bat
     fi
+    if [ -f "/mnt/user/netcast/browser_application.txt" ]
+    then
+	echo "OpenLGTV_BCM-INFO: setting links to NetCast browser configs on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt
+	mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
+    fi
+    if [ -f "/mnt/user/ywe/config-oem.xml" -a -f "/mnt/user/ywe/konfabulator.sh" ]
+    then
+	echo "OpenLGTV_BCM-INFO: setting links to Yahoo Widgets Engine configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	mount --bind /mnt/user/ywe/config-oem.xml              /mnt/addon/ywe/config-oem.xml
+	mount --bind /mnt/user/ywe/konfabulator.sh             /mnt/addon/ywe/bin/konfabulator.sh
+    fi
+else
+    echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 # Making nvram copy

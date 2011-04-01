@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.3
+# OpenLGTV BCM installation script by xeros, ver. 0.4
 
 # it needs $file.sqf and $file.md5 files in the same dir as this script
 
@@ -10,7 +10,7 @@
 confirmations=1
 rebooting=0
 
-ver=0.1.2-devel
+ver=0.2.0
 file=OpenLGTV_BCM-v$ver
 size=3145728
 mtd=3
@@ -47,6 +47,8 @@ then
 	exit 1
     fi
 fi
+
+ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1
 
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
