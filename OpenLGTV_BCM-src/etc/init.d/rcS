@@ -33,6 +33,8 @@ export ADDON_PRELOADED_PATH=/mnt/addon/contents
 export HOME=/home
 export DEPLOY_DIR=/mnt/browser
 
+export TERMINFO_DIRS=/usr/share/terminfo
+
 ver=`cat /etc/ver2`
 echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."
 

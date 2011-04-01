@@ -1441,3 +1441,678 @@ vt200-js|vt220-js|dec vt200 series with jump scroll:\
 vt320nam|v320n|DEC VT320 in vt100 emul. mode with NO AUTO WRAP mode:\
 	:am@:\
 	:rs=\E>\E[?3l\E[?4l\E[?5l\E[?7l\E[?8h:tc=vt220:
+
+# Entries for use by the `screen' program by Juergen Weigert,
+# Michael Schroeder, Oliver Laumann.  The screen and
+# screen-w entries came with version 3.7.1.  The screen2 and screen3 entries
+# come from University of Wisconsin and may be older.
+# (screen: added :ve: on ANSI model -- esr)
+#
+# 'screen' defines extensions to termcap.  Some are used in its terminal
+# description:
+#      G0   (bool)  Terminal can deal with ISO 2022  font  selection sequences.
+#      AX   (bool)  Does  understand ANSI set default fg/bg color
+#                   (\E[39m / \E[49m).
+#      S0   (str)   Switch charset 'G0' to the specified charset.
+#      E0   (str)   Switch charset 'G0' back to standard charset.
+#
+# tested with screen 3.09.08
+screen|VT 100/ANSI X3.64 virtual terminal:\
+	:am:bs:km:mi:ms:pt:xn:G0:\
+	:Co#8:NC@:co#80:it#8:li#24:pa#64:U8#1:\
+	:@7=\E[4~:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:\
+	:F1=\E[23~:F2=\E[24~:IC=\E[%d@:Km=\E[M:LE=\E[%dD:\
+	:RI=\E[%dC:UP=\E[%dA:\
+	:ac=++,,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~:\
+	:ae=^O:al=\E[L:as=^N:bl=^G:bt=\E[Z:cb=\E[1K:cd=\E[J:ce=\E[K:\
+	:cl=\E[H\E[J:cm=\E[%i%d;%dH:cr=^M:cs=\E[%i%d;%dr:\
+	:ct=\E[3g:dc=\E[P:dl=\E[M:do=^J:eA=\E(B\E)0:ei=\E[4l:\
+	:ho=\E[H:im=\E[4h:is=\E)0:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:\
+	:k5=\E[15~:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:\
+	:k;=\E[21~:kB=\E[Z:kD=\E[3~:kI=\E[2~:kN=\E[6~:kP=\E[5~:\
+	:kb=^H:kd=\EOB:ke=\E[?1l\E>:kh=\E[1~:kl=\EOD:kr=\EOC:\
+	:ks=\E[?1h\E=:ku=\EOA:le=^H:mb=\E[5m:md=\E[1m:me=\E[0m:\
+	:mr=\E[7m:nd=\E[C:nw=\EE:rc=\E8:rs=\Ec\E[?1000l\E[?25h:\
+	:sc=\E7:se=\E[23m:sf=^J:so=\E[3m:sr=\EM:st=\EH:ta=^I:\
+	:te=\E[?1049l:ti=\E[?1049h:ue=\E[24m:up=\EM:us=\E[4m:\
+	:vb=\Eg:ve=\E[34h\E[?25h:vi=\E[?25l:vs=\E[34l:E0=\E(B:\
+	:S0=\E(%p1%c:tc=ecma+color:
+# The bce and status-line entries are from screen 3.9.13 (and require some
+# changes to .screenrc).
+screen-bce|VT 100/ANSI X3.64 virtual terminal with bce:\
+	:ut:\
+	:ec@:tc=screen:
+screen-s|VT 100/ANSI X3.64 virtual terminal with hardstatus line:\
+	:ds=\E_\E\\:fs=\E\\:ts=\E_:tc=screen:
+
+# ======================================================================
+# Entries for GNU Screen with 16 colors.
+# Those variations permit to benefit from 16 colors palette, and from
+# bold font and blink attribute separated from bright colors. But they
+# are less portable than the generic "screen" 8 color entries: Their
+# usage makes real sense only if the terminals you attach and reattach
+# do all support 16 color palette.
+
+screen-16color|GNU Screen with 16 colors:\
+	:tc=ibm+16color:tc=screen:
+
+screen-16color-s|GNU Screen with 16 colors and status line:\
+	:tc=ibm+16color:tc=screen-s:
+
+screen-16color-bce|GNU Screen with 16 colors and BCE:\
+	:tc=ibm+16color:tc=screen-bce:
+
+screen-16color-bce-s|GNU Screen with 16 colors, BCE, and status line:\
+	:ut:tc=ibm+16color:tc=screen-s:
+
+# ======================================================================
+# Entries for GNU Screen 4.02 with --enable-colors256.
+
+screen-256color|GNU Screen with 256 colors:\
+	:cc@:\
+	:Ic@:tc=xterm+256color:tc=screen:
+
+screen-256color-s|GNU Screen with 256 colors and status line:\
+	:cc@:\
+	:Ic@:tc=xterm+256color:tc=screen-s:
+
+screen-256color-bce|GNU Screen with 256 colors and BCE:\
+	:cc@:\
+	:Ic@:tc=xterm+256color:tc=screen-bce:
+
+screen-256color-bce-s|GNU Screen with 256 colors, BCE, and status line:\
+	:cc@:ut:\
+	:Ic@:tc=xterm+256color:tc=screen-s:
+
+# ======================================================================
+
+# Read the fine manpage:
+#       When  screen  tries  to  figure  out  a  terminal name for
+#       itself, it first looks for an entry named "screen.<term>",
+#       where  <term>  is the contents of your $TERM variable.  If
+#       no such entry exists, screen tries "screen" (or "screen-w"
+#       if the terminal is wide (132 cols or more)).  If even this
+#       entry cannot be found, "vt100" is used as a substitute.
+#
+# Notwithstanding the manpage, screen uses its own notion of the termcap
+# and some keys from "screen.<term>" are ignored.  Here is an entry which
+# covers those (tested with screen 4.00.02) -TD
+screen+fkeys|function-keys according to screen:\
+	:*6@:@0@:@7=\E[4~:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:kh=\E[1~:
+#
+# Here are a few customized entries which are useful -TD
+#
+# Notes:
+# (a)	screen does not support invis.
+# (b)	screen's implementation of bw is incorrect according to tack.
+# (c)	screen appears to hardcode the strings for khome/kend, making it
+#	necessary to override the "use=" clause's values (screen+fkeys).
+# (d)	screen sets $TERMCAP to a termcap-formatted copy of the 'screen' entry,
+#	which is NOT the same as the terminfo screen.<term>.
+# (e)	when screen finds one of these customized entries, it sets $TERM to
+#	match.  Hence, no "screen.xterm" entry is provided, since that would
+#	create heartburn for people running remote xterm's.
+#
+#	xterm (-xfree86 or -r6) does not normally support kIC, kNXT and kPRV
+#	since the default translations override the built-in keycode
+#	translation.  They are suppressed here to show what is tested by tack.
+screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm:\
+	:bw:ut@:\
+	:#3@:%c@:%e@:mk@:ml@:mu@:tc=screen+fkeys:tc=xterm-new:
+# xterm-r6 does not really support khome/kend unless it is propped up by
+# the translations resource.
+screen.xterm-r6|screen customized for X11R6 xterm:\
+	:bw:tc=screen+fkeys:tc=xterm-r6:
+# Color applications running in screen and TeraTerm do not play well together
+# on Solaris because Sun's curses implementation gets confused.
+screen.teraterm|disable ncv in teraterm:\
+	:NC#127:\
+	:ac=+\020,\021-\030.^Y0\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376:\
+	:tc=screen+fkeys:tc=screen:
+# Other terminals
+screen.rxvt|screen in rxvt:\
+	:bw:XT:\
+	:kd=\EOB:kl=\EOD:kr=\EOC:ku=\EOA:vb@:vs@:tc=screen+fkeys:\
+	:tc=vt100+enq:tc=rxvt+pcfkeys:tc=vt220+keypad:tc=screen:
+screen.Eterm|screen in Eterm:\
+	:tc=screen+fkeys:tc=Eterm:
+screen.mrxvt|screen in mrxvt:\
+	:tc=screen+fkeys:tc=mrxvt:
+screen.vte|screen in any VTE-based terminal:\
+	:tc=screen+fkeys:tc=vte:
+screen.gnome|screen in GNOME Terminal:\
+	:tc=screen+fkeys:tc=gnome:
+screen.konsole|screen in KDE console window:\
+	:tc=screen+fkeys:tc=konsole:
+# fix the backspace key
+screen.linux|screen in linux console:\
+	:bw:\
+	:kB@:kb=\177:tc=screen+fkeys:tc=screen:
+screen.mlterm|screen in mlterm:\
+	:tc=screen+fkeys:tc=mlterm:
+
+# The default "screen" entry is reasonably portable, but not optimal for the
+# most widely-used terminal emulators.  The "bce" capability is supported in
+# screen since 3.9.13, and when used, will require fewer characters to be sent
+# to the terminal for updates.
+#
+# If you are using only terminals which support bce, then you can use this
+# feature in your screen configuration.
+#
+# Adding these lines to your ".screenrc" file will allow using these customized
+# entries:
+#	term screen-bce
+#	bce on
+#	defbce on
+screen-bce.xterm-new|screen optimized for modern xterm:\
+	:ut:\
+	:ec@:tc=screen.xterm-new:
+screen-bce.rxvt|screen optimized for rxvt:\
+	:ut:\
+	:ec@:tc=screen.rxvt:
+screen-bce.Eterm|screen optimized for Eterm:\
+	:ut:\
+	:ec@:tc=screen.Eterm:
+screen-bce.mrxvt|screen optimized for mrxvt:\
+	:ut:\
+	:ec@:tc=screen.mrxvt:
+screen-bce.gnome|screen optimized for GNOME-Terminal:\
+	:ut:\
+	:ec@:tc=screen.gnome:
+screen-bce.konsole|screen optimized for KDE console window:\
+	:ut:\
+	:ec@:tc=screen.konsole:
+screen-bce.linux|screen optimized for linux console:\
+	:ut:\
+	:ec@:tc=screen.linux:
+screen-bce.mlterm|screen optimized for mlterm:\
+	:ut:\
+	:ec@:tc=screen.mlterm:
+
+screen-w|VT 100/ANSI X3.64 virtual terminal with 132 cols:\
+	:co#132:tc=screen:
+
+screen2|old VT 100/ANSI X3.64 virtual terminal:\
+	:co#80:it#8:li#24:\
+	:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:IC=\E[%d@:\
+	:LE=\E[%dD:RI=\E[%dC:UP=\E[%dA:al=\E[L:bt=\E[Z:cd=\E[J:\
+	:ce=\E[K:cl=\E[2J\E[H:cm=\E[%i%d;%dH:cr=^M:ct=\E[3g:\
+	:dc=\E[P:dl=\E[M:do=\E[B:ei=\E[4l:ic=:im=\E[4h:k0=\E~:\
+	:k1=\ES:k2=\ET:k3=\EU:k4=\EV:k5=\EW:k6=\EP:k7=\EQ:k8=\ER:\
+	:k9=\E0I:kb=^H:kd=\EB:kh=\EH:kl=\ED:kr=\EC:ku=\EA:le=^H:\
+	:me=\E[m:nd=\E[C:nw=^M^J:r1=\Ec:rc=\E8:sc=\E7:se=\E[23m:\
+	:sf=^J:so=\E[3m:sr=\EM:st=\EH:ta=^I:ue=\E[24m:up=\E[A:\
+	:us=\E[4m:
+# (screen3: removed unknown ":xv:LP:G0:" -- esr)
+screen3|older VT 100/ANSI X3.64 virtual terminal:\
+	:km:mi:ms:\
+	:co#80:it#8:li#24:\
+	:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:IC=\E[%d@:\
+	:LE=\E[%dD:RI=\E[%dC:UP=\E[%dA:al=\E[L:bl=^G:bt=\E[Z:\
+	:cd=\E[J:ce=\E[K:cl=\E[H\E[J:cm=\E[%i%d;%dH:cr=^M:\
+	:cs=\E[%i%d;%dr:ct=\E[3g:dc=\E[P:dl=\E[M:do=^J:ei=\E[4l:\
+	:ho=\E[H:im=\E[4h:is=\E)0:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:\
+	:kb=^H:kd=\EOB:ke=\E>:kl=\EOD:kr=\EOC:ks=\E=:ku=\EOA:le=^H:\
+	:mb=\E[5m:md=\E[1m:me=\E[m:mr=\E[7m:nd=\E[C:nw=\EE:r1=\Ec:\
+	:rc=\E8:sc=\E7:se=\E[23m:sf=^J:so=\E[3m:sr=\EM:st=\EH:ta=^I:\
+	:ue=\E[24m:up=\EM:us=\E[4m:
+
+# PuTTY 0.55 (released 3 August 2004)
+# http://www.chiark.greenend.org.uk/~sgtatham/putty/
+#
+# Comparing with 0.51, vttest is much better (only a few problems with the
+# cursor position reports and wrapping).
+#
+# PuTTY 0.51 (released 14 December 2000)
+#
+# This emulates vt100 + vt52 (plus a few vt220 features:  ech, SRM, DECTCEM, as
+# well as SCO and Atari, color palettes from Linux console).  Reading the code,
+# it is intended to be VT102 plus selected features.  By default, it sets $TERM
+# to xterm, which is incorrect, since several features are misimplemented:
+#
+#	Alt+key always sends ESC+key, so 'km' capability is removed.
+#
+#	Control responses, wrapping and tabs are buggy, failing a couple of
+#	screens in vttest.
+#
+#	xterm mouse support is not implemented (unrelease version may).
+#
+# Several features such as backspace/delete are optional; this entry documents
+# the default behavior -TD
+
+# (sgr removed to fit entry within 1023 bytes)
+# (acsc removed to fit entry within 1023 bytes)
+# (terminfo-only capabilities suppressed to fit entry within 1023 bytes)
+putty|PuTTY terminal emulator:\
+	:am:bw:hs:mi:ms:xn:xo:\
+	:it#8:\
+	:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:K2=\E[G:\
+	:LE=\E[%dD:RI=\E[%dC:SF=\E[%dS:SR=\E[%dT:UP=\E[%dA:ae=^O:\
+	:al=\E[L:as=^N:bl=^G:bt=\E[Z:cd=\E[J:ce=\E[K:cl=\E[H\E[J:\
+	:cm=\E[%i%d;%dH:cr=^M:cs=\E[%i%d;%dr:ct=\E[3g:dc=\E[P:\
+	:dl=\E[M:do=\ED:ds=\E]0;\007:ec=\E[%dX:ei=\E[4l:fs=^G:\
+	:ho=\E[H:im=\E[4h:\
+	:is=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>\E]R:\
+	:k1=\E[11~:k2=\E[12~:k3=\E[13~:k4=\E[14~:k5=\E[15~:\
+	:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:kD=\E[3~:\
+	:kI=\E[2~:kN=\E[6~:kP=\E[5~:kb=\177:kd=\E[B:kh=\E[1~:\
+	:kl=\E[D:kr=\E[C:ku=\E[A:le=^H:mb=\E[5m:md=\E[1m:me=\E[0m:\
+	:mr=\E[7m:nd=\E[C:nw=^M^J:rc=\E8:\
+	:rs=\E<\E["p\E[50;6"p\Ec\E[?3l\E]R\E[?1000l:sc=\E7:\
+	:se=\E[27m:sf=^J:so=\E[7m:sr=\EM:st=\EH:ta=^I:\
+	:te=\E[2J\E[?47l:ti=\E[?47h:ts=\E]0;:ue=\E[24m:up=\EM:\
+	:us=\E[4m:vb=\E[?5h\E[?5l:ve=\E[?25h:vi=\E[?25l:\
+	:tc=vt102+enq:
+vt100-putty|Reset PuTTY to pure vt100:\
+	:rs=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p:\
+	:tc=vt100:
+# palette is hardcoded...
+putty-256color|PuTTY 0.58 with xterm 256-colors:\
+	:Ic@:tc=xterm+256color:tc=putty:
+
+# One of the keyboard selections is "VT100+".
+# pterm (the X11 port) uses shifted F1-F10 as F11-F20
+putty-vt100|VT100+ keyboard layout:\
+	:F1=\EOZ:F2=\EO[:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:k5=\EOT:\
+	:k6=\EOU:k7=\EOV:k8=\EOW:k9=\EOX:k;=\EOY:tc=putty:
+
+# This version was released in XFree86 4.0.
+xterm-xf86-v40|xterm terminal emulator (XFree86 4.0 Window System):\
+	:NP:\
+	:#2=\EO5H:#3=\E[2;5~:#4=\EO5D:%c=\E[6;5~:%e=\E[5;5~:\
+	:%i=\EO5C:*4=\E[3;5~:*7=\EO5F:@7=\EOF:F3=\EO2P:F4=\EO2Q:\
+	:F5=\EO2R:F6=\EO2S:F7=\E[15;2~:F8=\E[17;2~:F9=\E[18;2~:\
+	:FA=\E[19;2~:FB=\E[20;2~:FC=\E[21;2~:FD=\E[23;2~:\
+	:FE=\E[24;2~:FF=\EO5P:FG=\EO5Q:FH=\EO5R:FI=\EO5S:\
+	:FJ=\E[15;5~:FK=\E[17;5~:FL=\E[18;5~:FM=\E[19;5~:\
+	:FN=\E[20;5~:FO=\E[21;5~:FP=\E[23;5~:FQ=\E[24;5~:\
+	:FR=\EO6P:FS=\EO6Q:FT=\EO6R:FU=\EO6S:FV=\E[15;6~:\
+	:FW=\E[17;6~:FX=\E[18;6~:FY=\E[19;6~:FZ=\E[20;6~:\
+	:Fa=\E[21;6~:Fb=\E[23;6~:Fc=\E[24;6~:K1@:K2=\EOE:K3@:K4@:\
+	:K5@:kB=\E[Z:kD=\E[3~:kh=\EOH:te=\E[?1049l:ti=\E[?1049h:\
+	:tc=xterm-xf86-v333:
+
+# This version was released in XFree86 4.3.
+xterm-xf86-v43|xterm terminal emulator (XFree86 4.3 Window System):\
+	:#2=\E[1;2H:#3=\E[2;2~:#4=\E[1;2D:%c=\E[6;2~:%e=\E[5;2~:\
+	:%i=\E[1;2C:*4=\E[3;2~:*7=\E[1;2F:@1@:tc=xterm-xf86-v40:
+
+# This version was released in XFree86 4.4.
+xterm-xf86-v44|xterm terminal emulator (XFree86 4.4 Window System):\
+	:SF=\E[%dS:SR=\E[%dT:ve=\E[?12l\E[?25h:vs=\E[?12;25h:\
+	:tc=xterm-xf86-v43:
+
+xterm-xfree86|xterm terminal emulator (XFree86):\
+	:tc=xterm-xf86-v44:
+
+# This version reflects the current xterm features.
+xterm-new|modern xterm terminal emulator:\
+	:NP:\
+	:#2=\E[1;2H:#3=\E[2;2~:%c=\E[6;2~:%e=\E[5;2~:*4=\E[3;2~:\
+	:*7=\E[1;2F:@7=\EOF:@8=\EOM:K2=\EOE:Km=\E[M:SF=\E[%dS:\
+	:SR=\E[%dT:kB=\E[Z:kI=\E[2~:kN=\E[6~:kP=\E[5~:kd=\EOB:\
+	:kh=\EOH:kl=\EOD:kr=\EOC:ku=\EOA:tc=xterm+pcfkeys:\
+	:tc=xterm-basic:
+#
+# This fragment describes as much of XFree86 xterm's "pc-style" function
+# keys as will fit into terminfo's 60 function keys.
+# From ctlseqs.ms:
+#    Code     Modifiers
+#  ---------------------------------
+#     2       Shift
+#     3       Alt
+#     4       Shift + Alt
+#     5       Control
+#     6       Shift + Control
+#     7       Alt + Control
+#     8       Shift + Alt + Control
+#  ---------------------------------
+# The meta key may also be used as a modifier in this scheme, adding another
+# bit to the parameter.
+xterm+pcfkeys|fragment for PC-style fkeys:\
+	:tc=xterm+app:tc=xterm+pcf2:tc=xterm+pcc2:tc=xterm+pce2:
+#
+xterm+noapp|fragment with cursor keys in normal mode:\
+	:@7=\E[F:kd=\E[B:kh=\E[H:kl=\E[D:kr=\E[C:ku=\E[A:
+
+xterm+app|fragment with cursor keys in application mode:\
+	:@7=\EOF:kd=\EOB:kh=\EOH:kl=\EOD:kr=\EOC:ku=\EOA:
+#
+# The "PC-style" modifier scheme was introduced in xterm patch #94 (1999/3/27)
+# and revised in patch #167 (2002/8/24).  Some other terminal emulators copied
+# the earlier scheme, as noted in the "use=" clauses in this file.
+#
+# The original assignments from patch #94 for cursor-keys had some technical
+# issues:
+#
+#	A parameter for a function-key to represent a modifier is just more
+#	bits.  But for a cursor-key it may change the behavior of the
+#	application.  For instance, emacs decodes the first parameter of a
+#	cursor-key as a repeat count.
+#
+#	A parameterized string should (really) not begin with SS3 (\EO).
+#	Rather, CSI (\E[) should be used.
+#
+# For these reasons, the original assignments were deprecated.  For
+# compatibility reasons, they are still available as a setting of xterm's
+# modifyCursorKeys resource.  These fragments list the modified cursor-keys
+# that might apply to xterm+pcfkeys with different values of that resource.
+xterm+pcc3|fragment with modifyCursorKeys:3:\
+	:#4=\E[>1;2D:%i=\E[>1;2C:kF=\E[>1;2B:kR=\E[>1;2A:
+
+xterm+pcc2|fragment with modifyCursorKeys:2:\
+	:#4=\E[1;2D:%i=\E[1;2C:kF=\E[1;2B:kR=\E[1;2A:
+
+xterm+pcc1|fragment with modifyCursorKeys:1:\
+	:#4=\E[2D:%i=\E[2C:kF=\E[2B:kR=\E[2A:
+
+xterm+pcc0|fragment with modifyCursorKeys:0:\
+	:#4=\EO2D:%i=\EO2C:kF=\EO2B:kR=\EO2A:
+
+#
+# Here are corresponding fragments from xterm patch #216:
+#
+xterm+pcf0|fragment with modifyFunctionKeys:0:\
+	:F1=\E[23~:F2=\E[24~:F3=\EO2P:F4=\EO2Q:F5=\EO2R:F6=\EO2S:\
+	:F7=\E[15;2~:F8=\E[17;2~:F9=\E[18;2~:FA=\E[19;2~:\
+	:FB=\E[20;2~:FC=\E[21;2~:FD=\E[23;2~:FE=\E[24;2~:\
+	:FF=\EO5P:FG=\EO5Q:FH=\EO5R:FI=\EO5S:FJ=\E[15;5~:\
+	:FK=\E[17;5~:FL=\E[18;5~:FM=\E[19;5~:FN=\E[20;5~:\
+	:FO=\E[21;5~:FP=\E[23;5~:FQ=\E[24;5~:FR=\EO6P:FS=\EO6Q:\
+	:FT=\EO6R:FU=\EO6S:FV=\E[15;6~:FW=\E[17;6~:FX=\E[18;6~:\
+	:FY=\E[19;6~:FZ=\E[20;6~:Fa=\E[21;6~:Fb=\E[23;6~:\
+	:Fc=\E[24;6~:Fd=\EO3P:Fe=\EO3Q:Ff=\EO3R:Fg=\EO3S:\
+	:Fh=\E[15;3~:Fi=\E[17;3~:Fj=\E[18;3~:Fk=\E[19;3~:\
+	:Fl=\E[20;3~:Fm=\E[21;3~:Fn=\E[23;3~:Fo=\E[24;3~:\
+	:Fp=\EO4P:Fq=\EO4Q:Fr=\EO4R:k1=\EOP:k2=\EOQ:k3=\EOR:\
+	:k4=\EOS:k5=\E[15~:k6=\E[17~:k7=\E[18~:k8=\E[19~:\
+	:k9=\E[20~:k;=\E[21~:
+#
+xterm+pcf2|fragment with modifyFunctionKeys:2:\
+	:F1=\E[23~:F2=\E[24~:F3=\E[1;2P:F4=\E[1;2Q:F5=\E[1;2R:\
+	:F6=\E[1;2S:F7=\E[15;2~:F8=\E[17;2~:F9=\E[18;2~:\
+	:FA=\E[19;2~:FB=\E[20;2~:FC=\E[21;2~:FD=\E[23;2~:\
+	:FE=\E[24;2~:FF=\E[1;5P:FG=\E[1;5Q:FH=\E[1;5R:FI=\E[1;5S:\
+	:FJ=\E[15;5~:FK=\E[17;5~:FL=\E[18;5~:FM=\E[19;5~:\
+	:FN=\E[20;5~:FO=\E[21;5~:FP=\E[23;5~:FQ=\E[24;5~:\
+	:FR=\E[1;6P:FS=\E[1;6Q:FT=\E[1;6R:FU=\E[1;6S:FV=\E[15;6~:\
+	:FW=\E[17;6~:FX=\E[18;6~:FY=\E[19;6~:FZ=\E[20;6~:\
+	:Fa=\E[21;6~:Fb=\E[23;6~:Fc=\E[24;6~:Fd=\E[1;3P:\
+	:Fe=\E[1;3Q:Ff=\E[1;3R:Fg=\E[1;3S:Fh=\E[15;3~:\
+	:Fi=\E[17;3~:Fj=\E[18;3~:Fk=\E[19;3~:Fl=\E[20;3~:\
+	:Fm=\E[21;3~:Fn=\E[23;3~:Fo=\E[24;3~:Fp=\E[1;4P:\
+	:Fq=\E[1;4Q:Fr=\E[1;4R:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:\
+	:k5=\E[15~:k6=\E[17~:k7=\E[18~:k8=\E[19~:k9=\E[20~:\
+	:k;=\E[21~:
+#
+# Chunks from xterm #230:
+xterm+pce2|fragment with modifyCursorKeys:2:\
+	:#2=\E[1;2H:#3=\E[2;2~:%c=\E[6;2~:%e=\E[5;2~:*4=\E[3;2~:\
+	:*7=\E[1;2F:kI=\E[2~:kN=\E[6~:kP=\E[5~:tc=xterm+edit:
+
+xterm+edit|fragment for 6-key editing-keypad:\
+	:kD=\E[3~:kI=\E[2~:kN=\E[6~:kP=\E[5~:tc=xterm+pc+edit:
+
+xterm+pc+edit|fragment for pc-style editing keypad:\
+	:@7=\E[4~:kh=\E[1~:
+
+xterm+vt+edit|fragment for vt220-style editing keypad:\
+	:*6=\E[4~:@0=\E[1~:
+
+#
+# Those chunks use the new-style (the xterm oldFunctionKeys resource is false).
+# Alternatively, the same scheme with old-style function keys as in xterm-r6
+# is shown here (because that is used in mrxvt and mlterm):
+xterm+r6f2|xterm with oldFunctionKeys and modifyFunctionKeys:2:\
+	:F3=\E[11;2~:F4=\E[12;2~:F5=\E[13;2~:F6=\E[14;2~:\
+	:FF=\E[11;5~:FG=\E[12;5~:FH=\E[13;5~:FI=\E[14;5~:\
+	:FR=\E[11;6~:FS=\E[12;6~:FT=\E[13;6~:FU=\E[14;6~:\
+	:Fd=\E[11;3~:Fe=\E[12;3~:Ff=\E[13;3~:Fg=\E[14;3~:\
+	:Fp=\E[11;4~:Fq=\E[12;4~:Fr=\E[13;4~:k1=\E[11~:k2=\E[12~:\
+	:k3=\E[13~:k4=\E[14~:tc=xterm+pcf2:
+#
+# This chunk is used for building the VT220/Sun/PC keyboard variants.
+xterm-basic|modern xterm terminal emulator - common:\
+	:5i:am:bs:km:mi:ms:ut:xn:AX:\
+	:Co#8:co#80:it#8:li#24:pa#64:\
+	:AB=\E[4%dm:AF=\E[3%dm:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:\
+	:DO=\E[%dB:IC=\E[%d@:Km=\E[M:LE=\E[%dD:RA=\E[?7l:\
+	:RI=\E[%dC:SA=\E[?7h:UP=\E[%dA:\
+	:ac=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~:\
+	:ae=\E(B:al=\E[L:as=\E(0:bl=^G:bt=\E[Z:cb=\E[1K:cd=\E[J:\
+	:ce=\E[K:ch=\E[%i%dG:cl=\E[H\E[2J:cm=\E[%i%d;%dH:cr=^M:\
+	:cs=\E[%i%d;%dr:ct=\E[3g:cv=\E[%i%dd:dc=\E[P:dl=\E[M:\
+	:do=^J:ec=\E[%dX:ei=\E[4l:ho=\E[H:im=\E[4h:\
+	:is=\E[!p\E[?3;4l\E[4l\E>:kb=^H:ke=\E[?1l\E>:\
+	:ks=\E[?1h\E=:le=^H:mb=\E[5m:md=\E[1m:me=\E[0m:mk=\E[8m:\
+	:ml=\El:mm=\E[?1034h:mo=\E[?1034l:mr=\E[7m:mu=\Em:nd=\E[C:\
+	:op=\E[39;49m:pf=\E[4i:po=\E[5i:ps=\E[i:r1=\Ec:\
+	:r2=\E[!p\E[?3;4l\E[4l\E>:rc=\E8:sc=\E7:se=\E[27m:sf=^J:\
+	:so=\E[7m:sr=\EM:st=\EH:ta=^I:te=\E[?1049l:ti=\E[?1049h:\
+	:ue=\E[24m:up=\E[A:us=\E[4m:vb=\E[?5h\E[?5l:\
+	:ve=\E[?12l\E[?25h:vi=\E[?25l:vs=\E[?12;25h:\
+	:tc=vt100+enq:
+
+# From: David J. MacKenzie <djm@va.pubnix.com>, 14 Nov 1997
+# In retrospect, something like xterm-r6 was intended here -TD
+xterm-xi|xterm on XI Graphics Accelerated X under BSD/OS 3.1:\
+	:se=\E[m:ue=\E[m:tc=xterm-xf86-v33:
+
+# 16-colors is one of the variants of XFree86 3.3 xterm, updated for 4.0 (T.Dickey)
+# If configured to support 88- or 256-colors (which is fairly common in 2009),
+# xterm also recognizes the control sequences for initc -TD
+xterm-16color|xterm with 16 colors like aixterm:\
+	:cc:tc=ibm+16color:tc=xterm-new:
+
+# 256-colors is a compile-time feature of XFree86 xterm beginning with
+# patch #111 (1999/7/10) -TD
+xterm+256color|xterm 256-color feature:\
+	:cc:\
+	:Co#256:pa#32767:\
+	:AB=\E[48;5;%dm:AF=\E[38;5;%dm:Sb@:Sf@:
+
+# 88-colors is a compile-time feature of XFree86 xterm beginning with
+# patch #115 (1999/9/18) -TD
+#
+# Note that the escape sequences used are the same as for 256-colors - xterm
+# has a different table of default color resource values.  If built for
+# 256-colors, it can still handle an 88-color palette by using the initc
+# capability.
+#
+# At this time (2007/7/14), except for rxvt 2.7.x, none of the other terminals
+# which support the xterm+256color feature support the associated initc
+# capability.  So it is cancelled in the entries which use this and/or the
+# xterm+256color block.
+#
+# The default color palette for the 256- and 88-colors are different.  A
+# given executable will have one palette (perhaps compiled-in).  If the program
+# supports xterm's control sequence, it can be programmed using initc.
+xterm+88color|xterm 88-color feature:\
+	:Co#88:pa#7744:tc=xterm+256color:
+
+# These variants of XFree86 3.9.16 xterm are built as a configure option.
+xterm-256color|xterm with 256 colors:\
+	:tc=xterm+256color:tc=xterm-new:
+xterm-88color|xterm with 88 colors:\
+	:tc=xterm+88color:tc=xterm-256color:
+
+# These two are used to demonstrate the any-event mouse support, i.e., by
+# using an extended name "XM" which tells ncurses to put the terminal into
+# a special mode when initializing the xterm mouse.
+xterm-1002|testing xterm-mouse:\
+	:XM=\E[?1002%?%p1%{1}%=%th%el%;:tc=xterm-new:
+xterm-1003|testing xterm-mouse:\
+	:XM=\E[?1003%?%p1%{1}%=%th%el%;:tc=xterm-new:
+
+# This is another variant, for XFree86 4.0 xterm (T.Dickey)
+# This is an 8-bit version of xterm, which emulates DEC vt220 with ANSI color.
+# To use it, your decTerminalID resource must be set to 200 or above.
+#
+#	HTS	\E H	\210
+#	RI	\E M	\215
+#	SS3	\E O	\217
+#	CSI	\E [	\233
+#
+# (sgr removed to fit entry within 1023 bytes)
+# (acsc removed to fit entry within 1023 bytes)
+# (terminfo-only capabilities suppressed to fit entry within 1023 bytes)
+xterm-8bit|xterm terminal emulator 8-bit controls (X Window System):\
+	:am:bs:km:mi:ms:xn:\
+	:co#80:it#8:li#24:\
+	:AL=\233%dL:DC=\233%dP:DL=\233%dM:DO=\233%dB:IC=\233%d@:\
+	:K1=\217w:K2=\217y:K3=\217u:K4=\217q:K5=\217s:LE=\233%dD:\
+	:RI=\233%dC:UP=\233%dA:ae=\E(B:al=\233L:as=\E(0:bl=^G:\
+	:bt=\233Z:cd=\233J:ce=\233K:cl=\233H\2332J:\
+	:cm=\233%i%d;%dH:cr=^M:cs=\233%i%d;%dr:ct=\2333g:\
+	:dc=\233P:dl=\233M:do=^J:ec=\233%dX:ei=\2334l:ho=\233H:\
+	:im=\2334h:\
+	:is=\E[62"p\E G\233m\233?7h\E>\E7\233?1;3;4;6l\2334l\233r\E8:\
+	:k1=\23311~:k2=\23312~:k3=\23313~:k4=\23314~:k5=\23315~:\
+	:k6=\23317~:k7=\23318~:k8=\23319~:k9=\23320~:kD=\2333~:\
+	:kI=\2332~:kN=\2336~:kP=\2335~:kb=^H:kd=\217B:\
+	:ke=\233?1l\E>:kh=\2331~:kl=\217D:kr=\217C:ks=\233?1h\E=:\
+	:ku=\217A:le=^H:mb=\2335m:md=\2331m:me=\2330m:mr=\2337m:\
+	:nd=\233C:rc=\E8:sc=\E7:se=\23327m:sf=^J:so=\2337m:sr=\215:\
+	:st=\210:ta=^I:te=\233?1049l:ti=\233?1049h:ue=\23324m:\
+	:up=\233A:us=\2334m:vb=\233?5h\233?5l:\
+	:ve=\233?25l\233?25h:vi=\233?25l:vs=\233?12;25h:
+
+xterm-hp|xterm with hpterm function keys:\
+	:@7=\EF:k1=\Ep:k2=\Eq:k3=\Er:k4=\Es:k5=\Et:k6=\Eu:k7=\Ev:\
+	:k8=\Ew:kC=\EJ:kD=\EP:kI=\EQ:kN=\ES:kP=\ET:kd=\EB:kh=\Eh:\
+	:kl=\ED:kr=\EC:ku=\EA:tc=xterm-basic:
+
+xterm-sco|xterm with SCO function keys:\
+	:@1=\E[E:@7=\E[F:F1=\E[W:F2=\E[X:F3=\E[Y:F4=\E[Z:F5=\E[a:\
+	:F6=\E[b:F7=\E[c:F8=\E[d:F9=\E[e:FA=\E[f:FB=\E[g:FC=\E[h:\
+	:FD=\E[i:FE=\E[j:FF=\E[k:FG=\E[l:FH=\E[m:FI=\E[n:FJ=\E[o:\
+	:FK=\E[p:FL=\E[q:FM=\E[r:FN=\E[s:FO=\E[t:FP=\E[u:FQ=\E[v:\
+	:FR=\E[w:FS=\E[x:FT=\E[y:FU=\E[z:FV=\E[@:FW=\E[[:FX=\E[\\:\
+	:FY=\E[]:FZ=\E[\136:Fa=\E[_:Fb=\E[`:Fc=\E[{:Km=\E[>M:\
+	:k1=\E[M:k2=\E[N:k3=\E[O:k4=\E[P:k5=\E[Q:k6=\E[R:k7=\E[S:\
+	:k8=\E[T:k9=\E[U:k;=\E[V:kD=\177:kI=\E[L:kN=\E[G:kP=\E[I:\
+	:kd=\E[B:kh=\E[H:kl=\E[D:kr=\E[C:ku=\E[A:tc=xterm-basic:
+
+# The xterm-new description has all of the features, but is not completely
+# compatible with vt220.  If you are using a Sun or PC keyboard, set the
+# sunKeyboard resource to true:
+#	+ maps the editing keypad
+#	+ interprets control-function-key as a second array of keys, so a
+#	  12-fkey keyboard can support vt220's 20-fkeys.
+#	+ maps numeric keypad "+" to ",".
+#	+ uses DEC-style control sequences for the application keypad.
+#
+xterm-vt220|xterm emulating vt220:\
+	:@7=\E[4~:F1=\E[23~:F2=\E[24~:F3=\E[25~:F4=\E[26~:\
+	:F5=\E[28~:F6=\E[29~:F7=\E[31~:F8=\E[32~:F9=\E[33~:\
+	:FA=\E[34~:Km=\E[M:k5=\E[15~:k6=\E[17~:k7=\E[18~:\
+	:k8=\E[19~:k9=\E[20~:k;=\E[21~:kB=\E[Z:kI=\E[2~:kN=\E[6~:\
+	:kP=\E[5~:kd=\EOB:kh=\E[1~:kl=\EOD:kr=\EOC:ku=\EOA:\
+	:tc=xterm+app:tc=xterm+edit:tc=xterm-basic:\
+	:tc=vt220+keypad:
+
+xterm-vt52|xterm emulating dec vt52:\
+	:co#80:it#8:li#24:\
+	:ac=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~:\
+	:ae=\EG:as=\EF:bl=^G:cd=\EJ:ce=\EK:cl=\EH\EJ:cm=\EY%+ %+ :\
+	:cr=^M:do=\EB:ho=\EH:kb=^H:kd=\EB:kl=\ED:kr=\EC:ku=\EA:\
+	:le=\ED:nd=\EC:nw=^M^J:sf=^J:sr=\EI:ta=^I:up=\EA:
+
+xterm-noapp|xterm with cursor keys in normal mode:\
+	:ke=\E>:ks=\E=:te@:ti@:tc=xterm+noapp:tc=xterm:
+
+xterm-24|vs100|xterms|xterm terminal emulator (X Window System):\
+	:li#24:tc=xterm-old:
+
+# This is xterm for ncurses.
+xterm|xterm terminal emulator (X Window System):\
+	:tc=xterm-new:
+
+# This entry assumes that xterm's handling of VT100 SI/SO is disabled by
+# setting the vt100Graphics resource to false.
+xterm-utf8|xterm with no VT100 line-drawing in UTF-8 mode:\
+	:U8#1:tc=xterm:
+
+# These entries allow access to the X titlebar and icon name as a status line.
+# Note that twm (and possibly window managers descended from it such as tvtwm,
+# ctwm, and vtwm) track windows by icon-name; thus, you don't want to mess
+# with it.
+xterm+sl|access X title line and icon name:\
+	:hs:\
+	:ws#40:\
+	:ds=\E]0;\007:fs=^G:ts=\E]0;:tc=xterm:
+xterm+sl-twm|access X title line (pacify twm-descended window managers):\
+	:hs:\
+	:ws#40:\
+	:ds=\E]2;\007:fs=^G:ts=\E]2;:tc=xterm:
+
+#
+# The following xterm variants don't depend on your base version
+#
+# xterm with bold instead of underline
+xterm-bold|xterm terminal emulator (X11R6 Window System) standout w/bold:\
+	:so=\E[7m:us=\E[1m:tc=xterm-old:
+# (kterm: this had extension capabilities ":KJ:TY=ascii:" -- esr)
+# (kterm should not invoke DEC Graphics as the alternate character set
+#  -- Kenji Rikitake)
+# (proper setting of enacs, smacs, rmacs makes kterm to use DEC Graphics
+#  -- MATSUMOTO Shoji)
+# kterm implements acsc via built-in table of X Drawable's
+kterm|kterm kanji terminal emulator (X window system):\
+	:es:hs:XT:\
+	:NC@:\
+	:Km=\E[M:RA=\E[?7l:SA=\E[?7h:\
+	:ac=``aajjkkllmmnnooppqqrrssttuuvvwwxx~~:ae=\E(B:\
+	:as=\E(0:cs=\E[%i%d;%dr:ds=\E[?H:eA=:fs=\E[?F:me=\E[0m:\
+	:rc=\E8:sc=\E7:ts=\E[?E\E[?%i%dT:tc=xterm-r6:\
+	:tc=ecma+color:
+kterm-color|kterm-co|kterm with ANSI colors:\
+	:NC@:tc=kterm:tc=ecma+color:
+# See the note on ICH/ICH1 VERSUS RMIR/SMIR near the end of file
+xterm-nic|xterm with ich/ich1 suppressed for non-curses programs:\
+	:IC@:ic@:tc=xterm:
+# From: Mark Sheppard <kimble@mistral.co.uk>, 4 May 1996
+xterm1|xterm terminal emulator ignoring the alternate screen buffer:\
+	:te@:ti@:tc=xterm:
+
+# This describes the capabilities of color_xterm, an xterm variant from
+# before ECMA-64 color support was folded into the main-line xterm release.
+# This entry is straight from color_xterm's maintainer.
+# From: Jacob Mandelson <jlm@ugcs.caltech.edu>, 09 Nov 1996
+# The README's with the distribution also say that it supports SGR 21, 24, 25
+# and 27, but they are not present in the terminfo or termcap.
+color_xterm|cx|cx100|color_xterm color terminal emulator for X:\
+	:am:bs:km:mi:ms:xn:XT:\
+	:NC@:co#80:it#8:li#65:\
+	:@7=\E[8~:AL=\E[%dL:DC=\E[%dP:DL=\E[%dM:DO=\E[%dB:\
+	:F1=\E[23~:F2=\E[24~:IC=\E[%d@:Km=\E[M:LE=\E[%dD:\
+	:RA=\E[?7l:RI=\E[%dC:SA=\E[?7h:UP=\E[%dA:\
+	:ac=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~:\
+	:ae=^O:al=\E[L:as=^N:bl=^G:cb=\E[1K:cd=\E[J:ce=\E[K:\
+	:cl=\E[H\E[2J:cm=\E[%i%d;%dH:cr=^M:cs=\E[%i%d;%dr:\
+	:dc=\E[P:dl=\E[M:do=^J:eA=\E(B\E)0:ei=\E[4l:ho=\E[H:\
+	:i1=\E[r\E[m\E[?7h\E[?4;6l\E[4l:im=\E[4h:k1=\E[11~:\
+	:k2=\E[12~:k3=\E[13~:k4=\E[14~:k5=\E[15~:k6=\E[17~:\
+	:k7=\E[18~:k8=\E[19~:k9=\E[20~:k;=\E[21~:kI=\E[2~:\
+	:kN=\E[6~:kP=\E[5~:kb=^H:kd=\EOB:kh=\E[7~:kl=\EOD:kr=\EOC:\
+	:ku=\EOA:le=^H:md=\E[1m:me=\E[0m:mr=\E[7m:nd=\E[C:\
+	:r1=\E(B\017\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l\E<:\
+	:rc=\E8:sc=\E7:se=\E[27m:sf=^J:so=\E[7m:sr=\EM:ta=^I:\
+	:te=\E>\E[?41;1r:ti=\E[?1;41s\E[?1;41h\E=:ue=\E[24m:\
+	:up=\E[A:us=\E[4m:tc=ecma+color:tc=vt220+keypad:
+
+# The 'nxterm' distributed with Redhat Linux 5.2 is a slight rehack of
+# xterm-sb_right-ansi-3d, which implements ANSI colors, but does not support
+# SGR 39 or 49.  SGR 0 does reset colors (along with everything else).  This
+# description is "compatible" with color_xterm, rxvt and XFree86 xterm, except
+# that each of those implements the home, end, delete keys differently.
+#
+# Redhat Linux 6.x distributes XFree86 xterm as "nxterm", which uses bce
+# colors; note that this is not compatible with the 5.2 version.
+# csw (2002-05-15): make xterm-color primary instead of nxterm, to
+#   match XFree86's xterm.terminfo usage and prevent circular links
+xterm-color|nxterm|generic color xterm:\
+	:NC@:\
+	:op=\E[m:tc=xterm-r6:tc=klone+color:
+
+
