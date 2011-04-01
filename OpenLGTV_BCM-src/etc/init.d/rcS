@@ -134,11 +134,17 @@ then
     touch /mnt/flash/data/resolv.conf
 fi
 
+if [ ! -f /mnt/flash/data/hosts ]
+then
+    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/hosts file" | tee -a /tmp/OpenLGTV_BCM.log
+    touch /mnt/flash/data/hosts
+fi
+
 #
 # Network parameters
 #
 
-echo "OpenLGTV_BCM-INFO: creating /tmp/run and /tmp/log dirs for /var/log and /var/run links and utmp/wtmp logs" | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data" | tee -a /tmp/OpenLGTV_BCM.log
 mkdir -p /tmp/run /tmp/log /tmp/service /tmp/lib/hwclock /tmp/lib/misc /tmp/spool/cron
 cat /dev/null > /var/run/utmp
 cat /dev/null > /var/log/wtmp
