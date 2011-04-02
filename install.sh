@@ -86,7 +86,9 @@ fi
 #cat $tmp/$file.sha1 | sed "s#$file#$tmp/$file#" > $tmp/$file.2.sha1 2>$tmpout | tee -a $log
 sh -c "cat $tmp/$file.sha1 | sed \"s#$file#$tmp/$file#\" > $tmp/$file.2.sha1" > $tmpout 2>&1
 cat $tmpout | tee -a $log
-sha1sum -c $tmp/$file.2.sha1 > $tmpout 2>&1
+#sha1sum -c $tmp/$file.2.sha1 > $tmpout 2>&1
+sh -c "sha1sum $tmp/$file.sqf > $tmp/$file.2x.sha1" 2>&1 | tee -a $log
+diff $tmp/$file.2.sha1 $tmp/$file.2x.sha1 > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
