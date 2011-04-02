@@ -13,7 +13,7 @@ rm -f dev.tar.gz etc_passwd.tar.gz
 find . -name '.svn' | xargs rm -rf
 cd ..
 ofile=OpenLGTV_BCM-v$ver
-rm -f $ofile.sqf $ofile.md5 $ofile.zip
+rm -f $ofile.sqf $ofile.md5 $ofile.sha1 $ofile.zip
 mksquashfs squashfs-root $ofile.sqf
 osize=`wc -c $ofile.sqf | awk '{print $1}'`
 if [ "$osize" -gt "$size" ]
@@ -32,6 +32,6 @@ else
 	done
     fi
 fi
-md5sum $ofile.sqf > $ofile.md5
-zip $ofile.zip $ofile.sqf $ofile.md5 install.sh
+sha1sum $ofile.sqf > $ofile.sha1
+zip $ofile.zip $ofile.sqf $ofile.sha1 install.sh
 rm -rf squashfs-root

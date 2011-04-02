@@ -1,7 +1,7 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.4
+# OpenLGTV BCM installation script by xeros, ver. 0.5
 
-# it needs $file.sqf and $file.md5 files in the same dir as this script
+# it needs $file.sqf and $file.sha1 files in the same dir as this script
 
 # if 'confirmations' is set to '1' then it asks for confirmation, if '0' then autoconfirm
 # if 'rebooting' is set to '1' then TV is autorebooted after after successful flashing
@@ -10,7 +10,7 @@
 confirmations=1
 rebooting=0
 
-ver=0.2.0
+ver=0.2.0a
 file=OpenLGTV_BCM-v$ver
 size=3145728
 mtd=3
@@ -54,11 +54,11 @@ echo "" | tee -a $log
 date 2>&1 | tee -a $log
 echo "OpenLGTV BCM $ver installation script by xeros" | tee -a $log
 # check for files existence
-if [ -f $cdir/$file.sqf -a -f $cdir/$file.md5 ]
+if [ -f $cdir/$file.sqf -a -f $cdir/$file.sha1 ]
 then
-    echo "Comparing flash file size and MD5 checksum..." | tee -a $log
+    echo "Comparing flash file size and SHA1 checksum..." | tee -a $log
 else
-    echo "Cannot continue, file $file.sqf or $file.md5 does not exist." | tee -a $log
+    echo "Cannot continue, file $file.sqf or $file.sha1 does not exist." | tee -a $log
     exit 1
 fi
 # comparing size
@@ -76,17 +76,17 @@ then
     exit 1
 fi
 # copy to /tmp/
-cp $cdir/$file.sqf $cdir/$file.md5 $tmp/ 
+cp $cdir/$file.sqf $cdir/$file.sha1 $tmp/ 
 if [ "$?" -ne "0" ]
 then
     echo "Something is wrong. Cannot copy the files to $tmp/" | tee -a $log
     exit 1
 fi
-# md5sum compare
-#cat $tmp/$file.md5 | sed "s#$file#$tmp/$file#" > $tmp/$file.2.md5 2>$tmpout | tee -a $log
-sh -c "cat $tmp/$file.md5 | sed \"s#$file#$tmp/$file#\" > $tmp/$file.2.md5" > $tmpout 2>&1
+# sha1sum compare
+#cat $tmp/$file.sha1 | sed "s#$file#$tmp/$file#" > $tmp/$file.2.sha1 2>$tmpout | tee -a $log
+sh -c "cat $tmp/$file.sha1 | sed \"s#$file#$tmp/$file#\" > $tmp/$file.2.sha1" > $tmpout 2>&1
 cat $tmpout | tee -a $log
-md5sum -c $tmp/$file.2.md5 > $tmpout 2>&1
+sha1sum -c $tmp/$file.2.sha1 > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
