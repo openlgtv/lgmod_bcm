@@ -266,6 +266,22 @@ then
 	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
     fi
 fi
+
+# check if all users have their passwords enabled if they have set any already
+if [ -n "`grep '::' /mnt/user/etc/passwd 2> /dev/null`" ]
+then
+    for i in `grep '\\$' /mnt/user/etc/shadow | awk -F: '{print $1}'`
+    do
+	user_fix=`grep "^$i::" /mnt/user/etc/passwd | awk -F: '{print $1}'`
+	if [ "$user_fix" != "" ]
+	then
+	    echo "OpenLGTV_BCM-WARN: enable password for user $user_fix in passwd file..." | tee -a /var/log/OpenLGTV_BCM.log
+	    sed -i -e "s/^$user_fix::/$user_fix:x:/g" /mnt/user/etc/passwd
+	fi
+    done
+fi
+
+
 if [ ! -d /usr/etc/dropbear ]
 then
     if [ -d /mnt/user/etc/dropbear ]
