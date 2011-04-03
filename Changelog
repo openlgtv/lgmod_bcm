@@ -108,3 +108,6 @@ Answer for people asking if they can use it if they have already made modificati
 
     * FIX: workaround to enable password for users with password set (BusyBox 'passwd' command haven't done it while changing password) - passwords are enabled at next boot
 
+0.2.1
+
+    * ADD: update time at boot using NTP servers pool

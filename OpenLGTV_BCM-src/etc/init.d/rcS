@@ -231,6 +231,9 @@ else
     udhcpc eth0
 fi
 
+echo "OpenLGTV_BCM-INFO: setting time via NTP server pool" | tee -a /var/log/OpenLGTV_BCM.log
+ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
+
 mkdir -p /mnt/user/etc
 if [ $? -ne 0 ]
 then
