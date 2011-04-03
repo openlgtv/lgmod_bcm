@@ -412,6 +412,12 @@ else
     echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
+if [ ! -d /mnt/user/www ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..." | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/www
+fi
+
 # Making nvram copy
 echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd21 partitions..." | tee -a /var/log/OpenLGTV_BCM.log
 cat /dev/mtd21 > /tmp/nvram
