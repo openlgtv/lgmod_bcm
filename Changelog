@@ -1,0 +1,110 @@
+OpenLGTV BCM Changelog
+
+0.0.1
+
+    * initial release, had problems running init rcS script 
+
+0.0.2
+
+    * FIX: checking of /proc/cmdline after mounting /proc filesystem so all the commands in init rcS script can be executed 
+
+0.0.3
+
+    * FIX: fixed 'tmux' compilation and 'terminfo' dirs
+    * FIX: recompiled 'dropbear' ssh as multi-binary, fixed 'scp'
+    * FIX: after exit from RELEASE there's running busybox shell on rs232 console
+    * UPDATE: updated 'dropbear' from 0.52 to 0.53.1
+    * UPDATE: updated 'tmux' from 1.3 to 1.4
+    * INFO: short image size by 80kB 
+
+0.0.3a
+
+    * FIX: fixed 'dropbear' starting command ('-E' parameter not supported by 'dropbear' compiled without syslog support, thanks DeadMan) 
+
+0.0.4
+
+    * FIX: fixed error messages from creating dirs on not writable /var dir, now /var/log and /var/run are symlinks to /tmp/log and /tmp/run dirs
+    * FIX: fixed 'file' depenency on libmagic.so.1
+    * FIX: fixed /sbin PATH search with adding environment variables from rcS to /etc/profile
+    * FIX: fixed 'awk' as linking it to new busybox binary (LG busybox awk tool had problems with some scripts)
+    * ADD: added 'strace' tool ver. 4.6 (now we can get strace logs from RELEASE at it's first start (might be useful to see what it does to USB, too) - this need a script to start straced RELEASE in /mnt/user/init.d/)
+    * ADD: added 'ltrace' tool compiled from GIT (2011-03-25)
+    * ADD: added 'libelf.so*' lib as needed by 'ltrace'
+    * ADD: added some useful (at least for me) aliases in /etc/profile (vim, screen, src, unmount (tries to umount all the USB devices from /mnt/usb1&2/...), reboot (unmounts USB, syncs and reboots))
+    * ADD: added check for /mnt/user being writable, just in case of not mounted or broken partition, it should still start and setup users and passwords in tmpfs instead
+    * CHANGE: motd is now being regenerated as a copy in /tmp/ with new version number of OpenLGTV BCM if it finds it's 'welcome' header
+    * CHANGE: rcS script does now some logging at start to both rs232 console and to /var/log/OpenLGTV_BCM.log file (which is cleaned after reboot)
+    * CHANGE: telnet server is started before dropbear SSH server, just in case to be able to login if SSH server would be broken and stops boot process
+    * CHANGE: strip more libs and tools for getting more space
+    * REMOVE: removed gettext libs/tools as they were not useful as gettext didn't fit to partition image
+    * REMOVE: removed some unused tools, like 'blkid', 'uuidgen', 'uuidd'
+    * INFO: partition image size grow by 80KB again compared to 0.0.3a, up to max size of the partition
+    * INFO: I'm thinking about publishing this project soon, so this is release candidate for version 0.1.0 
+
+0.0.5
+
+    * FIX: fixed /etc/fstab to properly mount partitions even in different 'auto' modes from CFE (lgapp mounted from NFS must be in /share/global_platform/bcm35xx share)
+    * FIX: fixed 'swapon' and 'swapoff' links - busybox released by LG does not have these tools compiled in (LG bug) - tested, swap on USB hdd works
+    * ADD: starting from version 0.0.5 there's 'install.sh' script provided that takes care of flashing procedure and md5 checksum of the file to flash 
+
+no need to use the procedure for erasing and flashing, just run /mnt/usb1/Drive1/install.sh it would used as autoflash script later after more testing - it should take care about easy upgrades in the future
+
+    * ADD: 'ldd' tool
+    * ADD: wireless connection manging tools (taken from real OpenLGTV): 'iwconfig', 'iwgetid', 'iwlist', 'iwpriv', 'iwspy' - to be able to setup WLAN network on different WLAN cards (kernel modules needed)
+    * ADD: NVRAM dump to /tmp/nvram file - RELEASE erases the mtd21 (nvram) partition after it reads data from it, so it's hard to get dump of it with RELEASE running
+    * ADD: auto mount-binding /mnt/user/modules/btusb.ko to /mnt/lg/res/lgres/btusb.ko, so if you have new/modified driver for bluetooth dongle you can just put in /mnt/user/modules/ and it will be used at start
+    * ADD: copy from original places and bind-mount browser_application.txt, config.xml, addon_mgr.bat from /mnt/user/{browser,contents,addon} dirs if the 'addon' and 'browser' partitions are not modifed so the files can be changed without making modifications to those partitions (if all of those files are links already they wont be touched)
+    * REMOVE: 'wall', 'badblocks', 'utmpdump', 'logsave', 'mklost+found' tools (none of them were on original rootfs and are more likely not to be used, they might come back after we'll make use of 'remain' partition for our tools storage. 
+
+0.1.0
+
+    * CHANGE: /mnt/user/netcast/ dir is used for browser_addon.txt, config.xml and addon_mgr.bat files instead of /mnt/user/{addon,browser,contents}/ dirs 
+
+0.1.1
+
+    * UPDATE: update BusyBox to static binary 1.18.4 compiled with more applets (almost all) as replacement for BB 1.2.1
+    * ADD: dirs for new BusyBox applets,
+    * ADD: make install.sh script check if lginit partition is already erased and not erase it again
+    * ADD: udhcpc default.script
+    * REMOVE: remove dynamic BB 1.18.0,
+    * FIX: lastlog file creation,
+    * CHANGE: replace native binaries using BusyBox applets: mountpoint, runlevel, sulogin, last, mesg, flash_eraseall
+    * 216kb free space 
+
+Known problems:
+
+    * FISH protocol connection from Midnight Commander does not properly show file/directory names,
+    * /etc/termcap does not have terminal settings for 'putty', 'screen' and 'xterm' so /bin/top executed on terminals that advertise using these names needs to set manually different terminal type. 
+
+Using this version there's possibility to make 'nanddump' backups from BusyBox shell, too.
+0.2.0
+
+    * ADD: support for both EU and US models (not KR or others, yet)
+    * ADD: 'tcpdump' binary
+    * ADD: /mnt/Network path as might be related to DLNA/CIFS in RELEASE (?)
+    * ADD: add 'screen', 'putty' and 'xterm' terminals support in /etc/termcap (/bin/top would make use of it)
+    * ADD: TERMINFO_DIR path variable set to /usr/share/terminfo for broken apps with hardcoded paths (like /bin/top)
+    * FIX: fix 'scp' client in TV by making link /usr/bin/dbclient
+    * CHANGE: changed hostname to 'OpenLGTV_BCM'
+    * CHANGE: install script sets date from NTP servers before flashing (useful for logging)
+    * CHANGE: symlink /root dir to /tmp to be able to store termporarly configs, shell logs (like for example .ash_history)
+    * 124kb free space 
+
+Known problems:
+
+    * NOT A BUG in OpenLGTV BCM: FISH protocol connection from Midnight Commander 4.7.0.x does not properly show file/directory names - 'ls' from new BusyBox does support -Q parameter which output is parsed wrong by Midnight Commander 4.7.0.x, solution is to upgrade MC to 4.7.5.x version on PC for FISH connection,
+    * /etc/termcap terminal names collision so /bin/top is unusable, but /usr/bin/top is
+    * all current versions (0.1.0 - 0.2.0) can't install properly on original firmwares - missing md5sum in original firmware (fixed release should arrive in about 15 minutes) 
+
+Answer for people asking if they can use it if they have already made modifications on 'addon' or 'browser' partitions is YES, the boot script checks for common modifications (symlinks). If it finds them it does not copy and mount the files and does not break already made modifications.
+
+0.2.0a (quick fix release)
+
+    * FIX: nonexistent (in original firmware) md5sum change to sha1sum
+    * FIX: revert termcap data to original
+    * FIX: update create_img.sh and install.sh to use sha1sum instead of md5sum 
+
+0.2.0b (quick fix2 release)
+
+    * FIX: workaround to enable password for users with password set (BusyBox 'passwd' command haven't done it while changing password) - passwords are enabled at next boot
+
