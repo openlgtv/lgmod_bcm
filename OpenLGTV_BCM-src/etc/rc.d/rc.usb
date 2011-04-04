@@ -13,9 +13,15 @@ then
 	    then
 		echo "OpenLGTV_BCM-ERROR: theres too much OpenLGTV BCM upgrade (.sqf) files in /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/, refusing to autoupgrade" | tee -a /var/log/OpenLGTV_BCM.log
 	    else
-		/usr/bin/install.sh /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf
+		/scripts/install.sh /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf
+		exit $?
 	    fi
         fi
+    fi
+    if [ -f "/mnt/usb1/Drive1/OpenLGTV_BCM/make_backup" ]
+    then
+        echo "OpenLGTV_BCM-INFO: found /mnt/usb1/Drive1/OpenLGTV_BCM/make_backup file, starting backup to USB storage device..." | tee -a /var/log/OpenLGTV_BCM.log
+        /scripts/backup.sh 2>&1 /mnt/usb1/Drive1/OpenLGTV_BCM/backup | tee -a /var/log/OpenLGTV_BCM.log
     fi
     if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/autorun" ]
     then

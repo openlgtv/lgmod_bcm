@@ -4,7 +4,7 @@ size=3145728
 dir=OpenLGTV_BCM-src
 ver=`cat $dir/etc/ver2`
 sed -i -e "s/^ver=.*/ver=$ver/g" install.sh
-cp install.sh $dir/usr/bin/
+cp -f install.sh $dir/scripts/
 sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd.org
 cp -r $dir squashfs-root
 cd squashfs-root
