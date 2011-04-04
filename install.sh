@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.5
+# OpenLGTV BCM installation script by xeros, ver. 0.6
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -7,10 +7,11 @@
 # if 'rebooting' is set to '1' then TV is autorebooted after after successful flashing
 
 # vars set
-confirmations=1
-rebooting=0
-
-ver=0.2.1-devel
+#confirmations=1
+confirmations=0
+#rebooting=0
+rebooting=1
+ver=0.3.0-devel
 file=OpenLGTV_BCM-v$ver
 size=3145728
 mtd=3
@@ -21,12 +22,18 @@ lginit_size=262144
 
 tmp=/tmp
 dir=`dirname $0`
+
+if [ "$1" != "" ]
+then
+    ver=`echo $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`
+    dir=`dirname $1`
+fi
+
 cdir=$dir
 #log=$dir/$file.log
 log="$dir/$file.log $tmp/$file.log"
 tmpout=$tmp/output.log
 freemem=20000
-
 
 backup=pre-backup
 suffix=flashed
@@ -246,6 +253,8 @@ then
 fi
 cat $tmpout | tee -a $log
 echo "Looks like flashing finally succeeded." | tee -a $log
+# removing second backup, after flashing
+rm -f $dir/$file-$backup2.sqf
 # renaming flash file to prevent another flashing
 if [ "$dir" != "$tmp" ]
 then
@@ -272,6 +281,11 @@ sync
 if [ "`head -c4 $dir/$file-lginit-$backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" = "$magic_clean" ]
 then
     echo "Gathered dump header from /dev/mtd$mtd partition shows that the lginit partition is already erased - good." | tee -a $log
+    echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
+    mkdir -p $dir/flashed $tmp/flashed
+    mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    log=`echo $log | sed "s#$file#flashed/$file#"`
+    cat $tmpout | tee -a $log
     date 2>&1 | tee -a $log
     echo "" | tee -a $log
     sync
@@ -337,6 +351,12 @@ then
 fi
 # rebooting...
 sleep 5
+sync
+echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
+mkdir -p $dir/flashed $tmp/flashed
+mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+log=`echo $log | sed "s#$file#flashed/$file#"`
+cat $tmpout | tee -a $log
 sync
 date 2>&1 | tee -a $log
 echo "" | tee -a $log

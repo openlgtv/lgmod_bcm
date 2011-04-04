@@ -425,6 +425,8 @@ fi
 echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd21 partitions..." | tee -a /var/log/OpenLGTV_BCM.log
 cat /dev/mtd21 > /tmp/nvram
 
+(sleep 30; /etc/rc.d/rc.usb)&
+
 if [ -d /mnt/user/init.d ]
 then
     echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/" | tee -a /var/log/OpenLGTV_BCM.log

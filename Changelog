@@ -108,6 +108,12 @@ Answer for people asking if they can use it if they have already made modificati
 
     * FIX: workaround to enable password for users with password set (BusyBox 'passwd' command haven't done it while changing password) - passwords are enabled at next boot
 
-0.2.1
+0.3.0 (WORK IN PROGRESS)
 
+    * ADD: Changelog file to SVN
     * ADD: update time at boot using NTP servers pool
+    * ADD: create /mnt/user/www dir if it does not exist
+    * ADD: autoupgrade from USB storage device from /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/ dir at boot
+    * ADD: executing scripts from USB storage device from /mnt/usb1/Drive1/OpenLGTV_BCM/autorun/ dir at boot
+    * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
+    * WARN: from now on, install.sh makes installation automaticaly and reboots TV after successful flash, without confirmation

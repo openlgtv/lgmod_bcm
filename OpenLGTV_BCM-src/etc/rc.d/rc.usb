@@ -1,0 +1,29 @@
+#!/bin/sh
+if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM" ]
+then
+    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device" | tee -a /var/log/OpenLGTV_BCM.log
+    cur_dir=`pwd`
+    if [ -d "DISABLED/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade" ]
+    then
+	if [ -f "/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: running OpenLGTV BCM upgrade from /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/" | tee -a /var/log/OpenLGTV_BCM.log
+	    sqf_file_count=`ls -al /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
+	    if [ "$sqf_file_count" -gt 1 ]
+	    then
+		echo "OpenLGTV_BCM-ERROR: theres too much OpenLGTV BCM upgrade (.sqf) files in /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/, refusing to autoupgrade" | tee -a /var/log/OpenLGTV_BCM.log
+	    else
+		/usr/bin/install.sh /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf
+	    fi
+        fi
+    fi
+    if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/autorun" ]
+    then
+        echo "OpenLGTV_BCM-INFO: executing custom autorun scripts from /mnt/usb1/Drive1/OpenLGTV_BCM/autorun/" | tee -a /var/log/OpenLGTV_BCM.log
+	for scr_autorun in /mnt/usb1/Drive1/OpenLGTV_BCM/autorun/*
+	do
+	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..." | tee -a /var/log/OpenLGTV_BCM.log
+	    $scr_autorun
+	done
+    fi
+fi
