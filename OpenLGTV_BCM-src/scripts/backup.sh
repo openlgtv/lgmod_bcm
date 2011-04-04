@@ -1,5 +1,12 @@
 #!/bin/sh
-make_nanddump=1
+# OpenLGTV BCM backup script
+
+# Make standard dump
+make_catdump=1
+# Make nanddump dump (with OOB data)
+make_nanddump=0
+# Pack data from writable partitions to .tar.gz file
+make_writable_tgz=1
 
 if [ "$1" != "" ]
 then
@@ -17,15 +24,26 @@ cd $back_dir
 #for i in `cat /proc/mtd | grep -v erasesize | awk "BEGIN {printf \"mtd%02d_%s\", \"$1\", \"$4\"}" | sed 's/\"//g' | sed 's/://g'`
 for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed 's/\"//g' | sed 's/mtd\(.\):/mtd0\1/'`
 do
-    echo "Making standard backup of $i ..."
-    cat /dev/`echo $i | sed 's/_.*//g' | sed 's/mtd0/mtd/g'` > $back_dir/$i
+    if [ "$make_catdump" = "1" ]
+    then
+	echo "Making standard backup of $i ..."
+	cat /dev/`echo $i | sed 's/_.*//g' | sed 's/mtd0/mtd/g'` > $back_dir/$i
+    fi
     if [ "$make_nanddump" = "1" ]
     then
 	echo "Making nanddump backup of $i ..."
 	nanddump -f $back_dir/$i.nand /dev/`echo $i | sed 's/_.*//g' | sed 's/mtd0/mtd/g'`
     fi
 done
+if [ "$make_writable_tgz" = "1" ]
+then
+    for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
+    do
+	echo "Making tar.gz backup of $mount_path ..."
+	tar czvf `echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar.gz $mount_path
+    done
+fi
 echo "Making NVRAM copy ..."
-cp -f /tmp/nvram $back_dir/
+cp -f /tmp/nvram* $back_dir/
 echo "Backup DONE."
 cd $cur_dir

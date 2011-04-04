@@ -22,6 +22,7 @@ then
     then
         echo "OpenLGTV_BCM-INFO: found /mnt/usb1/Drive1/OpenLGTV_BCM/make_backup file, starting backup to USB storage device..." | tee -a /var/log/OpenLGTV_BCM.log
         /scripts/backup.sh 2>&1 /mnt/usb1/Drive1/OpenLGTV_BCM/backup | tee -a /var/log/OpenLGTV_BCM.log
+        rm -f /mnt/usb1/Drive1/OpenLGTV_BCM/make_backup
     fi
     if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/autorun" ]
     then
