@@ -1,4 +1,6 @@
 #!/bin/sh
+make_nanddump=1
+
 if [ "$1" != "" ]
 then
     back_dir=$1
@@ -17,8 +19,11 @@ for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed 's/\
 do
     echo "Making standard backup of $i ..."
     cat /dev/`echo $i | sed 's/_.*//g' | sed 's/mtd0/mtd/g'` > $back_dir/$i
-    echo "Making nanddump backup of $i ..."
-    nanddump -f $back_dir/$i.nand /dev/`echo $i | sed 's/_.*//g' | sed 's/mtd0/mtd/g'`
+    if [ "$make_nanddump" = "1" ]
+    then
+	echo "Making nanddump backup of $i ..."
+	nanddump -f $back_dir/$i.nand /dev/`echo $i | sed 's/_.*//g' | sed 's/mtd0/mtd/g'`
+    fi
 done
 echo "Making NVRAM copy ..."
 cp -f /tmp/nvram $back_dir/
