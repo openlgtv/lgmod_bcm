@@ -417,6 +417,12 @@ then
 	    cp /mnt/addon/ywe/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh
 	fi
     fi
+    if [ ! -f "/mnt/user/ywe/deviceid" ]
+    then
+	    deviceid=$RANDOM
+	    echo "OpenLGTV_BCM-INFO: generating Yahoo Widgets Engine device id: $deviceid in /mnt/user/ywe/deviceid..." | tee -a /var/log/OpenLGTV_BCM.log
+	    echo $deviceid > /mnt/user/ywe/deviceid
+    fi
     if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
     then
 	echo "OpenLGTV_BCM-INFO: setting links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
