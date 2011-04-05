@@ -121,6 +121,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: auto mount-binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko, so if you have new/modified driver for wireless card you can just put in /mnt/user/modules/ and it will be used at start
     * ADD: erase lginit partitions at boot if not erased
     * ADD: support for Yahoo Widgets (both Engine and Data) mounting from /mnt/usb1/Drive1/OpenLGTV_BCM/{ywe,ywedata}
+    * ADD: support for Yahoo Widgets Data used as ramdisk (set to max 80MB) if ywedata partition is not available in both NAND flash or USB storage device
     * ADD: support for Samsung Yahoo Widgets
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * WARN: from now on, install.sh makes installation automaticaly and reboots TV after successful flash, without confirmation

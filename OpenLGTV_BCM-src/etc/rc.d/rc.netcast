@@ -2,8 +2,8 @@
 # NetCast setup rc.netcast script
 if [ "$country_model" = "EU" ]
 then
-    echo "OpenLGTV_BCM-INFO: EU models do not have /mnt/widget.data mounted, so lets create 75MB tmpfs there..." | tee -a /var/log/OpenLGTV_BCM.log
-    mount -t tmpfs ywedata /mnt/widget.data -o size=75M
+    echo "OpenLGTV_BCM-INFO: EU models do not have /mnt/widget.data mounted, so lets create 80MB tmpfs there..." | tee -a /var/log/OpenLGTV_BCM.log
+    mount -t tmpfs ywedata /mnt/widget.data -o size=80M
 fi
 
 if [ ! -d /mnt/widget.data/samsung ]
