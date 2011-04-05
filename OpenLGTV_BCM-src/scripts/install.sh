@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.6
+# OpenLGTV BCM installation script by xeros, ver. 0.7
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -36,6 +36,8 @@ tmpout=$tmp/output.log
 freemem=20000
 
 backup=pre-backup
+lginit_backup=lginit-$backup
+rootfs_backup=rootfs-$backup
 suffix=flashed
 backup2=$suffix-backup
 
@@ -112,9 +114,9 @@ else
     exit 1
 fi
 # Backup
-echo "Making backup from /dev/mtd$mtd to $dir/$file-$backup.sqf" | tee -a $log
-#cat /dev/mtd3 > $dir/$file-$backup.sqf 2>$tmpout
-sh -c "cat /dev/mtd3 > $dir/$file-$backup.sqf" > $tmpout 2>&1
+echo "Making backup from /dev/mtd$mtd to $dir/$file-$rootfs_backup.sqf" | tee -a $log
+#cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf 2>$tmpout
+sh -c "cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf" > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
@@ -123,7 +125,7 @@ then
     exit 1
 fi
 # compare dump size
-if [ "`cat $dir/$file-$backup.sqf | wc -c`" -ne "$size" ]
+if [ "`cat $dir/$file-$rootfs_backup.sqf | wc -c`" -ne "$size" ]
 then
     echo "Gathered dump from /dev/mtd$mtd partition has wrong size." | tee -a $log
     echo "Refusing to flash" | tee -a $log
@@ -131,9 +133,9 @@ then
 fi
 sync
 # comparing magic bytes of dump
-#if [ "`od -N4 -c $dir/$file-$backup.sqf | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
-#if [ "`head -c4 $dir/$file-$backup.sqf`" != "$magic" ]
-if [ "`head -c4 $dir/$file-$backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
+#if [ "`od -N4 -c $dir/$file-$rootfs_backup.sqf | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
+#if [ "`head -c4 $dir/$file-$rootfs_backup.sqf`" != "$magic" ]
+if [ "`head -c4 $dir/$file-$rootfs_backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
 then
     echo "Gathered dump header from /dev/mtd$mtd partition is incorrect. Maybe you try to flash to wrong partition?" | tee -a $log
     exit 1
@@ -263,13 +265,13 @@ then
     cat $tmpout | tee -a $log
 else
     echo "Please rename the file $file.sqf yourself to prevent future flashing the same firmware again" | tee -a $log
-    echo "You might copy the $dir/$file-$backup.sqf file to have backup." | tee -a $log
+    echo "You might copy the $dir/$file-$rootfs_backup.sqf file to have backup." | tee -a $log
 fi
 sync
 # making backup of lginit
 echo "Making backup of lginit from /dev/mtd$lginit partition..." | tee -a $log
-#cat /dev/mtd$lginit > $dir/$file-lginit-$backup.sqf 2>$tmpout
-sh -c "cat /dev/mtd$lginit > $dir/$file-lginit-$backup.sqf" > $tmpout 2>&1
+#cat /dev/mtd$lginit > $dir/$file-$lginit_backup.sqf 2>$tmpout
+sh -c "cat /dev/mtd$lginit > $dir/$file-$lginit_backup.sqf" > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
@@ -278,7 +280,7 @@ then
 fi
 sync
 # comparing magic bytes of lginit dump
-if [ "`head -c4 $dir/$file-lginit-$backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" = "$magic_clean" ]
+if [ "`head -c4 $dir/$file-$lginit_backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" = "$magic_clean" ]
 then
     echo "Gathered dump header from /dev/mtd$mtd partition shows that the lginit partition is already erased - good." | tee -a $log
     echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
