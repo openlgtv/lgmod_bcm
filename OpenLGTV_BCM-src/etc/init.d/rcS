@@ -446,8 +446,14 @@ then
 fi
 
 # Making nvram copy
-echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd21 partitions..." | tee -a /var/log/OpenLGTV_BCM.log
-cat /dev/mtd21 > /tmp/nvram
+if [ "$country_model" = "EU" ]
+then
+    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd21 partition..." | tee -a /var/log/OpenLGTV_BCM.log
+    cat /dev/mtd21 > /tmp/nvram
+else
+    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd23 partition..." | tee -a /var/log/OpenLGTV_BCM.log
+    cat /dev/mtd23 > /tmp/nvram
+fi
 
 (sleep 30; /etc/rc.d/rc.usb)&
 
