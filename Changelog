@@ -111,6 +111,7 @@ Answer for people asking if they can use it if they have already made modificati
 0.3.0 (WORK IN PROGRESS)
 
     * FIX: Updated BusyBox binary with 'passwd' patch
+    * FIX: NVRAM dump on US models
     * ADD: Changelog file to SVN
     * ADD: update time at boot using NTP servers pool
     * ADD: create /mnt/user/www dir if it does not exist
