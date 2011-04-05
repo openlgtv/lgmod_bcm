@@ -118,6 +118,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: autoupgrade from USB storage device from /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/ dir at boot
     * ADD: automatic backup to USB storage device if /mnt/usb1/Drive1/OpenLGTV_BCM/make_backup file exists
     * ADD: executing scripts from USB storage device from /mnt/usb1/Drive1/OpenLGTV_BCM/autorun/ dir at boot
+    * ADD: auto mount-binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko, so if you have new/modified driver for wireless card you can just put in /mnt/user/modules/ and it will be used at start
     * ADD: erase lginit partitions at boot if not erased
     * ADD: support for Samsung Yahoo Widgets
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade

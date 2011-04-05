@@ -370,6 +370,13 @@ then
     mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko
 fi
 
+# Mount-binding wl.ko from /mnt/user/modules/
+if [ -f "/mnt/user/modules/wl.ko" ]
+then
+    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko..." | tee -a /var/log/OpenLGTV_BCM.log
+    mount --bind /mnt/user/modules/wl.ko /mnt/lg/res/lgres/wl.ko
+fi
+
 # Mount-binding NetCast services configs
 if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" ]
 then
