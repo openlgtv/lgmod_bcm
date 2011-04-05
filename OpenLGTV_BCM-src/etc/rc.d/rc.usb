@@ -45,4 +45,6 @@ then
 	    $scr_autorun
 	done
     fi
+else
+    echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device" | tee -a /var/log/OpenLGTV_BCM.log
 fi

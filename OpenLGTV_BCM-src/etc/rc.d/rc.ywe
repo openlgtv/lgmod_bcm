@@ -1,5 +1,6 @@
 #!/bin/sh
 if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" ]
+then
     export ywedir=/mnt/addon/ywe
     export ywedir_usb=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
     if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" ]
@@ -78,4 +79,6 @@ if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulat
 	    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
 	fi
     fi
+else
+    echo "OpenLGTV_BCM-WARN: found modified Yahoo Widget Engine files on addon partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
 fi
