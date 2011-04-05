@@ -11,7 +11,7 @@
 confirmations=0
 #rebooting=0
 rebooting=1
-ver=0.3.0-alpha1
+ver=0.3.0-alpha2
 file=OpenLGTV_BCM-v$ver
 size=3145728
 mtd=3
