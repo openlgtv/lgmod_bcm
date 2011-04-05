@@ -119,5 +119,6 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: automatic backup to USB storage device if /mnt/usb1/Drive1/OpenLGTV_BCM/make_backup file exists
     * ADD: executing scripts from USB storage device from /mnt/usb1/Drive1/OpenLGTV_BCM/autorun/ dir at boot
     * ADD: erase lginit partitions at boot if not erased
+    * ADD: support for Samsung Yahoo Widgets
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * WARN: from now on, install.sh makes installation automaticaly and reboots TV after successful flash, without confirmation
