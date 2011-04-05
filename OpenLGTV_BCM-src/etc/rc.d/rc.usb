@@ -24,6 +24,17 @@ then
         /scripts/backup.sh 2>&1 /mnt/usb1/Drive1/OpenLGTV_BCM/backup | tee -a /var/log/OpenLGTV_BCM.log
         rm -f /mnt/usb1/Drive1/OpenLGTV_BCM/make_backup
     fi
+    if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/ywe" ]
+    then
+        echo "OpenLGTV_BCM-INFO: mounting /mnt/usb1/Drive1/OpenLGTV_BCM/ywe to /mnt/ywe_lg" | tee -a /var/log/OpenLGTV_BCM.log
+        mount --bind /mnt/usb1/Drive1/OpenLGTV_BCM/ywe /mnt/ywe_lg
+    fi
+    if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/ywedata" ]
+    then
+        echo "OpenLGTV_BCM-INFO: mounting /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata to /mnt/widget.data" | tee -a /var/log/OpenLGTV_BCM.log
+        umount /mnt/widget.data
+        mount --bind /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata /mnt/widget.data
+    fi
     if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/autorun" ]
     then
         echo "OpenLGTV_BCM-INFO: executing custom autorun scripts from /mnt/usb1/Drive1/OpenLGTV_BCM/autorun/" | tee -a /var/log/OpenLGTV_BCM.log
