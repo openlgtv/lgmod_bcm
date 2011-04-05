@@ -432,6 +432,11 @@ then
 	    cp /mnt/addon/ywe/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh
 	fi
     fi
+    if [ -n '`grep "^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH" /mnt/user/ywe/konfabulator.sh`' ]
+    then
+	echo "OpenLGTV_BCM-INFO: setting browser partition library path in Yahoo Widgets Engine startup script - /mnt/addon/ywe/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
+	sed -i -e 's#^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH#export BROWSER=/mnt/browser\n\nexport LD_LIBRARY_PATH=$KF_APP_PATH/lib:$BROWSER/lib:$LD_LIBRARY_PATH#g' /mnt/user/ywe/konfabulator.sh
+    fi
     if [ ! -f "/mnt/user/ywe/deviceid" ]
     then
 	    deviceid=$RANDOM
