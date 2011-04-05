@@ -35,7 +35,7 @@ export DEPLOY_DIR=/mnt/browser
 
 export TERMINFO_DIRS=/usr/share/terminfo
 
-ver=`cat /etc/ver2`
+export ver=`cat /etc/ver2`
 echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."
 
 mount -t proc proc /proc
