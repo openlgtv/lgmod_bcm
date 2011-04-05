@@ -488,6 +488,9 @@ then
     done
 fi
 
+echo "OpenLGTV_BCM-INFO: start httpd" | tee -a /var/log/OpenLGTV_BCM.log
+httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+
 echo "OpenLGTV_BCM-INFO: start RELEASE" | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
 
