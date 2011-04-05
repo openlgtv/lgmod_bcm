@@ -378,6 +378,7 @@ then
 fi
 
 source /etc/rc.d/rc.netcast
+source /etc/rc.d/rc.ywe
 
 if [ ! -d /mnt/user/www ]
 then

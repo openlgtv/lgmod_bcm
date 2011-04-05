@@ -34,6 +34,7 @@ then
         echo "OpenLGTV_BCM-INFO: mounting /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata to /mnt/widget.data" | tee -a /var/log/OpenLGTV_BCM.log
         umount /mnt/widget.data
         mount --bind /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata /mnt/widget.data
+        source /etc/rc.d/rc.ywe
     fi
     if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/autorun" ]
     then
