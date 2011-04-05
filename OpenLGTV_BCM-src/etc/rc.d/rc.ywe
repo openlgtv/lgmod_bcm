@@ -41,6 +41,11 @@ if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulat
 	    echo "OpenLGTV_BCM-INFO: setting browser partition library path in Yahoo Widgets Engine startup script - $ywedir/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 	    sed -i -e 's#^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH#export BROWSER=/mnt/browser\n\nexport LD_LIBRARY_PATH=$KF_APP_PATH/lib:$BROWSER/lib:$LD_LIBRARY_PATH#g' /mnt/user/ywe/konfabulator.sh
 	fi
+	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/konfabulator.sh | grep "$ywedir"`' ]
+	then
+	    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for proper engine path ( $ywedir ) - /mnt/user/ywe/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
+	    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/konfabulator.sh
+	fi
 	if [ ! -f "/mnt/user/ywe/deviceid" ]
 	then
 	    deviceid=$RANDOM
@@ -59,7 +64,7 @@ if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulat
 	    cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
 	    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh
 	fi
-	if [ -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep "\/mnt\/ywe_s`' ]
+	if [ -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep "\/mnt\/ywe_s"`' ]
 	then
 	    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 	    sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh
