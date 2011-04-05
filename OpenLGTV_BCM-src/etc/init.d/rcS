@@ -416,7 +416,7 @@ then
     fi
     if [ ! -f "/mnt/user/ywe/samsung/config-oem.xml" ]
     then
-	if [ ! -f "/mnt/user/ywe/config-oem.xml" ]
+	if [ -f "/mnt/user/ywe/config-oem.xml" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: preparing Yahoo Widgets Engine config-oem.xml for Samsung Widgets in /mnt/addon/ywe/samsung/config-oem.xml..." | tee -a /var/log/OpenLGTV_BCM.log
 	    cat /mnt/user/ywe/config-oem.xml | sed 's/.*fingerprints.*//g' | \
