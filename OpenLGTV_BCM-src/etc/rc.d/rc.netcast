@@ -1,4 +1,17 @@
 #!/bin/sh
+# NetCast setup rc.netcast script
+if [ "$country_model" = "EU" ]
+then
+    echo "OpenLGTV_BCM-INFO: EU models do not have /mnt/widget.data mounted, so lets create 75MB tmpfs there..." | tee -a /var/log/OpenLGTV_BCM.log
+    mount -t tmpfs ywedata /mnt/widget.data -o size=75M
+fi
+
+if [ ! -d /mnt/widget.data/samsung ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/widget.data/samsung
+fi
+
 # Mount-binding NetCast services configs
 if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" ]
 then
@@ -111,16 +124,4 @@ then
     fi
 else
     echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
-fi
-
-if [ "$country_model" = "EU" ]
-then
-    echo "OpenLGTV_BCM-INFO: EU models do not have /mnt/widget.data mounted, so lets create 75MB tmpfs there..." | tee -a /var/log/OpenLGTV_BCM.log
-    mount -t tmpfs ywedata /mnt/widget.data -o size=75M
-fi
-
-if [ ! -d /mnt/widget.data/samsung ]
-then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/widget.data/samsung
 fi
