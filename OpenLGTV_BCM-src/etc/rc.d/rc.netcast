@@ -17,11 +17,6 @@ then
 	echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe/samsung dir for Yahoo Widgets Engine configs copy prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
 	mkdir -p /mnt/user/ywe/samsung
     fi
-    if [ ! -d /mnt/widget.data/samsung ]
-    then
-	echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p /mnt/widget.data/samsung
-    fi
     if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
     then
 	if [ -f "/mnt/browser/browser_application.txt" ]
@@ -118,8 +113,14 @@ else
     echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
-if [ ! -d /mnt/user/www ]
+if [ "$country_model" = "EU" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..." | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/www
+    echo "OpenLGTV_BCM-INFO: EU models do not have /mnt/widget.data mounted, so lets create 75MB tmpfs there..." | tee -a /var/log/OpenLGTV_BCM.log
+    mount -t tmpfs ywedata /mnt/widget.data -o size=75M
+fi
+
+if [ ! -d /mnt/widget.data/samsung ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/widget.data/samsung
 fi
