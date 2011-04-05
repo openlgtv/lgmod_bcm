@@ -3,7 +3,7 @@ if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device" | tee -a /var/log/OpenLGTV_BCM.log
     cur_dir=`pwd`
-    if [ -d "DISABLED/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade" ]
+    if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade" ]
     then
 	if [ -f "/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf" ]
 	then
