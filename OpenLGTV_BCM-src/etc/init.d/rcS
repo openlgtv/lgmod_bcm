@@ -411,6 +411,21 @@ fi
 echo "OpenLGTV_BCM-INFO: start httpd" | tee -a /var/log/OpenLGTV_BCM.log
 httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
 
+echo "OpenLGTV_BCM-INFO: start RELEASE in tmux" | tee -a /var/log/OpenLGTV_BCM.log
+echo ""
+
+# this should be some lines before, after reading config settings (TODO)
+if [ "$RELEASE_in_tmux" = "" ]
+then
+    RELEASE_in_tmux=1
+fi
+
+if [ "$RELEASE_in_tmux" != "0" ]
+then
+    /usr/bin/tmux new-session -n 'RELEASE' '/lg/lgapp/RELEASE 0'
+    /bin/sh
+fi
+
 echo "OpenLGTV_BCM-INFO: start RELEASE" | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
 
