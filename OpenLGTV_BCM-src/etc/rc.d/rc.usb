@@ -5,8 +5,8 @@ then
     cur_dir=`pwd`
     if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade" ]
     then
-	if [ -f "/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf" ]
-	then
+	#if [ -f "/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf" ]
+	#then
 	    echo "OpenLGTV_BCM-INFO: running OpenLGTV BCM upgrade from /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/" | tee -a /var/log/OpenLGTV_BCM.log
 	    sqf_file_count=`ls -al /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
 	    if [ "$sqf_file_count" -gt 1 ]
@@ -16,7 +16,7 @@ then
 		/scripts/install.sh /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf
 		exit $?
 	    fi
-        fi
+        #fi
     fi
     if [ -f "/mnt/usb1/Drive1/OpenLGTV_BCM/make_backup" ]
     then
