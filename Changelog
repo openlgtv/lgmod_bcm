@@ -124,6 +124,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: support for Yahoo Widgets Data used as ramdisk (set to max 80MB) if ywedata partition is not available in both NAND flash or USB storage device
     * ADD: support for Samsung Yahoo Widgets
     * ADD: RELEASE is started now in tmux, so it's possible to control RELEASE over telnet or SSH, too
+    * ADD: /mnt/user/cfg/settings file with configuration variables for OpenLGTV BCM scripts
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install,
     * CHANGE: move backup, flashed file and logs to 'flashed' subdir after successful flash
