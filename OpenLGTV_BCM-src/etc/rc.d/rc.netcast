@@ -13,8 +13,12 @@ then
 fi
 
 # Mount-binding NetCast services configs
-if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" ]
+if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -o "$force_copy_config_netcast" = "1" ]
 then
+    if [ "$force_copy_config_netcast" = "1" ]
+    then
+	echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
+    fi
     if [ ! -d /mnt/user/netcast ]
     then
 	echo "OpenLGTV_BCM-INFO: creating /mnt/user/netcast dir for NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log

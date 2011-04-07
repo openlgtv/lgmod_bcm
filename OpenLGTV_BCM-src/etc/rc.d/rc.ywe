@@ -1,6 +1,10 @@
 #!/bin/sh
-if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" ]
+if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" -o "$force_copy_config_ywe" = "1" ]
 then
+    if [ "$force_copy_config_ywe" = "1" ]
+    then
+	echo "OpenLGTV_BCM-WARN: forced Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
+    fi
     export ywedir=/mnt/addon/ywe
     export ywedir_usb=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
     if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" ]
