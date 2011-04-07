@@ -264,6 +264,24 @@ then
     echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a /var/log/OpenLGTV_BCM.log
     mount -t tmpfs tmpfs /mnt/user
 fi
+
+if [ ! -d "/mnt/user/cfg" ]
+then
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM config dir (/mnt/user/cfg) not found, creating it" | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/cfg
+fi
+
+if [ ! -f "/mnt/user/cfg/settings" ]
+then
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a /var/log/OpenLGTV_BCM.log
+    touch /mnt/user/cfg/settings
+    echo "confirmations=0" > /mnt/user/cfg/settings
+    echo "rebooting=1" >> /mnt/user/cfg/settings
+    echo "samsung_ywe=1" >> /mnt/user/cfg/settings
+    echo "RELEASE_in_tmux=1" >> /mnt/user/cfg/settings
+    # more to come...
+fi
+
 if [ ! -f "/usr/etc/passwd" ]
 then
     #mount -t tmpfs none /usr/etc
@@ -363,6 +381,10 @@ dropbear
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..." | tee -a /var/log/OpenLGTV_BCM.log
 hostname OpenLGTV_BCM
 
+echo "OpenLGTV_BCM-INFO: reading custom settings configuration" | tee -a /var/log/OpenLGTV_BCM.log
+source /mnt/user/cfg/settings
+export confirmations rebooting samsung_ywe RELEASE_in_tmux
+
 # Mount-binding btusb.ko from /mnt/user/modules/
 if [ -f "/mnt/user/modules/btusb.ko" ]
 then
@@ -413,12 +435,6 @@ httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
 
 echo "OpenLGTV_BCM-INFO: start RELEASE in tmux" | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
-
-# this should be some lines before, after reading config settings (TODO)
-if [ "$RELEASE_in_tmux" = "" ]
-then
-    RELEASE_in_tmux=1
-fi
 
 if [ "$RELEASE_in_tmux" != "0" ]
 then

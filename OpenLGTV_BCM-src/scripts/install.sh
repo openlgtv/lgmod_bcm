@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.7
+# OpenLGTV BCM installation script by xeros, ver. 0.8
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -11,7 +11,20 @@
 confirmations=0
 #rebooting=0
 rebooting=1
-ver=0.3.0-alpha2
+
+# enforce variables from settings file
+if [ -f "/mnt/user/cfg/settings" ]
+then
+    source /mnt/user/cfg/settings
+fi
+
+if [ "$2" = "autoupgrade" ]
+then
+    confirmations=0
+    rebooting=1
+fi
+
+ver=0.3.0-devel
 file=OpenLGTV_BCM-v$ver
 size=3145728
 mtd=3
@@ -62,6 +75,14 @@ ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
 echo "OpenLGTV BCM $ver installation script by xeros" | tee -a $log
+
+if [ "$2" = "autoupgrade" ]
+then
+    echo "Script is run as AUTOUPGRADE, forcing disable confirmations and reboot TV after successful flashing" | tee -a $log
+    confirmations=0
+    rebooting=1
+fi
+
 # check for files existence
 if [ -f $cdir/$file.sqf -a -f $cdir/$file.sha1 ]
 then
