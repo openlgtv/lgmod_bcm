@@ -52,6 +52,16 @@ then
 	echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..." | tee -a /var/log/OpenLGTV_BCM.log
 	cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat
     fi
+    if [ "$netcast_config_add_openlgtv" = "1" ]
+    then
+	echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Web UI option (netcast_config_add_openlgtv=1)..." | tee -a /var/log/OpenLGTV_BCM.log
+	/scripts/netcast_config_regenerator.sh /mnt/user/netcast/config.xml add_openlgtv /mnt/user/netcast/browser_application.txt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    fi
+    if [ "$netcast_config_enable_all" = "1" ]
+    then
+	echo "OpenLGTV_BCM-WARN: running NetCast Config Regenerator to enable all NetCast services (netcast_config_enable_all=1)..." | tee -a /var/log/OpenLGTV_BCM.log
+	/scripts/netcast_config_regenerator.sh /mnt/user/netcast/config.xml add_openlgtv /mnt/user/netcast/browser_application.txt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    fi
     if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
     then
 	echo "OpenLGTV_BCM-INFO: setting links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
