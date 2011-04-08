@@ -30,7 +30,7 @@ then
 	    echo "OpenLGTV BCM-INFO: NetCast config generator: \"add_openlgtv\" argument passed..."
 	    if [ -z "`grep $id_name $org_cfgxml`" ]
 	    then
-		echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id to exitsting config.xml"
+		echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id to existing config.xml"
 		#cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\r\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\r\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\r\n\t\t\t\t\t</item>\r\n#g" > $new_cfgxml
 		cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
 		mv $org_cfgxml $bck_cfgxml
@@ -48,7 +48,7 @@ then
 	    is_id_openlgtv="`grep ^$id_number $org_brw_app_txt | grep \"http://127.0.0.1/\"`"
 	    if [ -z "$is_id_openlgtv" ]
 	    then
-		echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id $id_number to exitsting browser_application.txt file"
+		echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id $id_number to existing browser_application.txt file"
 		cp -f $org_brw_app_txt $new_brw_app_txt
 		#echo '254\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n' >> $new_brw_app_txt
 		#echo "$id_number\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt

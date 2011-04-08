@@ -64,13 +64,13 @@ then
     fi
     if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
     then
-	echo "OpenLGTV_BCM-INFO: setting links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
 	mount --bind /mnt/user/netcast/config.xml              /mnt/addon/contents/config.xml
 	mount --bind /mnt/user/netcast/addon_mgr.bat           /mnt/addon/bin/addon_mgr.bat
     fi
     if [ -f "/mnt/user/netcast/browser_application.txt" ]
     then
-	echo "OpenLGTV_BCM-INFO: setting links to NetCast browser configs on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: using links to NetCast browser configs on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
 	mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt
 	mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
     fi

@@ -25,6 +25,16 @@ then
 fi
 
 ver=0.3.0-devel
+
+tmp=/tmp
+dir=`dirname $0`
+
+if [ "$1" != "" ]
+then
+    ver=`basename $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`
+    dir=`dirname $1`
+fi
+
 file=OpenLGTV_BCM-v$ver
 size=3145728
 mtd=3
@@ -33,14 +43,6 @@ magic_clean=377377377377
 lginit=4
 lginit_size=262144
 
-tmp=/tmp
-dir=`dirname $0`
-
-if [ "$1" != "" ]
-then
-    ver=`echo $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`
-    dir=`dirname $1`
-fi
 
 cdir=$dir
 #log=$dir/$file.log
