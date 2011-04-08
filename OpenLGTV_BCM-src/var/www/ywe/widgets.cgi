@@ -45,7 +45,8 @@ hwversion="LNYYC650"
 swversion="T-ML09_2000.0"
 
 region="US"
-lang="en"
+#lang="en"
+lang=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])lang=[^&]+" | cut -f 2 -d "="`
 
 yweversion="5.5.5"
 
