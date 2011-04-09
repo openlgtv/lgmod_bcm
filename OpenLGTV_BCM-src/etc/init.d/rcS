@@ -278,6 +278,7 @@ then
     echo "confirmations=0" > /mnt/user/cfg/settings
     echo "rebooting=1" >> /mnt/user/cfg/settings
     echo "samsung_ywe=1" >> /mnt/user/cfg/settings
+    echo "use_samsung_ywe_instead_of_lg=1" >> /mnt/user/cfg/settings
     echo "RELEASE_in_tmux=1" >> /mnt/user/cfg/settings
     echo "force_copy_config_netcast=0" >> /mnt/user/cfg/settings
     echo "force_copy_config_ywe=0" >> /mnt/user/cfg/settings

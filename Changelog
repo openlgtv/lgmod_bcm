@@ -122,7 +122,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: erase lginit partitions at boot if not erased
     * ADD: support for Yahoo Widgets (both Engine and Data) mounting from /mnt/usb1/Drive1/OpenLGTV_BCM/{ywe,ywedata}
     * ADD: support for Yahoo Widgets Data used as ramdisk (set to max 80MB) if ywedata partition is not available in both NAND flash or USB storage device
-    * ADD: support for Samsung Yahoo Widgets
+    * ADD: support for Samsung Yahoo Widgets (drop support for LG Yahoo Widgets - Samsung ones offer the same and a lot more widgets)
     * ADD: RELEASE is started now in tmux, so it's possible to control RELEASE over telnet or SSH, too
     * ADD: /mnt/user/cfg/settings file with configuration variables for OpenLGTV BCM scripts
     * ADD: possibility to enable all available NetCast services (be careful as it sorts all of them alphabetically and some do not have it's icons)
