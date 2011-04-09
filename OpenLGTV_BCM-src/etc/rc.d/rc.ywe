@@ -1,4 +1,5 @@
 #!/bin/sh
+# this script might need cleanup after we will finally drop all support for lg yahoo widgets, even drop the variable
 if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" -o "$force_copy_config_ywe" = "1" ]
 then
     if [ "$force_copy_config_ywe" = "1" ]
@@ -7,13 +8,36 @@ then
     fi
     export ywedir=/mnt/addon/ywe
     export ywedir_usb=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
+    export ywedatadir_usb=/mnt/usb1/Drive1/OpenLGTV_BCM/ywedata
     if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" ]
     then
 	echo "OpenLGTV_BCM-INFO: no available Yahoo Widgets Engine dirs - /mnt/addon/ywe or /mnt/usb1/Drive1/OpenLGTV_BCM/ywe - skipping YWE configuration..." | tee -a /var/log/OpenLGTV_BCM.log
     else
 	if [ -d "$ywedir_usb" ]
 	then
+	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Engine dir in /mnt/usb1/Drive1/OpenLGTV_BCM/ywe - setting it as ywedir..." | tee -a /var/log/OpenLGTV_BCM.log
 	    export ywedir=$ywedir_usb
+	    # lets try to kill konfabulator as on US models it running at start in background
+	    killall konfabulator > /dev/null 2>&1
+	fi
+	if [ -d "$ywedatadir_usb" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata - mount-binding it to /mnt/widget.data..." | tee -a /var/log/OpenLGTV_BCM.log
+	    mount --bind "$ywedatadir_usb" /mnt/widget.data
+	    # lets try to kill konfabulator as on US models it running at start in background
+	    killall konfabulator > /dev/null 2>&1
+	else
+	    if [ "$country_model" = "EU" ]
+	    then
+		# TODO: for now its tmpfs, lets find another writable (permanent) storage for them on EU models
+		echo "OpenLGTV_BCM-INFO: EU models do not have /mnt/widget.data mounted, so lets create 80MB tmpfs there..." | tee -a /var/log/OpenLGTV_BCM.log
+		mount -t tmpfs ywedata /mnt/widget.data -o size=80M
+	    fi
+	fi
+	if [ ! -d "/mnt/widget.data/samsung" -a "$use_samsung_ywe_instead_of_lg" != "1" -a "$samsung_ywe" != "0" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
+	    mkdir -p /mnt/widget.data/samsung
 	fi
 	if [ ! -f "/mnt/user/ywe/config-oem.xml" ]
 	then
@@ -36,7 +60,7 @@ then
 	    echo "OpenLGTV_BCM-INFO: setting browser partition library path in Yahoo Widgets Engine startup script - $ywedir/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 	    sed -i -e 's#^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH#export BROWSER=/mnt/browser\n\nexport LD_LIBRARY_PATH=$KF_APP_PATH/lib:$BROWSER/lib:$LD_LIBRARY_PATH#g' /mnt/user/ywe/konfabulator.sh
 	fi
-	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/konfabulator.sh | grep "$ywedir"`' ]
+	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -z "`grep \"^export KF_APP_PATH\" /mnt/user/ywe/konfabulator.sh | grep \"$ywedir\"`" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for proper engine path ( $ywedir ) - /mnt/user/ywe/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 	    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/konfabulator.sh
@@ -72,8 +96,10 @@ then
 	    then
 		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
 		then
-		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets ONLY - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
-		    cp /mnt/user/ywe/konfabulator.sh /mnt/user/ywe/samsung/konfabulator.sh
+		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script with proper path for Samsung Widgets ONLY - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
+		    #cp /mnt/user/ywe/konfabulator.sh /mnt/user/ywe/samsung/konfabulator.sh
+		    cat /mnt/user/ywe/konfabulator.sh | sed "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" > /mnt/user/ywe/samsung/konfabulator.sh
+		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh
 		else
 		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets with proper engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 		    cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
@@ -86,12 +112,18 @@ then
 		echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 		sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh
 		sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
+	    else
+		if [ -z "`grep \"^export KF_APP_PATH\" /mnt/user/ywe/samsung/konfabulator.sh | grep \"$ywedir\"`" -a "$use_samsung_ywe_instead_of_lg" = "1" ]
+		then
+		    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets ONLY engine path - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
+		    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/samsung/konfabulator.sh
+		    #sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
+		fi
 	    fi
 	    if [ -f "/mnt/user/ywe/samsung/config-oem.xml" -a -f "/mnt/user/ywe/samsung/konfabulator.sh" -a -d "$ywedir" ]
 	    then
 		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
 		then
-		    # TODO - mount it better, leaving original KF_APP_PATH and KF_DATA_DIR and drop /mnt/ywe_s and /mnt/widget.data/samsung paths
 		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets replacing LG Widgets in path: $ywedir ..." | tee -a /var/log/OpenLGTV_BCM.log
 		    # v- these (commented out) should not be mounted
 		    #umount $ywedir/config-oem.xml
