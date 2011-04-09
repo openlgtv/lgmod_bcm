@@ -82,7 +82,7 @@ then
 		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
 		then
 		    # TODO - mount it better, leaving original KF_APP_PATH and KF_DATA_DIR and drop /mnt/ywe_s and /mnt/widget.data/samsung paths
-		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets replacing LG Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets replacing LG Widgets in path: $ywedir ..." | tee -a /var/log/OpenLGTV_BCM.log
 		    umount $ywedir/config-oem.xml
 		    umount $ywedir/bin/konfabulator.sh
 		    mount --bind $ywedir                                   /mnt/ywe_s
@@ -91,7 +91,7 @@ then
 		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
 		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
 		else
-		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets into /mnt/ywe_s..." | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets into separate path: /mnt/ywe_s..." | tee -a /var/log/OpenLGTV_BCM.log
 		    mount --bind $ywedir                                   /mnt/ywe_s
 		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
 		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
