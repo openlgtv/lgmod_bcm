@@ -70,9 +70,15 @@ then
 	    fi
 	    if [ ! -f "/mnt/user/ywe/samsung/konfabulator.sh" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets with proper engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
-		cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
-		chmod +rx /mnt/user/ywe/samsung/konfabulator.sh
+		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
+		then
+		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets ONLY - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
+		    cp /mnt/user/ywe/konfabulator.sh /mnt/user/ywe/samsung/konfabulator.sh
+		else
+		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets with proper engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
+		    cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
+		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh
+		fi
 	    fi
 	    # its not needed to change paths if we use only one widget engine ------------------------------------v
 	    if [ -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep "\/mnt\/ywe_s"`' -a "$use_samsung_ywe_instead_of_lg" != "1" ]
