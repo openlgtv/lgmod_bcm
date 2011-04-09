@@ -41,6 +41,15 @@ then
 	    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for proper engine path ( $ywedir ) - /mnt/user/ywe/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 	    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/konfabulator.sh
 	fi
+	if [ -f "/mnt/user/ywe/config-oem.xml" -a -f "/mnt/user/ywe/konfabulator.sh" ]
+	then
+	    if [ "$use_samsung_ywe_instead_of_lg" != "1" ]
+	    then
+	        echo "OpenLGTV_BCM-INFO: using links to Yahoo Widgets Engine configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	        mount --bind /mnt/user/ywe/config-oem.xml              $ywedir/config-oem.xml
+	        mount --bind /mnt/user/ywe/konfabulator.sh             $ywedir/bin/konfabulator.sh
+	    fi
+	fi
 	if [ "$samsung_ywe" != "0" ]
 	then
 	    if [ ! -f "/mnt/user/ywe/deviceid" ]
@@ -48,12 +57,6 @@ then
 		deviceid=$RANDOM
 		echo "OpenLGTV_BCM-INFO: generating Yahoo Widgets Engine device id: $deviceid in /mnt/user/ywe/deviceid..." | tee -a /var/log/OpenLGTV_BCM.log
 		echo $deviceid > /mnt/user/ywe/deviceid
-	    fi
-	    if [ -f "/mnt/user/ywe/config-oem.xml" -a -f "/mnt/user/ywe/konfabulator.sh" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: using links to Yahoo Widgets Engine configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
-		mount --bind /mnt/user/ywe/config-oem.xml              $ywedir/config-oem.xml
-		mount --bind /mnt/user/ywe/konfabulator.sh             $ywedir/bin/konfabulator.sh
 	    fi
 	    if [ ! -f "/mnt/user/ywe/samsung/config-oem.xml" ]
 	    then
@@ -71,7 +74,8 @@ then
 		cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
 		chmod +rx /mnt/user/ywe/samsung/konfabulator.sh
 	    fi
-	    if [ -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep "\/mnt\/ywe_s"`' ]
+	    # its not needed to change paths if we use only one widget engine ------------------------------------v
+	    if [ -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep "\/mnt\/ywe_s"`' -a "$use_samsung_ywe_instead_of_lg" != "1" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 		sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh
@@ -83,13 +87,14 @@ then
 		then
 		    # TODO - mount it better, leaving original KF_APP_PATH and KF_DATA_DIR and drop /mnt/ywe_s and /mnt/widget.data/samsung paths
 		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets replacing LG Widgets in path: $ywedir ..." | tee -a /var/log/OpenLGTV_BCM.log
-		    umount $ywedir/config-oem.xml
-		    umount $ywedir/bin/konfabulator.sh
-		    mount --bind $ywedir                                   /mnt/ywe_s
+		    # v- these (commented out) should not be mounted
+		    #umount $ywedir/config-oem.xml
+		    #umount $ywedir/bin/konfabulator.sh
+		    #mount --bind $ywedir                                   /mnt/ywe_s
 		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      $ywedir/config-oem.xml
 		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     $ywedir/bin/konfabulator.sh
-		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
-		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
+		    #mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
+		    #mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
 		else
 		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets into separate path: /mnt/ywe_s..." | tee -a /var/log/OpenLGTV_BCM.log
 		    mount --bind $ywedir                                   /mnt/ywe_s

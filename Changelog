@@ -122,12 +122,12 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: erase lginit partitions at boot if not erased
     * ADD: support for Yahoo Widgets (both Engine and Data) mounting from /mnt/usb1/Drive1/OpenLGTV_BCM/{ywe,ywedata}
     * ADD: support for Yahoo Widgets Data used as ramdisk (set to max 80MB) if ywedata partition is not available in both NAND flash or USB storage device
-    * ADD: support for Samsung Yahoo Widgets (drop support for LG Yahoo Widgets - Samsung ones offer the same and a lot more widgets)
+    * ADD: support for Samsung Yahoo Widgets (by default drop support for LG Yahoo Widgets - Samsung offer all the LG has and it's newer platform and a lot more widgets)
     * ADD: RELEASE is started now in tmux, so it's possible to control RELEASE over telnet or SSH, too
     * ADD: /mnt/user/cfg/settings file with configuration variables for OpenLGTV BCM scripts
-    * ADD: possibility to enable all available NetCast services (be careful as it sorts all of them alphabetically and some do not have it's icons)
+    * ADD: possibility to enable all available NetCast services (disabled by default, be careful as it sorts all of them alphabetically and some do not have it's icons)
     * ADD: add OpenLGTV BCM WebUI NetCast option as first service (needs to add NetCast icon, too) - WebUI is still TODO
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
-    * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install,
+    * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install
     * CHANGE: move backup, flashed file and logs to 'flashed' subdir after successful flash
     * WARN: from now on, install.sh makes installation automaticaly and reboots TV after successful flash, without confirmation
