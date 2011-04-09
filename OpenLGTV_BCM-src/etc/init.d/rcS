@@ -283,6 +283,7 @@ then
     echo "force_copy_config_netcast=0" >> /mnt/user/cfg/settings
     echo "force_copy_config_ywe=0" >> /mnt/user/cfg/settings
     echo "netcast_config_add_openlgtv=1" >> /mnt/user/cfg/settings
+    echo "netcast_config_add_yahoo=1" >> /mnt/user/cfg/settings
     echo "netcast_config_enable_all=0" >> /mnt/user/cfg/settings
     # more to come...
 fi

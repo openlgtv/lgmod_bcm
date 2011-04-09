@@ -5,6 +5,7 @@ if [ "$1" != "" ]
 then
     id_number=254
     id_name=openlgtv
+    yid_name=yahoo
     org_cfgxml=$1
     tmp_cfgxml=$org_cfgxml.tmp
     new_cfgxml=$org_cfgxml.new
@@ -37,6 +38,31 @@ then
 		mv $new_cfgxml $org_cfgxml
 	    else
 		echo "OpenLGTV BCM-INFO: NetCast config generator: \"$id_name\" id already exist in current config.xml"
+	    fi
+	else
+	    if [ "$2" = "add_yahoo" ]
+	    then
+		echo "OpenLGTV BCM-INFO: NetCast config generator: \"add_yahoo\" argument passed..."
+		# v- we will not check if it exists there as it exist there for sure somewhere, we need to use lock file
+		#if [ -z "`grep $yid_name $org_cfgxml`" ]
+		if [ ! -f "`/mnt/user/netcast/ywe_added_to_config_xml.lock" ]
+		then
+		    echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$yid_name\" id to existing config.xml"
+		    if [ -d "/mnt/addon/ywe" ]
+		    then
+			echo "OpenLGTV BCM-INFO: NetCast config generator: found /mnt/addon/ywe, setting it as ywedir for \"$yid_name\" in existing config.xml"
+			ywedir=/mnt/addon/ywe
+		    else
+			echo "OpenLGTV BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywedir to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe for \"$yid_name\" in existing config.xml"
+			ywedir=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
+		    fi
+		    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"native\" use_magic=\"true\" check_network=\"true\" resolution=\"960*540\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>$ywedir/bin/konfabulator.sh</exec_engine>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywedir/bin/konfabulator.sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+		    mv $org_cfgxml $bck_cfgxml
+		    mv $new_cfgxml $org_cfgxml
+		    touch /mnt/user/netcast/ywe_added_to_config_xml.lock
+		else
+		    echo "OpenLGTV BCM-INFO: NetCast config generator: \"$yid_name\" id should be already in current config.xml (/mnt/user/netcast/ywe_added_to_config_xml.lock lockfile exist)"
+		fi
 	    fi
 	fi
 	if [ "$3" != "" ]

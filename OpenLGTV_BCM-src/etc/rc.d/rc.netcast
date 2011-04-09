@@ -40,6 +40,16 @@ then
 	echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..." | tee -a /var/log/OpenLGTV_BCM.log
 	cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat
     fi
+    if [ "$netcast_config_add_yahoo" = "1" ]
+    then
+	if [ "$country_model" = "EU" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add Yahoo Widgets option (netcast_config_add_yahoo=1)..." | tee -a /var/log/OpenLGTV_BCM.log
+	    /scripts/netcast_config_regenerator.sh /mnt/user/netcast/config.xml add_yahoo 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	else
+	    echo "OpenLGTV_BCM-INFO: skipping adding Yahoo Widgets option (netcast_config_add_yahoo=1) in US TV models as it exists there..." | tee -a /var/log/OpenLGTV_BCM.log
+	fi
+    fi
     if [ "$netcast_config_add_openlgtv" = "1" ]
     then
 	echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Web UI option (netcast_config_add_openlgtv=1)..." | tee -a /var/log/OpenLGTV_BCM.log
