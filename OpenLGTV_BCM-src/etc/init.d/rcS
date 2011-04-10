@@ -399,9 +399,12 @@ dropbear
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..." | tee -a /var/log/OpenLGTV_BCM.log
 hostname OpenLGTV_BCM
 
+# need to rethink if loading configuration shouldnt be earlier, even before telnet and ssh, but need to make safety checks to not break boot if config is bad
 echo "OpenLGTV_BCM-INFO: reading custom settings configuration" | tee -a /var/log/OpenLGTV_BCM.log
 source /mnt/user/cfg/settings
-export confirmations rebooting samsung_ywe RELEASE_in_tmux
+
+echo "OpenLGTV_BCM-INFO: exporting custom settings configuration variables" | tee -a /var/log/OpenLGTV_BCM.log
+for svar in `cat /mnt/user/cfg/settings | awk -F= '{print $1}'`; do export $svar; done
 
 # Mount-binding btusb.ko from /mnt/user/modules/
 if [ -f "/mnt/user/modules/btusb.ko" ]
