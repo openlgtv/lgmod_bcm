@@ -372,6 +372,8 @@ then
 	if [ "$ver_old" != "$ver" ]
 	then
 	    cat /mnt/user/etc/motd | sed "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver. $ver/g" > /tmp/motd
+	else
+	    cp /mnt/user/etc/motd /tmp/motd
 	fi
     else
         echo "OpenLGTV_BCM-WARN: OpenLGTV BCM welcome string not found in /tmp/motd file" | tee -a /var/log/OpenLGTV_BCM.log
