@@ -45,7 +45,7 @@ then
 		echo "OpenLGTV BCM-INFO: NetCast config generator: \"add_yahoo\" argument passed..."
 		# v- we will not check if it exists there as it exist there for sure somewhere, we need to use lock file
 		#if [ -z "`grep $yid_name $org_cfgxml`" ]
-		if [ ! -f "`/mnt/user/netcast/ywe_added_to_config_xml.lock" ]
+		if [ ! -f "/mnt/user/netcast/ywe_added_to_config_xml.lock" ]
 		then
 		    echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$yid_name\" id to existing config.xml"
 		    if [ -d "/mnt/addon/ywe" ]
