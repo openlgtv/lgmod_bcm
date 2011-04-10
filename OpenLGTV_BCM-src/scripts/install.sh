@@ -24,7 +24,7 @@ then
     rebooting=1
 fi
 
-ver=0.3.0-devel
+ver=0.3.0-alpha3
 
 tmp=/tmp
 dir=`dirname $0`
