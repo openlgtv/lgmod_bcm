@@ -378,6 +378,16 @@ then
 	cat /mnt/user/etc/motd > /tmp/motd
     fi
 fi
+if [ ! -d "/mnt/user/.ssh" ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/.ssh dir for storage of user SSH configs and keys" | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir /mnt/user/.ssh
+fi
+if [ ! -d "/tmp/.ssh" ]
+then
+    echo "OpenLGTV_BCM-INFO: linking /tmp/.ssh to /mnt/user/.ssh dir for storage of user SSH configs and keys" | tee -a /var/log/OpenLGTV_BCM.log
+    ln -sf /mnt/user/.ssh /tmp/.ssh
+fi
 echo "OpenLGTV_BCM-INFO: starting portmapper..." | tee -a /var/log/OpenLGTV_BCM.log
 portmap &
 echo "OpenLGTV_BCM-INFO: starting telnet server..." | tee -a /var/log/OpenLGTV_BCM.log
