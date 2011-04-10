@@ -434,7 +434,8 @@ else
     cat /dev/mtd23 > /tmp/nvram
 fi
 
-(sleep 30; /etc/rc.d/rc.usb)&
+#(sleep 30; /etc/rc.d/rc.usb)&
+(sleep 20; /etc/rc.d/rc.usb)&
 
 if [ -d /mnt/user/init.d ]
 then
