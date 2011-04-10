@@ -214,7 +214,8 @@ else
 	sync
 	echo "We need to ensure the partition is ok" | tee -a $log
 	sync
-	sleep 30
+	#sleep 30
+	sleep 10
 	sync
     fi
 fi
