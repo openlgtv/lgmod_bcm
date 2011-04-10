@@ -7,14 +7,14 @@ then
     then
 	#if [ -f "/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf" ]
 	#then
-	    echo "OpenLGTV_BCM-INFO: running OpenLGTV BCM upgrade from /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/" | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: found /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/ dir - trying to run OpenLGTV BCM upgrade..." | tee -a /var/log/OpenLGTV_BCM.log
 	    sqf_file_count=`ls -al /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
 	    if [ "$sqf_file_count" -gt 1 ]
 	    then
 		echo "OpenLGTV_BCM-ERROR: theres too much OpenLGTV BCM upgrade (.sqf) files in /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/, refusing to autoupgrade" | tee -a /var/log/OpenLGTV_BCM.log
 	    else
-		/scripts/install.sh /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade
-		exit $?
+		/scripts/install.sh /mnt/usb1/Drive1/OpenLGTV_BCM/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		#exit $?
 	    fi
         #fi
     fi
