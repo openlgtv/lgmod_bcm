@@ -270,6 +270,11 @@ then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM config dir (/mnt/user/cfg) not found, creating it" | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/cfg
 fi
+if [ ! -d /mnt/user/lock ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock dir for one time script exectuting locks..." | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/lock
+fi
 
 if [ ! -f "/usr/etc/passwd" ]
 then
@@ -389,7 +394,7 @@ then
 fi
 
 # need to rethink if loading configuration shouldnt be earlier, even before telnet and ssh, but need to make safety checks to not break boot if config is bad
-echo "OpenLGTV_BCM-INFO: reading custom settings configuration" | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: reading custom settings configuration and updating variables if they do not exist there" | tee -a /var/log/OpenLGTV_BCM.log
 source /mnt/user/cfg/settings
 
 if [ "$confirmations" = "" ];                 then echo "confirmations=0"                 >> /mnt/user/cfg/settings; fi
