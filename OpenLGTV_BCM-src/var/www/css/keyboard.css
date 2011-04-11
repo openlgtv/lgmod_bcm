@@ -1,0 +1,15 @@
+.Keyboard {
+	background: transparent url(../Images/Keyboard/keypad.png) 0 0 no-repeat;
+}
+.Keyboard a{
+	background: transparent url(../Images/Keyboard/bt_nofocus.png) 0 0 no-repeat;
+}
+.Keyboard a:hover, a:focus{
+	background: transparent url(../Images/Keyboard/bt_focus.png) -50px -50px no-repeat;
+}
+.footer li.red:hover, li.green:hover, li.yellow:hover, li.blue:hover, li.return:hover, li.exit:hover{
+	background:#525065;
+	color:#fff;
+	border:#222 1px solid;
+	cursor:pointer;
+}

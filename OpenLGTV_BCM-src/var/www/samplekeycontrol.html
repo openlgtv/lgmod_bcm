@@ -11,12 +11,13 @@
 <meta http-equiv="Content-Style-Type" content="text/css">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <link rel="stylesheet" type="text/css" href="player/styles.css"/>
+<link rel="stylesheet" type="text/css" href="css/keyboard.css"/>
+
 <SCRIPT language="JavaScript" type="text/javascript" src="js/control.js"></script>
 </head>
 <body>
-<IMG align="right" SRC="http://openlgtv.org.ru/wiki/openlgtv_logo.png" ALT="OpenLGTV BCM"/>
-
-	<div style="position: absolute; left: 5px; top: 5px;">
+<IMG align="right" SRC="http://openlgtv.org.ru/wiki/openlgtv_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 30px; top: 30px;"/>
+	<div style="position: absolute; left: 10px; top: 15px; width:500px">
 		<form id="URL" name="URL">
 			<div id="txtURLParent" style="background-color:white;height:32px;">
 				<div style="position: relative; left: 5px; top: 5px;">
@@ -58,11 +59,13 @@
 			</div>
 		</form>
 	</div>	
-<!-- sorry, no icons yet, but looks like this table is tightly integrated with JS code -->
-	<div style="position: absolute; left: 5px; top: 250px;">
-	<Table id="Keyboard" name="Keyboard" Border=0 cellspacing=0>
+	<!-- div style="position: absolute; left: 5px; top: 480px;" -->
+	<!-- div style="position: absolute; right: 10px; bottom: 100px;" -->
+	<div style="position: absolute; right: 30px; bottom: 300px;">
+	<Table id="Keyboard" name="Keyboard" class="Keyboard" Border=0 cellspacing=0 background="Images/Keyboard/keypad.png">
 		<tr>
-			<td><a id="c1" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="a">
+			<td border=0 height="31px" width="44px">
+			<a id="c1" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="a">
 				<img id="i1" src="Images/Keyboard/1n.png" alt="a" style="text-decoration:none; color:white" border=0 height="31px" width="44px">
 				</a>
 			</td>
@@ -267,16 +270,16 @@
 		</tr>
 	</Table>
 	</div>
-	<!-- disabled for space reason on rootfs -->
-	<!-- div style="position: absolute; left: 400px; top: 250px;">
+	<!-- div style="position: absolute; left: 400px; top: 480px;" -->
+	<div style="position: absolute; right: 80px; bottom: 100px;">
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td><img src="Images/Keyboard/tapkey.png" align="middle"></td>
 			</tr>
 		</Table>
-	</div -->
-	<!-- HTML only table prototype for keypad -->
-	<div style="position: absolute; left: 400px; top: 250px; background-color: white">
+	</div>
+	<!-- HTML only table prototype for keypad
+	<div style="position: absolute; left: 400px; top: 480px; background-color: white">
 		<Table Border=1 cellspacing=10>
 			<tr align="center">
 				<td>1<br/>.,?</td>
@@ -296,17 +299,17 @@
 				<td>#<br/></td>
 			</tr>
 		</Table>
+	</div> -->
+	<div id="footer" class="footer">
+		<ul>
+			<!-- li class="blank"><span></span></li -->
+			<a onClick="javascript:PrevControl();" href="#" style="text-decoration:none; color:white"><li class="red"><span></span>Prev Ctrl</li></a>
+			<a onClick="javascript:NextControl();" href="#" style="text-decoration:none; color:white"><li class="green"><span></span>Next Ctrl</li></a>
+			<a onClick="javascript:SaveForm();" href="#" style="text-decoration:none; color:white"><li class="yellow"><span></span>Save</li></a>
+			<a onClick="javascript:BackSpace();" href="#" style="text-decoration:none; color:white"><li class="blue"><span></span>BackSpace</li></a>
+			<li id="return_bt" class="return"><span></span>Back</li>
+			<li class="exit"><span></span>Exit</li>
+		</ul>
 	</div>
-		<div id="footer" class="footer">
-			<ul>
-				<!-- li class="blank"><span></span></li -->
-				<a onClick="javascript:PrevControl();" href="#" style="text-decoration:none; color:white"><li class="red"><span></span>Prev Ctrl</li></a>
-				<a onClick="javascript:NextControl();" href="#" style="text-decoration:none; color:white"><li class="green"><span></span>Next Ctrl</li></a>
-				<a onClick="javascript:SaveForm();" href="#" style="text-decoration:none; color:white"><li class="yellow"><span></span>Save</li></a>
-				<a onClick="javascript:BackSpace();" href="#" style="text-decoration:none; color:white"><li class="blue"><span></span>BackSpace</li></a>
-				<li id="return_bt" class="return"><span></span>Back</li>
-				<li class="exit"><span></span>Exit</li>
-			</ul>
-		</div>
 </body>
 </html>
