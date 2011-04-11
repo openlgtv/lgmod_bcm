@@ -22,6 +22,7 @@ if [ "$2" = "autoupgrade" ]
 then
     confirmations=0
     rebooting=1
+    autoupgrade=1
 fi
 
 ver=0.3.0-alpha3
@@ -83,6 +84,7 @@ then
     echo "Script is run as AUTOUPGRADE, forcing disable confirmations and reboot TV after successful flashing" | tee -a $log
     confirmations=0
     rebooting=1
+    autoupgrade=1
 fi
 
 # check for files existence
