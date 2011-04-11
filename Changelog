@@ -131,6 +131,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: add OpenLGTV BCM WebUI NetCast option as first service - WebUI is still TODO [not UI yet but sample testing code from nicola_12345 in trunk]
     * ADD: add support for ~/.ssh dir (linked to /mnt/user/.ssh) - for example for autorised_keys file to be able to login via SSH using public key authorisation, even without password
     * ADD: support for /mnt/user/cfg/settings file updates after version upgrades
+    * ADD: at first time installation make backup of writable partitions - useful for Yahoo Widgets backup before changing to Samsung platform
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install
     * CHANGE: move backup, flashed file and logs to 'flashed' subdir after successful flash

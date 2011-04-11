@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.8
+# OpenLGTV BCM installation script by xeros, ver. 0.9
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -163,6 +163,20 @@ then
     echo "Gathered dump header from /dev/mtd$mtd partition is incorrect. Maybe you try to flash to wrong partition?" | tee -a $log
     exit 1
 fi
+
+if [ ! -f "/mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock" ]
+then
+    for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
+    do
+	echo "Making tar backup of $mount_path ..." | tee -a $log
+	# v- theres not gzip in default firmware
+	#tar czvf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar.gz $mount_path
+	tar cf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar $mount_path | tee -a $log
+    done
+    mkdir -p /mnt/user/lock
+    touch /mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock
+fi
+
 # check free ram
 if [ "`free | grep Mem | awk '{print $4}'`" -lt "$freemem" ]
 then
