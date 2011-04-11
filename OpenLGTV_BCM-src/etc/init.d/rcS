@@ -271,23 +271,6 @@ then
     mkdir -p /mnt/user/cfg
 fi
 
-if [ ! -f "/mnt/user/cfg/settings" ]
-then
-    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a /var/log/OpenLGTV_BCM.log
-    touch /mnt/user/cfg/settings
-    echo "confirmations=0" > /mnt/user/cfg/settings
-    echo "rebooting=1" >> /mnt/user/cfg/settings
-    echo "samsung_ywe=1" >> /mnt/user/cfg/settings
-    echo "use_samsung_ywe_instead_of_lg=1" >> /mnt/user/cfg/settings
-    echo "RELEASE_in_tmux=1" >> /mnt/user/cfg/settings
-    echo "force_copy_config_netcast=0" >> /mnt/user/cfg/settings
-    echo "force_copy_config_ywe=0" >> /mnt/user/cfg/settings
-    echo "netcast_config_add_openlgtv=1" >> /mnt/user/cfg/settings
-    echo "netcast_config_add_yahoo=1" >> /mnt/user/cfg/settings
-    echo "netcast_config_enable_all=0" >> /mnt/user/cfg/settings
-    # more to come...
-fi
-
 if [ ! -f "/usr/etc/passwd" ]
 then
     #mount -t tmpfs none /usr/etc
@@ -399,8 +382,29 @@ dropbear
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..." | tee -a /var/log/OpenLGTV_BCM.log
 hostname OpenLGTV_BCM
 
+if [ ! -f "/mnt/user/cfg/settings" ]
+then
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a /var/log/OpenLGTV_BCM.log
+    touch /mnt/user/cfg/settings
+fi
+
 # need to rethink if loading configuration shouldnt be earlier, even before telnet and ssh, but need to make safety checks to not break boot if config is bad
 echo "OpenLGTV_BCM-INFO: reading custom settings configuration" | tee -a /var/log/OpenLGTV_BCM.log
+source /mnt/user/cfg/settings
+
+if [ "$confirmations" = "" ];                 then echo "confirmations=0"                 >> /mnt/user/cfg/settings; fi
+if [ "$rebooting" = "" ];                     then echo "rebooting=1"                     >> /mnt/user/cfg/settings; fi
+if [ "$samsung_ywe" = "" ];                   then echo "samsung_ywe=1"                   >> /mnt/user/cfg/settings; fi
+if [ "$use_samsung_ywe_instead_of_lg" = "" ]; then echo "use_samsung_ywe_instead_of_lg=1" >> /mnt/user/cfg/settings; fi
+if [ "$RELEASE_in_tmux" = "" ];               then echo "RELEASE_in_tmux=1"               >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_netcast" = "" ];     then echo "force_copy_config_netcast=0"     >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_ywe" = "" ];         then echo "force_copy_config_ywe=0"         >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_openlgtv" = "" ];   then echo "netcast_config_add_openlgtv=1"   >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_yahoo" = "" ];      then echo "netcast_config_add_yahoo=1"      >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_enable_all" = "" ];     then echo "netcast_config_enable_all=0"     >> /mnt/user/cfg/settings; fi
+# more to come...
+
+echo "OpenLGTV_BCM-INFO: reading custom settings configuration again..." | tee -a /var/log/OpenLGTV_BCM.log
 source /mnt/user/cfg/settings
 
 echo "OpenLGTV_BCM-INFO: exporting custom settings configuration variables" | tee -a /var/log/OpenLGTV_BCM.log
