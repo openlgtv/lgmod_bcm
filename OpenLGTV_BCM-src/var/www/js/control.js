@@ -1,8 +1,7 @@
-<!-- Source code released under GPL License -->
-<!-- Nicola Ottomano LG TV -->
+//<!-- 
+// Source code released under GPL License
+// Nicola Ottomano LG TV
 
-<SCRIPT language="JavaScript">
-	<!--
 	// On-screen keyboard images preload
 	if (document.images)
 	{
@@ -434,4 +433,3 @@ function OnLoadSetCurrent()
 	
 	document.defaultAction = true;
 	//-->
-</script>

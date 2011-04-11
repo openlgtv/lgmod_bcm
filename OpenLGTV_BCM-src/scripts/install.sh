@@ -25,7 +25,8 @@ then
     autoupgrade=1
 fi
 
-ver=0.3.0-alpha3
+ver=0.3.0-alpha4
+development=1
 
 tmp=/tmp
 dir=`dirname $0`
@@ -138,6 +139,42 @@ else
     echo "Did you run this installation script in TV? Looks like the device dont have the proper /dev/mtd$mtd and /dev/mtdblock$mtd devices." | tee -a $log
     exit 1
 fi
+if [ "$development" = "1" -a ! -f "/mnt/user/lock/development-logs-dumped.lock" ]
+then
+    devel_dir=/mnt/usb1/Drive1/OpenLGTV_BCM/development-logs
+    mkdir -p $devel_dir
+    if [ "$?" -eq "0" ]
+    then
+	echo "OpenLGTV BCM development version - taking more info from running system to $devel_dir" | tee -a $log
+	echo "They are taken only once and might be useful for making better support platforms other than EU" | tee -a $log
+	dmesg > $devel_dir/dmesg.log
+	cat /proc/mtd > $devel_dir/proc_mtd.log
+	cat /proc/mounts > $devel_dir/proc_mounts.log
+	cat /proc/cpuinfo > $devel_dir/proc_cpuinfo.log
+	cat /proc/cmdline > $devel_dir/proc_cmdline.log
+	cat /proc/modules > $devel_dir/proc_modules.log
+	cat /proc/version > $devel_dir/proc_version.log
+	cat /etc/ver > $devel_dir/etc_ver.log
+	uname -a > $devel_dir/uname-a.log
+	ps w > $devel_dir/ps-w.log
+	free > $devel_dir/free.log
+	mount > $devel_dir/mount.log
+	df -h > $devel_dir/df-h.log
+	ls -laR /mnt/addon > $devel_dir/ls-alR-mnt_addon.log
+	ls -laR /mnt/browser > $devel_dir/ls-alR-mnt_browser.log
+	ls -laR /mnt/lg > $devel_dir/ls-alR-mnt_lg.log
+	cat /mnt/addon/contents/config.xml > $devel_dir/mnt_addon_contents_config.xml
+	cat /mnt/addon/contents/bin/addon_mgr.bat > $devel_dir/mnt_addon_bin_addon_mgr.bat
+	cat /mnt/addon/browser/browser_application.txt > $devel_dir/mnt_addon_browser_browser_application.txt
+	cat /proc/mtd4 > $devel_dir/mtd4_lginit.dump
+	cp -r /mnt/addon $devel_dir
+	cp -r /mnt/browser $devel_dir
+	touch /mnt/user/lock/development-logs-dumped.lock
+	echo "Debug info saved in $devel_dir, please give them + install log to OpenLGTV BCM developers for analyse." | tee -a $log
+	echo "Please give us /var/log/OpenLGTV_BCM.log file taken from first boot, too - its very useful in case of any problems." | tee -a $log
+    fi
+fi
+
 # Backup
 echo "Making backup from /dev/mtd$mtd to $dir/$file-$rootfs_backup.sqf" | tee -a $log
 #cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf 2>$tmpout
