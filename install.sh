@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.9
+# OpenLGTV BCM installation script by xeros, ver. 0.9a
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -164,11 +164,12 @@ then
 	ls -laR /mnt/browser > $devel_dir/ls-alR-mnt_browser.log
 	ls -laR /mnt/lg > $devel_dir/ls-alR-mnt_lg.log
 	cat /mnt/addon/contents/config.xml > $devel_dir/mnt_addon_contents_config.xml
-	cat /mnt/addon/contents/bin/addon_mgr.bat > $devel_dir/mnt_addon_bin_addon_mgr.bat
+	cat /mnt/addon/bin/addon_mgr.bat > $devel_dir/mnt_addon_bin_addon_mgr.bat
 	cat /mnt/addon/browser/browser_application.txt > $devel_dir/mnt_addon_browser_browser_application.txt
 	cat /proc/mtd4 > $devel_dir/mtd4_lginit.dump
-	cp -r /mnt/addon $devel_dir
-	cp -r /mnt/browser $devel_dir
+	cp -r /mnt/addon $devel_dir > /dev/null 2>&1
+	cp -r /mnt/browser $devel_dir > /dev/null 2>&1
+	mkdir -p /mnt/user/lock
 	touch /mnt/user/lock/development-logs-dumped.lock
 	echo "Debug info saved in $devel_dir, please give them + install log to OpenLGTV BCM developers for analyse." | tee -a $log
 	echo "Please give us /var/log/OpenLGTV_BCM.log file taken from first boot, too - its very useful in case of any problems." | tee -a $log
