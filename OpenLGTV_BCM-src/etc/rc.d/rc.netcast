@@ -1,21 +1,49 @@
 #!/bin/sh
 # NetCast setup rc.netcast script
 # Mount-binding NetCast services configs
+if [ ! -d "/mnt/user/netcast" ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/netcast dir for NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/netcast
+fi
+if [ ! -d "/mnt/user/ywe" -o ! -d "/mnt/user/ywe/samsung" ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe and /mnt/user/ywe/samsung dirs for Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/ywe/samsung
+fi
+if [ -d "/mnt/addon/contents/netcast" ]
+then
+    if [ ! -d "/home/netcast_icons" ]
+    then
+	echo "OpenLGTV_BCM-INFO: creating /home/netcast_icons dir for NetCast icons copy..." | tee -a /var/log/OpenLGTV_BCM.log
+	mkdir -p /home/netcast_icons
+	if [ -d "/home/netcast_icons" -a -d "/mnt/addon/contents/netcast" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: making copy of NetCast icons from /mnt/addon/contents/netcast to /home/netcast_icons dir..." | tee -a /var/log/OpenLGTV_BCM.log
+	    cp /mnt/addon/contents/netcast/* /home/netcast_icons/
+	fi
+    fi
+    if [ ! -f "/home/netcast_icons/icon_openlgtv.swf" ]
+    then
+	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM NetCast icon from /var/icons/openlgtv.swf to /home/netcast_icons/icon_openlgtv.swf..." | tee -a /var/log/OpenLGTV_BCM.log
+	cp /var/icons/openlgtv.swf /home/netcast_icons/icon_openlgtv.swf 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    fi
+    if [ ! -f "/home/netcast_icons/icon_yahoo.swf" ]
+    then
+	echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets icon from /var/icons/y.swf to /home/netcast_icons/icon_yahoo.swf..." | tee -a /var/log/OpenLGTV_BCM.log
+	cp /var/icons/y.swf /home/netcast_icons/icon_yahoo.swf 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    fi
+    if [ -f "/home/netcast_icons/icon_openlgtv.swf" -a "/mnt/addon/contents/netcast" ]
+    then
+	echo "OpenLGTV_BCM-INFO: found NetCast icons copy in /home/netcast_icons dir - linking it to /mnt/addon/contents/netcast dir..." | tee -a /var/log/OpenLGTV_BCM.log
+	mount --bind /home/netcast_icons /mnt/addon/contents/netcast
+    fi
+fi
 if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -o "$force_copy_config_netcast" = "1" ]
 then
     if [ "$force_copy_config_netcast" = "1" ]
     then
 	echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
-    fi
-    if [ ! -d "/mnt/user/netcast" ]
-    then
-	echo "OpenLGTV_BCM-INFO: creating /mnt/user/netcast dir for NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p /mnt/user/netcast
-    fi
-    if [ ! -d "/mnt/user/ywe" -o ! -d "/mnt/user/ywe/samsung" ]
-    then
-	echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe and /mnt/user/ywe/samsung dirs for Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p /mnt/user/ywe/samsung
     fi
     if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
     then
@@ -69,31 +97,6 @@ then
 	echo "OpenLGTV_BCM-INFO: using links to NetCast browser configs on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
 	mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt
 	mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
-    fi
-    if [ ! -d "/home/netcast_icons" ]
-    then
-	echo "OpenLGTV_BCM-INFO: creating /home/netcast_icons dir for NetCast icons copy..." | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p /home/netcast_icons
-	if [ -d "/home/netcast_icons" -a -d "/mnt/addon/contents/netcast" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: making copy of NetCast icons from /mnt/addon/contents/netcast to /home/netcast_icons dir..." | tee -a /var/log/OpenLGTV_BCM.log
-	    cp /mnt/addon/contents/netcast/* /home/netcast_icons/
-	fi
-    fi
-    if [ ! -f "/home/netcast_icons/icon_openlgtv.swf" ]
-    then
-	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM NetCast icon from /var/icons/openlgtv.swf to /home/netcast_icons/icon_openlgtv.swf..." | tee -a /var/log/OpenLGTV_BCM.log
-	cp /var/icons/openlgtv.swf /home/netcast_icons/icon_openlgtv.swf 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    fi
-    if [ ! -f "/home/netcast_icons/icon_yahoo.swf" ]
-    then
-	echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets icon from /var/icons/y.swf to /home/netcast_icons/icon_yahoo.swf..." | tee -a /var/log/OpenLGTV_BCM.log
-	cp /var/icons/y.swf /home/netcast_icons/icon_yahoo.swf 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    fi
-    if [ -f "/home/netcast_icons/icon_openlgtv.swf" -a "/mnt/addon/contents/netcast" ]
-    then
-	echo "OpenLGTV_BCM-INFO: found NetCast icons copy in /home/netcast_icons dir - linking it to /mnt/addon/contents/netcast dir..." | tee -a /var/log/OpenLGTV_BCM.log
-	mount --bind /home/netcast_icons /mnt/addon/contents/netcast
     fi
 else
     echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
