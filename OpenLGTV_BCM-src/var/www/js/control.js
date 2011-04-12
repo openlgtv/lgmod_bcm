@@ -173,6 +173,58 @@ PageElements[6] = new Object();
 PageElements[6].value = ['check3'];
 PageElements[6].type = ['checkbox'];
 
+PageElements[7] = new Object();
+PageElements[7].value = ['check4'];
+PageElements[7].type = ['checkbox'];
+
+PageElements[8] = new Object();
+PageElements[8].value = ['check5'];
+PageElements[8].type = ['checkbox'];
+
+PageElements[9] = new Object();
+PageElements[9].value = ['check6'];
+PageElements[9].type = ['checkbox'];
+
+PageElements[10] = new Object();
+PageElements[10].value = ['check7'];
+PageElements[10].type = ['checkbox'];
+
+PageElements[11] = new Object();
+PageElements[11].value = ['check8'];
+PageElements[11].type = ['checkbox'];
+
+PageElements[12] = new Object();
+PageElements[12].value = ['check9'];
+PageElements[12].type = ['checkbox'];
+
+PageElements[13] = new Object();
+PageElements[13].value = ['check10'];
+PageElements[13].type = ['checkbox'];
+
+PageElements[14] = new Object();
+PageElements[14].value = ['check11'];
+PageElements[14].type = ['checkbox'];
+
+PageElements[15] = new Object();
+PageElements[15].value = ['check12'];
+PageElements[15].type = ['checkbox'];
+
+PageElements[16] = new Object();
+PageElements[16].value = ['check13'];
+PageElements[16].type = ['checkbox'];
+
+PageElements[17] = new Object();
+PageElements[17].value = ['check14'];
+PageElements[17].type = ['checkbox'];
+
+PageElements[18] = new Object();
+PageElements[18].value = ['check15'];
+PageElements[18].type = ['checkbox'];
+
+PageElements[19] = new Object();
+PageElements[19].value = ['check16'];
+PageElements[19].type = ['checkbox'];
+
 
 var currElementIndex;
 var currElementName;
@@ -379,6 +431,7 @@ function PrevControl()
 	
 	}	
 	
+	
 function NextControl()
 	{
 	//Function that move to next control
@@ -387,11 +440,18 @@ function NextControl()
 		
 		//Change the background color of current control
 		d = document.getElementById(currElementName + 'Parent');
+		//if (document.getElementById(currElementName + 'Parent')) {
 		d.style.backgroundColor=ParentUnfocusColor;
 		
 		//move to next control
 		currElementIndex+=1;
 		currElementName=PageElements[currElementIndex].value;
+		//check if the next element exist
+		if (!document.forms['URL'].elements[currElementName]) {
+		//if (!document.getElementById(currElementName + 'Parent').id) {}
+		    currElementIndex-=1;
+		    currElementName=PageElements[currElementIndex].value;
+		}
 		
 		if (PageElements[currElementIndex].type == 'radio') 
 			{
@@ -408,7 +468,6 @@ function NextControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
 		}
-	
 	}	
 
 function setCurrent(element)
@@ -432,4 +491,7 @@ function OnLoadSetCurrent()
 	}	
 	
 	document.defaultAction = true;
+function checkObject(obj) {
+    if (document.getElementById(obj)) { return true; } else { return false; }
+}
 	//-->
