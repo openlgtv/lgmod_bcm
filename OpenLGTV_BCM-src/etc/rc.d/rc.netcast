@@ -7,19 +7,14 @@ then
     then
 	echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
     fi
-    if [ ! -d /mnt/user/netcast ]
+    if [ ! -d "/mnt/user/netcast" ]
     then
 	echo "OpenLGTV_BCM-INFO: creating /mnt/user/netcast dir for NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
 	mkdir -p /mnt/user/netcast
     fi
-    if [ ! -d /mnt/user/ywe ]
+    if [ ! -d "/mnt/user/ywe" -o ! -d "/mnt/user/ywe/samsung" ]
     then
-	echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe dir for Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p /mnt/user/ywe
-    fi
-    if [ ! -d /mnt/user/ywe/samsung ]
-    then
-	echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe/samsung dir for Yahoo Widgets Engine configs copy prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe and /mnt/user/ywe/samsung dirs for Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
 	mkdir -p /mnt/user/ywe/samsung
     fi
     if [ ! -f "/mnt/user/netcast/browser_application.txt" ]

@@ -24,16 +24,13 @@ then
         /scripts/backup.sh /mnt/usb1/Drive1/OpenLGTV_BCM/backup 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
         rm -f /mnt/usb1/Drive1/OpenLGTV_BCM/make_backup
     fi
-    if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/ywe" ]
+    if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/ywedata" -o -d "/mnt/usb1/Drive1/OpenLGTV_BCM/ywe" ]
     then
-        echo "OpenLGTV_BCM-INFO: mounting /mnt/usb1/Drive1/OpenLGTV_BCM/ywe to /mnt/ywe_lg" | tee -a /var/log/OpenLGTV_BCM.log
-        mount --bind /mnt/usb1/Drive1/OpenLGTV_BCM/ywe /mnt/ywe_lg
-    fi
-    if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/ywedata" ]
-    then
-        echo "OpenLGTV_BCM-INFO: mounting /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata to /mnt/widget.data" | tee -a /var/log/OpenLGTV_BCM.log
-        umount /mnt/widget.data
-        mount --bind /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata /mnt/widget.data
+        echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs in /mnt/usb1/Drive1/OpenLGTV_BCM/ - executing Yahoo Widgets configs setup again" | tee -a /var/log/OpenLGTV_BCM.log
+        #umount /mnt/widget.data
+        #mount --bind /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata /mnt/widget.data
+        #export ywe_usb_ywe_lg=1
+        #export ywedata_usb_widget_data=1
         source /etc/rc.d/rc.ywe
     fi
     if [ -d "/mnt/usb1/Drive1/OpenLGTV_BCM/autorun" ]
