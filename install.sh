@@ -223,6 +223,7 @@ then
     echo "There might be problem as you have less than $freemem KB RAM free." | tee -a $log
     echo "(The builtin web browser is set to send OutOfMemory signals if there is less than 20MB free RAM)" | tee -a $log
     echo "Refusing to flash" | tee -a $log
+    echo "Dont worry - just reboot TV (or power off and on) and try install again." | tee -a $log
     exit 1
 fi
 # question
