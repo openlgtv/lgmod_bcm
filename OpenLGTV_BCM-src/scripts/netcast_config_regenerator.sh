@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.1a
+# OpenLGTV BCM NetCast config parser and regenerator v.0.2
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
 if [ "$1" != "" ]
 then
@@ -53,15 +53,24 @@ then
 			echo "OpenLGTV BCM-INFO: NetCast config generator: found /mnt/addon/ywe, setting it as ywedir for \"$yid_name\" in existing config.xml"
 			ywedir=/mnt/addon/ywe
 		    else
-			echo "OpenLGTV BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywedir to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe for \"$yid_name\" in existing config.xml"
+			#echo "OpenLGTV BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywedir to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe for \"$yid_name\" in existing config.xml"
+			echo "OpenLGTV BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywe_konfab_sh to /scripts/konfabulator-exec.sh for \"$yid_name\" in existing config.xml"
 			ywedir=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
+			ywe_konfab_sh=/scripts/konfabulator-exec.sh
 		    fi
-		    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"native\" use_magic=\"true\" check_network=\"true\" resolution=\"960*540\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>$ywedir/bin/konfabulator.sh</exec_engine>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywedir/bin/konfabulator.sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+		    if [ "$ywe_konfab_sh" = "" ]; then ywe_konfab_sh=$ywedir/bin/konfabulator.sh; fi
+		    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"native\" use_magic=\"true\" check_network=\"true\" resolution=\"960*540\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>$ywe_konfab_sh</exec_engine>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywe_konfab_sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
 		    mv $org_cfgxml $bck_cfgxml
 		    mv $new_cfgxml $org_cfgxml
 		    touch /mnt/user/lock/ywe_added_to_config_xml.lock
 		else
-		    echo "OpenLGTV BCM-INFO: NetCast config generator: \"$yid_name\" id should be already in current config.xml (/mnt/user/lock/ywe_added_to_config_xml.lock lockfile exist)"
+		    if [ -n "`grep '/mnt/usb1/Drive1/OpenLGTV_BCM/ywe' $org_cfgxml`" ]
+		    then
+			echo "OpenLGTV BCM-WARN: NetCast config generator: found old settings for konfabulator.sh path (/mnt/usb1/Drive1/OpenLGTV_BCM/ywe) in \"$yid_name\" id, changing it to /scripts/konfabulator-exec.sh now..."
+			sed -i 's#/mnt/usb1/Drive1/OpenLGTV_BCM/ywe/bin/konfabulator.sh#/scripts/konfabulator-exec.sh#g' $org_cfgxml
+		    else
+			echo "OpenLGTV BCM-INFO: NetCast config generator: \"$yid_name\" id should be already in current config.xml (/mnt/user/lock/ywe_added_to_config_xml.lock lockfile exist)"
+		    fi
 		fi
 	    fi
 	fi
