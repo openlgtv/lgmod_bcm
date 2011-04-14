@@ -412,6 +412,7 @@ function PrevControl()
 		//move to previous control
 		currElementIndex-=1;
 		currElementName=PageElements[currElementIndex].value;
+		checkElementMinus(currElementIndex);
 		
 		if (PageElements[currElementIndex].type == 'radio') 
 			{
@@ -434,24 +435,20 @@ function PrevControl()
 	
 function NextControl()
 	{
+	//currElementName=PageElements[currElementIndex].value;
+	
 	//Function that move to next control
 	if (currElementIndex < PageElements.length-1)
 		{
 		
 		//Change the background color of current control
 		d = document.getElementById(currElementName + 'Parent');
-		//if (document.getElementById(currElementName + 'Parent')) {
 		d.style.backgroundColor=ParentUnfocusColor;
 		
 		//move to next control
 		currElementIndex+=1;
 		currElementName=PageElements[currElementIndex].value;
-		//check if the next element exist
-		if (!document.forms['URL'].elements[currElementName]) {
-		//if (!document.getElementById(currElementName + 'Parent').id) {}
-		    currElementIndex-=1;
-		    currElementName=PageElements[currElementIndex].value;
-		}
+		checkElementPlus(currElementIndex);
 		
 		if (PageElements[currElementIndex].type == 'radio') 
 			{
@@ -476,6 +473,44 @@ function setCurrent(element)
 	current = string.slice(1,string.length);
 	}
 	
+function checkElementPlus(elementIndex)
+{
+	currElementIndex=elementIndex;
+	prevElementIndex=elementIndex-1;
+	currElementName=PageElements[currElementIndex].value;
+	//Check if currElement exists, if not then go to next one until finds the one that exists
+	if (!document.forms['URL'].elements[currElementName]) {
+		do {
+		    currElementIndex+=1;
+		    currElementName=PageElements[currElementIndex].value;
+		} while ((!document.forms['URL'].elements[currElementName])&&(currElementIndex < PageElements.length-1));
+	}
+	if (!document.forms['URL'].elements[currElementName]) {
+	    currElementIndex=prevElementIndex;
+	    currElementName=PageElements[currElementIndex].value;
+	    checkElementMinus(currElementIndex);
+	}
+	currElementName=PageElements[currElementIndex].value;
+}
+function checkElementMinus(elementIndex)
+{
+	currElementIndex=elementIndex;
+	currElementName=PageElements[currElementIndex].value;
+	//Check if currElement exists, if not then go to previous one until finds the one that exists
+	if ((!document.forms['URL'].elements[currElementName])&&(currElementIndex > 0)) {
+		do {
+		    currElementIndex-=1;
+		    currElementName=PageElements[currElementIndex].value;
+		} while ((!document.forms['URL'].elements[currElementName]) && (currElementIndex > 0));
+	}
+	//Check if currElement exists already, if not then go to 
+	if (!document.forms['URL'].elements[currElementName]) {
+	    currElementIndex=0;
+	    currElementName=PageElements[currElementIndex].value;
+	    checkElementPlus(currElementIndex);
+	}
+	currElementName=PageElements[currElementIndex].value;
+}
 function OnLoadSetCurrent()
 	{
 	//Setting the position of first button of the on-screen keyboard
@@ -484,6 +519,7 @@ function OnLoadSetCurrent()
 	
 	//Setting the current input control 
 	currElementIndex=0;
+	checkElementPlus(currElementIndex);
 	currElementName=PageElements[currElementIndex].value;
 	//Change the background color of selected control
 	d = document.getElementById(currElementName + 'Parent');
@@ -491,7 +527,4 @@ function OnLoadSetCurrent()
 	}	
 	
 	document.defaultAction = true;
-function checkObject(obj) {
-    if (document.getElementById(obj)) { return true; } else { return false; }
-}
 	//-->
