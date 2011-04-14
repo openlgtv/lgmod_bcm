@@ -227,8 +227,8 @@ then
     ifconfig eth0 $TARGET_IP netmask $NETMASK up
     route add default gw $GATEWAY
 else
-    echo "OpenLGTV_BCM-INFO: connecting to DHCP server for network setup" | tee -a /var/log/OpenLGTV_BCM.log
-    udhcpc eth0
+    echo "OpenLGTV_BCM-INFO: connecting to DHCP server for network setup (in background)" | tee -a /var/log/OpenLGTV_BCM.log
+    udhcpc eth0 &
 fi
 
 magic=hsqs

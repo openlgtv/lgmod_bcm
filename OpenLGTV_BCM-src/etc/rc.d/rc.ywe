@@ -11,7 +11,7 @@ then
     export ywedatadir_usb=/mnt/usb1/Drive1/OpenLGTV_BCM/ywedata
     if [ ! -d "/mnt/user/ywe" -o ! -d "/mnt/user/ywe/samsung" ]
     then
-	mkdir -p /mnt/user/ywe/samsung
+	mkdir -p /mnt/user/ywe/samsung                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
     if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" ]
     then
@@ -29,7 +29,7 @@ then
 	then
 	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata - mount-binding it to /mnt/widget.data..." | tee -a /var/log/OpenLGTV_BCM.log
 	    umount /mnt/widget.data > /dev/null 2>&1
-	    mount --bind "$ywedatadir_usb" /mnt/widget.data
+	    mount --bind "$ywedatadir_usb" /mnt/widget.data                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    # lets try to kill konfabulator as on US models it running at start in background
 	    killall konfabulator > /dev/null 2>&1
 	else
@@ -37,20 +37,20 @@ then
 	    then
 		# TODO: for now its tmpfs, lets find another writable (permanent) storage for them on EU models
 		echo "OpenLGTV_BCM-INFO: EU models do not have /mnt/widget.data mounted, so lets create 80MB tmpfs there..." | tee -a /var/log/OpenLGTV_BCM.log
-		mount -t tmpfs ywedata /mnt/widget.data -o size=80M
+		mount -t tmpfs ywedata /mnt/widget.data -o size=80M          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	fi
 	if [ ! -d "/mnt/widget.data/samsung" -a "$use_samsung_ywe_instead_of_lg" != "1" -a "$samsung_ywe" != "0" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..." | tee -a /var/log/OpenLGTV_BCM.log
-	    mkdir -p /mnt/widget.data/samsung
+	    mkdir -p /mnt/widget.data/samsung                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
 	if [ ! -f "/mnt/user/ywe/config-oem.xml" ]
 	then
 	    if [ -f "$ywedir/config-oem.xml" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine config copy - $ywedir/config-oem.xml..." | tee -a /var/log/OpenLGTV_BCM.log
-		cp $ywedir/config-oem.xml /mnt/user/ywe/config-oem.xml
+		cp $ywedir/config-oem.xml /mnt/user/ywe/config-oem.xml       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	fi
 	if [ ! -f "/mnt/user/ywe/konfabulator.sh" ]
@@ -58,26 +58,26 @@ then
 	    if [ -f "$ywedir/bin/konfabulator.sh" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine startup script copy - $ywedir/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
-		cp $ywedir/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh
+		cp $ywedir/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	fi
 	if [ -n "`grep '^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH' /mnt/user/ywe/konfabulator.sh`" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: setting browser partition library path in Yahoo Widgets Engine startup script - $ywedir/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
-	    sed -i -e 's#^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH#export BROWSER=/mnt/browser\n\nexport LD_LIBRARY_PATH=$KF_APP_PATH/lib:$BROWSER/lib:$LD_LIBRARY_PATH#g' /mnt/user/ywe/konfabulator.sh
+	    sed -i -e 's#^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH#export BROWSER=/mnt/browser\n\nexport LD_LIBRARY_PATH=$KF_APP_PATH/lib:$BROWSER/lib:$LD_LIBRARY_PATH#g' /mnt/user/ywe/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
 	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -z "`grep \"^export KF_APP_PATH\" /mnt/user/ywe/konfabulator.sh | grep \"$ywedir\"`" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for proper engine path ( $ywedir ) - /mnt/user/ywe/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
-	    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/konfabulator.sh
+	    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
 	if [ -f "/mnt/user/ywe/config-oem.xml" -a -f "/mnt/user/ywe/konfabulator.sh" ]
 	then
 	    if [ "$use_samsung_ywe_instead_of_lg" != "1" ]
 	    then
 	        echo "OpenLGTV_BCM-INFO: using links to Yahoo Widgets Engine configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
-	        mount --bind /mnt/user/ywe/config-oem.xml              $ywedir/config-oem.xml
-	        mount --bind /mnt/user/ywe/konfabulator.sh             $ywedir/bin/konfabulator.sh
+	        mount --bind /mnt/user/ywe/config-oem.xml              $ywedir/config-oem.xml      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	        mount --bind /mnt/user/ywe/konfabulator.sh             $ywedir/bin/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	fi
 	if [ "$samsung_ywe" != "0" ]
@@ -105,24 +105,24 @@ then
 		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script with proper path for Samsung Widgets ONLY - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 		    #cp /mnt/user/ywe/konfabulator.sh /mnt/user/ywe/samsung/konfabulator.sh
 		    cat /mnt/user/ywe/konfabulator.sh | sed "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" > /mnt/user/ywe/samsung/konfabulator.sh
-		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh
+		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		else
 		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets with proper engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 		    cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
-		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh
+		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		fi
 	    fi
 	    # its not needed to change paths if we use only one widget engine ------------------------------------v
 	    if [ -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep "\/mnt\/ywe_s"`' -a "$use_samsung_ywe_instead_of_lg" != "1" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
-		sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh
-		sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
+		sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    else
 		if [ -z "`grep \"^export KF_APP_PATH\" /mnt/user/ywe/samsung/konfabulator.sh | grep \"$ywedir\"`" -a "$use_samsung_ywe_instead_of_lg" = "1" ]
 		then
 		    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets ONLY engine path - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
-		    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/samsung/konfabulator.sh
+		    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    #sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
 		fi
 	    fi
@@ -135,15 +135,29 @@ then
 		    #umount $ywedir/config-oem.xml
 		    #umount $ywedir/bin/konfabulator.sh
 		    #mount --bind $ywedir                                   /mnt/ywe_s
-		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      $ywedir/config-oem.xml
-		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     $ywedir/bin/konfabulator.sh
+		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      $ywedir/config-oem.xml         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     $ywedir/bin/konfabulator.sh    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    #mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
 		    #mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
 		else
 		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets into separate path: /mnt/ywe_s..." | tee -a /var/log/OpenLGTV_BCM.log
-		    mount --bind $ywedir                                   /mnt/ywe_s
-		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
-		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
+		    mount --bind $ywedir                                   /mnt/ywe_s                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		fi
+	    fi
+	    if [ "$ywedir_on_usb" = "1" -a ! -h "$ywedir_usb/lib/libKonfabulator.so.0" ]
+	    then
+		# Check if YWE dir was not properly unpacked - missing links of FAT partitions
+		if [ -f "$ywedir_usb/lib/libKonfabulator.so" -a ! -f "$ywedir_usb/lib/libKonfabulator.so.0" ]
+		then
+		    echo "OpenLGTV_BCM-WARN: Yahoo Widgets Engine libs on USB stick were not unpacked properly, fixing them..." | tee -a /var/log/OpenLGTV_BCM.log
+		    cp -f "$ywedir_usb/lib/libKonfabulator.so"   "$ywedir_usb/lib/libKonfabulator.so.0"    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cp -f "$ywedir_usb/lib/libKonfabulatorFB.so" "$ywedir_usb/lib/libKonfabulatorFB.so.0"  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cp -f "$ywedir_usb/lib/libcrypto.so.0.9.8"   "$ywedir_usb/lib/libcrypto.so"            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cp -f "$ywedir_usb/lib/libcurl.so.4.0.1"     "$ywedir_usb/lib/libcurl.so.4"            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cp -f "$ywedir_usb/lib/libcurl.so.4.0.1"     "$ywedir_usb/lib/libcurl.so"              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cp -f "$ywedir_usb/lib/libssl.so.0.9.8"      "$ywedir_usb/lib/libssl.so"               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		fi
 	    fi
 	else

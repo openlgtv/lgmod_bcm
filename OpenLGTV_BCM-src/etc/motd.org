@@ -1,5 +1,5 @@
 
-         Welcome to OpenLGTV BCM ver. 0.3.0-alpha5
+         Welcome to OpenLGTV BCM ver. 0.3.0-alpha5a
                   http://openlgtv.org.ru/
 
     After first login change root password for yours TV!

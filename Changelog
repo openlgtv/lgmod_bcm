@@ -112,6 +112,8 @@ Answer for people asking if they can use it if they have already made modificati
 
     * FIX: Updated BusyBox binary with 'passwd' patch
     * FIX: NVRAM dump on US models
+    * FIX: fixes for nonexistent links for YWE on USB storage device
+    * FIX: run DHCP client in background to not delay boot process in case of lack DHCP server connection
     * ADD: Changelog file to SVN
     * ADD: update time at boot using NTP servers pool
     * ADD: create /mnt/user/www dir if it does not exist
@@ -128,7 +130,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: RELEASE is started now in tmux, so it's possible to control RELEASE over telnet or SSH, too
     * ADD: /mnt/user/cfg/settings file with configuration variables for OpenLGTV BCM scripts
     * ADD: possibility to enable all available NetCast services (disabled by default, be careful as it sorts all of them alphabetically and some do not have it's icons)
-    * ADD: add OpenLGTV BCM WebUI NetCast option as first service - WebUI is still TODO [not UI available yet but sample testing code from nicola_12345]
+    * ADD: add OpenLGTV BCM WebUI NetCast option as first service - WebUI is still TODO [not UI available yet but sample testing code from nicola_12345 changed to CGI script]
     * ADD: add support for ~/.ssh dir (linked to /mnt/user/.ssh) - for example for autorised_keys file to be able to login via SSH using public key authorisation, even without password
     * ADD: support for /mnt/user/cfg/settings file updates after version upgrades
     * ADD: at first time installation make backup of writable partitions - useful for Yahoo Widgets backup before changing to Samsung platform
