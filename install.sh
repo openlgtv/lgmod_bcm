@@ -166,7 +166,7 @@ then
 	cat /mnt/addon/contents/config.xml > $devel_dir/mnt_addon_contents_config.xml
 	cat /mnt/addon/bin/addon_mgr.bat > $devel_dir/mnt_addon_bin_addon_mgr.bat
 	cat /mnt/addon/browser/browser_application.txt > $devel_dir/mnt_addon_browser_browser_application.txt
-	cat /proc/mtd4 > $devel_dir/mtd4_lginit.dump
+	cat /dev/mtd4 > $devel_dir/mtd4_lginit.dump
 	#cp -r /mnt/addon $devel_dir > /dev/null 2>&1
 	#cp -r /mnt/browser $devel_dir > /dev/null 2>&1
 	mkdir -p /mnt/user/lock
