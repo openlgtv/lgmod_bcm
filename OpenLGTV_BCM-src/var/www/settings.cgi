@@ -1,4 +1,4 @@
-#!/usr/bin/haserl
+#!/bin/haserl
 content-type: text/html
 
 <html>
@@ -8,37 +8,11 @@ content-type: text/html
 <!-- ? for i in `cat /mnt/user/cfg/settings`; do echo "$i<br/>"; done ? -->
 </font>
 
-	<div style="position: absolute; left: 10px; top: 15px; width:550px">
-		<div id="textOnly" style="background-color:white;height:64px;">
-			<div style="position: relative; left: 5px; top: 5px;">
-				<font size="+3"><b>OpenLGTV BCM settings list</b></font>
-			</div>
-		</div>
+	<div style="position: absolute; left: 10px; top: 15px; width:600px">
 		<form id="URL" name="URL">
-			<div id="txtURLParent" style="background-color:white;height:32px;">
-				<div style="position: relative; left: 5px; top: 5px;">
-					URL: <input id="txtURL" type="textarea" style="width:200px" value=""/>
-				</div>
-			</div>
-			<div id="txtUserParent" style="background-color:white;height:32px;">
-				<div style="position: relative; left: 5px; top: 5px;">
-					Username: <input id="txtUser" type="textarea" style="width:200px" value=""/>
-				</div>
-			</div>
-			<div id="txtPasswParent" style="background-color:white;height:32px;">
-				<div style="position: relative; left: 5px; top: 5px;">
-					Password: <input id="txtPassw" type="textarea" style="width:200px" value=""/>
-				</div>
-			</div>
-			<div id="radio1Parent" style="background-color:white;height:32px;">
-				<div style="position: relative; left: 5px; top: 5px;">
-					Radio buttons 
-					<input type="radio" name="radio1" value="Option1"> Option1
-					<input type="radio" name="radio1" value="Option2" checked> Option2
-					<input type="radio" name="radio1" value="Option3"> Option3
-				</div>
-			</div>
-
+			<? export pagename="Settings List" ?>
+			<? include/header_links.cgi.inc ?>
+			
 			<? 
 			id_nr=1
 			for i in `cat /mnt/user/cfg/settings`
@@ -61,7 +35,5 @@ content-type: text/html
 			</div>
 		</form>
 	</div>	
-
-
 </body>
 </html>

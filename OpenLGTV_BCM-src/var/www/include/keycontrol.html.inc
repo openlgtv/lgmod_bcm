@@ -263,7 +263,7 @@
 			<a onClick="javascript:NextControl();" href="#" style="text-decoration:none; color:white"><li class="green"><span></span>Next Ctrl</li></a>
 			<a onClick="javascript:SaveForm();" href="#" style="text-decoration:none; color:white"><li class="yellow"><span></span>Save</li></a>
 			<a onClick="javascript:BackSpace();" href="#" style="text-decoration:none; color:white"><li class="blue"><span></span>BackSpace</li></a>
-			<li id="return_bt" class="return"><span></span>Back</li>
+			<a onClick="window.NetCastBack();" href="#" style="text-decoration:none; color:white"><li id="return_bt" class="return"><span></span>Back</li></a>
 			<li class="exit"><span></span>Exit</li>
 		</ul>
 	</div>

@@ -25,7 +25,7 @@ then
     autoupgrade=1
 fi
 
-ver=0.3.0-alpha5a
+ver=0.3.0-alpha6
 development=1
 
 tmp=/tmp

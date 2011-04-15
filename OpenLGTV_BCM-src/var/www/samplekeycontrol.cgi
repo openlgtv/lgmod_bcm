@@ -1,11 +1,13 @@
-#!/usr/bin/haserl
+#!/bin/haserl
 content-type: text/html
 
 <html>
 <? cat /var/www/include/keycontrol.html.inc ?>
 
-	<div style="position: absolute; left: 10px; top: 15px; width:500px">
+	<div style="position: absolute; left: 10px; top: 15px; width:600px">
 		<form id="URL" name="URL">
+			<? export pagename="Sample Key Control" ?>
+			<? include/header_links.cgi.inc ?>
 			<div id="txtURLParent" style="background-color:white;height:32px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					URL: <input id="txtURL" type="textarea" style="width:200px" value=""/>

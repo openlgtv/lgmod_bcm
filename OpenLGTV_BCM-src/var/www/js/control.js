@@ -146,84 +146,137 @@ function keypad(num)
 var PageElements = new Array();
 
 PageElements[0] = new Object();
-PageElements[0].value = ['txtURL'];
-PageElements[0].type = ['txt'];
+PageElements[0].value = ['link1'];
+PageElements[0].type = ['button'];
+
+/* TODO? - navigation on 'button' page elements in one row
+PageElements[0].value = ['links'];
+PageElements[0].type = ['buttons'];
+PageElements[0].array = new Array();
+
+PageElements[0].array[0] = new Object();
+PageElements[0].array[0].value = ['link1a'];
+PageElements[0].array[0].type = ['button'];
+
+PageElements[0].array[1] = new Object();
+PageElements[0].array[1].value = ['link1b'];
+PageElements[0].array[1].type = ['button'];*/
 
 PageElements[1] = new Object();
-PageElements[1].value = ['txtUser'];
-PageElements[1].type = ['txt'];
+PageElements[1].value = ['link2'];
+PageElements[1].type = ['button'];
 
 PageElements[2] = new Object();
-PageElements[2].value = ['txtPassw'];
-PageElements[2].type = ['txt'];
+PageElements[2].value = ['link3'];
+PageElements[2].type = ['button'];
 
 PageElements[3] = new Object();
-PageElements[3].value = ['radio1'];
-PageElements[3].type = ['radio'];
+PageElements[3].value = ['link4'];
+PageElements[3].type = ['button'];
 
 PageElements[4] = new Object();
-PageElements[4].value = ['check1'];
-PageElements[4].type = ['checkbox'];
+PageElements[4].value = ['link5'];
+PageElements[4].type = ['button'];
 
 PageElements[5] = new Object();
-PageElements[5].value = ['check2'];
-PageElements[5].type = ['checkbox'];
+PageElements[5].value = ['link6'];
+PageElements[5].type = ['button'];
 
 PageElements[6] = new Object();
-PageElements[6].value = ['check3'];
-PageElements[6].type = ['checkbox'];
+PageElements[6].value = ['link7'];
+PageElements[6].type = ['button'];
 
 PageElements[7] = new Object();
-PageElements[7].value = ['check4'];
-PageElements[7].type = ['checkbox'];
+PageElements[7].value = ['link8'];
+PageElements[7].type = ['button'];
 
 PageElements[8] = new Object();
-PageElements[8].value = ['check5'];
-PageElements[8].type = ['checkbox'];
+PageElements[8].value = ['link9'];
+PageElements[8].type = ['button'];
 
 PageElements[9] = new Object();
-PageElements[9].value = ['check6'];
-PageElements[9].type = ['checkbox'];
+PageElements[9].value = ['link10'];
+PageElements[9].type = ['button'];
 
 PageElements[10] = new Object();
-PageElements[10].value = ['check7'];
-PageElements[10].type = ['checkbox'];
+PageElements[10].value = ['txtURL'];
+PageElements[10].type = ['txt'];
 
 PageElements[11] = new Object();
-PageElements[11].value = ['check8'];
-PageElements[11].type = ['checkbox'];
+PageElements[11].value = ['txtUser'];
+PageElements[11].type = ['txt'];
 
 PageElements[12] = new Object();
-PageElements[12].value = ['check9'];
-PageElements[12].type = ['checkbox'];
+PageElements[12].value = ['txtPassw'];
+PageElements[12].type = ['txt'];
 
 PageElements[13] = new Object();
-PageElements[13].value = ['check10'];
-PageElements[13].type = ['checkbox'];
+PageElements[13].value = ['radio1'];
+PageElements[13].type = ['radio'];
 
 PageElements[14] = new Object();
-PageElements[14].value = ['check11'];
+PageElements[14].value = ['check1'];
 PageElements[14].type = ['checkbox'];
 
 PageElements[15] = new Object();
-PageElements[15].value = ['check12'];
+PageElements[15].value = ['check2'];
 PageElements[15].type = ['checkbox'];
 
 PageElements[16] = new Object();
-PageElements[16].value = ['check13'];
+PageElements[16].value = ['check3'];
 PageElements[16].type = ['checkbox'];
 
 PageElements[17] = new Object();
-PageElements[17].value = ['check14'];
+PageElements[17].value = ['check4'];
 PageElements[17].type = ['checkbox'];
 
 PageElements[18] = new Object();
-PageElements[18].value = ['check15'];
+PageElements[18].value = ['check5'];
 PageElements[18].type = ['checkbox'];
 
 PageElements[19] = new Object();
-PageElements[19].value = ['check16'];
+PageElements[19].value = ['check6'];
 PageElements[19].type = ['checkbox'];
+
+PageElements[20] = new Object();
+PageElements[20].value = ['check7'];
+PageElements[20].type = ['checkbox'];
+
+PageElements[21] = new Object();
+PageElements[21].value = ['check8'];
+PageElements[21].type = ['checkbox'];
+
+PageElements[22] = new Object();
+PageElements[22].value = ['check9'];
+PageElements[22].type = ['checkbox'];
+
+PageElements[23] = new Object();
+PageElements[23].value = ['check10'];
+PageElements[23].type = ['checkbox'];
+
+PageElements[24] = new Object();
+PageElements[24].value = ['check11'];
+PageElements[24].type = ['checkbox'];
+
+PageElements[25] = new Object();
+PageElements[25].value = ['check12'];
+PageElements[25].type = ['checkbox'];
+
+PageElements[26] = new Object();
+PageElements[26].value = ['check13'];
+PageElements[26].type = ['checkbox'];
+
+PageElements[27] = new Object();
+PageElements[27].value = ['check14'];
+PageElements[27].type = ['checkbox'];
+
+PageElements[28] = new Object();
+PageElements[28].value = ['check15'];
+PageElements[28].type = ['checkbox'];
+
+PageElements[29] = new Object();
+PageElements[29].value = ['check16'];
+PageElements[29].type = ['checkbox'];
 
 
 var currElementIndex;
@@ -268,9 +321,25 @@ window.onload = OnLoadSetCurrent;
 				document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
 				current = next;
 				}
-			}
+			/* TODO? - actions for left and right remote buttons on 'button' page elements
+			if (PageElements[currElementIndex].type == 'buttons')
+				{
+				//Move to the next key on the keyboard
+				var code=document.links['c' + next].name;
+				document.links['c' + next].focus();
+				document.images['i' + next].src = 'Images/Keyboard/' + next + 'b.png';
+				document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
+				current = next;
+				} */
+			} 
 		else if (key==13) 
 			{
+			//Simulate click on button elements for OK remote button
+			if (PageElements[currElementIndex].type == 'button')
+				{
+				    document.forms['URL'].elements[currElementName].click();
+				    //break;
+				}
 			//Write the letter on the currFocusedElement field
 			/*
 			var URLText = document.forms['URL'].elements[currElementName].value;
