@@ -135,6 +135,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: support for /mnt/user/cfg/settings file updates after version upgrades
     * ADD: at first time installation make backup of writable partitions - useful for Yahoo Widgets backup before changing to Samsung platform
     * ADD: development versions (devel, alpha, beta) are taking more logs and info from current firmware and hardware at first time installation procedure, give there to us for making better support of yours model
+    * ADD: support for OpenLGTV_BCM dir on both USB1 and USB2 ports (just needs to be on it's first partition (/mnt/usb[1|2]/Drive1/OpenLGTV_BCM)
     * UPDATE: haserl binary updated to version 0.9.28, compiled without LUA and BashExtensions support
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install

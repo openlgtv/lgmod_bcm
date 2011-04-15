@@ -141,7 +141,13 @@ else
 fi
 if [ "$development" = "1" -a ! -f "/mnt/user/lock/development-logs-dumped.lock" ]
 then
-    devel_dir=/mnt/usb1/Drive1/OpenLGTV_BCM/development-logs
+    if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+    then
+	export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+    else
+	export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+    fi
+    devel_dir=$OpenLGTV_BCM_USB/development-logs
     mkdir -p $devel_dir
     if [ "$?" -eq "0" ]
     then

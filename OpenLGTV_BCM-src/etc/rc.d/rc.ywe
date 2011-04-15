@@ -7,19 +7,28 @@ then
 	echo "OpenLGTV_BCM-WARN: forced Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
     fi
     export ywedir=/mnt/addon/ywe
-    export ywedir_usb=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
-    export ywedatadir_usb=/mnt/usb1/Drive1/OpenLGTV_BCM/ywedata
+    if [ "$OpenLGTV_BCM_USB" = "" ]
+    then
+	if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+	then
+	    export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+	else
+	    export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+	fi
+    fi
+    export ywedir_usb=$OpenLGTV_BCM_USB/ywe
+    export ywedatadir_usb=$OpenLGTV_BCM_USB/ywedata
     if [ ! -d "/mnt/user/ywe" -o ! -d "/mnt/user/ywe/samsung" ]
     then
 	mkdir -p /mnt/user/ywe/samsung                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
     if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" ]
     then
-	echo "OpenLGTV_BCM-INFO: no available Yahoo Widgets Engine dirs - /mnt/addon/ywe or /mnt/usb1/Drive1/OpenLGTV_BCM/ywe - skipping YWE configuration..." | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: no available Yahoo Widgets Engine dirs - /mnt/addon/ywe or $OpenLGTV_BCM_USB/ywe - skipping YWE configuration..." | tee -a /var/log/OpenLGTV_BCM.log
     else
 	if [ -d "$ywedir_usb" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Engine dir in /mnt/usb1/Drive1/OpenLGTV_BCM/ywe - setting it as ywedir..." | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Engine dir in $OpenLGTV_BCM_USB/ywe - setting it as ywedir..." | tee -a /var/log/OpenLGTV_BCM.log
 	    export ywedir=$ywedir_usb
 	    export ywedir_on_usb=1
 	    # lets try to kill konfabulator as on US models it running at start in background
@@ -27,7 +36,7 @@ then
 	fi
 	if [ -d "$ywedatadir_usb" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in /mnt/usb1/Drive1/OpenLGTV_BCM/ywedata - mount-binding it to /mnt/widget.data..." | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in $OpenLGTV_BCM_USB/ywedata - mount-binding it to /mnt/widget.data..." | tee -a /var/log/OpenLGTV_BCM.log
 	    umount /mnt/widget.data > /dev/null 2>&1
 	    mount --bind "$ywedatadir_usb" /mnt/widget.data                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    # lets try to kill konfabulator as on US models it running at start in background
