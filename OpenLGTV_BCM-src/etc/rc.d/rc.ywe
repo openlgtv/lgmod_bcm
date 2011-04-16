@@ -158,6 +158,7 @@ then
 	    if [ "$ywedir_on_usb" = "1" -a ! -h "$ywedir_usb/lib/libKonfabulator.so.0" ]
 	    then
 		# Check if YWE dir was not properly unpacked - missing links of FAT partitions
+		#if [ -f "$ywedir_usb/lib/libKonfabulator.so" -a ! -f "$ywedir_usb/lib/libKonfabulator.so.0" -o "`ls -al $ywedir_usb/lib/libKonfabulator.so.0 | awk '{print $4}'`" -lt "10000000" ]
 		if [ -f "$ywedir_usb/lib/libKonfabulator.so" -a ! -f "$ywedir_usb/lib/libKonfabulator.so.0" ]
 		then
 		    echo "OpenLGTV_BCM-WARN: Yahoo Widgets Engine libs on USB stick were not unpacked properly, fixing them..." | tee -a /var/log/OpenLGTV_BCM.log
