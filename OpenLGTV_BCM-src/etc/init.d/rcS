@@ -451,6 +451,12 @@ fi
 #(sleep 30; /etc/rc.d/rc.usb)&
 (sleep 20; /etc/rc.d/rc.usb)&
 
+if [ ! -d /mnt/user/init.d ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/init.d
+fi
+
 if [ -d /mnt/user/init.d ]
 then
     echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/" | tee -a /var/log/OpenLGTV_BCM.log
