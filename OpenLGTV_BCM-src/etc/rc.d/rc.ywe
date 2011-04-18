@@ -38,6 +38,11 @@ then
 	then
 	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in $OpenLGTV_BCM_USB/ywedata - mount-binding it to /mnt/widget.data..." | tee -a /var/log/OpenLGTV_BCM.log
 	    umount /mnt/widget.data > /dev/null 2>&1
+	    if [ -f "$OpenLGTV_BCM_USB/ywedata.ext3.img" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: mounting $OpenLGTV_BCM_USB/ywedata.ext3.img file image as ywedata dir..." | tee -a /var/log/OpenLGTV_BCM.log
+		mount "$OpenLGTV_BCM_USB/ywedata.ext3.img" "$OpenLGTV_BCM_USB/ywedata" 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    fi
 	    mount --bind "$ywedatadir_usb" /mnt/widget.data                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    # lets try to kill konfabulator as on US models it running at start in background
 	    killall konfabulator > /dev/null 2>&1
