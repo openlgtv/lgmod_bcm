@@ -63,29 +63,7 @@ then
 	echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..." | tee -a /var/log/OpenLGTV_BCM.log
 	cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat
     fi
-    if [ "$netcast_config_add_yahoo" = "1" ]
-    then
-	if [ "$country_model" = "EU" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add Yahoo Widgets option (netcast_config_add_yahoo=1)..." | tee -a /var/log/OpenLGTV_BCM.log
-	    /scripts/netcast_config_regenerator.sh /mnt/user/netcast/config.xml add_yahoo 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	else
-	    echo "OpenLGTV_BCM-INFO: skipping adding Yahoo Widgets option (netcast_config_add_yahoo=1) in US TV models as it exists there..." | tee -a /var/log/OpenLGTV_BCM.log
-	fi
-    fi
-    if [ "$netcast_config_add_openlgtv" = "1" ]
-    then
-	if [ -f "/mnt/user/netcast/browser_application.txt" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Web UI option (netcast_config_add_openlgtv=1)..." | tee -a /var/log/OpenLGTV_BCM.log
-	    /scripts/netcast_config_regenerator.sh /mnt/user/netcast/config.xml add_openlgtv /mnt/user/netcast/browser_application.txt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	fi
-    fi
-    if [ "$netcast_config_enable_all" = "1" ]
-    then
-	echo "OpenLGTV_BCM-WARN: running NetCast Config Regenerator to enable all NetCast services (netcast_config_enable_all=1)..." | tee -a /var/log/OpenLGTV_BCM.log
-	/scripts/netcast_config_regenerator.sh /mnt/user/netcast/config.xml enable_all 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    fi
+    source /etc/rc.d/rc.netcast-modify
     if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
     then
 	echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -99,5 +77,34 @@ then
 	mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
     fi
 else
-    echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
+    #echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-WARN: found modified addon or browser partition - trying to find where are the real configs..." | tee -a /var/log/OpenLGTV_BCM.log
+    custom_addonmgrbat=0
+    custom_configxml=0
+    custom_browapptxt=0
+    if [ -h "/mnt/addon/bin/addon_mgr.bat" ]
+    then
+	real_addonmgrbat="`ls -al /mnt/addon/bin/addon_mgr.bat | awk -F\"> \" '{print $2}'`"
+	custom_addonmgrbat=1
+    else
+	real_addonmgrbat="/mnt/addon/bin/addon_mgr.bat"
+    fi
+    echo "OpenLGTV_BCM-INFO: using real Addon_Mgr config file: $real_addonmgrbat ..." | tee -a /var/log/OpenLGTV_BCM.log
+    if [ -h "/mnt/addon/contents/config.xml" ]
+    then
+	real_configxml="`ls -al /mnt/addon/contents/config.xml | awk -F\"> \" '{print $2}'`"
+	custom_configxml=1
+    else
+	real_configxml="/mnt/addon/contents/config.xml"
+    fi
+    echo "OpenLGTV_BCM-INFO: using real StageCraft config file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
+    if [ -h "/mnt/browser/browser_application.xml" ]
+    then
+	real_browapptxt="`ls -al /mnt/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
+	custom_browapptxt=1
+    else
+	real_browapptxt="/mnt/browser/browser_application.txt"
+    fi
+    echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
+    source /etc/rc.d/rc.netcast-modify
 fi

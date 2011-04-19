@@ -1,0 +1,42 @@
+#!/bin/sh
+# NetCast config modification rc.netcast-modify script
+#source /mnt/user/cfg/settings
+if [ "$real_configxml" = "" -a -f "/mnt/user/netcast/config.xml" ]
+then
+    real_configxml="/mnt/user/netcast/config.xml"
+fi
+if [ "$real_browapptxt" = "" -a -f "/mnt/user/netcast/browser_application.txt" ]
+then
+    real_browapptxt="/mnt/user/netcast/browser_application.txt"
+fi
+
+if [ -f "$real_configxml" ]
+then
+    if [ "$netcast_config_enable_all" = "1" ]
+    then
+	echo "OpenLGTV_BCM-WARN: running NetCast Config Regenerator to enable all NetCast services (netcast_config_enable_all=1)..." | tee -a /var/log/OpenLGTV_BCM.log
+	/scripts/netcast_config_regenerator.sh $real_configxml enable_all 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    fi
+    if [ "$netcast_config_add_yahoo" = "1" ]
+    then
+	if [ "$country_model" = "EU" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add Yahoo Widgets option (netcast_config_add_yahoo=1)..." | tee -a /var/log/OpenLGTV_BCM.log
+	    /scripts/netcast_config_regenerator.sh $real_configxml add_yahoo 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	else
+	    echo "OpenLGTV_BCM-INFO: skipping adding Yahoo Widgets option (netcast_config_add_yahoo=1) in US TV models as it exists there..." | tee -a /var/log/OpenLGTV_BCM.log
+	fi
+    fi
+    if [ "$netcast_config_add_openlgtv" = "1" ]
+    then
+	if [ -f "$real_browapptxt" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Web UI option (netcast_config_add_openlgtv=1)..." | tee -a /var/log/OpenLGTV_BCM.log
+	    /scripts/netcast_config_regenerator.sh $real_configxml add_openlgtv $real_browapptxt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	else
+	    echo "OpenLGTV_BCM-WARN: havent found any useful browser_application.txt file, skipping custom NetCast configuration (including OpenLGTV BCM NetCast item)..." | tee -a /var/log/OpenLGTV_BCM.log
+	fi
+    fi
+else
+    echo "OpenLGTV_BCM-ERROR: havent found any useful config.xml file, skipping custom NetCast configuration..." | tee -a /var/log/OpenLGTV_BCM.log
+fi
