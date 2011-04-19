@@ -144,7 +144,7 @@ then
 	    then
 		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
 		then
-		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets replacing LG Widgets in path: $ywedir ..." | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets (from /mnt/user/ywe/samsung) replacing LG Widgets in path: $ywedir ..." | tee -a /var/log/OpenLGTV_BCM.log
 		    # v- these (commented out) should not be mounted
 		    #umount $ywedir/config-oem.xml
 		    #umount $ywedir/bin/konfabulator.sh
@@ -154,7 +154,7 @@ then
 		    #mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
 		    #mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
 		else
-		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets into separate path: /mnt/ywe_s..." | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets (from /mnt/user/ywe/samsung) into separate path: /mnt/ywe_s..." | tee -a /var/log/OpenLGTV_BCM.log
 		    mount --bind $ywedir                                   /mnt/ywe_s                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
@@ -163,10 +163,21 @@ then
 	    if [ "$ywedir_on_usb" = "1" -a ! -h "$ywedir_usb/lib/libKonfabulator.so.0" ]
 	    then
 		# Check if YWE dir was not properly unpacked - missing links of FAT partitions
-		#if [ -f "$ywedir_usb/lib/libKonfabulator.so" -a ! -f "$ywedir_usb/lib/libKonfabulator.so.0" -o "`ls -al $ywedir_usb/lib/libKonfabulator.so.0 | awk '{print $4}'`" -lt "10000000" ]
+		ywe_usb_copy_libs=0
 		if [ -f "$ywedir_usb/lib/libKonfabulator.so" -a ! -f "$ywedir_usb/lib/libKonfabulator.so.0" ]
 		then
-		    echo "OpenLGTV_BCM-WARN: Yahoo Widgets Engine libs on USB stick were not unpacked properly, fixing them..." | tee -a /var/log/OpenLGTV_BCM.log
+		    ywe_usb_copy_libs=1
+		    ywe_err_msg="$ywedir_usb/lib/libKonfabulator.so.0 file does not exist"
+		else
+		    if [ "`ls -al $ywedir_usb/lib/libKonfabulator.so.0 | awk '{print $4}'`" -lt "8000000" ]
+		    then
+			ywe_usb_copy_libs=1
+			ywe_err_msg="$ywedir_usb/lib/libKonfabulator.so.0 file has wrong size (less than 8MB)"
+		    fi
+		fi
+		if [ "$ywe_usb_copy_libs" = "1" ]
+		then
+		    echo "OpenLGTV_BCM-WARN: Yahoo Widgets Engine libs on USB stick were not unpacked properly - $ywe_err_msg, fixing them..." | tee -a /var/log/OpenLGTV_BCM.log
 		    cp -f "$ywedir_usb/lib/libKonfabulator.so"   "$ywedir_usb/lib/libKonfabulator.so.0"    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    cp -f "$ywedir_usb/lib/libKonfabulatorFB.so" "$ywedir_usb/lib/libKonfabulatorFB.so.0"  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    cp -f "$ywedir_usb/lib/libcrypto.so.0.9.8"   "$ywedir_usb/lib/libcrypto.so"            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
