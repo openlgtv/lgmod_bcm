@@ -1,10 +1,11 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.2
+# OpenLGTV BCM NetCast config parser and regenerator v.0.3
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
 if [ "$1" != "" ]
 then
     id_number=254
     id_name=openlgtv
+    id_link=http://127.0.0.1:88/
     yid_name=yahoo
     org_cfgxml=$1
     tmp_cfgxml=$org_cfgxml.tmp
@@ -80,18 +81,29 @@ then
 	    new_brw_app_txt=$3.new
 	    bck_brw_app_txt=$3.backup
 	    #is_id_openlgtv="`grep ^254 $org_brw_app_txt | grep \"http://127.0.0.1/\"`"
-	    is_id_openlgtv="`grep ^$id_number $org_brw_app_txt | grep \"http://127.0.0.1/\"`"
+	    is_id_openlgtv="`grep ^$id_number $org_brw_app_txt"
+	    is_id_openlgtv_link="`grep ^$id_number $org_brw_app_txt | grep \"$id_link\"`"
+	    #if [ -z "$is_id_openlgtv_link" ]
 	    if [ -z "$is_id_openlgtv" ]
 	    then
-		echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id $id_number to existing browser_application.txt file"
+		echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id $id_number link: $id_link to existing browser_application.txt file"
 		cp -f $org_brw_app_txt $new_brw_app_txt
 		#echo '254\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n' >> $new_brw_app_txt
 		#echo "$id_number\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
-		echo -e "$id_number\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
+		echo -e "$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
 		mv $org_brw_app_txt $bck_brw_app_txt
 		mv $new_brw_app_txt $org_brw_app_txt
 	    else
-		echo "OpenLGTV BCM-INFO: NetCast config generator: \"$id_name\" id $id_number already exist in current browser_application.txt"
+		if [ -z "$is_id_openlgtv_link" ]
+		then
+		    echo "OpenLGTV BCM-WARN: NetCast config generator: found incorrect link to \"$id_name\" id: $id_number, changing to new link: $id_link in existing browser_application.txt file"
+		    cp -f $org_brw_app_txt $new_brw_app_txt
+		    sed -i -e "s#^$id_number.*#$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1#g" $new_brw_app_txt
+		    mv $org_brw_app_txt $bck_brw_app_txt
+		    mv $new_brw_app_txt $org_brw_app_txt
+		else
+		    echo "OpenLGTV BCM-INFO: NetCast config generator: \"$id_name\" id: $id_number link: $id_link already exist in current browser_application.txt"
+		fi
 	    fi
 	fi
     fi

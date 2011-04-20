@@ -493,11 +493,16 @@ then
     sed -i -e "s:^/\:openlgtv\:.*:/\:openlgtv\:$md5password:g" /mnt/user/etc/httpd.conf  | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
-echo "OpenLGTV_BCM-INFO: start local httpd on 127.0.0.1:80" | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88" | tee -a /var/log/OpenLGTV_BCM.log
 #httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
-httpd -c /etc/httpd.conf -p 127.0.0.1:80 -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: start external httpd on 0.0.0.0:81" | tee -a /var/log/OpenLGTV_BCM.log
-httpd -c /etc/httpd.conf -p 0.0.0.0:81 -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+if [ -f "/mnt/user/etc/httpd.conf" ]
+then
+    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication" | tee -a /var/log/OpenLGTV_BCM.log
+    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" | tee -a /var/log/OpenLGTV_BCM.log
+else
+    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a /var/log/OpenLGTV_BCM.log
+fi
 
 echo "OpenLGTV_BCM-INFO: start RELEASE in tmux" | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
