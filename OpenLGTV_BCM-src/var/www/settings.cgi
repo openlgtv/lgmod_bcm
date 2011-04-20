@@ -35,8 +35,8 @@ content-type: text/html
 			    echo "<div id=\"check"$id_nr"Parent\" style=\"background-color:white;height:32px;\">"
 			    echo '<div style="position: relative; left: 5px; top: 5px;">'
 			    ##echo $opt_val $opt_checked 
-			    #echo "<input type=\"checkbox\" name=\"check$id_nr\" value=\"$opt_val\" \"$opt_checked\"> $opt_name"
-			    echo "<input type=\"checkbox\" name=\"check$id_nr\" value=\"1\" \"$opt_checked\"> $opt_name"
+			    #echo "<input type=\"checkbox\" name=\"check$id_nr\" value=\"$opt_val\" $opt_checked> $opt_name"
+			    echo "<input type=\"checkbox\" name=\"check$id_nr\" value=\"1\" $opt_checked> $opt_name"
 			    echo '</div></div>'
 			    id_nr=$((id_nr+1))
 			done 

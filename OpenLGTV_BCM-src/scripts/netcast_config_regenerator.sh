@@ -81,7 +81,7 @@ then
 	    new_brw_app_txt=$3.new
 	    bck_brw_app_txt=$3.backup
 	    #is_id_openlgtv="`grep ^254 $org_brw_app_txt | grep \"http://127.0.0.1/\"`"
-	    is_id_openlgtv="`grep ^$id_number $org_brw_app_txt"
+	    is_id_openlgtv="`grep ^$id_number $org_brw_app_txt`"
 	    is_id_openlgtv_link="`grep ^$id_number $org_brw_app_txt | grep \"$id_link\"`"
 	    #if [ -z "$is_id_openlgtv_link" ]
 	    if [ -z "$is_id_openlgtv" ]
