@@ -68,6 +68,11 @@ then
 	done
     fi
     /etc/rc.d/rc.mount-netshare
+    if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM.log" ]
+    then
+        echo "OpenLGTV_BCM-INFO: making copy of /var/log/OpenLGTV_BCM.log log file to  $OpenLGTV_BCM_USB/" | tee -a /var/log/OpenLGTV_BCM.log
+	cp /var/log/OpenLGTV_BCM.log $OpenLGTV_BCM_USB/
+    fi
 else
     echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device" | tee -a /var/log/OpenLGTV_BCM.log
 fi

@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.9a
+# OpenLGTV BCM installation script by xeros, ver. 0.9b
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -50,7 +50,7 @@ cdir=$dir
 #log=$dir/$file.log
 log="$dir/$file.log $tmp/$file.log"
 tmpout=$tmp/output.log
-freemem=20000
+reqfreemem=20000
 
 backup=pre-backup
 lginit_backup=lginit-$backup
@@ -173,6 +173,7 @@ then
 	cat /mnt/addon/bin/addon_mgr.bat > $devel_dir/mnt_addon_bin_addon_mgr.bat
 	cat /mnt/addon/browser/browser_application.txt > $devel_dir/mnt_addon_browser_browser_application.txt
 	cat /dev/mtd4 > $devel_dir/mtd4_lginit.dump
+	free > $devel_dir/free2.log
 	#cp -r /mnt/addon $devel_dir > /dev/null 2>&1
 	#cp -r /mnt/browser $devel_dir > /dev/null 2>&1
 	mkdir -p /mnt/user/lock
@@ -224,13 +225,19 @@ then
 fi
 
 # check free ram
-if [ "`free | grep Mem | awk '{print $4}'`" -lt "$freemem" ]
+currfreemem=`free | grep Mem | awk '{print $4}'`
+currbuffmem=`free | grep Mem | awk '{print $6}'`
+curravailmem=$(($currfreemem + $currbuffmem))
+reqavailmem=$((2*$reqfreemem))
+if [ "$currfreemem" -lt "$reqfreemem" -a "$curravailmem" -lt "$reqavailmem" ]
 then
-    echo "There might be problem as you have less than $freemem KB RAM free." | tee -a $log
+    echo "There might be problem as you have only $currfreemem KB RAM free (+$currbuffmem KB on buffers), its less than $reqfreemem KB ($reqavailmem KB with buffers)." | tee -a $log
     echo "(The builtin web browser is set to send OutOfMemory signals if there is less than 20MB free RAM)" | tee -a $log
     echo "Refusing to flash" | tee -a $log
     echo "Dont worry - just reboot TV (or power off and on) and try install again." | tee -a $log
     exit 1
+else
+    echo "You have $currfreemem KB RAM free (+$currbuffmem KB on buffers) - good." | tee -a $log
 fi
 # question
 echo "Do you really want to flash the /dev/mtd$mtd (`cat /proc/mtd | grep mtd$mtd: | awk '{print $4}'`) device?" | tee -a $log
