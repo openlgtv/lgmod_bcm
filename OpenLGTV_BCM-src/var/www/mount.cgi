@@ -64,29 +64,26 @@ fi
 ?>
 
 			<div id="txtURLParent" style="background-color:white;height:30px;">
-				<div style="position: relative; left: 5px; top: 7px;">
+				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					URL: 
 				</div>
-				<!-- div style="position: relative; left: 100px; top: -22px;" -->
-				<div style="position: relative; left: 100px; top: -16px;">
+				<div style="position: relative; left: 100px; top: -22px;">
 				    <input id="txtURL" name="qURL" type="textarea" style="width:400px" value="<? echo $src ?>"/>
 				</div>
 			</div>
 			<div id="txtUserParent" style="background-color:white;height:30px;">
-				<div style="position: relative; left: 5px; top: 7px;">
+				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					Username: 
 				</div>
-				<!-- div style="position: relative; left: 100px; top: -22px;" -->
-				<div style="position: relative; left: 100px; top: -16px;">
+				<div style="position: relative; left: 100px; top: -22px;">
 					<input id="txtUser" name="qUser" type="textarea" style="width:400px" value="<? echo $uname ?>"/>
 				</div>
 			</div>
 			<div id="txtPasswParent" style="background-color:white;height:30px;">
-				<div style="position: relative; left: 5px; top: 7px;">
+				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					Password: 
 				</div>
-				<!-- div style="position: relative; left: 100px; top: -22px;" -->
-				<div style="position: relative; left: 100px; top: -16px;">
+				<div style="position: relative; left: 100px; top: -22px;">
 					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" value="<? echo $pass ?>"/>
 				</div>
 			</div>
