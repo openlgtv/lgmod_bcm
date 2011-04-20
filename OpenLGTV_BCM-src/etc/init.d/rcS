@@ -468,8 +468,36 @@ then
     done
 fi
 
-echo "OpenLGTV_BCM-INFO: start httpd" | tee -a /var/log/OpenLGTV_BCM.log
-httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+md5password="`grep ^root: /etc/shadow | awk -F: '{print $2}'`"
+
+if [ ! -f "/mnt/user/etc/httpd.conf" ]
+then
+    echo "OpenLGTV_BCM-INFO: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..." | tee -a /var/log/OpenLGTV_BCM.log
+    cat /etc/httpd.conf | sed 's/D:*/A:*/g' > /mnt/user/etc/httpd.conf
+    if [ "`grep ^root:x /etc/passwd`" = "" ]
+    then
+	echo "OpenLGTV_BCM-WARN: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it" | tee -a /var/log/OpenLGTV_BCM.log
+	#echo '/:openlgtv:openlgtv' >> /mnt/user/etc/httpd.conf
+	echo '/:openlgtv:$1$3X/HLa0A$UNzgE.VueZjnJG1wCNIgB0' >> /mnt/user/etc/httpd.conf
+    else
+	echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf" | tee -a /var/log/OpenLGTV_BCM.log
+	echo "/:openlgtv:$md5password" >> /mnt/user/etc/httpd.conf
+    fi
+fi
+
+md5password_httpd="`grep ^/:openlgtv: /mnt/user/etc/httpd.conf | awk -F: '{print $3}'`"
+
+if [ "$md5password_httpd" != "$md5password" ]
+then
+    echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf config change" | tee -a /var/log/OpenLGTV_BCM.log
+    sed -i -e "s:^/\:openlgtv\:.*:/\:openlgtv\:$md5password:g" /mnt/user/etc/httpd.conf  | tee -a /var/log/OpenLGTV_BCM.log
+fi
+
+echo "OpenLGTV_BCM-INFO: start local httpd on 127.0.0.1:80" | tee -a /var/log/OpenLGTV_BCM.log
+#httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+httpd -c /etc/httpd.conf -p 127.0.0.1:80 -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: start external httpd on 0.0.0.0:81" | tee -a /var/log/OpenLGTV_BCM.log
+httpd -c /etc/httpd.conf -p 0.0.0.0:81 -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
 
 echo "OpenLGTV_BCM-INFO: start RELEASE in tmux" | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
