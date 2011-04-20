@@ -139,6 +139,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: support for ywedata as ext3 partition image file: ywedata.ext3.img on USB storage devices (done this because of found problems with ywedata dir storage on FAT partitions, thanks sirius for testing)
     * ADD: support for modified addon and browser partitions in NetCast configs modifications
     * ADD: NFS/CIFS Network Share mounting on boot and WebUI configuration features, this needs FAT formated USB stick plugged in as mount point, CIFS needs additional kernel driver module (cifs.ko)
+    * ADD: WebUI is capable of saving changed settings file (be careful changing settings, not all of them have been tested enough)
     * UPDATE: haserl binary updated to version 0.9.28, compiled without LUA and BashExtensions support
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install
