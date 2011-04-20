@@ -1,14 +1,25 @@
 #!/bin/sh
-if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+# Wait until connect usb drive
+USB1_DIR=/mnt/usb2/Drive1/OpenLGTV_BCM
+USB2_DIR=/mnt/usb2/Drive2/OpenLGTV_BCM
+k=0;
+while [ ! -d $USB1_DIR -a ! -d $USB2_DIR ]; 
+do
+    sleep 1;
+    k=$(($k+1))
+    if [ $k -gt 30 ]; then break; fi
+done;
+
+if [ -d "$USB2_DIR" ]
 then
-    export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+    export OpenLGTV_BCM_USB=$USB2_DIR
 else
-    export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+    export OpenLGTV_BCM_USB=$USB1_DIR
 fi
 
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
-    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device" | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device in $k seconds..." | tee -a /var/log/OpenLGTV_BCM.log
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
