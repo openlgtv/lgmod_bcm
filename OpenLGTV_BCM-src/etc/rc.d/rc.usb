@@ -1,20 +1,22 @@
 #!/bin/sh
 # Wait until connect usb drive
-USB1_DIR=/mnt/usb2/Drive1/OpenLGTV_BCM
-USB2_DIR=/mnt/usb2/Drive2/OpenLGTV_BCM
+USB1_DIR=/mnt/usb1/Drive1
+USB2_DIR=/mnt/usb2/Drive1
 k=0;
-while [ ! -d $USB1_DIR -a ! -d $USB2_DIR ]; 
+while [ ! -d "$USB1_DIR/OpenLGTV_BCM" -a ! -d "$USB2_DIR/OpenLGTV_BCM" ]; 
 do
     sleep 1;
     k=$(($k+1))
     if [ $k -gt 30 ]; then break; fi
 done;
 
-if [ -d "$USB2_DIR" ]
+if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
 then
-    export OpenLGTV_BCM_USB=$USB2_DIR
+    export USB_DIR=$USB2_DIR
+    export OpenLGTV_BCM_USB=$USB2_DIR/OpenLGTV_BCM
 else
-    export OpenLGTV_BCM_USB=$USB1_DIR
+    export USB_DIR=$USB1_DIR
+    export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
 fi
 
 if [ -d "$OpenLGTV_BCM_USB" ]
@@ -60,6 +62,7 @@ then
 	    $scr_autorun
 	done
     fi
+    /etc/rc.d/rc.mount-netshare
 else
     echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device" | tee -a /var/log/OpenLGTV_BCM.log
 fi

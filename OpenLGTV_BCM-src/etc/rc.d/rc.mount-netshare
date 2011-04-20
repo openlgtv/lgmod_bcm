@@ -1,0 +1,39 @@
+#!/bin/sh
+if [ -f "/mnt/user/cfg/ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
+then
+    echo "OpenLGTV_BCM-INFO: found Network Share configuration file /mnt/user/cfg/ndrvtab and mounted USB stick - parsing config content..." | tee -a /var/log/OpenLGTV_BCM.log
+    #cat /mnt/user/cfg/ndrvtab | while read ndrv < /mnt/user/cfg/ndrvtab
+    #while read ndrv < /mnt/user/cfg/ndrvtab
+    #cat /mnt/user/cfg/ndrvtab | read ndrv
+    ndrv="`cat /mnt/user/cfg/ndrvtab`"
+    #do
+	automount=`echo $ndrv | awk -F# '{print $1}'`
+	fs_type=`echo $ndrv | awk -F# '{print $2}'`
+	src=`echo $ndrv | awk -F# '{print $3}'`
+	dst=`echo $ndrv | awk -F# '{print $4}'`
+	opt=`echo $ndrv | awk -F# '{print $5}'`
+	uname=`echo $ndrv | awk -F# '{print $6}'`
+	pass=`echo $ndrv | awk -F# '{print $7}'`
+	passHidden="*password*"
+	#mntstat=`mount | grep "$src.*$dst"`
+    ##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
+    #done
+    echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..." | tee -a /var/log/OpenLGTV_BCM.log
+    if [ "$automount" = "1" ]
+    then
+	if [ ! -d "$USB_DIR/NetShare" ]
+	then
+	    mkdir -p "$USB_DIR/NetShare"
+	fi
+	if [ "$fs_type" = "cifs" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
+	    mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,pass=$pass &
+	else
+	    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
+	    mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp &
+	fi
+    fi
+else
+    echo "OpenLGTV_BCM-INFO: NOT found Network Share configuration file /mnt/user/cfg/ndrvtab or mounted USB stick with OpenLGTV_BCM dir - skipping network share configuration..." | tee -a /var/log/OpenLGTV_BCM.log
+fi

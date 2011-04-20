@@ -457,7 +457,8 @@ function DirectWriteKey(key)
 function SaveForm()
 	{
 	//Save the settings in current page
-	alert("Save stub.");
+	document.forms['URL'].submit();
+	//alert("Save stub.");
 	}	
 
 function BackSpace()

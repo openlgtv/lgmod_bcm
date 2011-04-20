@@ -8,7 +8,7 @@ content-type: text/html
 <!-- ? for i in `cat /mnt/user/cfg/settings`; do echo "$i<br/>"; done ? -->
 </font>
 
-	<div style="position: absolute; left: 10px; top: 15px; width:600px">
+	<div style="position: absolute; left: 10px; top: 10px; width:600px">
 		<form id="URL" name="URL">
 			<? export pagename="Settings List" ?>
 			<? include/header_links.cgi.inc ?>

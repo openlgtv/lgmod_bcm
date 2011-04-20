@@ -4,7 +4,7 @@ content-type: text/html
 <html>
 <? cat /var/www/include/keycontrol.html.inc ?>
 
-	<div style="position: absolute; left: 10px; top: 15px; width:600px">
+	<div style="position: absolute; left: 10px; top: 10px; width:600px">
 		<form id="URL" name="URL">
 			<? export pagename="Info Page" ?>
 			<? include/header_links.cgi.inc ?>
