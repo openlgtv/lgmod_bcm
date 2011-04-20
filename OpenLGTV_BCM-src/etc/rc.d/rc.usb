@@ -31,10 +31,15 @@ then
 	    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
 	    if [ "$sqf_file_count" -gt 1 ]
 	    then
-		echo "OpenLGTV_BCM-ERROR: theres too much OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, refusing to autoupgrade" | tee -a /var/log/OpenLGTV_BCM.log
+		echo "OpenLGTV_BCM-WARN: theres too much OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, refusing to autoupgrade" | tee -a /var/log/OpenLGTV_BCM.log
 	    else
-		/scripts/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		#exit $?
+		if [ "$sqf_file_count" -lt 1 ]
+		then
+		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade" | tee -a /var/log/OpenLGTV_BCM.log
+		else
+		    /scripts/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    #exit $?
+		fi
 	    fi
         #fi
     fi
