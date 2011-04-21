@@ -151,3 +151,4 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: move backup, flashed file and logs to 'flashed' subdir after successful flash
     * CHANGE: shorten USB storage check time to minimal with info how much time has it took
     * WARN: from now on, install.sh makes installation automaticaly and reboots TV after successful flash, without confirmation
+    * WARN: from this release there's already default password set for telnet, SSH and web server - "openlgtv"
