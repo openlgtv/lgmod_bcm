@@ -387,6 +387,13 @@ dropbear
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..." | tee -a /var/log/OpenLGTV_BCM.log
 hostname OpenLGTV_BCM
 
+if [ -f "/mnt/user/cfg/settings" -a ! -f "/mnt/user/cfg/settings.default" ]
+then
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM default settings config file (/mnt/user/cfg/settings.default) not found, but current settings file found, creating default file with default settings" | tee -a /var/log/OpenLGTV_BCM.log
+    mv -f /mnt/user/cfg/settings /mnt/user/cfg/settings.bck
+    settings_read_from_backup=1
+fi
+
 if [ ! -f "/mnt/user/cfg/settings" ]
 then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a /var/log/OpenLGTV_BCM.log
@@ -397,17 +404,25 @@ fi
 echo "OpenLGTV_BCM-INFO: reading custom settings configuration and updating variables if they do not exist there" | tee -a /var/log/OpenLGTV_BCM.log
 source /mnt/user/cfg/settings
 
-if [ "$confirmations" = "" ];                 then echo "confirmations=0"                 >> /mnt/user/cfg/settings; fi
-if [ "$rebooting" = "" ];                     then echo "rebooting=1"                     >> /mnt/user/cfg/settings; fi
-if [ "$samsung_ywe" = "" ];                   then echo "samsung_ywe=1"                   >> /mnt/user/cfg/settings; fi
-if [ "$use_samsung_ywe_instead_of_lg" = "" ]; then echo "use_samsung_ywe_instead_of_lg=1" >> /mnt/user/cfg/settings; fi
-if [ "$RELEASE_in_tmux" = "" ];               then echo "RELEASE_in_tmux=1"               >> /mnt/user/cfg/settings; fi
-if [ "$force_copy_config_netcast" = "" ];     then echo "force_copy_config_netcast=0"     >> /mnt/user/cfg/settings; fi
-if [ "$force_copy_config_ywe" = "" ];         then echo "force_copy_config_ywe=0"         >> /mnt/user/cfg/settings; fi
-if [ "$netcast_config_add_openlgtv" = "" ];   then echo "netcast_config_add_openlgtv=1"   >> /mnt/user/cfg/settings; fi
-if [ "$netcast_config_add_yahoo" = "" ];      then echo "netcast_config_add_yahoo=1"      >> /mnt/user/cfg/settings; fi
-if [ "$netcast_config_enable_all" = "" ];     then echo "netcast_config_enable_all=0"     >> /mnt/user/cfg/settings; fi
+if [ "$confirmations" = "" ];                 then echo "confirmations=0#Should installer ask for confirmations?"                                     | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$rebooting" = "" ];                     then echo "rebooting=1#Should installer reboot automaticly after successful flash?"                            | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$samsung_ywe" = "" ];                   then echo "samsung_ywe=1#Should YWE configs be copied to use Samsung YWE?"                             | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$use_samsung_ywe_instead_of_lg" = "" ]; then echo "use_samsung_ywe_instead_of_lg=1#Replace LG YWE using Samsung YWE config?"                    | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$RELEASE_in_tmux" = "" ];               then echo "RELEASE_in_tmux=1#Running RELEASE in tmux virtual terminal"                                  | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_netcast" = "" ];     then echo "force_copy_config_netcast=0#Forcing making copy of NetCast configs"                          | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_ywe" = "" ];         then echo "force_copy_config_ywe=0#Forcing making copy of YWE configs"                                  | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_openlgtv" = "" ];   then echo "netcast_config_add_openlgtv=1#Should OpenLGTV BCM NetCast icon be added to NetCast configs?" | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_yahoo" = "" ];      then echo "netcast_config_add_yahoo=1#Should Yahoo Widgets NetCast icon be added to NetCast configs?"   | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_enable_all" = "" ];     then echo "netcast_config_enable_all=0#Regenerate NetCast configs enabling all services - BE CAREFUL"   | tee -a /mnt/user/cfg/settings.default >> /mnt/user/cfg/settings; fi
 # more to come...
+
+if [ "$settings_read_from_backup" = "1" ]
+then
+    echo "OpenLGTV_BCM-WARN: bringing back current settings file on top of default config... " | tee -a /var/log/OpenLGTV_BCM.log
+    mv -f /mnt/user/cfg/settings.bck /mnt/user/cfg/settings
+    settings_read_from_backup=0
+    source /mnt/user/cfg/settings.default
+fi
 
 echo "OpenLGTV_BCM-INFO: reading custom settings configuration again..." | tee -a /var/log/OpenLGTV_BCM.log
 source /mnt/user/cfg/settings

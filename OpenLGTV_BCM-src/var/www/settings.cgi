@@ -16,7 +16,7 @@ content-type: text/html
 			<? 
 			id_nr=1
 			rm -f /tmp/settings.save
-			for i in `cat /mnt/user/cfg/settings`
+			for i in `cat /mnt/user/cfg/settings | awk -F# '{print $1}'`
 			do
 			    opt_name=`echo $i | awk -F= '{print $1}'`
 			    opt_val=`echo $i | awk -F= '{print $2}'`
