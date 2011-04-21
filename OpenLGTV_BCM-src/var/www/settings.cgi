@@ -55,7 +55,7 @@ content-type: text/html
 			done 
 			?>
 			<input type="hidden" name="save" value="1">
-			<div id="textOnly" style="background-color:white;height:64px;">
+			<div id="textOnly" style="background-color:white;height:40px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 				    <?
 					if [ "$FORM_save" = "1" ]
@@ -68,7 +68,7 @@ content-type: text/html
 					    fi
 					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
 					else
-					    echo '<br /><center><font size="+2" color="red"><b>Be very careful when changing settings !!!</b></font></center>'
+					    echo '<center><font size="+2" color="red"><b>Be very careful when changing settings !!!</b></font></center>'
 					fi
 				    ?>
 				</div>

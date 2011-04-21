@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.3
+# OpenLGTV BCM NetCast config parser and regenerator v.0.4
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
 if [ "$1" != "" ]
 then
@@ -71,6 +71,22 @@ then
 			sed -i 's#/mnt/usb1/Drive1/OpenLGTV_BCM/ywe/bin/konfabulator.sh#/scripts/konfabulator-exec.sh#g' $org_cfgxml
 		    else
 			echo "OpenLGTV BCM-INFO: NetCast config generator: \"$yid_name\" id should be already in current config.xml (/mnt/user/lock/ywe_added_to_config_xml.lock lockfile exist)"
+		    fi
+		fi
+	    else
+		if [ "$2" = "kill_browser" ]
+		then
+		    echo "OpenLGTV BCM-INFO: NetCast config generator: \"kill_browser\" argument passed..."
+		    # $org_cfgxml is $real_3556, NOT config.xml
+		    if [ -z "`grep '^killall lb4wk' $org_cfgxml`" ]
+		    then
+			echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"killall lb4wk\" at the beginning of existing run3556 script"
+			cat $org_cfgxml | sed 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk:g' > $new_cfgxml
+			# $*_cfgxml is $real_3556 based, NOT config.xml
+			mv $org_cfgxml $bck_cfgxml
+			mv $new_cfgxml $org_cfgxml
+		    else
+			echo "OpenLGTV BCM-INFO: NetCast config generator: \"killall lb4wk\" already exist in current run3556 script"
 		    fi
 		fi
 	    fi

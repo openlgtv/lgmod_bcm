@@ -9,6 +9,7 @@ if [ -f "$ywedir/bin/konfabulator.sh" -o -h "$ywedir/bin/konfabulator.sh" ]
 then
 	echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: running $ywedir/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
 	$ywedir/bin/konfabulator.sh $* 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	killall lb4wk > /dev/null 2>&1
 else
 	# if konfabulator.sh file does not exist, try to run web browser instead
 	echo "OpenLGTV_BCM-WARN: konfabulator-exec.sh: $ywedir/bin/konfabulator.sh file does not exist, trying to start web browser instead..." | tee -a /var/log/OpenLGTV_BCM.log

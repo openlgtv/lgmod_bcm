@@ -12,6 +12,11 @@ if [ "$real_browapptxt" = "" -a -f "/mnt/user/netcast/browser_application.txt" ]
 then
     real_browapptxt="/mnt/user/netcast/browser_application.txt"
 fi
+#v- not used yet
+#if [ "$real_run3556" = "" -a -f "/mnt/user/netcast/run3556" ]
+#then
+#    real_run3556="/mnt/user/netcast/run3556"
+#fi
 
 if [ -f "$real_configxml" ]
 then
@@ -40,6 +45,17 @@ then
 	    echo "OpenLGTV_BCM-WARN: havent found any useful browser_application.txt file, skipping custom NetCast configuration (including OpenLGTV BCM NetCast item)..." | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     fi
+    #v- not used as killing browser should be done in konfabulator.sh
+    #if [ "$netcast_kill_browser" = "1" ]
+    #then
+    #	if [ -f "$real_run3556" ]
+    #	then
+    #	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for killing old browser instance in browser startup script (netcast_kill_browser=1) run3556 file: $real_run3556 ..." | tee -a /var/log/OpenLGTV_BCM.log
+    #	    /scripts/netcast_config_regenerator.sh $real_run3556 kill_browser 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    #	else
+    #	    echo "OpenLGTV_BCM-WARN: havent found any useful run3556 file, skipping custom NetCast Web Browser start script modification..." | tee -a /var/log/OpenLGTV_BCM.log
+    #	fi
+    #fi
 else
     echo "OpenLGTV_BCM-ERROR: havent found any useful config.xml file, skipping custom NetCast configuration..." | tee -a /var/log/OpenLGTV_BCM.log
 fi

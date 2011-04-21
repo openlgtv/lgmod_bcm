@@ -197,6 +197,16 @@ then
 		    cp -f "$ywedir_usb/lib/libssl.so.0.9.8"      "$ywedir_usb/lib/libssl.so"               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		fi
 	    fi
+	    if [ -e "$ywedir/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir/bin/konfabulator.sh`" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config ($ywedir/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..." | tee -a /var/log/OpenLGTV_BCM.log
+		echo -e "\nkillall lb4wk\n" >> "$ywedir/bin/konfabulator.sh"
+	    fi
+	    if [ -e "$ywedir_usb/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir_usb/bin/konfabulator.sh`" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config on USB storage device ($ywedir_usb/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..." | tee -a /var/log/OpenLGTV_BCM.log
+		echo -e "\nkillall lb4wk\n" >> "$ywedir_usb/bin/konfabulator.sh"
+	    fi
 	else
 	    echo "OpenLGTV_BCM-INFO: preparing Yahoo Widgets Engine configs for Samsung Widgets is disabled by samsung_ywe setting variable..." | tee -a /var/log/OpenLGTV_BCM.log
 	fi

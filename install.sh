@@ -25,7 +25,7 @@ then
     autoupgrade=1
 fi
 
-ver=0.3.0-beta1
+ver=0.3.0-beta2
 development=1
 
 tmp=/tmp

@@ -11,12 +11,12 @@ content-type: text/html
 			<? export pagename="Info Page" ?>
 			<? include/header_links.cgi.inc ?>
 			
-			<div id="textOnly" style="background-color:white;height:400px;">
+			<div id="textOnly" style="background-color:white;height:390px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					<!-- /proc/cpuinfo:<br />
 					<pre><? cat /proc/cpuinfo ?></pre> -->
-					Last 20 running processes:<br />
-					<font size="-3"><pre><? ps w | tail -n 20 ?></pre></font>
+					Last 25 running processes:<br />
+					<font size="-3"><pre><? ps w | tail -n 25 ?></pre></font>
 				</div>
 			</div>
 		</form>
