@@ -1,4 +1,8 @@
 #!/bin/sh
+# OpenLGTV BCM script rc.usb
+# USB Storage Usage Script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
 # Wait until connect usb drive
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1

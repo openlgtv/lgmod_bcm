@@ -1,5 +1,8 @@
 #!/bin/sh
-# NetCast config modification rc.netcast-modify script
+# OpenLGTV BCM script rc.netcast-modify
+# NetCast config modification script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
 #source /mnt/user/cfg/settings
 if [ "$real_configxml" = "" -a -f "/mnt/user/netcast/config.xml" ]
 then

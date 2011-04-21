@@ -1,10 +1,12 @@
 #!/bin/haserl
+# mount.cgi by xeros, nicola_12345
+# Source code released under GPL License
 content-type: text/html
 
 <html>
 <? cat /var/www/include/keycontrol.html.inc ?>
 
-	<div style="position: absolute; left: 10px; top: 10px; width:600px">
+	<div style="position: absolute; left: 10px; top: 10px; width:860px">
 		<form id="URL" name="URL" action="mount.cgi" method="GET">
 			<? export pagename="Network Share Mounts" ?>
 			<? include/header_links.cgi.inc ?>
@@ -63,7 +65,7 @@ fi
 
 ?>
 
-			<div id="txtURLParent" style="background-color:white;height:30px;">
+			<div id="txtURLParent" style="background-color:white;height:30px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					URL: 
 				</div>
@@ -71,7 +73,7 @@ fi
 				    <input id="txtURL" name="qURL" type="textarea" style="width:400px" value="<? echo $src ?>"/>
 				</div>
 			</div>
-			<div id="txtUserParent" style="background-color:white;height:30px;">
+			<div id="txtUserParent" style="background-color:white;height:30px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					Username: 
 				</div>
@@ -79,7 +81,7 @@ fi
 					<input id="txtUser" name="qUser" type="textarea" style="width:400px" value="<? echo $uname ?>"/>
 				</div>
 			</div>
-			<div id="txtPasswParent" style="background-color:white;height:30px;">
+			<div id="txtPasswParent" style="background-color:white;height:30px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					Password: 
 				</div>
@@ -87,7 +89,7 @@ fi
 					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" value="<? echo $pass ?>"/>
 				</div>
 			</div>
-			<div id="radio1Parent" style="background-color:white;height:30px;">
+			<div id="radio1Parent" style="background-color:white;height:30px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					Network Protocol: 
 					<? if [ "$fs_type" = "cifs" ]
@@ -100,7 +102,7 @@ fi
 					   fi ?>
 				</div>
 			</div>
-			<div id="check1Parent" style="background-color:white;height:30px;">
+			<div id="check1Parent" style="background-color:white;height:30px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 				<? if [ "$automount" = "1" ]
 				   then

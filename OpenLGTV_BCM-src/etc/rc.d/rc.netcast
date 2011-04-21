@@ -1,5 +1,8 @@
 #!/bin/sh
-# NetCast setup rc.netcast script
+# OpenLGTV BCM script rc.netcast
+# NetCast setup script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
 # Mount-binding NetCast services configs
 if [ ! -d "/mnt/user/netcast" ]
 then

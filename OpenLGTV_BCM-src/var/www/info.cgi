@@ -1,10 +1,12 @@
 #!/bin/haserl
+# info.cgi by xeros
+# Source code released under GPL License
 content-type: text/html
 
 <html>
 <? cat /var/www/include/keycontrol.html.inc ?>
 
-	<div style="position: absolute; left: 10px; top: 10px; width:600px">
+	<div style="position: absolute; left: 10px; top: 10px; width:860px">
 		<form id="URL" name="URL">
 			<? export pagename="Info Page" ?>
 			<? include/header_links.cgi.inc ?>

@@ -1,5 +1,8 @@
 #!/bin/haserl
-			<div id="textOnly" style="background-color:white;height:120px;">
+# header_links.cgi.inc by xeros
+# Source code released under GPL License
+
+			<div id="textOnly" style="background-color:white;height:120px; background-color:yellow;">
 				<div style="position: relative; left: 5px; top: 0px;">
 					<center><font size="+3"><b>OpenLGTV BCM <? cat /etc/ver2 ?><br/></font><font size="+2">Web UI<br/></font><font color="blue" size="+3"><? echo $pagename ?></font></b></font></center>
 				</div>

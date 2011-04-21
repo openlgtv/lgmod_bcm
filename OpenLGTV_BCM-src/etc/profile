@@ -1,3 +1,6 @@
+# OpenLGTV BCM script /etc/profile
+# Profile Setting Script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
 
 echo "Processing /etc/profile..."
 

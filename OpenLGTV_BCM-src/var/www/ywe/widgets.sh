@@ -1,4 +1,7 @@
 #!/bin/sh
+# widgets.sh by xeros, tbage, QueZt
+# Source code released under GPL License
+
 echo "Content-type: text/html"
 echo ""
 

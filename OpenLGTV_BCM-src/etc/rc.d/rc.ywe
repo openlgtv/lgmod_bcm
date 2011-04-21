@@ -1,4 +1,8 @@
 #!/bin/sh
+# OpenLGTV BCM script rc.ywe
+# YWE Configuration Script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
 # this script might need cleanup after we will finally drop all support for lg yahoo widgets, even drop the variable
 if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" -o "$force_copy_config_ywe" = "1" ]
 then

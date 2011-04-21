@@ -1,6 +1,7 @@
 //<!-- 
+// control.js by Nicola Ottomano
+// changed by xeros
 // Source code released under GPL License
-// Nicola Ottomano LG TV
 
 	// On-screen keyboard images preload
 	if (document.images)
@@ -283,7 +284,9 @@ var currElementIndex;
 var currElementName;
 
 //Background color of current focused control parent.
-var ParentFocusColor = 'yellow';
+//var ParentFocusColor = 'yellow';
+//var ParentFocusColor = 'green';
+var ParentFocusColor = '#00FF00';
 var ParentUnfocusColor = 'white';
 
 

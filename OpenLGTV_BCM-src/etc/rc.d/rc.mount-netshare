@@ -1,4 +1,8 @@
 #!/bin/sh
+# OpenLGTV BCM script rc.mount-netshare
+# Network Share Mounting Script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
 if [ -f "/mnt/user/cfg/ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
 then
     echo "OpenLGTV_BCM-INFO: found Network Share configuration file /mnt/user/cfg/ndrvtab and mounted USB stick - parsing config content..." | tee -a /var/log/OpenLGTV_BCM.log
