@@ -1,7 +1,5 @@
 <head>
-
 <!-- Sample Key Control NetCast Web UI by nicola_12345, changes by xeros -->
-
 <!-- Source code released under GPL License -->
 
 <title>OpenLGTV BCM</title>
@@ -14,7 +12,7 @@
 <SCRIPT language="JavaScript" type="text/javascript" src="js/control.js"></script>
 </head>
 <body>
-<IMG align="right" SRC="http://openlgtv.org.ru/wiki/openlgtv_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 30px; top: 30px;"/>
+<IMG align="right" SRC="http://openlgtv.org.ru/wiki/openlgtv_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 140px; top: 30px;"/>
 	<!-- div style="position: absolute; left: 5px; top: 480px;" -->
 	<!-- div style="position: absolute; right: 10px; bottom: 100px;" -->
 	<div style="position: absolute; right: 30px; bottom: 300px;">

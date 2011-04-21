@@ -584,8 +584,17 @@ function checkElementMinus(elementIndex)
 	}
 	currElementName=PageElements[currElementIndex].value;
 }
+function sleep(milliseconds) 
+{
+	var startTime = new Date().getTime();
+	for (var i = 0; i < 1e7; i++) {
+	    if ((new Date().getTime() - startTime) > milliseconds){
+		break;
+	    }
+	}
+}
 function OnLoadSetCurrent()
-	{
+{
 	//Setting the position of first button of the on-screen keyboard
 	current = 1;
 	document.links['c1'].focus();
@@ -597,7 +606,11 @@ function OnLoadSetCurrent()
 	//Change the background color of selected control
 	d = document.getElementById(currElementName + 'Parent');
 	d.style.backgroundColor=ParentFocusColor;
-	}	
-	
+	if (document.getElementById('spanSAVED')) {
+	    document.getElementById('spanSAVED').innerHTML='SETTINGS SAVED !!!';
+	    sleep(300);
+	    document.getElementById('spanSAVED').innerHTML='-';
+	}
+}	
 	document.defaultAction = true;
 	//-->

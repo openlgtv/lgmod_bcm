@@ -66,7 +66,7 @@ content-type: text/html
 						mv /tmp/settings.save /mnt/user/cfg/settings
 						echo "OpenLGTV_BCM-INFO: WebUI: Settings file: /mnt/user/cfg/settings changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
 					    fi
-					    echo '<center><font size="+3" color="red"><b>SETTINGS SAVED !!!</b></font></center>'
+					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
 					else
 					    echo '<br /><center><font size="+2" color="red"><b>Be very careful when changing settings !!!</b></font></center>'
 					fi

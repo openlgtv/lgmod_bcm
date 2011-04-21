@@ -112,6 +112,25 @@ fi
 				   fi ?>
 				</div>
 			</div>
+			<input type="hidden" name="save" value="1">
+			<div id="textOnly" style="background-color:white;height:64px;">
+				<div style="position: relative; left: 5px; top: 5px;">
+				    <?
+					if [ "$FORM_save" = "1" ]
+					then
+					    #if [ -f "/tmp/settings.save" ]
+					    #then
+						#mv /mnt/user/cfg/settings /mnt/user/cfg/settings.bck
+						#mv /tmp/settings.save /mnt/user/cfg/settings
+						echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts file: /mnt/user/cfg/ndrvtab changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
+					    #fi
+					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
+					else
+					    echo '<br /><center><font size="+2" color="red"><b></b></font></center>'
+					fi
+				    ?>
+				</div>
+			</div>
 		</form>
 	</div>	
 

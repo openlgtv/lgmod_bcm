@@ -10,7 +10,7 @@ content-type: text/html
 		<form id="URL" name="URL">
 			<? export pagename="Home Page" ?>
 			<? include/header_links.cgi.inc ?>
-			<div id="textOnly" style="background-color:white;height:300px;">
+			<div id="textOnly" style="background-color:white;height:320px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					<br />
 					<b>LG rootfs version:</b> <? cat /etc/ver | awk -F, '{print $1}' ?><br /><br />

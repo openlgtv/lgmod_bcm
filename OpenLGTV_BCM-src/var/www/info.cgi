@@ -15,8 +15,8 @@ content-type: text/html
 				<div style="position: relative; left: 5px; top: 5px;">
 					<!-- /proc/cpuinfo:<br />
 					<pre><? cat /proc/cpuinfo ?></pre> -->
-					Running processes:<br />
-					<font size="-3"><pre><? ps w ?></pre></font>
+					Last 20 running processes:<br />
+					<font size="-3"><pre><? ps w | tail -n 20 ?></pre></font>
 				</div>
 			</div>
 		</form>
