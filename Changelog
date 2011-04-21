@@ -143,6 +143,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: support for modified addon and browser partitions in NetCast configs modifications
     * ADD: NFS/CIFS Network Share mounting on boot and WebUI configuration features, this needs FAT formated USB stick plugged in as mount point, CIFS needs additional kernel driver module (cifs.ko)
     * ADD: WebUI is capable of saving changed settings file (be careful changing settings, not all of them have been tested enough)
+    * ADD: WebUI settings - default values are presented in green color, changed from defaults are red, description of settings, save info on bottom of page
     * ADD: WebUI is available without password on 127.0.0.1:88 and with root password authentication and user: openlgtv on 0.0.0.0:80 (accepting authenticated connections on LAN/WLAN)
     * ADD: making copy of boot log /var/log/OpenLGTV_BCM.log to USB storage device in OpenLGTV_BCM dir if it does not exist there - usally it should be first boot log
     * ADD: making default settings file /mnt/user/cfg/settings.default with comments
