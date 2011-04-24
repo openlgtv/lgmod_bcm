@@ -148,6 +148,8 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: WebUI is available without password on 127.0.0.1:88 and with root password authentication and user: openlgtv on 0.0.0.0:80 (accepting authenticated connections on LAN/WLAN)
     * ADD: making copy of boot log /var/log/OpenLGTV_BCM.log to USB storage device in OpenLGTV_BCM dir if it does not exist there - usally it should be first boot log
     * ADD: making default settings file /mnt/user/cfg/settings.default with comments
+    * ADD: WebUI - full browser option [work in progress] by nicola_12345
+    * ADD: WebUI menu in horizontal view, so it can have more items without using limited vertical space
     * UPDATE: haserl binary updated to version 0.9.28, compiled without LUA and BashExtensions support
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install

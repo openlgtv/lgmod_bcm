@@ -3,91 +3,29 @@
 // changed by xeros
 // Source code released under GPL License
 
-	// On-screen keyboard images preload
-	if (document.images)
-	{
-	  preload_image_object = new Image();
-	  // set image url
-	  image_url = new Array();
-	  image_url[0] = "Images/Keyboard/1b.png";
-	  image_url[1] = "Images/Keyboard/2b.png";
-	  image_url[2] = "Images/Keyboard/3b.png";
-	  image_url[3] = "Images/Keyboard/4b.png";
-	  image_url[4] = "Images/Keyboard/5b.png";
-	  image_url[5] = "Images/Keyboard/6b.png";
-	  image_url[6] = "Images/Keyboard/7b.png";
-	  image_url[7] = "Images/Keyboard/8b.png";
-	  image_url[8] = "Images/Keyboard/9b.png";
-	  image_url[9] = "Images/Keyboard/10b.png";
-	  image_url[10] = "Images/Keyboard/11b.png";
-	  image_url[11] = "Images/Keyboard/12b.png";
-	  image_url[12] = "Images/Keyboard/13b.png";
-	  image_url[13] = "Images/Keyboard/14b.png";
-	  image_url[14] = "Images/Keyboard/15b.png";
-	  image_url[15] = "Images/Keyboard/16b.png";
-	  image_url[16] = "Images/Keyboard/17b.png";
-	  image_url[17] = "Images/Keyboard/18b.png";
-	  image_url[18] = "Images/Keyboard/19b.png";
-	  image_url[19] = "Images/Keyboard/20b.png";
-	  image_url[20] = "Images/Keyboard/21b.png";
-	  image_url[21] = "Images/Keyboard/22b.png";
-	  image_url[22] = "Images/Keyboard/23b.png";
-	  image_url[23] = "Images/Keyboard/24b.png";
-	  image_url[24] = "Images/Keyboard/25b.png";
-	  image_url[25] = "Images/Keyboard/26b.png";
-	  image_url[26] = "Images/Keyboard/27b.png";
-	  image_url[27] = "Images/Keyboard/28b.png";
-	  image_url[28] = "Images/Keyboard/29b.png";
-	  image_url[29] = "Images/Keyboard/30b.png";
-	  image_url[30] = "Images/Keyboard/31b.png";
-	  image_url[31] = "Images/Keyboard/32b.png";
-	  image_url[32] = "Images/Keyboard/33b.png";
-	  image_url[33] = "Images/Keyboard/34b.png";
-	  image_url[34] = "Images/Keyboard/35b.png";
-	  image_url[35] = "Images/Keyboard/36b.png";
-	  image_url[36] = "Images/Keyboard/37b.png";
-	  image_url[37] = "Images/Keyboard/38b.png";
-	  image_url[38] = "Images/Keyboard/39b.png";
-	  image_url[39] = "Images/Keyboard/40b.png";
-	  image_url[40] = "Images/Keyboard/41b.png";
-	  image_url[41] = "Images/Keyboard/42b.png";
-	  image_url[42] = "Images/Keyboard/43b.png";
-	  image_url[43] = "Images/Keyboard/44b.png";
-	  image_url[44] = "Images/Keyboard/45b.png";
-	  image_url[45] = "Images/Keyboard/46b.png";
-	  image_url[46] = "Images/Keyboard/47b.png";
-	  image_url[47] = "Images/Keyboard/48b.png";
-
-	   var i = 0;
-	   for(i=0; i<=47; i++) 
-		 preload_image_object.src = image_url[i];
-	}
-
-	//-->
-<!--
 
 //******** MOBILE PHONE-STYLE KEYPAD *********
 var keys = new Array();
 
 keys['0'] = new Object();
 keys['0'].ctr = 0;
-keys['0'].char = [' ','0'];
+keys['0'].char = [' ','0','+','*','-','\\','=','<','>'];
 
 keys['1'] = new Object();
 keys['1'].ctr = 0;
-keys['1'].char = ['.',':','/','1',',','@','\\','$','%','#'];
+keys['1'].char = ['.',':',',','/','1','@','(',')','[',']','$','%','#','&'];
 
 keys['2'] = new Object();
 keys['2'].ctr = 0;
-keys['2'].char = ['a','b','c','2'];
+keys['2'].char = ['a','b','c','2','à'];
 
 keys['3'] = new Object();
 keys['3'].ctr = 0;
-keys['3'].char = ['d','e','f','3'];
+keys['3'].char = ['d','e','f','3','è','é'];
 
 keys['4'] = new Object();
 keys['4'].ctr = 0;
-keys['4'].char = ['g','h','i','4'];
+keys['4'].char = ['g','h','i','4','ì'];
 
 keys['5'] = new Object();
 keys['5'].ctr = 0;
@@ -95,7 +33,7 @@ keys['5'].char = ['j','k','l','5'];
 
 keys['6'] = new Object();
 keys['6'].ctr = 0;
-keys['6'].char = ['m','n','o','6'];
+keys['6'].char = ['m','n','o','6','ò','ó'];
 
 keys['7'] = new Object();
 keys['7'].ctr = 0;
@@ -103,7 +41,7 @@ keys['7'].char = ['p','q','r','s','7'];
 
 keys['8'] = new Object();
 keys['8'].ctr = 0;
-keys['8'].char = ['t','u','v','8'];
+keys['8'].char = ['t','u','v','8','ù'];
 
 keys['9'] = new Object();
 keys['9'].ctr = 0;
@@ -320,8 +258,10 @@ window.onload = OnLoadSetCurrent;
 				//Move to the next key on the keyboard
 				var code=document.links['c' + next].name;
 				document.links['c' + next].focus();
-				document.images['i' + next].src = 'Images/Keyboard/' + next + 'b.png';
-				document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
+				//document.images['i' + next].src = 'Images/Keyboard/' + next + 'b.png';
+				document.images['i' + next].src = 'Images/Keyboard/bt_focus.png';
+				//document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
+				document.images['i' + current].src = 'Images/Keyboard/bt_nofocus.png';
 				current = next;
 				}
 			/* TODO? - actions for left and right remote buttons on 'button' page elements
@@ -330,8 +270,10 @@ window.onload = OnLoadSetCurrent;
 				//Move to the next key on the keyboard
 				var code=document.links['c' + next].name;
 				document.links['c' + next].focus();
-				document.images['i' + next].src = 'Images/Keyboard/' + next + 'b.png';
-				document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
+				//document.images['i' + next].src = 'Images/Keyboard/' + next + 'b.png';
+				document.images['i' + next].src = 'Images/Keyboard/bt_focus.png';
+				//document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
+				document.images['i' + current].src = 'Images/Keyboard/bt_nofocus.png';
 				current = next;
 				} */
 			} 
