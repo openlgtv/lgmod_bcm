@@ -50,10 +50,12 @@ then
     fi
     if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
     then
-	if [ -f "/mnt/browser/browser_application.txt" ]
+	#if [ -f "/mnt/browser/browser_application.txt" ]
+	if [ -f "/mnt/addon/browser/browser_application.txt" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: making browser config copy - /mnt/browser/browser_application.txt..." | tee -a /var/log/OpenLGTV_BCM.log
-	    cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
+	    echo "OpenLGTV_BCM-INFO: making browser config copy - /mnt/addon/browser/browser_application.txt..." | tee -a /var/log/OpenLGTV_BCM.log
+	    #cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
+	    cp /mnt/addon/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
 	fi
     fi
     if [ ! -f "/mnt/user/netcast/run3556" ]
@@ -116,12 +118,14 @@ else
 	export real_configxml="/mnt/addon/contents/config.xml"
     fi
     echo "OpenLGTV_BCM-INFO: using real StageCraft config file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
-    if [ -h "/mnt/browser/browser_application.txt" ]
+    # browser_application.txt file really used by built-in web browser is /mnt/addon/browser/browser_application.txt instead of /mnt/browser/browser_application.txt file
+    #if [ -h "/mnt/browser/browser_application.txt" ]
+    if [ -h "/mnt/addon/browser/browser_application.txt" ]
     then
-	export real_browapptxt="`ls -al /mnt/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
+	export real_browapptxt="`ls -al /mnt/addon/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
 	export custom_browapptxt=1
     else
-	export real_browapptxt="/mnt/browser/browser_application.txt"
+	export real_browapptxt="/mnt/addon/browser/browser_application.txt"
     fi
     echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
     #v- not needed yet
