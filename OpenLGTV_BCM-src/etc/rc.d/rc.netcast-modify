@@ -6,11 +6,11 @@
 #source /mnt/user/cfg/settings
 if [ "$real_configxml" = "" -a -f "/mnt/user/netcast/config.xml" ]
 then
-    real_configxml="/mnt/user/netcast/config.xml"
+    export real_configxml="/mnt/user/netcast/config.xml"
 fi
 if [ "$real_browapptxt" = "" -a -f "/mnt/user/netcast/browser_application.txt" ]
 then
-    real_browapptxt="/mnt/user/netcast/browser_application.txt"
+    export real_browapptxt="/mnt/user/netcast/browser_application.txt"
 fi
 #v- not used yet
 #if [ "$real_run3556" = "" -a -f "/mnt/user/netcast/run3556" ]

@@ -102,26 +102,26 @@ else
     custom_run3556=0
     if [ -h "/mnt/addon/bin/addon_mgr.bat" ]
     then
-	real_addonmgrbat="`ls -al /mnt/addon/bin/addon_mgr.bat | awk -F\"> \" '{print $2}'`"
-	custom_addonmgrbat=1
+	export real_addonmgrbat="`ls -al /mnt/addon/bin/addon_mgr.bat | awk -F\"> \" '{print $2}'`"
+	export custom_addonmgrbat=1
     else
-	real_addonmgrbat="/mnt/addon/bin/addon_mgr.bat"
+	export real_addonmgrbat="/mnt/addon/bin/addon_mgr.bat"
     fi
     echo "OpenLGTV_BCM-INFO: using real Addon_Mgr config file: $real_addonmgrbat ..." | tee -a /var/log/OpenLGTV_BCM.log
     if [ -h "/mnt/addon/contents/config.xml" ]
     then
-	real_configxml="`ls -al /mnt/addon/contents/config.xml | awk -F\"> \" '{print $2}'`"
-	custom_configxml=1
+	export real_configxml="`ls -al /mnt/addon/contents/config.xml | awk -F\"> \" '{print $2}'`"
+	export custom_configxml=1
     else
-	real_configxml="/mnt/addon/contents/config.xml"
+	export real_configxml="/mnt/addon/contents/config.xml"
     fi
     echo "OpenLGTV_BCM-INFO: using real StageCraft config file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
-    if [ -h "/mnt/browser/browser_application.xml" ]
+    if [ -h "/mnt/browser/browser_application.txt" ]
     then
-	real_browapptxt="`ls -al /mnt/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
-	custom_browapptxt=1
+	export real_browapptxt="`ls -al /mnt/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
+	export custom_browapptxt=1
     else
-	real_browapptxt="/mnt/browser/browser_application.txt"
+	export real_browapptxt="/mnt/browser/browser_application.txt"
     fi
     echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
     #v- not needed yet
