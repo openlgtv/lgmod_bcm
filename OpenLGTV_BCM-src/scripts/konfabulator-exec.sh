@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ ! -d "$ywedir" -o ! -h "$ywedir" ]
+if [ ! -d "$ywedir" -a ! -h "$ywedir" ]
 then
     echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: not found ywedir=$ywedir path, trying set it to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe instead..." | tee -a /var/log/OpenLGTV_BCM.log
     ywedir=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe

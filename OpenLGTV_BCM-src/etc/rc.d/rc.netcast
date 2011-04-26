@@ -9,7 +9,7 @@ then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/netcast dir for NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/netcast
 fi
-if [ ! -d "/mnt/user/ywe" -o ! -d "/mnt/user/ywe/samsung" ]
+if [ ! -d "/mnt/user/ywe/samsung" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe and /mnt/user/ywe/samsung dirs for Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/ywe/samsung

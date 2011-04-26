@@ -22,7 +22,7 @@ then
     fi
     export ywedir_usb=$OpenLGTV_BCM_USB/ywe
     export ywedatadir_usb=$OpenLGTV_BCM_USB/ywedata
-    if [ ! -d "/mnt/user/ywe" -o ! -d "/mnt/user/ywe/samsung" ]
+    if [ ! -d "/mnt/user/ywe/samsung" ]
     then
 	mkdir -p /mnt/user/ywe/samsung                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
