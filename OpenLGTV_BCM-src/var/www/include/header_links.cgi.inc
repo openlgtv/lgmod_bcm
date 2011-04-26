@@ -20,15 +20,3 @@
 				<input type="button" id="link5" onKeyPress="javascript:window.location='browser.html';" onClick="javascript:window.location='browser.html';" value="Web Browser" style="width:150px" />
 			</div>
 			</center>
-
-			<!-- TODO - 'button' page elements presentation and navigation in one row
-			<div id="linksParent" style="background-color:white;height:32px;">
-				<div id="link1Parent" style="background-color:white;height:32px;">
-				    <div style="position: relative; left: 5px; top: 5px;">
-					<input id="links" type="hidden" href="settings.cgi" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:NextControl();" value="TEST" style="width:200px" />
-					Links: 
-					<input type="button" id="link1" href="settings.cgi" onKeyPress="javascript:window.location='settings.cgi';" onClick="javascript:window.location='settings.cgi';" value="Settings" style="width:100px" />
-					<input type="button" id="link2" href="settings.cgi" onKeyPress="javascript:window.location='samplekeycontrol.cgi';" onClick="javascript:window.location='samplekeycontrol.cgi';" value="Settings2" style="width:100px" />
-				    </div>
-				</div>
-			</div> -->
