@@ -422,7 +422,7 @@ if [ "$force_copy_config_ywe" = "" ];         then echo "force_copy_config_ywe=0
 if [ "$netcast_config_add_openlgtv" = "" ];   then echo "netcast_config_add_openlgtv=1#Add OpenLGTV BCM icon to NetCast conf?"             | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
 if [ "$netcast_config_add_yahoo" = "" ];      then echo "netcast_config_add_yahoo=1#Add Yahoo Widgets icon to NetCast conf?"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
 if [ "$netcast_config_enable_all" = "" ];     then echo "netcast_config_enable_all=0#Rewrite NetCast conf, enable all services BE CAREFUL" | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$netcast_kill_browser" = "" ];          then echo "netcast_kill_browser=1#Modify Web Browser script for Browser after YWE fix"       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+#if [ "$netcast_kill_browser" = "" ];          then echo "netcast_kill_browser=1#Modify Web Browser script for Browser after YWE fix"       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
 # more to come...
 
 #v- this could make inconsistency between default settings and current ones, so disabling it for now

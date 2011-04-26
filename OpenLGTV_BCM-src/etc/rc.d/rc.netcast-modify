@@ -24,6 +24,8 @@ then
     then
 	echo "OpenLGTV_BCM-WARN: running NetCast Config Regenerator to enable all NetCast services (netcast_config_enable_all=1) file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
 	/scripts/netcast_config_regenerator.sh $real_configxml enable_all 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-WARN: changing back netcast_config_enable_all=1 option to netcast_config_enable_all=0 in /mnt/user/cfg/settings file to prevent config.xml rewrite at every boot..." | tee -a /var/log/OpenLGTV_BCM.log
+	sed -i -e 's/netcast_config_enable_all=1/netcast_config_enable_all=0/g' /mnt/user/cfg/settings 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
     if [ "$netcast_config_add_yahoo" = "1" ]
     then
