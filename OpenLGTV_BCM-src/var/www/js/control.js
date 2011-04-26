@@ -444,10 +444,8 @@ function PrevControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
 		}
-	
-	}	
-	
-	
+	}
+
 function NextControl()
 	{
 	//currElementName=PageElements[currElementIndex].value;
@@ -480,14 +478,14 @@ function NextControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
 		}
-	}	
+	}
 
 function setCurrent(element)
 	{
 	var string = element.id;
 	current = string.slice(1,string.length);
 	}
-	
+
 function checkElementPlus(elementIndex)
 {
 	currElementIndex=elementIndex;
@@ -501,9 +499,11 @@ function checkElementPlus(elementIndex)
 		} while ((!document.forms['URL'].elements[currElementName])&&(currElementIndex < PageElements.length-1));
 	}
 	if (!document.forms['URL'].elements[currElementName]) {
-	    currElementIndex=prevElementIndex;
-	    currElementName=PageElements[currElementIndex].value;
-	    checkElementMinus(currElementIndex);
+	    //Disabled so it goes to beginning if there are no more elements
+	    //Disabled// currElementIndex=prevElementIndex;
+	    //Disabled// currElementName=PageElements[currElementIndex].value;
+	    //Disabled// checkElementMinus(currElementIndex);
+	    currElementIndex=0;
 	}
 	currElementName=PageElements[currElementIndex].value;
 }
@@ -542,7 +542,8 @@ function OnLoadSetCurrent()
 	document.links['c1'].focus();
 	
 	//Setting the current input control 
-	currElementIndex=0;
+	//currElementIndex=0;
+	currElementIndex=5;
 	checkElementPlus(currElementIndex);
 	currElementName=PageElements[currElementIndex].value;
 	//Change the background color of selected control
@@ -550,8 +551,8 @@ function OnLoadSetCurrent()
 	d.style.backgroundColor=ParentFocusColor;
 	if (document.getElementById('spanSAVED')) {
 	    document.getElementById('spanSAVED').innerHTML='SETTINGS SAVED !!!';
-	    sleep(300);
-	    document.getElementById('spanSAVED').innerHTML='-';
+	    //sleep(300);
+	    //document.getElementById('spanSAVED').innerHTML='-';
 	}
 }	
 	document.defaultAction = true;
