@@ -1,0 +1,48 @@
+body{
+	font-family:"TiresiasScreenfont";
+	background-color:black;
+}
+
+.container{
+	width:1280px;
+	height:720px;
+	overflow:hidden;
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+.footer{
+	background:rgb(42,42,42);
+	position:absolute;
+	bottom:0;
+	left:0;
+	height:50px;
+	overflow:hidden;
+	width:100%;
+}
+.footer li span{
+	width:46px;
+	height:30px;
+	margin:8px;
+	float:left;
+}
+.footer li{
+	width:212px;
+	height:45px;
+	line-height:47px;
+	font-size:24px;
+	letter-spacing:1px;
+	color:white;
+	border:rgb(34,34,34) 1px solid;
+	cursor:pointer;
+	overflow:hidden;
+	float:left;
+}
+.footer li:hover{
+	background:#2B3856;
+}
+.footer ul{
+	margin:0;
+	padding:0;
+}
