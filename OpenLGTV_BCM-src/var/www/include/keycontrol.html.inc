@@ -12,10 +12,8 @@
 <SCRIPT language="JavaScript" type="text/javascript" src="js/control.js"></script>
 </head>
 <body>
-<IMG align="right" SRC="http://openlgtv.org.ru/wiki/openlgtv_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 140px; top: 30px;"/>
-	<!-- div style="position: absolute; left: 5px; top: 480px;" -->
-	<!-- div style="position: absolute; right: 10px; bottom: 100px;" -->
-	<div style="position: absolute; right: 30px; bottom: 300px;">
+<IMG align="right" SRC="http://openlgtv.org.ru/wiki/openlgtv_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 110px; top: 30px;"/>
+	<div style="position: absolute; right: 10px; bottom: 300px;">
 	<Table id="Keyboard" name="Keyboard" class="Keyboard" Border=0 cellspacing=0 background="Images/Keyboard/keypad.png">
 		<tr>
 			<td border=0 height="31px" width="44px"><a id="c1" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="a"><img id="i1" src="Images/Keyboard/bt_nofocus.png" alt="a" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
@@ -79,36 +77,13 @@
 		</tr>
 	</Table>
 	</div>
-	<!-- div style="position: absolute; left: 400px; top: 480px;" -->
-	<div style="position: absolute; right: 80px; bottom: 100px;">
+	<div style="position: absolute; right: 110px; bottom: 100px;">
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td><img src="Images/Keyboard/tapkey.png" align="middle"></td>
 			</tr>
 		</Table>
 	</div>
-	<!-- HTML only table prototype for keypad
-	<div style="position: absolute; left: 400px; top: 480px; background-color: white">
-		<Table Border=1 cellspacing=10>
-			<tr align="center">
-				<td>1<br/>.,?</td>
-				<td>2<br/>ABC</td>
-				<td>3<br/>DEF</td>
-			</tr><tr align="center">
-				<td>4<br/>GHI</td>
-				<td>5<br/>JKL</td>
-				<td>6<br/>MNO</td>
-			</tr><tr align="center">
-				<td>7<br/>PQRS</td>
-				<td>8<br/>TUV</td>
-				<td>9<br/>WXYZ</td>
-			</tr><tr align="center">
-				<td>*<br/></td>
-				<td>0<br/>space</td>
-				<td>#<br/></td>
-			</tr>
-		</Table>
-	</div> -->
 	<div id="footer" class="footer">
 		<ul>
 			<!-- li class="blank"><span></span></li -->
