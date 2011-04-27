@@ -28,7 +28,7 @@ g_yaction=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])yaction=[^&]+" | cut -f 2 -
 
 useragent="Mozilla/5.0 (Samsung; U; Linux; en) Konfabulator/5.5.5"
 
-#widgetsPhpLoc="http://127.0.0.1/widgets.sh"
+#widgetsPhpLoc="http://127.0.0.1:88/widgets.sh"
 #url="http://gallery.tv.widgets.yahoo.com/api/v1/gallery/samsung$yaction"
 url="http://gallery.tv.widgets.yahoo.com/api/v1/gallery/samsung/category/$g_ycat"
 
