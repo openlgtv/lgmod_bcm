@@ -25,7 +25,7 @@ then
     autoupgrade=1
 fi
 
-ver=0.3.0-beta3
+vcer=1234
 development=1
 
 tmp=/tmp
