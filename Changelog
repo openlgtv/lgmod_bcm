@@ -117,6 +117,7 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: memory check problem on install or upgrade - now there's counted memory taken by buffers, too
     * FIX: do not run upgrade when there are not flashable files in upgrade dir
     * FIX: Yahoo Widgets Engine vs Web Browser resolution incompatibility is now fixed
+    * FIX: check for proper NetCast config.xml format before doing any NetCast configuration
     * ADD: Changelog file to SVN
     * ADD: update time at boot using NTP servers pool
     * ADD: create /mnt/user/www dir if it does not exist

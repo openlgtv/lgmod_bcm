@@ -3,18 +3,36 @@
 # NetCast setup script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-# Mount-binding NetCast services configs
-if [ ! -d "/mnt/user/netcast" ]
+# Check for proper NetCast configs structure (might need to be extended in future)
+export netcast_config_ok=1
+if [ ! -f "/mnt/user/netcast/config.xml" ]
+then
+    echo "OpenLGTV_BCM-INFO: first run NetCast configs preparation..." | tee -a /var/log/OpenLGTV_BCM.log
+    if [ -f "/mnt/addon/contents/config.xml" ]
+    then
+	echo "OpenLGTV_BCM-INFO: checking if /mnt/addon/contents/config.xml file has supported format..." | tee -a /var/log/OpenLGTV_BCM.log
+	if [ -z "`grep '<exec_engine>' /mnt/addon/contents/config.xml`" -o -z "`grep '<exec_app>' /mnt/addon/contents/config.xml`" -o -z "`grep 'check_network' /mnt/addon/contents/config.xml`" -o -z "`grep 'native' /mnt/addon/contents/config.xml`" ]
+	then
+	    echo "OpenLGTV_BCM-ERROR: /mnt/addon/contents/config.xml file has NOT SUPPORTED format, please upgrade yours firmware - stopping NetCast preparation..." | tee -a /var/log/OpenLGTV_BCM.log
+	    export netcast_config_ok=0
+	fi
+    else
+	echo "OpenLGTV_BCM-ERROR: /mnt/addon/contents/config.xml file does not exist - stopping NetCast preparation..." | tee -a /var/log/OpenLGTV_BCM.log
+	export netcast_config_ok=0
+    fi
+fi
+
+if [ ! -d "/mnt/user/netcast" -a "$netcast_config_ok" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/netcast dir for NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/netcast
 fi
-if [ ! -d "/mnt/user/ywe/samsung" ]
+if [ ! -d "/mnt/user/ywe/samsung" -a "$netcast_config_ok" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/ywe and /mnt/user/ywe/samsung dirs for Yahoo Widgets Engine configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/ywe/samsung
 fi
-if [ -d "/mnt/addon/contents/netcast" ]
+if [ -d "/mnt/addon/contents/netcast" -a "$netcast_config_ok" = "1" ]
 then
     if [ ! -d "/home/netcast_icons" ]
     then
@@ -44,98 +62,104 @@ then
 fi
 if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
 then
-    if [ "$force_copy_config_netcast" = "1" ]
+    if [ "$netcast_config_ok" = "1" ]
     then
-	echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
-    fi
-    if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
-    then
-	#if [ -f "/mnt/browser/browser_application.txt" ]
-	if [ -f "/mnt/addon/browser/browser_application.txt" ]
+	if [ "$force_copy_config_netcast" = "1" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: making browser config copy - /mnt/addon/browser/browser_application.txt..." | tee -a /var/log/OpenLGTV_BCM.log
-	    #cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
-	    cp /mnt/addon/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
+	    echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..." | tee -a /var/log/OpenLGTV_BCM.log
 	fi
-    fi
-    if [ ! -f "/mnt/user/netcast/run3556" ]
-    then
-	if [ -f "/mnt/browser/run3556" ]
+	if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: making browser startup script copy - /mnt/browser/run3556..." | tee -a /var/log/OpenLGTV_BCM.log
-	    cp /mnt/browser/run3556 /mnt/user/netcast/run3556
+	    #if [ -f "/mnt/browser/browser_application.txt" ]
+	    if [ -f "/mnt/addon/browser/browser_application.txt" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: making browser config copy - /mnt/addon/browser/browser_application.txt..." | tee -a /var/log/OpenLGTV_BCM.log
+		#cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
+		cp /mnt/addon/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
+	    fi
 	fi
+	if [ ! -f "/mnt/user/netcast/run3556" ]
+	then
+	    if [ -f "/mnt/browser/run3556" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: making browser startup script copy - /mnt/browser/run3556..." | tee -a /var/log/OpenLGTV_BCM.log
+		cp /mnt/browser/run3556 /mnt/user/netcast/run3556
+	    fi
+	fi
+	if [ ! -f "/mnt/user/netcast/config.xml" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: making StageCraft config copy - /mnt/addon/contents/config.xml..." | tee -a /var/log/OpenLGTV_BCM.log
+	    cp /mnt/addon/contents/config.xml /mnt/user/netcast/config.xml
+	fi
+	if [ ! -f "/mnt/user/netcast/addon_mgr.bat" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..." | tee -a /var/log/OpenLGTV_BCM.log
+	    cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat
+	fi
+	source /etc/rc.d/rc.netcast-modify
+	if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	    mount --bind /mnt/user/netcast/config.xml              /mnt/addon/contents/config.xml
+	    mount --bind /mnt/user/netcast/addon_mgr.bat           /mnt/addon/bin/addon_mgr.bat
+	fi
+	if [ -f "/mnt/user/netcast/browser_application.txt" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: using links to NetCast browser configs on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt
+	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
+	fi
+	#v- not needed yet
+	#if [ -f "/mnt/user/netcast/run3556" ]
+	#then
+	#	echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	#	mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556
+	#fi
     fi
-    if [ ! -f "/mnt/user/netcast/config.xml" ]
-    then
-	echo "OpenLGTV_BCM-INFO: making StageCraft config copy - /mnt/addon/contents/config.xml..." | tee -a /var/log/OpenLGTV_BCM.log
-	cp /mnt/addon/contents/config.xml /mnt/user/netcast/config.xml
-    fi
-    if [ ! -f "/mnt/user/netcast/addon_mgr.bat" ]
-    then
-	echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..." | tee -a /var/log/OpenLGTV_BCM.log
-	cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat
-    fi
-    source /etc/rc.d/rc.netcast-modify
-    if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
-    then
-	echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
-	mount --bind /mnt/user/netcast/config.xml              /mnt/addon/contents/config.xml
-	mount --bind /mnt/user/netcast/addon_mgr.bat           /mnt/addon/bin/addon_mgr.bat
-    fi
-    if [ -f "/mnt/user/netcast/browser_application.txt" ]
-    then
-	echo "OpenLGTV_BCM-INFO: using links to NetCast browser configs on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
-	mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt
-	mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
-    fi
-    #v- not needed yet
-    #if [ -f "/mnt/user/netcast/run3556" ]
-    #then
-    #	echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..." | tee -a /var/log/OpenLGTV_BCM.log
-    #	mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556
-    #fi
 else
-    #echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-WARN: found modified addon or browser partition - trying to find where are the real configs..." | tee -a /var/log/OpenLGTV_BCM.log
-    custom_addonmgrbat=0
-    custom_configxml=0
-    custom_browapptxt=0
-    custom_run3556=0
-    if [ -h "/mnt/addon/bin/addon_mgr.bat" ]
+    if [ "$netcast_config_ok" = "1" ]
     then
-	export real_addonmgrbat="`ls -al /mnt/addon/bin/addon_mgr.bat | awk -F\"> \" '{print $2}'`"
-	export custom_addonmgrbat=1
-    else
-	export real_addonmgrbat="/mnt/addon/bin/addon_mgr.bat"
+	#echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-WARN: found modified addon or browser partition - trying to find where are the real configs..." | tee -a /var/log/OpenLGTV_BCM.log
+	custom_addonmgrbat=0
+	custom_configxml=0
+	custom_browapptxt=0
+	custom_run3556=0
+	if [ -h "/mnt/addon/bin/addon_mgr.bat" ]
+	then
+	    export real_addonmgrbat="`ls -al /mnt/addon/bin/addon_mgr.bat | awk -F\"> \" '{print $2}'`"
+	    export custom_addonmgrbat=1
+	else
+	    export real_addonmgrbat="/mnt/addon/bin/addon_mgr.bat"
+	fi
+	echo "OpenLGTV_BCM-INFO: using real Addon_Mgr config file: $real_addonmgrbat ..." | tee -a /var/log/OpenLGTV_BCM.log
+	if [ -h "/mnt/addon/contents/config.xml" ]
+	then
+	    export real_configxml="`ls -al /mnt/addon/contents/config.xml | awk -F\"> \" '{print $2}'`"
+	    export custom_configxml=1
+	else
+	    export real_configxml="/mnt/addon/contents/config.xml"
+	fi
+	echo "OpenLGTV_BCM-INFO: using real StageCraft config file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
+	# browser_application.txt file really used by built-in web browser is /mnt/addon/browser/browser_application.txt instead of /mnt/browser/browser_application.txt file
+	#if [ -h "/mnt/browser/browser_application.txt" ]
+	if [ -h "/mnt/addon/browser/browser_application.txt" ]
+	then
+	    export real_browapptxt="`ls -al /mnt/addon/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
+	    export custom_browapptxt=1
+	else
+	    export real_browapptxt="/mnt/addon/browser/browser_application.txt"
+	fi
+	echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
+	#v- not needed yet
+	#if [ -h "/mnt/browser/run3556" ]
+	#then
+	#	real_run3556="`ls -al /mnt/browser/run3556 | awk -F\"> \" '{print $2}'`"
+	#	custom_run3556=1
+	#else
+	#	real_run3556="/mnt/browser/run3556"
+	#fi
+	#echo "OpenLGTV_BCM-INFO: using real Web Browser startup script file: $real_run3556 ..." | tee -a /var/log/OpenLGTV_BCM.log
+	source /etc/rc.d/rc.netcast-modify
     fi
-    echo "OpenLGTV_BCM-INFO: using real Addon_Mgr config file: $real_addonmgrbat ..." | tee -a /var/log/OpenLGTV_BCM.log
-    if [ -h "/mnt/addon/contents/config.xml" ]
-    then
-	export real_configxml="`ls -al /mnt/addon/contents/config.xml | awk -F\"> \" '{print $2}'`"
-	export custom_configxml=1
-    else
-	export real_configxml="/mnt/addon/contents/config.xml"
-    fi
-    echo "OpenLGTV_BCM-INFO: using real StageCraft config file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
-    # browser_application.txt file really used by built-in web browser is /mnt/addon/browser/browser_application.txt instead of /mnt/browser/browser_application.txt file
-    #if [ -h "/mnt/browser/browser_application.txt" ]
-    if [ -h "/mnt/addon/browser/browser_application.txt" ]
-    then
-	export real_browapptxt="`ls -al /mnt/addon/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
-	export custom_browapptxt=1
-    else
-	export real_browapptxt="/mnt/addon/browser/browser_application.txt"
-    fi
-    echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
-    #v- not needed yet
-    #if [ -h "/mnt/browser/run3556" ]
-    #then
-    #	real_run3556="`ls -al /mnt/browser/run3556 | awk -F\"> \" '{print $2}'`"
-    #	custom_run3556=1
-    #else
-    #	real_run3556="/mnt/browser/run3556"
-    #fi
-    #echo "OpenLGTV_BCM-INFO: using real Web Browser startup script file: $real_run3556 ..." | tee -a /var/log/OpenLGTV_BCM.log
-    source /etc/rc.d/rc.netcast-modify
 fi
