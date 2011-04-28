@@ -190,14 +190,16 @@ document.onkeydown = check;
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed
-			//NetCastBack API
-			window.NetCastBack();
+			//NetCastBack API (exits from NetCast service?)
+			//window.NetCastBack();
+			history.go(-1);
 			}
 		else if (key==1000) 
 			{
 			//the exit button on the remote control have been pressed
-			//NetCastExit API
-			window.NetCastExit();
+			//NetCastExit API (does not work?)
+			//window.NetCastExit();
+			window.NetCastBack();
 			}
 		}catch(Exception){}
 	}
