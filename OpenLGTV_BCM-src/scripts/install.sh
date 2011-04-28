@@ -26,6 +26,7 @@ then
 fi
 
 ver=0.3.0-beta4
+supported_rootfs_ver="V1.00.51 Mar 01 2010"
 development=1
 
 tmp=/tmp
@@ -184,7 +185,13 @@ then
     fi
 fi
 
-# Checks for supported partitions
+# Safety checks for supported rootfs version and partitions numbers
+if [ "`cat /etc/ver | awk -F, '{print $1}'`" != "$supported_rootfs_ver" ]
+then
+    echo "ERROR: found NOT SUPPORTED yet TV model (unknown rootfs version) - please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
+    echo "OpenLGTV BCM is not installed and no changes have been made to yours TV firmware" | tee -a $log
+    exit 1
+fi
 if [ -z "`cat /proc/mtd | grep ^mtd$mtd: | grep rootfs`" ]
 then
     echo "ERROR: /dev/mtd$mtd IS NOT rootfs parition, please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
