@@ -235,24 +235,39 @@ fi
 magic=hsqs
 magic_clean=377377377377
 
-if [ "`head -c4 /dev/mtd4 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
+if [ -n "`cat /proc/mtd | grep ^mtd4: | grep lginit`" ]
 then
-    echo "OpenLGTV_BCM-WARN: lginit partition (mtd4) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
-    flash_eraseall /dev/mtd4 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    if [ "`head -c4 /dev/mtd4 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
+    then
+	echo "OpenLGTV_BCM-WARN: lginit partition (mtd4) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
+	flash_eraseall /dev/mtd4 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    fi
+else
+    echo "OpenLGTV_BCM-ERROR: /dev/mtd4 IS NOT lginit partition, please give yours firmware dump to OpenLGTV BCM developers for making better support yours TV model..." | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 if [ "$country_model" = "EU" ]
 then
-    if [ "`head -c4 /dev/mtd27 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
+    if [ -n "`cat /proc/mtd | grep ^mtd27: | grep lginit`" ]
     then
-	echo "OpenLGTV_BCM-WARN: lginit backup partition (mtd27) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
-	flash_eraseall /dev/mtd27 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	if [ "`head -c4 /dev/mtd27 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
+	then
+	    echo "OpenLGTV_BCM-WARN: lginit backup partition (mtd27) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
+	    flash_eraseall /dev/mtd27 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	fi
+    else
+	echo "OpenLGTV_BCM-ERROR: /dev/mtd27 IS NOT lginit partition, please give yours firmware dump to OpenLGTV BCM developers for making better support yours TV model..." | tee -a /var/log/OpenLGTV_BCM.log
     fi
 else
-    if [ "`head -c4 /dev/mtd25 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
+    if [ -n "`cat /proc/mtd | grep ^mtd25: | grep lginit`" ]
     then
-	echo "OpenLGTV_BCM-WARN: lginit backup partition (mtd25) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
-	flash_eraseall /dev/mtd25 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	if [ "`head -c4 /dev/mtd25 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
+	then
+	    echo "OpenLGTV_BCM-WARN: lginit backup partition (mtd25) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
+	    flash_eraseall /dev/mtd25 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	fi
+    else
+	echo "OpenLGTV_BCM-ERROR: /dev/mtd25 IS NOT lginit partition, please give yours firmware dump to OpenLGTV BCM developers for making better support yours TV model..." | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi
 

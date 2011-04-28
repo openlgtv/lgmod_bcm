@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 0.9b
+# OpenLGTV BCM installation script by xeros, ver. 1.0
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -25,7 +25,7 @@ then
     autoupgrade=1
 fi
 
-ver=0.3.0-beta3a
+ver=0.3.0-beta4
 development=1
 
 tmp=/tmp
@@ -172,7 +172,8 @@ then
 	cat /mnt/addon/contents/config.xml > $devel_dir/mnt_addon_contents_config.xml
 	cat /mnt/addon/bin/addon_mgr.bat > $devel_dir/mnt_addon_bin_addon_mgr.bat
 	cat /mnt/addon/browser/browser_application.txt > $devel_dir/mnt_addon_browser_browser_application.txt
-	cat /dev/mtd4 > $devel_dir/mtd4_lginit.dump
+	cat /dev/mtd$mtd > $devel_dir/mtd$mtd.rootfs.dump
+	cat /dev/mtd$lginit > $devel_dir/mtd$lginit.lginit.dump
 	free > $devel_dir/free2.log
 	#cp -r /mnt/addon $devel_dir > /dev/null 2>&1
 	#cp -r /mnt/browser $devel_dir > /dev/null 2>&1
@@ -181,6 +182,20 @@ then
 	echo "Debug info saved in $devel_dir, please give them + install log to OpenLGTV BCM developers for analyse." | tee -a $log
 	echo "Please give us /var/log/OpenLGTV_BCM.log file taken from first boot, too - its very useful in case of any problems." | tee -a $log
     fi
+fi
+
+# Checks for supported partitions
+if [ -z "`cat /proc/mtd | grep ^mtd$mtd: | grep rootfs`" ]
+then
+    echo "ERROR: /dev/mtd$mtd IS NOT rootfs parition, please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
+    echo "OpenLGTV BCM is not installed and no changes have been made to yours TV firmware" | tee -a $log
+    exit 1
+fi
+if [ -z "`cat /proc/mtd | grep ^mtd$lginit: | grep lginit`" ]
+then
+    echo "ERROR: /dev/mtd$lginit IS NOT lginit parition, please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
+    echo "OpenLGTV BCM is not installed and no changes have been made to yours TV firmware" | tee -a $log
+    exit 1
 fi
 
 # Backup
