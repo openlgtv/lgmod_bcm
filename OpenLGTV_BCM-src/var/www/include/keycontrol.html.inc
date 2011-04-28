@@ -13,7 +13,7 @@
 <SCRIPT language="JavaScript" type="text/javascript" src="js/control.js"></script>
 </head>
 <body>
-<IMG align="right" SRC="http://openlgtv.org.ru/wiki/openlgtv_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 110px; top: 30px;"/>
+<IMG align="right" SRC="Images/openlgtvbcm_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 110px; top: 30px;"/>
 	<div style="position: absolute; right: 10px; bottom: 300px;">
 	<Table id="Keyboard" name="Keyboard" class="Keyboard" Border=0 cellspacing=0 background="Images/Keyboard/keypad.png">
 		<tr>
