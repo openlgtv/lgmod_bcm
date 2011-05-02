@@ -170,6 +170,13 @@ then
     touch /mnt/flash/data/hosts
 fi
 
+export uver=`cat /mnt/user/etc/ver2`
+if [ "$uver" != "$ver" ]
+then
+    echo "OpenLGTV_BCM-INFO: last booted version is different from current, making /mnt/user/etc/ver2 file update" | tee -a /tmp/OpenLGTV_BCM.log
+    cp -f /etc/ver2 /mnt/user/etc/ver2 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+fi
+
 #
 # Network parameters
 #
