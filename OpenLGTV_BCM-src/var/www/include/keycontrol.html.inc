@@ -78,7 +78,7 @@
 		</tr>
 	</Table>
 	</div>
-	<div style="position: absolute; right: 110px; bottom: 100px;">
+	<div style="position: absolute; right: 60px; bottom: 100px;">
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td><img src="Images/Keyboard/tapkey.png" align="middle"></td>

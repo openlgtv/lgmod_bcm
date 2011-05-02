@@ -10,6 +10,7 @@
 <meta http-equiv="Content-Style-Type" content="text/css">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 
+<link rel="stylesheet" type="text/css" href="css/keyboard.css"/>
 	
 <script type="text/javascript">
 
@@ -91,17 +92,41 @@ function keypad(num)
 
 
 //******** END OF MOBILE PHONE-STYLE KEYPAD *********
+
+var col = 8; //number of 'cells' in a row
+var current;
+var next;
 document.onkeydown = check;
+window.onload = OnLoadSetCurrent;
      
- function check(e)
+function check(e)
 	{
 	if (!e) var e = window.event;
 	(e.keyCode) ? key = e.keyCode : key = e.which;
 	try
 		{
-		if (key==13) 
+		switch(key)
 			{
-			//if Enter is pressed. Do nothing for the moment
+			case 37: next = current - 1; break; //left
+			case 38: next = current - col; break; //up
+			case 39: next = (1*current) + 1; break; //right
+			case 40: next = (1*current) + col; break; //down
+			}
+		if (key==37|key==38|key==39|key==40)
+			{
+			//Move to the next key on the keyboard
+			var code=document.links['c' + next].name;
+			document.links['c' + next].focus();
+			document.images['i' + next].src = 'Images/Keyboard/bt_focus.png';
+			document.images['i' + current].src = 'Images/Keyboard/bt_nofocus.png';
+			current = next;
+			} 
+		else if (key==13) 
+			{
+			//Write the letter on the currFocusedElement field
+			var URLText = document.forms['URL'].elements[currElementName].value;
+			URLText = URLText + document.links['c' + next].name;
+			document.forms['URL'].elements[currElementName].value = URLText;
 			} 
 		else if (key==48) 
 			{
@@ -246,90 +271,138 @@ function SearchOnGoogle()
 	top.frames["MainPage"].location = URLText;
 	}	
 	
-	document.defaultAction = true;
+function setCurrent(element)
+	{
+	var string = element.id;
+	current = string.slice(1,string.length);
+	}
+	
+function OnLoadSetCurrent()
+	{
+	current = 1;
+	document.links['c1'].focus();
+	}	
+	
+document.defaultAction = true;
 
 
 </script>
 
 
-<style type="text/css">
-	/* <![CDATA[ */
 
-	table, td
-	{
-		border-color: gray;
-		border-style: solid;
-	}
-
-	table
-	{
-		border-width: 0 0 1px 1px;
-		border-spacing: 0;
-		border-collapse: collapse;
-	}
-
-	td
-	{
-		margin: 0;
-		padding: 4px;
-		border-width: 1px 1px 0 0;
-		background-color: #FFF;
-	}
-
-	/* ]]> */
-</style>
 
 </head>
 <body bgcolor="lightgray">
 
-	<div style="position: absolute; left: 5px; top: 5px;">
+	<div style="position: absolute; left: 0px; top: 5px;">
 		<form id="URL" name="URL">
-			<font size="4"><b><center>OpenLGTV BCM Internet Browser</center></b></font><br>
-			<font size="3"><b>Enter URL or text to search:</b></font><br>
-			<input id="txtURL" type="textarea" style="width:500px" value=""/>
+			<b>Type URL or Text to Search:</b><br>
+			<input id="txtURL" type="textarea" style="width:365px" value=""/>
 		</form>
 	</div>	
 	
-	<div style="position: absolute; left: 520px; top: 0px;">
-		<img src="Images/Keyboard/tapkey.png" align="middle">
+	<div style="position: absolute; left: 0px; top: 60px;">
+	<Table id="Keyboard" name="Keyboard" class="Keyboard" Border=0 cellspacing=0 background="Images/Keyboard/keypad.png">
+		<tr>
+			<td border=0 height="31px" width="44px"><a id="c1" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="a"><img id="i1" src="Images/Keyboard/bt_nofocus.png" alt="a" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c2" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="b"><img id="i2" src="Images/Keyboard/bt_nofocus.png" alt="b" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c3" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="c"><img id="i3" src="Images/Keyboard/bt_nofocus.png" alt="c" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c4" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="d"><img id="i4" src="Images/Keyboard/bt_nofocus.png" alt="d" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c5" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="e"><img id="i5" src="Images/Keyboard/bt_nofocus.png" alt="e" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c6" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="1"><img id="i6" src="Images/Keyboard/bt_nofocus.png" alt="1" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c7" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="2"><img id="i7" src="Images/Keyboard/bt_nofocus.png" alt="2" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c8" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="3"><img id="i8" src="Images/Keyboard/bt_nofocus.png" alt="3" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+		</tr>
+		<tr>
+			<td><a id="c9" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="f"><img id="i9" src="Images/Keyboard/bt_nofocus.png" alt="f" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c10" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="g"><img id="i10" src="Images/Keyboard/bt_nofocus.png" alt="g" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c11" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="h"><img id="i11" src="Images/Keyboard/bt_nofocus.png" alt="h" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c12" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="i"><img id="i12" src="Images/Keyboard/bt_nofocus.png" alt="i" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c13" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="j"><img id="i13" src="Images/Keyboard/bt_nofocus.png" alt="j" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c14" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="4"><img id="i14" src="Images/Keyboard/bt_nofocus.png" alt="4" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c15" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="5"><img id="i15" src="Images/Keyboard/bt_nofocus.png" alt="5" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c16" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="6"><img id="i16" src="Images/Keyboard/bt_nofocus.png" alt="6" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+		</tr>
+		<tr>
+			<td><a id="c17" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="k"><img id="i17" src="Images/Keyboard/bt_nofocus.png" alt="k" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c18" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="l"><img id="i18" src="Images/Keyboard/bt_nofocus.png" alt="l" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c19" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="m"><img id="i19" src="Images/Keyboard/bt_nofocus.png" alt="m" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c20" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="n"><img id="i20" src="Images/Keyboard/bt_nofocus.png" alt="n" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c21" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="o"><img id="i21" src="Images/Keyboard/bt_nofocus.png" alt="o" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c22" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="7"><img id="i22" src="Images/Keyboard/bt_nofocus.png" alt="7" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c23" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="8"><img id="i23" src="Images/Keyboard/bt_nofocus.png" alt="8" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c24" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="9"><img id="i24" src="Images/Keyboard/bt_nofocus.png" alt="9" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+		</tr>
+		<tr>
+			<td><a id="c25" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="p"><img id="i25" src="Images/Keyboard/bt_nofocus.png" alt="p" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c26" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="q"><img id="i26" src="Images/Keyboard/bt_nofocus.png" alt="q" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c27" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="r"><img id="i27" src="Images/Keyboard/bt_nofocus.png" alt="r" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c28" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="s"><img id="i28" src="Images/Keyboard/bt_nofocus.png" alt="s" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c29" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="t"><img id="i29" src="Images/Keyboard/bt_nofocus.png" alt="t" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c30" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="."><img id="i30" src="Images/Keyboard/bt_nofocus.png" alt="." style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c31" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="0"><img id="i31" src="Images/Keyboard/bt_nofocus.png" alt="0" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c32" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="@"><img id="i32" src="Images/Keyboard/bt_nofocus.png" alt="@" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+		</tr>
+		<tr>
+			<td><a id="c33" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="u"><img id="i33" src="Images/Keyboard/bt_nofocus.png" alt="u" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c34" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="v"><img id="i34" src="Images/Keyboard/bt_nofocus.png" alt="v" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c35" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="w"><img id="i35" src="Images/Keyboard/bt_nofocus.png" alt="w" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c36" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="x"><img id="i36" src="Images/Keyboard/bt_nofocus.png" alt="x" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c37" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="y"><img id="i37" src="Images/Keyboard/bt_nofocus.png" alt="y" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c38" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="z"><img id="i38" src="Images/Keyboard/bt_nofocus.png" alt="z" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c39" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="/"><img id="i39" src="Images/Keyboard/bt_nofocus.png" alt="/" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c40" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="_"><img id="i40" src="Images/Keyboard/bt_nofocus.png" alt="_" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+		</tr>
+		<tr>
+			<td><a id="c41" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="-"><img id="i41" src="Images/Keyboard/bt_nofocus.png" alt="-" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c42" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="+"><img id="i42" src="Images/Keyboard/bt_nofocus.png" alt="+" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c43" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name=":"><img id="i43" src="Images/Keyboard/bt_nofocus.png" alt=":" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c44" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="="><img id="i44" src="Images/Keyboard/bt_nofocus.png" alt="=" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c45" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="&"><img id="i45" src="Images/Keyboard/bt_nofocus.png" alt="&" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c46" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name=" "><img id="i46" src="Images/Keyboard/bt_nofocus.png" alt="spc" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c47" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name="'"><img id="i47" src="Images/Keyboard/bt_nofocus.png" alt="'" style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+			<td><a id="c48" onKeyPress="javascript:setCurrent(this);return false" onClick="javascript:setCurrent(this);DirectWriteKey(this.name)" href="#" name=","><img id="i48" src="Images/Keyboard/bt_nofocus.png" alt="," style="text-decoration:none; color:white" border=0 height="31px" width="44px"></a></td>
+		</tr>
+	</Table>
 	</div>
-	
-	<!-- div style="position: absolute; left: 680px; top: 5px;" -->
-	<div style="position: absolute; left: 680px; top: 25px;">
-		<Table cellspacing=2>
+	<!-- div style="position: absolute; left: 400px; top: 480px;" -->
+	<div style="position: absolute; left: 0px; top: 270px;">
+		<Table Border=0 cellspacing=0>
 			<tr>
-				<td align="center">
-					<a onClick="javascript:SearchOnGoogle();" href="#"><img src="Images/Keyboard/red_button.png" align="middle" border="0" /></a>
-					<br>
-					<b>Search on Google</b>
-				</td>
-				<td align="center">
-					<img src="Images/Keyboard/green_button.png" align="middle" border="0" />
-					<br>
-					<b>Switch Page</b>
-				</td>
-				<td align="center">
-					<a onClick="javascript:GoToURL();" href="#"><img src="Images/Keyboard/yellow_button.png" align="middle" border="0" /></a>
-					<br>
-					<b>Go to URL</b>
-				</td>
-				<td align="center">
-					<a onClick="javascript:BackSpace();" href="#"><img src="Images/Keyboard/blue_button.png" align="middle" border="0" /></a>
-					<br>
-					<b>Backspace</b>
-				</td>
-				<td align="center">
-					<img src="Images/Keyboard/back_button.png" align="middle" border="0" />
-					<br>
-					<b>Back</b>
-				</td>
-				<td align="center">
-					<img src="Images/Keyboard/exit_button.png" align="middle" border="0" />
-					<br>
-					<b>Exit</b>
-				</td>
+				<td><img src="Images/Keyboard/tapkey.png" align="middle"></td>
 			</tr>
 		</Table>
 	</div>
-</body> 
-</html>  
+	
+	<div style="position: absolute; left: 5px; top: 470px;">
+		<Table Border=0 cellspacing=0>
+			<tr>
+				<td colspan=2>
+					<a onClick="javascript:SearchOnGoogle();" href="#"><img src="Images/Keyboard/red_button.png" align="middle" Border="0" /></a>
+					<b>Search on Google</b>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<img src="Images/Keyboard/green_button.png" align="middle" Border="0" />
+					<b>Switch Page</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a onClick="javascript:GoToURL();" href="#"><img src="Images/Keyboard/yellow_button.png" align="middle" Border="0" /></a>
+					<b>Go to URL</b>
+				</td>
+				<td><img src="Images/Keyboard/back_button.png" align="middle" Border="0" /><b>Back</b></td>
+			</tr>
+			<tr>
+				<td>
+					<a onClick="javascript:BackSpace();" href="#"><img src="Images/Keyboard/blue_button.png" align="middle" Border="0" /></a>
+					<b>Backspace</b>
+				</td>
+				<td><img src="Images/Keyboard/exit_button.png" align="middle" Border="0" /><b>Exit</b></td>
+			</tr>
+		</Table>
+	</div>
+</body>
+</html>
