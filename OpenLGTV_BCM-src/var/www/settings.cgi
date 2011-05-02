@@ -4,7 +4,7 @@
 content-type: text/html
 
 <html>
-<? cat /var/www/include/keycontrol.html.inc ?>
+<? include/keycontrol.cgi.inc ?>
 
 <font color="white">
 <!-- ? for i in `cat /mnt/user/cfg/settings`; do echo "$i<br/>"; done ? -->

@@ -4,7 +4,7 @@
 content-type: text/html
 
 <html>
-<? cat /var/www/include/keycontrol.html.inc ?>
+<? include/keycontrol.cgi.inc ?>
 
 	<div style="position: absolute; left: 10px; top: 10px; width:860px">
 		<form id="URL" name="URL" action="mount.cgi" method="GET">
