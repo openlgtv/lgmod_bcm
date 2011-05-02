@@ -154,6 +154,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: WebUI available on US TV models (althrough only remotely, not in TV itself - these models lack of built-in web browser)
     * ADD: WebUI has now execute command and change passwords options (change password changes password to telnet, SSH and WebUI - all in one)
     * ADD: more safety checks if TV model is supported in both installation and boot scripts
+    * ADD: /etc/TZ link to /mnt/user/etc/TZ for TimeZone settings - will be scritpted to set it via WebUI later
     * UPDATE: haserl binary updated to version 0.9.28, compiled without LUA and BashExtensions support
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install
