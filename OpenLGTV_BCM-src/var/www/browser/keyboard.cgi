@@ -126,11 +126,25 @@ function check(e)
 			} 
 		else if (key==13) 
 			{
+			//Simulate click on button elements for OK remote button
+			document.forms['URL'].elements[currElementName].click();
+			// v- using .click() above as this code makes problems with TV remote buttons ('OK' button makes both keyboard '13' code and click() at the same time, so the character is type twice)
 			//Write the letter on the currFocusedElement field
-			var URLText = document.forms['URL'].elements[currElementName].value;
-			URLText = URLText + document.links['c' + next].name;
-			document.forms['URL'].elements[currElementName].value = URLText;
+			//var URLText = document.forms['URL'].elements[currElementName].value;
+			//URLText = URLText + document.links['c' + next].name;
+			//document.forms['URL'].elements[currElementName].value = URLText;
 			} 
+		else if (key==32) 
+			{
+			//spacebar
+			if (!elem.focused)
+				{
+				//Write the letter on the currFocusedElement field
+				var URLText = document.forms['URL'].elements[currElementName].value;
+				URLText = URLText + document.links['c' + next].name;
+				document.forms['URL'].elements[currElementName].value = URLText;
+				}
+			}
 		else if (key==48) 
 			{
 			//the 0 on the remote control have been pressed

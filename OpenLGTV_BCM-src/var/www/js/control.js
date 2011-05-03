@@ -302,15 +302,29 @@ function check(e)
 			//Simulate click on button elements for OK remote button
 			if (PageElements[currElementIndex].type == 'button')
 				{
-				    //Write the letter on the currFocusedElement field
 				    document.forms['URL'].elements[currElementName].click();
-				    //break;
-				} else {
+				} //else { // v- makes problems with TV remote buttons ('OK' button makes both keyboard '13' code and click() at the same time, so the character is type twice)
+				    //Write the letter on the currFocusedElement field
+				    //var URLText = document.forms['URL'].elements[currElementName].value;
+				    //URLText = URLText + document.links['c' + next].name;
+				    //document.forms['URL'].elements[currElementName].value = URLText;
+				//}
+			}
+		else if (key==32) 
+			{
+			//spacebar
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    if (PageElements[currElementIndex].type == 'button')
+				{
+				    document.forms['URL'].elements[currElementName].click();
+				} else { 
 				    //Write the letter on the currFocusedElement field
 				    var URLText = document.forms['URL'].elements[currElementName].value;
 				    URLText = URLText + document.links['c' + next].name;
 				    document.forms['URL'].elements[currElementName].value = URLText;
 				}
+			    }
 			}
 		else if (key==48) 
 			{
