@@ -63,8 +63,43 @@ then
     #done
 fi
 
+if [ "$FORM_mount" = "1" ]
+then
+    echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to mount NetShare by WebUI..." >> /var/log/OpenLGTV_BCM.log
+    /etc/rc.d/rc.mount-netshare WebUI_MOUNT
+fi
+
+if [ "$FORM_umount" = "1" ]
+then
+    share_path="`cat /proc/mounts | grep NetShare | awk '{print $2}'`"
+    echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to unmount NetShare: $share_path by WebUI..." >> /var/log/OpenLGTV_BCM.log
+    umount "$share_path" >> /var/log/OpenLGTV_BCM.log 2>&1
+fi
+
 ?>
 
+			<center>
+			    <div id="link11Parent" style="background-color:white;height:30px;">
+				<?
+				    if [ -z "`cat /proc/mounts | grep NetShare`" ]
+				    then
+					if [ -f "/mnt/user/cfg/ndrvtab" ]
+					then
+					    if [ ! -d "/mnt/usb1/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+					    then
+						echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount.cgi?mount=1';\" onClick=\"javascript:window.location='mount.cgi?mount=1';\" value=\"Mount button: You need to plug USB stick with OpenLGTV_BCM dir first\" style=\"width:600px\" disabled />"
+					    else
+						echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount.cgi?mount=1';\" onClick=\"javascript:window.location='mount.cgi?mount=1';\" value=\"Mount\" style=\"width:100px\" />"
+					    fi
+					else
+					    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount.cgi?mount=1';\" onClick=\"javascript:window.location='mount.cgi?mount=1';\" value=\"Mount button: You need to save first to be able to mount\" style=\"width:600px\" disabled />"
+					fi
+				    else
+					echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount.cgi?umount=1';\" onClick=\"javascript:window.location='mount.cgi?umount=1';\" value=\"Unmount\" style=\"width:400px\" />"
+				    fi 
+				?> 
+			    </div>
+			</center>
 			<div id="txtURLParent" style="background-color:white;height:30px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					URL: 
@@ -126,7 +161,7 @@ fi
 					    #fi
 					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
 					else
-					    echo '<br /><center><font size="+2" color="red"><b></b></font></center>'
+					    echo '<br /><center><font size="+2" color="red"><b>Remember to save settings before trying to use mount button</b></font></center>'
 					fi
 				    ?>
 				</div>

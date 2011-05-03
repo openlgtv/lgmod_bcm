@@ -23,7 +23,7 @@ then
     ##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
     #done
     echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..." | tee -a /var/log/OpenLGTV_BCM.log
-    if [ "$automount" = "1" ]
+    if [ "$automount" = "1" -o "$1" = "WebUI_MOUNT" ]
     then
 	if [ ! -d "$USB_DIR/NetShare" ]
 	then
