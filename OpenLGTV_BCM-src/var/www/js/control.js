@@ -125,99 +125,119 @@ PageElements[9].value = ['link10'];
 PageElements[9].type = ['button'];
 
 PageElements[10] = new Object();
-PageElements[10].value = ['txtURL'];
-PageElements[10].type = ['txt'];
-PageElements[10].focused=false;
+PageElements[10].value = ['link11'];
+PageElements[10].type = ['button'];
+
+PageElements[11] = new Object();
+PageElements[11].value = ['link12'];
+PageElements[11].type = ['button'];
+
+PageElements[12] = new Object();
+PageElements[12].value = ['link13'];
+PageElements[12].type = ['button'];
+
+PageElements[13] = new Object();
+PageElements[13].value = ['link14'];
+PageElements[13].type = ['button'];
+
+PageElements[14] = new Object();
+PageElements[14].value = ['link15'];
+PageElements[14].type = ['button'];
+
+PageElements[15] = new Object();
+PageElements[15].value = ['txtURL'];
+PageElements[15].type = ['txt'];
+PageElements[15].focused=false;
 // v- none of these are working, so I have moved the code for setting PageElements[*].focused variables to html code in onFocus and onBlur settings in input fields
-//document.forms['URL'].elements[PageElements[10].value].onfocus=function()
+//document.forms['URL'].elements[PageElements[15].value].onfocus=function()
 //document.forms['URL'].elements['txtURL'].onfocus=function()
-/*document.forms['URL'].elements[10].onfocus=function()
+/*document.forms['URL'].elements[15].onfocus=function()
 {
          this.focused=true;
 };*/
-//PageElements[10].onblur=function()
-/*document.forms['URL'].elements[PageElements[10].value].onblur=function()
+//PageElements[15].onblur=function()
+/*document.forms['URL'].elements[PageElements[15].value].onblur=function()
 {
          this.focused=false;
 };*/
 
-PageElements[11] = new Object();
-PageElements[11].value = ['txtUser'];
-PageElements[11].type = ['txt'];
-PageElements[11].focused=false;
-
-PageElements[12] = new Object();
-PageElements[12].value = ['txtPassw'];
-PageElements[12].type = ['txt'];
-PageElements[12].focused=false;
-
-PageElements[13] = new Object();
-PageElements[13].value = ['radio1'];
-PageElements[13].type = ['radio'];
-
-PageElements[14] = new Object();
-PageElements[14].value = ['check1'];
-PageElements[14].type = ['checkbox'];
-
-PageElements[15] = new Object();
-PageElements[15].value = ['check2'];
-PageElements[15].type = ['checkbox'];
-
 PageElements[16] = new Object();
-PageElements[16].value = ['check3'];
-PageElements[16].type = ['checkbox'];
+PageElements[16].value = ['txtUser'];
+PageElements[16].type = ['txt'];
+PageElements[16].focused=false;
 
 PageElements[17] = new Object();
-PageElements[17].value = ['check4'];
-PageElements[17].type = ['checkbox'];
+PageElements[17].value = ['txtPassw'];
+PageElements[17].type = ['txt'];
+PageElements[17].focused=false;
 
 PageElements[18] = new Object();
-PageElements[18].value = ['check5'];
-PageElements[18].type = ['checkbox'];
+PageElements[18].value = ['radio1'];
+PageElements[18].type = ['radio'];
 
 PageElements[19] = new Object();
-PageElements[19].value = ['check6'];
+PageElements[19].value = ['check1'];
 PageElements[19].type = ['checkbox'];
 
 PageElements[20] = new Object();
-PageElements[20].value = ['check7'];
+PageElements[20].value = ['check2'];
 PageElements[20].type = ['checkbox'];
 
 PageElements[21] = new Object();
-PageElements[21].value = ['check8'];
+PageElements[21].value = ['check3'];
 PageElements[21].type = ['checkbox'];
 
 PageElements[22] = new Object();
-PageElements[22].value = ['check9'];
+PageElements[22].value = ['check4'];
 PageElements[22].type = ['checkbox'];
 
 PageElements[23] = new Object();
-PageElements[23].value = ['check10'];
+PageElements[23].value = ['check5'];
 PageElements[23].type = ['checkbox'];
 
 PageElements[24] = new Object();
-PageElements[24].value = ['check11'];
+PageElements[24].value = ['check6'];
 PageElements[24].type = ['checkbox'];
 
 PageElements[25] = new Object();
-PageElements[25].value = ['check12'];
+PageElements[25].value = ['check7'];
 PageElements[25].type = ['checkbox'];
 
 PageElements[26] = new Object();
-PageElements[26].value = ['check13'];
+PageElements[26].value = ['check8'];
 PageElements[26].type = ['checkbox'];
 
 PageElements[27] = new Object();
-PageElements[27].value = ['check14'];
+PageElements[27].value = ['check9'];
 PageElements[27].type = ['checkbox'];
 
 PageElements[28] = new Object();
-PageElements[28].value = ['check15'];
+PageElements[28].value = ['check10'];
 PageElements[28].type = ['checkbox'];
 
 PageElements[29] = new Object();
-PageElements[29].value = ['check16'];
+PageElements[29].value = ['check11'];
 PageElements[29].type = ['checkbox'];
+
+PageElements[30] = new Object();
+PageElements[30].value = ['check12'];
+PageElements[30].type = ['checkbox'];
+
+PageElements[31] = new Object();
+PageElements[31].value = ['check13'];
+PageElements[31].type = ['checkbox'];
+
+PageElements[32] = new Object();
+PageElements[32].value = ['check14'];
+PageElements[32].type = ['checkbox'];
+
+PageElements[33] = new Object();
+PageElements[33].value = ['check15'];
+PageElements[33].type = ['checkbox'];
+
+PageElements[34] = new Object();
+PageElements[34].value = ['check16'];
+PageElements[34].type = ['checkbox'];
 
 var currElementIndex;
 var currElementName;
