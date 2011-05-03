@@ -37,7 +37,7 @@ content-type: text/html
 				<div style="position: relative; left: 5px; top: 0px; height:30;">
 					<b>Shell command to execute: (use Save button to execute)</b>
 				</div><div style="position: relative; left: 5px">
-				    <input id="txtURL" name="qURL" type="textarea" style="width:695px" value="<? echo $src ?>"/>
+				    <input id="txtURL" name="qURL" type="textarea" style="width:695px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $src ?>"/>
 				</div>
 			</div>
 			<input type="hidden" name="run" value="Run">
@@ -63,7 +63,7 @@ content-type: text/html
 					New WebUI/Telnet/SSH Password: 
 				</div>
 				<div style="position: relative; left: 300px; top: -22px;">
-					<input id="txtUser" name="qUser" type="textarea" style="width:400px" value=""/>
+					<input id="txtUser" name="qUser" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value=""/>
 				</div>
 			</div>
 			<div id="txtPasswParent" style="background-color:white;height:30px; font-size:16px;">
@@ -71,7 +71,7 @@ content-type: text/html
 					Confirm New Password: 
 				</div>
 				<div style="position: relative; left: 300px; top: -22px;">
-					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" value=""/>
+					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value=""/>
 				</div>
 			</div>
 			<?

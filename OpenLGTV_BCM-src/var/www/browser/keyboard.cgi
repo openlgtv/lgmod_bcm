@@ -135,61 +135,91 @@ function check(e)
 			{
 			//the 0 on the remote control have been pressed
 			//use the keypad function
-			keypad('0');
+			if (!elem.focused)
+			    {
+			    keypad('0');
+			    }
 			} 
 		else if (key==49) 
 			{
 			//the 1 on the remote control have been pressed
 			//use the keypad function
-			keypad('1');
+			if (!elem.focused)
+			    {
+			    keypad('1');
+			    }
 			}
 		else if (key==50) 
 			{
 			//the 2 on the remote control have been pressed
 			//use the keypad function
-			keypad('2');
+			if (!elem.focused)
+			    {
+			    keypad('2');
+			    }
 			}
 		else if (key==51) 
 			{
 			//the 3 on the remote control have been pressed
 			//use the keypad function
-			keypad('3');
+			if (!elem.focused)
+			    {
+			    keypad('3');
+			    }
 			}
 		else if (key==52) 
 			{
 			//the 4 on the remote control have been pressed
 			//use the keypad function
-			keypad('4');
+			if (!elem.focused)
+			    {
+			    keypad('4');
+			    }
 			}
 		else if (key==53) 
 			{
 			//the 5 on the remote control have been pressed
 			//use the keypad function
-			keypad('5');
+			if (!elem.focused)
+			    {
+			    keypad('5');
+			    }
 			}
 		else if (key==54) 
 			{
 			//the 6 on the remote control have been pressed
 			//use the keypad function
-			keypad('6');
+			if (!elem.focused)
+			    {
+			    keypad('6');
+			    }
 			}
 		else if (key==55) 
 			{
 			//the 7 on the remote control have been pressed
 			//use the keypad function
-			keypad('7');
+			if (!elem.focused)
+			    {
+			    keypad('7');
+			    }
 			}
 		else if (key==56) 
 			{
 			//the 8 on the remote control have been pressed
 			//use the keypad function
-			keypad('8');
+			if (!elem.focused)
+			    {
+			    keypad('8');
+			    }
 			}
 		else if (key==57) 
 			{
 			//the 9 on the remote control have been pressed
 			//use the keypad function
-			keypad('9');
+			if (!elem.focused)
+			    {
+			    keypad('9');
+			    }
 			}
 		else if (key==403) 
 			{
@@ -284,8 +314,21 @@ function OnLoadSetCurrent()
 	{
 	current = 1;
 	document.links['c1'].focus();
-	}	
-	
+	elem=document.forms['URL'].elements[currElementName];
+	elem.focused = false;
+	elem.hasFocus = function()
+	    {
+	    return this.focused;
+	    };
+	elem.onfocus=function()
+	    {
+	    this.focused=true;
+	    };
+	    elem.onblur=function() {
+		this.focused=false;
+	    };
+	}
+
 document.defaultAction = true;
 
 
@@ -306,11 +349,11 @@ document.defaultAction = true;
 		</form>
 	</div>	
 	
-	<div style="position: absolute; left: 0px; top: 135px;">
-	<? cat include/keypad_table.html.inc ?>
+	<div style="position: absolute; left: 0px; top: 145px;">
+		<? cat include/keypad_table.html.inc ?>
 	</div>
 	<!-- div style="position: absolute; left: 400px; top: 480px;" -->
-	<div style="position: absolute; left: -1px; top: 340px;">
+	<div style="position: absolute; left: -1px; top: 350px;">
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td><img src="Images/Keyboard/tapkey.png" align="middle"></td>
@@ -318,7 +361,7 @@ document.defaultAction = true;
 		</Table>
 	</div>
 	
-	<div style="position: absolute; left: 5px; top: 540px;">
+	<div style="position: absolute; left: 5px; top: 550px;">
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td colspan=2>

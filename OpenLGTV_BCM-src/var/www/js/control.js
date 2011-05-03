@@ -88,19 +88,6 @@ PageElements[0] = new Object();
 PageElements[0].value = ['link1'];
 PageElements[0].type = ['button'];
 
-/* TODO? - navigation on 'button' page elements in one row
-PageElements[0].value = ['links'];
-PageElements[0].type = ['buttons'];
-PageElements[0].array = new Array();
-
-PageElements[0].array[0] = new Object();
-PageElements[0].array[0].value = ['link1a'];
-PageElements[0].array[0].type = ['button'];
-
-PageElements[0].array[1] = new Object();
-PageElements[0].array[1].value = ['link1b'];
-PageElements[0].array[1].type = ['button'];*/
-
 PageElements[1] = new Object();
 PageElements[1].value = ['link2'];
 PageElements[1].type = ['button'];
@@ -140,14 +127,29 @@ PageElements[9].type = ['button'];
 PageElements[10] = new Object();
 PageElements[10].value = ['txtURL'];
 PageElements[10].type = ['txt'];
+PageElements[10].focused=false;
+// v- none of these are working, so I have moved the code for setting PageElements[*].focused variables to html code in onFocus and onBlur settings in input fields
+//document.forms['URL'].elements[PageElements[10].value].onfocus=function()
+//document.forms['URL'].elements['txtURL'].onfocus=function()
+/*document.forms['URL'].elements[10].onfocus=function()
+{
+         this.focused=true;
+};*/
+//PageElements[10].onblur=function()
+/*document.forms['URL'].elements[PageElements[10].value].onblur=function()
+{
+         this.focused=false;
+};*/
 
 PageElements[11] = new Object();
 PageElements[11].value = ['txtUser'];
 PageElements[11].type = ['txt'];
+PageElements[11].focused=false;
 
 PageElements[12] = new Object();
 PageElements[12].value = ['txtPassw'];
 PageElements[12].type = ['txt'];
+PageElements[12].focused=false;
 
 PageElements[13] = new Object();
 PageElements[13].value = ['radio1'];
@@ -217,7 +219,6 @@ PageElements[29] = new Object();
 PageElements[29].value = ['check16'];
 PageElements[29].type = ['checkbox'];
 
-
 var currElementIndex;
 var currElementName;
 
@@ -227,14 +228,13 @@ var currElementName;
 var ParentFocusColor = '#00FF00';
 var ParentUnfocusColor = 'white';
 
-
 var col = 8; //number of 'cells' in a row
 var current;
 var next;
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
-     
- function check(e)
+
+function check(e)
 	{
 	if (!e) var e = window.event;
 	(e.keyCode) ? key = e.keyCode : key = e.which;
@@ -282,75 +282,106 @@ window.onload = OnLoadSetCurrent;
 			//Simulate click on button elements for OK remote button
 			if (PageElements[currElementIndex].type == 'button')
 				{
+				    //Write the letter on the currFocusedElement field
 				    document.forms['URL'].elements[currElementName].click();
 				    //break;
+				} else {
+				    //Write the letter on the currFocusedElement field
+				    var URLText = document.forms['URL'].elements[currElementName].value;
+				    URLText = URLText + document.links['c' + next].name;
+				    document.forms['URL'].elements[currElementName].value = URLText;
 				}
-			//Write the letter on the currFocusedElement field
-			/*
-			var URLText = document.forms['URL'].elements[currElementName].value;
-			URLText = URLText + document.links['c' + next].name;
-			document.forms['URL'].elements[currElementName].value = URLText;
-			*/
-			} 
+			}
 		else if (key==48) 
 			{
 			//the 0 on the remote control have been pressed
 			//use the keypad function
-			keypad('0');
+			//check if the input field is has focus (dirty fix for typing numbers into textarea input fields from PC keyboard)
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('0');
+			    }
 			} 
 		else if (key==49) 
 			{
 			//the 1 on the remote control have been pressed
 			//use the keypad function
-			keypad('1');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('1');
+			    }
 			}
 		else if (key==50) 
 			{
 			//the 2 on the remote control have been pressed
 			//use the keypad function
-			keypad('2');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('2');
+			    }
 			}
 		else if (key==51) 
 			{
 			//the 3 on the remote control have been pressed
 			//use the keypad function
-			keypad('3');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('3');
+			    }
 			}
 		else if (key==52) 
 			{
 			//the 4 on the remote control have been pressed
 			//use the keypad function
-			keypad('4');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('4');
+			    }
 			}
 		else if (key==53) 
 			{
 			//the 5 on the remote control have been pressed
 			//use the keypad function
-			keypad('5');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('5');
+			    }
 			}
 		else if (key==54) 
 			{
 			//the 6 on the remote control have been pressed
 			//use the keypad function
-			keypad('6');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('6');
+			    }
 			}
 		else if (key==55) 
 			{
 			//the 7 on the remote control have been pressed
 			//use the keypad function
-			keypad('7');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('7');
+			    }
 			}
 		else if (key==56) 
 			{
 			//the 8 on the remote control have been pressed
 			//use the keypad function
-			keypad('8');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('8');
+			    }
 			}
 		else if (key==57) 
 			{
 			//the 9 on the remote control have been pressed
 			//use the keypad function
-			keypad('9');
+			if (!PageElements[currElementIndex].focused)
+			    {
+			    keypad('9');
+			    }
 			}
 		else if (key==403) 
 			{
@@ -557,5 +588,10 @@ function OnLoadSetCurrent()
 	    //document.getElementById('spanSAVED').innerHTML='-';
 	}
 }	
+
+function hasFocus(elementIndex)
+{
+	return this.focused;
+}
 	document.defaultAction = true;
 	//-->
