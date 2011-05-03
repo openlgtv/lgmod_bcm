@@ -25,7 +25,7 @@ then
     autoupgrade=1
 fi
 
-ver=0.3.0-rc1a
+ver=0.3.0-rc2
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 development=1
 

@@ -461,11 +461,14 @@ function check(e)
 function DirectWriteKey(key)
 	{
 	//Write the letter on the currFocusedElement field
-	var URLText = document.forms['URL'].elements[currElementName].value;
-	URLText = URLText + key;
-	document.forms['URL'].elements[currElementName].value = URLText;
+	if (PageElements[currElementIndex].type != 'button')
+		{
+		var URLText = document.forms['URL'].elements[currElementName].value;
+		URLText = URLText + key;
+		document.forms['URL'].elements[currElementName].value = URLText;
+		}
 	}	
-	
+
 function SaveForm()
 	{
 	//Save the settings in current page
