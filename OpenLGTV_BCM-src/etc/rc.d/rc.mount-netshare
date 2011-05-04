@@ -3,6 +3,21 @@
 # Network Share Mounting Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+# USB testing code for WebUI executed script
+USB1_DIR=/mnt/usb1/Drive1
+USB2_DIR=/mnt/usb2/Drive1
+if [ -n "$USB_DIR" -o -n "$OpenLGTV_BCM_USB" ]
+then
+    if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
+    then
+	export USB_DIR=$USB2_DIR
+	export OpenLGTV_BCM_USB=$USB2_DIR/OpenLGTV_BCM
+    else
+	export USB_DIR=$USB1_DIR
+	export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
+    fi
+fi
+
 if [ -f "/mnt/user/cfg/ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
 then
     echo "OpenLGTV_BCM-INFO: found Network Share configuration file /mnt/user/cfg/ndrvtab and mounted USB stick - parsing config content..." | tee -a /var/log/OpenLGTV_BCM.log
