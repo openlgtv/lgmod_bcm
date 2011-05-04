@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>Key presses detector</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+<!--
+
+document.defaultAction = true;
+
+function initialize() {
+	var inp = document.getElementById('testing').getElementsByTagName('input');
+	for (var i=0;i<inp.length;i++) {
+		inp[i].onclick = setEvents;
+		if (inp[i].checked)
+			inp[i].onclick();
+	}
+	writeframe = document.getElementById('writeframe');
+	document.getElementById('emptywriteframe').onclick = function () {
+		writeframe.innerHTML = '';
+		return false;
+	}
+}
+
+function setEvents() {
+	var eventHandler = detectEvent;
+	document['on'+this.id] = eventHandler;
+	//document.onkeyup = detectEvent;
+	//document.onkeydown = detectEvent;
+	//document.onkeypress = detectEvent;
+}
+
+function detectEvent(e) {
+	var evt = e || window.event;
+	//writeText(evt.type);
+	writeText('keyCode: ' + evt.keyCode);
+	//writeText('charCode: ' + evt.charCode);
+	//writeText('');
+	return document.defaultAction;
+}
+
+var writeframe;
+
+function writeText(msg) {
+	writeframe.innerHTML += msg + '<br />';
+}
+
+window.onload=initialize;
+
+// -->
+</script>
+<style type="text/css">
+#writeframe {
+	height: 750px;
+	border: 1px solid;
+	overflow: auto;
+	background-color:white;
+}
+
+</style>
+
+</head>
+<body>
+
+<form id="testing">
+<input type="hidden" id="keydown" checked />
+<p id="writeframe"></p>
+</form>
+
+</body>
+</html>
+

@@ -1,6 +1,9 @@
 body{
 	font-family:"TiresiasScreenfont";
 	background-color:black;
+	overflow:hidden;
+	overflow-y:hidden;
+	overflow-x:hidden;
 }
 
 .container{

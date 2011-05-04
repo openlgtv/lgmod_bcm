@@ -156,6 +156,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: more safety checks if TV model is supported in both installation and boot scripts
     * ADD: /etc/TZ link to /mnt/user/etc/TZ for TimeZone settings - will be scritpted to set it via WebUI later
     * ADD: making versioning of configs on 'user' partition structure for better supporting configs update in next versions
+    * ADD: mount/unmount button in WebUI Network Share Mounts option to be able to mount/unmount at run time without reboot
     * UPDATE: haserl binary updated to version 0.9.28, compiled without LUA and BashExtensions support
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
     * CHANGE: use better names for backups with information which is rootfs and which lginit backups before autoupgrade/install

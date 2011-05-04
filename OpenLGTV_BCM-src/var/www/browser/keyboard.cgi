@@ -262,16 +262,20 @@ function check(e)
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed
-			//NetCastBack API (exits from NetCast service?)
+			//NetCastBack API (exits from NetCast portal menu)
 			//window.NetCastBack();
+			//let's get back to WebUI instead of closing NetCast service
 			history.go(-1);
 			}
-		else if (key==1000) 
+		else if (key==1001) 
 			{
 			//the exit button on the remote control have been pressed
-			//NetCastExit API (does not work?) - lets try both ways then
+			//NetCastExit API (exits closes whole NetCast)
 			window.NetCastExit();
-			window.NetCastBack();
+			//different options to get back to NetCast portal menu
+			//history.go(-100);
+			//window.NetCastReturn(461);
+			//window.NetCastBack();
 			}
 		}catch(Exception){}
 	}
