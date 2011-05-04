@@ -478,12 +478,14 @@ function SaveForm()
 
 function BackSpace()
 	{
-	//I send a backspace on the currFocusedElement field
-	var URLText = document.forms['URL'].elements[currElementName].value;
-	document.forms['URL'].elements[currElementName].value = URLText.slice(0,URLText.length-1);
+	if (PageElements[currElementIndex].type != 'button')
+		{
+		//I send a backspace on the currFocusedElement field
+		var URLText = document.forms['URL'].elements[currElementName].value;
+		document.forms['URL'].elements[currElementName].value = URLText.slice(0,URLText.length-1);
+		}
 	}
-		
-	
+
 function PrevControl()
 	{
 	//Function that move to previous control
