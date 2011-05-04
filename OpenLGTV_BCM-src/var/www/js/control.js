@@ -451,8 +451,8 @@ function check(e)
 		else if (key==1000) 
 			{
 			//the exit button on the remote control have been pressed
-			//NetCastExit API (does not work?)
-			//window.NetCastExit();
+			//NetCastExit API (does not work?) - lets try both ways then
+			window.NetCastExit();
 			window.NetCastBack();
 			}
 		}catch(Exception){}
