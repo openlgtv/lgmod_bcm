@@ -17,8 +17,8 @@ content-type: text/html
 	</style>
     <TITLE>OpenLGTV BCM Browser</TITLE>
   </HEAD>
-  <FRAMESET cols="264,*" frameborder=0 border="0" framespacing="0">
-  <frame name="Keyboard" src="browser/keyboard.cgi">
+  <FRAMESET cols="263,*" frameborder=0 border="0" framespacing="0">
+  <frame name="Keyboard" src="browser/keyboard.cgi" scrolling="no">
   <!-- frame name="MainPage" src="browser/mainpage.html" scrolling="no" -->
   <frame name="MainPage" src="browser/mainpage.html">
   </FRAMESET>
