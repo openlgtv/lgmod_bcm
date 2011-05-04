@@ -61,7 +61,8 @@ then
 	    if [ "$WebUI_MOUNT" = "1" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..." | tee -a /var/log/OpenLGTV_BCM.log
-		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino >> /var/log/OpenLGTV_BCM.log 2>&1
+		export mount_err_code="$?"
 	    else
 		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
 		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino &
@@ -70,11 +71,17 @@ then
 	    if [ "$WebUI_MOUNT" = "1" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..." | tee -a /var/log/OpenLGTV_BCM.log
-		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp >> /var/log/OpenLGTV_BCM.log 2>&1
+		export mount_err_code="$?"
 	    else
 		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
 		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp &
 	    fi
+	fi
+	if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
+	then
+	    echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..." | tee -a /var/log/OpenLGTV_BCM.log
+	    exit $mount_err_code
 	fi
     fi
 else

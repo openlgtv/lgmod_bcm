@@ -67,6 +67,11 @@ if [ "$FORM_mount" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to mount NetShare by WebUI..." >> /var/log/OpenLGTV_BCM.log
     /etc/rc.d/rc.mount-netshare WebUI_MOUNT > /dev/null 2>&1
+    export mount_err_code="$?"
+    if [ "$mount_err_code" -ne "0" ]
+    then
+	export mounting_error=1
+    fi
 fi
 
 if [ "$FORM_umount" = "1" ]
@@ -161,7 +166,12 @@ fi
 					    #fi
 					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
 					else
-					    echo '<br /><center><font size="+2" color="red"><b>Remember to save settings before trying to use mount button</b></font></center>'
+					    if [ "$mounting_error" = "1" ]
+					    then
+						echo "<br /><center><font size=\"+2\" color=\"red\"><b>Mounting ERROR with error code: $mount_err_code, check logs and settings!</b></font></center>"
+					    else
+						echo '<br /><center><font size="+2" color="red"><b>Remember to save settings before trying to use mount button</b></font></center>'
+					    fi
 					fi
 				    ?>
 				</div>
