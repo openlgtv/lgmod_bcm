@@ -168,7 +168,7 @@ fi
 					else
 					    if [ "$mounting_error" = "1" ]
 					    then
-						echo "<br /><center><font size=\"+2\" color=\"red\"><b>Mounting ERROR with error code: $mount_err_code, check logs and settings!</b></font></center>"
+						echo "<center><font size=\"+2\" color=\"red\"><b>Mounting ERROR with error code: $mount_err_code !!!<br />Check your logs and settings!</b></font></center>"
 					    else
 						echo '<br /><center><font size="+2" color="red"><b>Remember to save settings before trying to use mount button</b></font></center>'
 					    fi
