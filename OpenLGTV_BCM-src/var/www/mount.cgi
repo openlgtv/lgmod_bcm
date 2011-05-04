@@ -66,7 +66,7 @@ fi
 if [ "$FORM_mount" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to mount NetShare by WebUI..." >> /var/log/OpenLGTV_BCM.log
-    /etc/rc.d/rc.mount-netshare WebUI_MOUNT
+    /etc/rc.d/rc.mount-netshare WebUI_MOUNT > /dev/null 2>&1
 fi
 
 if [ "$FORM_umount" = "1" ]

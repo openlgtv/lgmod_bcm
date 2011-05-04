@@ -18,6 +18,11 @@ then
     fi
 fi
 
+if [ "$1" = "WebUI_MOUNT" ]
+then
+    WebUI_MOUNT=1
+fi
+
 if [ -f "/mnt/user/cfg/ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
 then
     echo "OpenLGTV_BCM-INFO: found Network Share configuration file /mnt/user/cfg/ndrvtab and mounted USB stick - parsing config content..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -38,7 +43,7 @@ then
     ##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
     #done
     echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..." | tee -a /var/log/OpenLGTV_BCM.log
-    if [ "$automount" = "1" -o "$1" = "WebUI_MOUNT" ]
+    if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
     then
 	if [ ! -d "$USB_DIR/NetShare" ]
 	then
@@ -53,11 +58,23 @@ then
 	    else
 		echo "OpenLGTV_BCM-WARN: CIFS kernel module NOT FOUND in location: /mnt/user/modules/cifs.ko... trying to mount CIFS without it" | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
-	    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
-	    mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino &
+	    if [ "$WebUI_MOUNT" = "1" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..." | tee -a /var/log/OpenLGTV_BCM.log
+		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    else
+		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
+		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino &
+	    fi
 	else
-	    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
-	    mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp &
+	    if [ "$WebUI_MOUNT" = "1" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..." | tee -a /var/log/OpenLGTV_BCM.log
+		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    else
+		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..." | tee -a /var/log/OpenLGTV_BCM.log
+		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp &
+	    fi
 	fi
     fi
 else
