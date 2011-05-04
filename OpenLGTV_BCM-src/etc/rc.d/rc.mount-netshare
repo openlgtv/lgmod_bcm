@@ -6,7 +6,7 @@
 # USB testing code for WebUI executed script
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
-if [ -n "$USB_DIR" -o -n "$OpenLGTV_BCM_USB" ]
+if [ "$USB_DIR" = "" -o "$OpenLGTV_BCM_USB" = "" ]
 then
     if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
     then
