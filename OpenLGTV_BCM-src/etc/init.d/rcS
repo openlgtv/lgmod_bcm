@@ -450,7 +450,8 @@ portmap &
 echo "OpenLGTV_BCM-INFO: starting telnet server..."              | tee -a /var/log/OpenLGTV_BCM.log
 telnetd &
 echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."        | tee -a /var/log/OpenLGTV_BCM.log
-dropbear                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+# v- output redirection makes dropbear stay in foreground, so need to add '&' after tee command
+dropbear                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log &
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."    | tee -a /var/log/OpenLGTV_BCM.log
 hostname OpenLGTV_BCM                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 
