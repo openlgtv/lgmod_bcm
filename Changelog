@@ -161,6 +161,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: /var/www/usb{1,2} symlinks to /mnt/usb{1,2}/OpenLGTV_BCM/www for using custom web code from USB storage devices
     * ADD: support for WebUI development without need to flash firmware after web code changes - by linking /mnt/usb{1,2}/OpenLGTV_BCM/WebUI-devel to /var/www if the first dir exists
     * ADD: support for browser executable script modifications
+    * ADD: /var/www/samples/keypress.html file for getting remote or keyboard key codes in web browser (not linked anywhere)
     * ADD: /scripts/tmp_www.sh which copies /var/www to /tmp/www, links the /tmp/www to /var/www back and restarts both http server processes
     * UPDATE: haserl binary updated to version 0.9.28, compiled without LUA and BashExtensions support
     * CHANGE: update install.sh and create_img.sh scripts to support autoupgrade
