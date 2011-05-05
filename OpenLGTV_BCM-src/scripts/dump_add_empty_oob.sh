@@ -1,4 +1,11 @@
 #!/bin/bash
+# dump_add_empty_oob.sh script by xeros
+# Source code released under GPL License
+
+# this script is just for testing purpose for partition nanddump compatibile images creation from standard partition images
+
+# DO NOT FLASH SUCH CONVERTED IMAGES
+
 ifile=$1
 ofile=$ifile.with_empty_oob
 ibs=2048

@@ -1,5 +1,6 @@
 #!/bin/sh
-# OpenLGTV BCM installation script by xeros, ver. 1.0
+# OpenLGTV BCM installation script v.1.0 by xeros
+# Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
@@ -25,7 +26,7 @@ then
     autoupgrade=1
 fi
 
-ver=0.3.0-rc2
+ver=0.3.0-rc3
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 development=1
 

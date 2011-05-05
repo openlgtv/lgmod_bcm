@@ -1,5 +1,6 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.4
+# OpenLGTV BCM NetCast config parser and regenerator v.0.4 by xeros
+# Source code released under GPL License
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
 if [ "$1" != "" ]
 then
@@ -127,5 +128,5 @@ then
 	fi
     fi
 else
-    echo "OpenLGTV BCM-WARN: NetCast config generator: usage: `basename $0` /path/to/config.xml [add_openlgtv|enable_all] [/path/to/browser_application.txt]"
+    echo "OpenLGTV BCM-WARN: NetCast config generator: usage: `basename $0` /path/to/config.xml [add_openlgtv|add_yahoo|enable_all] [/path/to/browser_application.txt]"
 fi

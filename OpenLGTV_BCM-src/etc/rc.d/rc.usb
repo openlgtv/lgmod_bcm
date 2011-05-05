@@ -25,13 +25,13 @@ fi
 
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
-    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device in $k seconds..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device in $k seconds..."                  | tee -a /var/log/OpenLGTV_BCM.log
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
 	#if [ -f "$OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf" ]
 	#then
-	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM upgrade..." | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM upgrade..."   | tee -a /var/log/OpenLGTV_BCM.log
 	    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
 	    if [ "$sqf_file_count" -gt 1 ]
 	    then
@@ -41,7 +41,7 @@ then
 		then
 		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade" | tee -a /var/log/OpenLGTV_BCM.log
 		else
-		    /scripts/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    /scripts/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    #exit $?
 		fi
 	    fi
@@ -50,8 +50,8 @@ then
     if [ -f "$OpenLGTV_BCM_USB/make_backup" ]
     then
         echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/make_backup file, starting backup to USB storage device..." | tee -a /var/log/OpenLGTV_BCM.log
-        /scripts/backup.sh $OpenLGTV_BCM_USB/backup 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-        rm -f $OpenLGTV_BCM_USB/make_backup
+        /scripts/backup.sh $OpenLGTV_BCM_USB/backup                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+        rm -f $OpenLGTV_BCM_USB/make_backup                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
     if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" ]
     then
@@ -67,23 +67,23 @@ then
         echo "OpenLGTV_BCM-INFO: executing custom autorun scripts from $OpenLGTV_BCM_USB/autorun/" | tee -a /var/log/OpenLGTV_BCM.log
 	for scr_autorun in $OpenLGTV_BCM_USB/autorun/*
 	do
-	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..." | tee -a /var/log/OpenLGTV_BCM.log
-	    $scr_autorun 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."               | tee -a /var/log/OpenLGTV_BCM.log
+	    $scr_autorun                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	done
     fi
     if [ -d "$OpenLGTV_BCM_USB/WebUI-devel" ]
     then
         echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/WebUI-devel dir, mount-binding it to /var/www and restarting web servers..." | tee -a /var/log/OpenLGTV_BCM.log
-	mount --bind $OpenLGTV_BCM_USB/WebUI-devel /var/www 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	killall httpd 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	mount --bind $OpenLGTV_BCM_USB/WebUI-devel /var/www            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	killall httpd                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	sleep 1
-	echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88" | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"      | tee -a /var/log/OpenLGTV_BCM.log
 	#httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
-	httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+	httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	if [ -f "/mnt/user/etc/httpd.conf" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication" | tee -a /var/log/OpenLGTV_BCM.log
-	    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" | tee -a /var/log/OpenLGTV_BCM.log
+	    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI"          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	else
 	    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a /var/log/OpenLGTV_BCM.log
 	fi
@@ -91,9 +91,9 @@ then
     /etc/rc.d/rc.mount-netshare
     if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM.log" ]
     then
-        echo "OpenLGTV_BCM-INFO: making copy of /var/log/OpenLGTV_BCM.log log file to  $OpenLGTV_BCM_USB/" | tee -a /var/log/OpenLGTV_BCM.log
-	cp /var/log/OpenLGTV_BCM.log $OpenLGTV_BCM_USB/
+        echo "OpenLGTV_BCM-INFO: making copy of /var/log/OpenLGTV_BCM.log log file to $OpenLGTV_BCM_USB/"     | tee -a /var/log/OpenLGTV_BCM.log
+	cp /var/log/OpenLGTV_BCM.log $OpenLGTV_BCM_USB/                                              2>&1     | tee -a /var/log/OpenLGTV_BCM.log
     fi
 else
-    echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device" | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device"                              | tee -a /var/log/OpenLGTV_BCM.log
 fi

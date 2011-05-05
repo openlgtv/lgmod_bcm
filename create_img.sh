@@ -1,5 +1,6 @@
 #!/bin/bash
 # OpenLGTV BCM rootfs image creation script by xeros
+# Source code released under GPL License
 size=3145728
 dir=OpenLGTV_BCM-src
 ver=`cat $dir/etc/ver2`

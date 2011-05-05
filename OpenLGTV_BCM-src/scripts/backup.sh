@@ -1,5 +1,6 @@
 #!/bin/sh
-# OpenLGTV BCM backup script
+# OpenLGTV BCM backup script by xeros
+# Source code released under GPL License
 #  $1  - backup dir
 # [$2] = writable_only - make backup from writable partitions only
 

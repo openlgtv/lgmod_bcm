@@ -1,4 +1,11 @@
 #!/bin/sh
+# dump_cut_oob.sh script by xeros
+# Source code released under GPL License
+
+# this script is just for testing purpose for partition images creation from nanddump dumps
+
+# DO NOT FLASH SUCH CONVERTED IMAGES
+
 ifile=$1
 ofile=$ifile.without_oob
 ibs=2112
