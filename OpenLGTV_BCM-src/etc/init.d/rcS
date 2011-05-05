@@ -41,58 +41,58 @@ export ver=`cat /etc/ver2`
 mount -t proc proc /proc
 mount -t ramfs tmp /tmp
 
-echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..." | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."  | tee -a /tmp/OpenLGTV_BCM.log
 
 AUTORUN=`cat /proc/cmdline | grep autorun`
 
 if [ "$AUTORUN" != "" ]
 then
 
-mount -t ramfs tmp /tmp
+#mount -t ramfs tmp /tmp
 
-echo "OpenLGTV_BCM-INFO: starting in AUTORUN mode" | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: starting in AUTORUN mode"                       | tee -a /tmp/OpenLGTV_BCM.log
 
-echo "OpenLGTV_BCM-INFO: system mounts..."    | tee -a /tmp/OpenLGTV_BCM.log
-mount -t sysfs sysfs /sys                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t usbfs usbfs /proc/bus/usb       2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t devpts devpts /dev/pts          2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t tmpfs none /usr/etc             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t tmpfs bt /mnt/lg/bt -o size=10M 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: system mounts..."                               | tee -a /tmp/OpenLGTV_BCM.log
+mount -t sysfs sysfs /sys                                           2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mount -t usbfs usbfs /proc/bus/usb                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mount -t devpts devpts /dev/pts                                     2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mount -t tmpfs none /usr/etc                                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mount -t tmpfs bt /mnt/lg/bt -o size=10M                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
 if [ "`cat /proc/mtd | wc -l`" = "39" -a "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: setting country_model to US..." | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: setting country_model to US..."             | tee -a /tmp/OpenLGTV_BCM.log
     export country_model=US
 else
-    echo "OpenLGTV_BCM-INFO: setting country_model to EU..." | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: setting country_model to EU..."             | tee -a /tmp/OpenLGTV_BCM.log
     export country_model=EU
 fi
 
-echo "OpenLGTV_BCM-INFO: mtdblock partitions mounts..."              | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: mtdblock5 in /mnt/lg/model"                 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock5 /mnt/lg/model                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: mtdblock10 in /mnt/lg/res/lgres"            | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock10 /mnt/lg/res/lgres             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: mtdblock12 in /mnt/lg/res/ezcal"            | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock12 /mnt/lg/res/ezcal             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: mtdblock13 in /mnt/lg/res/estreamer"        | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock13 /mnt/lg/res/estreamer         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: mtdblock14 in /usr/local"                   | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock14 /usr/local                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t tmpfs tmpfs /usr/local/etc -o size=1M                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: mtdblock15 in /mnt/addon"                   | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock15 /mnt/addon                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtdblock partitions mounts..."                  | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtdblock5 in /mnt/lg/model"                     | tee -a /tmp/OpenLGTV_BCM.log
+mount -t squashfs /dev/mtdblock5 /mnt/lg/model                      2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtdblock10 in /mnt/lg/res/lgres"                | tee -a /tmp/OpenLGTV_BCM.log
+mount -t squashfs /dev/mtdblock10 /mnt/lg/res/lgres                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtdblock12 in /mnt/lg/res/ezcal"                | tee -a /tmp/OpenLGTV_BCM.log
+mount -t squashfs /dev/mtdblock12 /mnt/lg/res/ezcal                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtdblock13 in /mnt/lg/res/estreamer"            | tee -a /tmp/OpenLGTV_BCM.log
+mount -t squashfs /dev/mtdblock13 /mnt/lg/res/estreamer             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtdblock14 in /usr/local"                       | tee -a /tmp/OpenLGTV_BCM.log
+mount -t squashfs /dev/mtdblock14 /usr/local                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mount -t tmpfs tmpfs /usr/local/etc -o size=1M                      2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtdblock15 in /mnt/addon"                       | tee -a /tmp/OpenLGTV_BCM.log
+mount -t squashfs /dev/mtdblock15 /mnt/addon                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
 if [ "$country_model" = "EU" ]
 then
-    echo "OpenLGTV_BCM-INFO: mtdblock23 in /mnt/lg/ciplus/cert"      | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t squashfs /dev/mtdblock23 /mnt/lg/ciplus/cert       2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: mtdblock24 in /mnt/lg/ciplus/authcxt"   | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t yaffs2 /dev/mtdblock24 /mnt/lg/ciplus/authcxt      2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: mtdblock23 in /mnt/lg/ciplus/cert"          | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock23 /mnt/lg/ciplus/cert           2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: mtdblock24 in /mnt/lg/ciplus/authcxt"       | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t yaffs2 /dev/mtdblock24 /mnt/lg/ciplus/authcxt          2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
-echo "OpenLGTV_BCM-INFO: mtdblock7 in /mnt/lg/cmn_data"              | tee -a /tmp/OpenLGTV_BCM.log
-mount -t yaffs2 /dev/mtdblock7 /mnt/lg/cmn_data -o noatime                 >> /tmp/OpenLGTV_BCM.log 2>&1
+echo "OpenLGTV_BCM-INFO: mtdblock7 in /mnt/lg/cmn_data"                  | tee -a /tmp/OpenLGTV_BCM.log
+mount -t yaffs2 /dev/mtdblock7 /mnt/lg/cmn_data -o noatime                     >> /tmp/OpenLGTV_BCM.log 2>&1
 if [ "$?" -ne "0" ]
 then
     echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd7 - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
@@ -199,13 +199,13 @@ fi
 if [ ! -f "/mnt/flash/data/resolv.conf" ]
 then
     echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/resolv.conf file" | tee -a /tmp/OpenLGTV_BCM.log
-    touch /mnt/flash/data/resolv.conf
+    touch /mnt/flash/data/resolv.conf                                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ ! -f "/mnt/flash/data/hosts" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/hosts file" | tee -a /tmp/OpenLGTV_BCM.log
-    touch /mnt/flash/data/hosts
+    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/hosts file"       | tee -a /tmp/OpenLGTV_BCM.log
+    touch /mnt/flash/data/hosts                                          2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 export uver=`cat /mnt/user/etc/ver2`
@@ -219,14 +219,14 @@ fi
 # Network parameters
 #
 
-echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data" | tee -a /tmp/OpenLGTV_BCM.log
-mkdir -p /tmp/run /tmp/log /tmp/service /tmp/lib/hwclock /tmp/lib/misc /tmp/spool/cron
+echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data"           | tee -a /tmp/OpenLGTV_BCM.log
+mkdir -p /tmp/run /tmp/log /tmp/service /tmp/lib/hwclock /tmp/lib/misc /tmp/spool/cron 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 cat /dev/null > /var/run/utmp
 cat /dev/null > /var/log/wtmp
 cat /dev/null > /var/log/lastlog
-chgrp utmp /var/run/utmp /var/log/wtmp
-chmod 0664 /var/run/utmp /var/log/wtmp
-mv /tmp/OpenLGTV_BCM.log /var/log/ 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+chgrp utmp /var/run/utmp /var/log/wtmp 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+chmod 0664 /var/run/utmp /var/log/wtmp 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mv /tmp/OpenLGTV_BCM.log /var/log/     2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
 echo "OpenLGTV_BCM-INFO: starting network setup..." | tee -a /var/log/OpenLGTV_BCM.log
 network_set=0
@@ -266,7 +266,8 @@ fi
 #
 # Network setting
 #
-ifconfig lo 127.0.0.1 netmask 255.0.0.0
+echo "OpenLGTV_BCM-INFO: setting loopback network connection..." | tee -a /var/log/OpenLGTV_BCM.log
+ifconfig lo 127.0.0.1 netmask 255.0.0.0          2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 if [ "$network_set" -eq "1" ]
 then
     echo "OpenLGTV_BCM-INFO: TARGET_IP: $TARGET_IP SERVER_IP: $SERVER_IP GATEWAY: $GATEWAY NETMASK: $NETMASK" | tee -a /var/log/OpenLGTV_BCM.log
@@ -275,7 +276,7 @@ then
     then
 	echo "OpenLGTV_BCM-INFO: dropping default gateway as WLAN network is going to be configured later..." | tee -a /var/log/OpenLGTV_BCM.log
     else
-	route add default gw $GATEWAY 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	route add default gw $GATEWAY            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
 else
     echo "OpenLGTV_BCM-INFO: connecting to DHCP server for network setup (in background)" | tee -a /var/log/OpenLGTV_BCM.log
@@ -290,7 +291,7 @@ then
     if [ "`head -c4 /dev/mtd4 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
     then
 	echo "OpenLGTV_BCM-WARN: lginit partition (mtd4) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
-	flash_eraseall /dev/mtd4 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	flash_eraseall /dev/mtd4                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
 else
     echo "OpenLGTV_BCM-ERROR: /dev/mtd4 IS NOT lginit partition, please give yours firmware dump to OpenLGTV BCM developers for making better support yours TV model..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -303,7 +304,7 @@ then
 	if [ "`head -c4 /dev/mtd27 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
 	then
 	    echo "OpenLGTV_BCM-WARN: lginit backup partition (mtd27) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
-	    flash_eraseall /dev/mtd27 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    flash_eraseall /dev/mtd27            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     else
 	echo "OpenLGTV_BCM-ERROR: /dev/mtd27 IS NOT lginit partition, please give yours firmware dump to OpenLGTV BCM developers for making better support yours TV model..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -314,7 +315,7 @@ else
 	if [ "`head -c4 /dev/mtd25 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
 	then
 	    echo "OpenLGTV_BCM-WARN: lginit backup partition (mtd25) is not clean, erasing it..." | tee -a /var/log/OpenLGTV_BCM.log
-	    flash_eraseall /dev/mtd25 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    flash_eraseall /dev/mtd25            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     else
 	echo "OpenLGTV_BCM-ERROR: /dev/mtd25 IS NOT lginit partition, please give yours firmware dump to OpenLGTV BCM developers for making better support yours TV model..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -324,22 +325,22 @@ fi
 echo "OpenLGTV_BCM-INFO: setting time via NTP server pool" | tee -a /var/log/OpenLGTV_BCM.log
 ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 
-mkdir -p /mnt/user/etc
+mkdir -p /mnt/user/etc                                      >> /var/log/OpenLGTV_BCM.log
 if [ $? -ne 0 ]
 then
     echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a /var/log/OpenLGTV_BCM.log
-    mount -t tmpfs tmpfs /mnt/user
+    mount -t tmpfs tmpfs /mnt/user               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 if [ ! -d "/mnt/user/cfg" ]
 then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM config dir (/mnt/user/cfg) not found, creating it" | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/cfg
+    mkdir -p /mnt/user/cfg                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 if [ ! -d /mnt/user/lock ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock dir for one time script exectuting locks..." | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/lock
+    mkdir -p /mnt/user/lock                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 if [ ! -f "/usr/etc/passwd" ]
@@ -349,12 +350,12 @@ then
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/passwd file" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /mnt/user/etc/passwd /usr/etc/passwd
-	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
+	ln -sf /mnt/user/etc/passwd /usr/etc/passwd          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     else
         echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/passwd file based on default one" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /etc/passwd.org /usr/etc/passwd
-	cp /etc/passwd.org /mnt/user/etc/passwd
-	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
+	cp /etc/passwd.org /mnt/user/etc/passwd              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/passwd /usr/etc/passwd          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi
 if [ ! -f "/usr/etc/shadow" ]
@@ -363,12 +364,12 @@ then
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/shadow file" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /mnt/user/etc/shadow /usr/etc/shadow
-	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
+	ln -sf /mnt/user/etc/shadow /usr/etc/shadow 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     else
         echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/shadow file based on default one" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /etc/shadow.org /usr/etc/shadow
-	cp /etc/shadow.org /mnt/user/etc/shadow
-	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
+	cp /etc/shadow.org /mnt/user/etc/shadow     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/shadow /usr/etc/shadow 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi
 
@@ -381,7 +382,7 @@ then
 	if [ "$user_fix" != "" ]
 	then
 	    echo "OpenLGTV_BCM-WARN: enable password for user $user_fix in passwd file..." | tee -a /var/log/OpenLGTV_BCM.log
-	    sed -i -e "s/^$user_fix::/$user_fix:x:/g" /mnt/user/etc/passwd
+	    sed -i -e "s/^$user_fix::/$user_fix:x:/g" /mnt/user/etc/passwd            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     done
 fi
@@ -391,30 +392,30 @@ if [ ! -d /usr/etc/dropbear ]
 then
     if [ -d /mnt/user/etc/dropbear ]
     then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys" | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys"         | tee -a /var/log/OpenLGTV_BCM.log
 	#cp -r /mnt/user/etc/dropbear /usr/etc/
-	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     else
         echo "OpenLGTV_BCM-WARN: generating new SSH host keys in /mnt/user/etc/dropear path" | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p /mnt/user/etc/dropbear
-	dropbearkey -t dss -f /mnt/user/etc/dropbear/dropbear_dss_host_key 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	dropbearkey -t rsa -f /mnt/user/etc/dropbear/dropbear_rsa_host_key 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	mkdir -p /mnt/user/etc/dropbear                                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	dropbearkey -t dss -f /mnt/user/etc/dropbear/dropbear_dss_host_key              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	dropbearkey -t rsa -f /mnt/user/etc/dropbear/dropbear_rsa_host_key              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	#cp -r /mnt/user/etc/dropbear /usr/etc/
-	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi
 if [ ! -f "/usr/etc/motd" ]
 then
     if [ -f "/mnt/user/etc/motd" ]
     then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/motd file" | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/motd file"  | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /mnt/user/etc/shadow /usr/etc/shadow
-	ln -sf /mnt/user/etc/motd /usr/etc/motd
+	ln -sf /mnt/user/etc/motd /usr/etc/motd             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     else
         echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/motd file based on default one" | tee -a /var/log/OpenLGTV_BCM.log
 	#cp /etc/motd.org /usr/etc/motd
-	cp /etc/motd.org /mnt/user/etc/motd
-	ln -sf /mnt/user/etc/motd /usr/etc/motd
+	cp /etc/motd.org /mnt/user/etc/motd                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/motd /usr/etc/motd             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi
 if [ -f "/mnt/user/etc/motd" ]
@@ -427,7 +428,7 @@ then
 	then
 	    cat /mnt/user/etc/motd | sed "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver. $ver/g" > /tmp/motd
 	else
-	    cp /mnt/user/etc/motd /tmp/motd
+	    cp /mnt/user/etc/motd /tmp/motd                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     else
         echo "OpenLGTV_BCM-WARN: OpenLGTV BCM welcome string not found in /tmp/motd file" | tee -a /var/log/OpenLGTV_BCM.log
@@ -437,40 +438,40 @@ fi
 if [ ! -d "/mnt/user/.ssh" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/.ssh dir for storage of user SSH configs and keys" | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir /mnt/user/.ssh
+    mkdir /mnt/user/.ssh                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 if [ ! -d "/tmp/.ssh" ]
 then
     echo "OpenLGTV_BCM-INFO: linking /tmp/.ssh to /mnt/user/.ssh dir for storage of user SSH configs and keys" | tee -a /var/log/OpenLGTV_BCM.log
-    ln -sf /mnt/user/.ssh /tmp/.ssh
+    ln -sf /mnt/user/.ssh /tmp/.ssh                         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
-echo "OpenLGTV_BCM-INFO: starting portmapper..." | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: starting portmapper..."                 | tee -a /var/log/OpenLGTV_BCM.log
 portmap &
-echo "OpenLGTV_BCM-INFO: starting telnet server..." | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: starting telnet server..."              | tee -a /var/log/OpenLGTV_BCM.log
 telnetd &
-echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..." | tee -a /var/log/OpenLGTV_BCM.log
-dropbear
-echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..." | tee -a /var/log/OpenLGTV_BCM.log
-hostname OpenLGTV_BCM
+echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."        | tee -a /var/log/OpenLGTV_BCM.log
+dropbear                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."    | tee -a /var/log/OpenLGTV_BCM.log
+hostname OpenLGTV_BCM                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 
 if [ -f "/mnt/user/cfg/settings" -a ! -f "/mnt/user/cfg/settings.default" ]
 then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM default settings config file (/mnt/user/cfg/settings.default) not found, but current settings file found, creating new files and reseting settings to default values" | tee -a /var/log/OpenLGTV_BCM.log
-    mv -f /mnt/user/cfg/settings /mnt/user/cfg/settings.bck
+    mv -f /mnt/user/cfg/settings /mnt/user/cfg/settings.bck 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     settings_read_from_backup=1
 fi
 
 if [ ! -f "/mnt/user/cfg/settings" ]
 then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a /var/log/OpenLGTV_BCM.log
-    touch /mnt/user/cfg/settings
+    touch /mnt/user/cfg/settings                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 if [ -n "`grep '#' /mnt/user/cfg/settings`" ]
 then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) is BROKEN, creating new settings files with default values" | tee -a /var/log/OpenLGTV_BCM.log
-    rm -f /mnt/user/cfg/settings*
-    touch /mnt/user/cfg/settings
+    rm -f /mnt/user/cfg/settings*                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    touch /mnt/user/cfg/settings                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 # need to rethink if loading configuration shouldnt be earlier, even before telnet and ssh, but need to make safety checks to not break boot if config is bad
@@ -509,14 +510,14 @@ for svar in `cat /mnt/user/cfg/settings | awk -F= '{print $1}'`; do export $svar
 if [ -f "/mnt/user/modules/btusb.ko" ]
 then
     echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/btusb.ko to /mnt/lg/res/lgres/btusb.ko..." | tee -a /var/log/OpenLGTV_BCM.log
-    mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko
+    mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 # Mount-binding wl.ko from /mnt/user/modules/
 if [ -f "/mnt/user/modules/wl.ko" ]
 then
-    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko..." | tee -a /var/log/OpenLGTV_BCM.log
-    mount --bind /mnt/user/modules/wl.ko /mnt/lg/res/lgres/wl.ko
+    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko..."       | tee -a /var/log/OpenLGTV_BCM.log
+    mount --bind /mnt/user/modules/wl.ko /mnt/lg/res/lgres/wl.ko                             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 source /etc/rc.d/rc.netcast
@@ -524,17 +525,17 @@ source /etc/rc.d/rc.ywe
 
 if [ ! -d /mnt/user/www ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..." | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/www
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."  | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/www                                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 # Making nvram copy
 if [ "$country_model" = "EU" ]
 then
-    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd21 partition..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd21 partition..."        | tee -a /var/log/OpenLGTV_BCM.log
     cat /dev/mtd21 > /tmp/nvram
 else
-    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd23 partition..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd23 partition..."        | tee -a /var/log/OpenLGTV_BCM.log
     cat /dev/mtd23 > /tmp/nvram
 fi
 
@@ -545,16 +546,16 @@ fi
 if [ ! -d /mnt/user/init.d ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/init.d
+    mkdir -p /mnt/user/init.d                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 if [ -d /mnt/user/init.d ]
 then
-    echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/" | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"  | tee -a /var/log/OpenLGTV_BCM.log
     for scr_file in /mnt/user/init.d/*
     do
-	echo "OpenLGTV_BCM-INFO: executing $scr_file ..." | tee -a /var/log/OpenLGTV_BCM.log
-	$scr_file
+	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                           | tee -a /var/log/OpenLGTV_BCM.log
+	$scr_file                                                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     done
 fi
 
@@ -585,16 +586,16 @@ fi
 
 echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88" | tee -a /var/log/OpenLGTV_BCM.log
 #httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
-httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
+httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 if [ -f "/mnt/user/etc/httpd.conf" ]
 then
     echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication" | tee -a /var/log/OpenLGTV_BCM.log
-    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" | tee -a /var/log/OpenLGTV_BCM.log
+    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" 2>&1          | tee -a /var/log/OpenLGTV_BCM.log
 else
     echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
-echo "OpenLGTV_BCM-INFO: start RELEASE in tmux" | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"                | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
 
 if [ "$RELEASE_in_tmux" != "0" ]
@@ -603,17 +604,15 @@ then
     /bin/sh
 fi
 
-echo "OpenLGTV_BCM-INFO: start RELEASE" | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: start RELEASE"                        | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
 
 /lg/lgapp/RELEASE 0
 
 /bin/sh
 
-echo "OpenLGTV_BCM-INFO: Done...login now" | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: Done...login now"                     | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
-
-
 
 
 
