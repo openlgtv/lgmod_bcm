@@ -13,9 +13,9 @@
 
 echo "OpenLGTV_BCM-INFO: variables initialization"
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:.
-export PATH=.:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
+export PATH=.:/mnt/user/bin:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
 #export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib:/mnt/lg/res/lgres
-export LD_LIBRARY_PATH=.:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
+export LD_LIBRARY_PATH=.:/mnt/user/lib:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
 export LOG_CALLER=NO
 export OSAMEM_SIZE=0x200000
 export LOAD_SYM=1

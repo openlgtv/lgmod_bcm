@@ -84,6 +84,7 @@ then
 	    then
 		echo "OpenLGTV_BCM-INFO: making browser startup script copy - /mnt/browser/run3556..."               | tee -a /var/log/OpenLGTV_BCM.log
 		cp /mnt/browser/run3556 /mnt/user/netcast/run3556                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		chmod 775 /mnt/user/netcast/run3556                                                             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	fi
 	if [ ! -f "/mnt/user/netcast/config.xml" ]
@@ -109,12 +110,11 @@ then
 	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
-	#v- not needed yet
-	#if [ -f "/mnt/user/netcast/run3556" ]
-	#then
-	#	echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..."       | tee -a /var/log/OpenLGTV_BCM.log
-	#	mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556                                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	#fi
+	if [ -f "/mnt/user/netcast/run3556" ]
+	then
+		echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..."       | tee -a /var/log/OpenLGTV_BCM.log
+		mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556                                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	fi
     fi
 else
     if [ "$netcast_config_ok" = "1" ]
@@ -151,15 +151,14 @@ else
 	    export real_browapptxt="/mnt/addon/browser/browser_application.txt"
 	fi
 	echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
-	#v- not needed yet
-	#if [ -h "/mnt/browser/run3556" ]
-	#then
-	#	real_run3556="`ls -al /mnt/browser/run3556 | awk -F\"> \" '{print $2}'`"
-	#	custom_run3556=1
-	#else
-	#	real_run3556="/mnt/browser/run3556"
-	#fi
-	#echo "OpenLGTV_BCM-INFO: using real Web Browser startup script file: $real_run3556 ..." | tee -a /var/log/OpenLGTV_BCM.log
+	if [ -h "/mnt/browser/run3556" ]
+	then
+		real_run3556="`ls -al /mnt/browser/run3556 | awk -F\"> \" '{print $2}'`"
+		custom_run3556=1
+	else
+		real_run3556="/mnt/browser/run3556"
+	fi
+	echo "OpenLGTV_BCM-INFO: using real Web Browser startup script file: $real_run3556 ..." | tee -a /var/log/OpenLGTV_BCM.log
 	source /etc/rc.d/rc.netcast-modify
     fi
 fi

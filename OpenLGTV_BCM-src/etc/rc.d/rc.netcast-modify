@@ -12,11 +12,10 @@ if [ "$real_browapptxt" = "" -a -f "/mnt/user/netcast/browser_application.txt" ]
 then
     export real_browapptxt="/mnt/user/netcast/browser_application.txt"
 fi
-#v- not used yet
-#if [ "$real_run3556" = "" -a -f "/mnt/user/netcast/run3556" ]
-#then
-#    real_run3556="/mnt/user/netcast/run3556"
-#fi
+if [ "$real_run3556" = "" -a -f "/mnt/user/netcast/run3556" ]
+then
+    real_run3556="/mnt/user/netcast/run3556"
+fi
 
 if [ -f "$real_configxml" ]
 then
