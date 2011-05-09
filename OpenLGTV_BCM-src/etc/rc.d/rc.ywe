@@ -51,7 +51,7 @@ then
 		echo "OpenLGTV_BCM-INFO: not found Yahoo Widgets Data image file - $OpenLGTV_BCM_USB/ywedata.ext3.img and ywedata dir is not populated yet, so creating 128MB image file on USB storage device..." | tee -a /var/log/OpenLGTV_BCM.log
 		dd if=/dev/zero of=$OpenLGTV_BCM_USB/ywedata.ext3.img bs=1024 count=131072     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		echo "OpenLGTV_BCM-INFO: creating EXT3 filesystem on Yahoo Widgets Data image file - $OpenLGTV_BCM_USB/ywedata.ext3.img..." | tee -a /var/log/OpenLGTV_BCM.log
-		mke2fs -j $OpenLGTV_BCM_USB/ywedata.ext3.img                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		mke2fs -F -j $OpenLGTV_BCM_USB/ywedata.ext3.img                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	    echo "OpenLGTV_BCM-INFO: trying to kill konfabulator again if its process exits - it might have respawned (you may ignore error about process not exits)..." | tee -a /var/log/OpenLGTV_BCM.log
 	    killall konfabulator                                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
