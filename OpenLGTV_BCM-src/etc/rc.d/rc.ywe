@@ -41,6 +41,7 @@ then
 	if [ -d "$ywedatadir_usb" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in $OpenLGTV_BCM_USB/ywedata - starting ywedata preparation process..."   | tee -a /var/log/OpenLGTV_BCM.log
+	    # lets try to kill konfabulator as on US models it running at start in background
 	    echo "OpenLGTV_BCM-INFO: trying to kill konfabulator if its process exits (you may ignore error about process not exits)..."    | tee -a /var/log/OpenLGTV_BCM.log
 	    killall konfabulator                                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in $OpenLGTV_BCM_USB/ywedata - trying to unmount /mnt/widget.data..."     | tee -a /var/log/OpenLGTV_BCM.log
@@ -52,6 +53,8 @@ then
 		echo "OpenLGTV_BCM-INFO: creating EXT3 filesystem on Yahoo Widgets Data image file - $OpenLGTV_BCM_USB/ywedata.ext3.img..." | tee -a /var/log/OpenLGTV_BCM.log
 		mke2fs -j $OpenLGTV_BCM_USB/ywedata.ext3.img                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
+	    echo "OpenLGTV_BCM-INFO: trying to kill konfabulator again if its process exits - it might have respawned (you may ignore error about process not exits)..." | tee -a /var/log/OpenLGTV_BCM.log
+	    killall konfabulator                                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    if [ -f "$OpenLGTV_BCM_USB/ywedata.ext3.img" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: mounting $OpenLGTV_BCM_USB/ywedata.ext3.img file image as ywedata dir..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -59,7 +62,6 @@ then
 	    fi
 	    echo "OpenLGTV_BCM-INFO: linking $ywedatadir_usb to /mnt/widget.data..."                | tee -a /var/log/OpenLGTV_BCM.log
 	    mount --bind "$ywedatadir_usb" /mnt/widget.data                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	    # lets try to kill konfabulator as on US models it running at start in background
 	else
 	    if [ "$country_model" = "EU" ]
 	    then
