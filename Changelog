@@ -177,3 +177,5 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: static list of kernel modules loading support from /lib/modules, /home/modules, /mnt/user/modules
     * ADD: kernel modules included in /lib/modules: cifs.ko, evdev.ko, fuse.ko, hid.ko, input-core.ko, usbhid.ko
     * CHANGE: sstripped binaries for reduce image size
+    * REMOVE: removed strace and ltrace binaries
+    * REMOVE: libz.so.1.2.3 - libz.so* libs are now linked to /usr/local/lib/libz.so*
