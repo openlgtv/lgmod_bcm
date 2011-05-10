@@ -479,17 +479,18 @@ fi
 echo "OpenLGTV_BCM-INFO: reading custom settings configuration and updating variables if they do not exist there" | tee -a /var/log/OpenLGTV_BCM.log
 source /mnt/user/cfg/settings
 
-if [ "$confirmations" = "" ];                 then echo "confirmations=0#Should installer ask for confirmations?"                          | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$rebooting" = "" ];                     then echo "rebooting=1#Should installer reboot after successful flash?"                      | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$samsung_ywe" = "" ];                   then echo "samsung_ywe=1#Should YWE configs be copied to use Samsung YWE?"                   | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$use_samsung_ywe_instead_of_lg" = "" ]; then echo "use_samsung_ywe_instead_of_lg=1#Replace LG YWE using Samsung YWE config?"         | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$RELEASE_in_tmux" = "" ];               then echo "RELEASE_in_tmux=1#Running RELEASE in tmux virtual terminal"                       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$force_copy_config_netcast" = "" ];     then echo "force_copy_config_netcast=0#Forcing making copy of NetCast configs"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$force_copy_config_ywe" = "" ];         then echo "force_copy_config_ywe=0#Forcing making copy of YWE configs"                       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$netcast_config_add_openlgtv" = "" ];   then echo "netcast_config_add_openlgtv=1#Add OpenLGTV BCM icon to NetCast conf?"             | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$netcast_config_add_yahoo" = "" ];      then echo "netcast_config_add_yahoo=1#Add Yahoo Widgets icon to NetCast conf?"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
-if [ "$netcast_config_enable_all" = "" ];     then echo "netcast_config_enable_all=0#Rewrite NetCast conf, enable all services BE CAREFUL" | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$confirmations" = "" ];                  then echo "confirmations=0#Should installer ask for confirmations?"                          | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$rebooting" = "" ];                      then echo "rebooting=1#Should installer reboot after successful flash?"                      | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$samsung_ywe" = "" ];                    then echo "samsung_ywe=1#Should YWE configs be copied to use Samsung YWE?"                   | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$use_samsung_ywe_instead_of_lg" = "" ];  then echo "use_samsung_ywe_instead_of_lg=1#Replace LG YWE using Samsung YWE config?"         | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$RELEASE_in_tmux" = "" ];                then echo "RELEASE_in_tmux=1#Running RELEASE in tmux virtual terminal"                       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_netcast" = "" ];      then echo "force_copy_config_netcast=0#Forcing making copy of NetCast configs"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_ywe" = "" ];          then echo "force_copy_config_ywe=0#Forcing making copy of YWE configs"                       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_openlgtv" = "" ];    then echo "netcast_config_add_openlgtv=1#Add OpenLGTV BCM icon to NetCast conf?"             | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_yahoo" = "" ];       then echo "netcast_config_add_yahoo=1#Add Yahoo Widgets icon to NetCast conf?"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_enable_all" = "" ];      then echo "netcast_config_enable_all=0#Rewrite NetCast conf, enable all services BE CAREFUL" | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
 #if [ "$netcast_kill_browser" = "" ];          then echo "netcast_kill_browser=1#Modify Web Browser script for Browser after YWE fix"       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_keyboard_mouse_support" = "" ]; then echo "netcast_keyboard_mouse_support=0#Support for USB keyboard and mouse in NetCast"   | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
 # more to come...
 
 #v- this could make inconsistency between default settings and current ones, so disabling it for now
@@ -542,8 +543,6 @@ else
     cat /dev/mtd23 > /tmp/nvram
 fi
 
-#(sleep 30; /etc/rc.d/rc.usb)&
-#(sleep 20; /etc/rc.d/rc.usb)&
 /etc/rc.d/rc.usb &
 
 if [ ! -d /mnt/user/init.d ]
@@ -597,6 +596,8 @@ then
 else
     echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a /var/log/OpenLGTV_BCM.log
 fi
+
+(sleep 10; /etc/rc.d/rc.directfb)&
 
 echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"                | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
