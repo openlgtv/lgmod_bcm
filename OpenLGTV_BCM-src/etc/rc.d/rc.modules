@@ -1,0 +1,42 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.modules
+# Kernel modules loading script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+MODULES_ROOTFS_LIST="input-core hid usbhid evdev cifs fuse"
+if [ "$MODULES_CUSTOM_LIST" = "" ]
+then
+    #MODULES_CUSTOM_LIST="input-core hid usbhid evdev cifs fuse"
+    MODULES_CUSTOM_LIST=""
+fi
+
+MOD_RPATH="/lib/modules"
+MOD_PATH1="/home/modules"
+MOD_PATH2="/mnt/user/modules"
+
+for mod in $MODULES_ROOTFS_LIST
+do
+    mod_file="$MOD_RPATH/$mod.ko"
+    if [ -f "$mod_file" ]
+    then
+	echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..." | tee -a /var/log/OpenLGTV_BCM.log
+	insmod "$mod_file"
+    fi
+done
+
+for mod in $MODULES_CUSTOM_LIST
+do
+    mod_file="$MOD_PATH1/$mod.ko"
+    if [ -f "$mod_file" ]
+    then
+	echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..." | tee -a /var/log/OpenLGTV_BCM.log
+	insmod "$mod_file"
+    else
+	mod_file="$MOD_PATH2/$mod.ko"
+	if [ -f "$mod_file" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..." | tee -a /var/log/OpenLGTV_BCM.log
+	    insmod "$mod_file"
+	fi
+    fi
+done
