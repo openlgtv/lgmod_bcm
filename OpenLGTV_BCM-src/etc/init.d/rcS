@@ -507,6 +507,8 @@ source /mnt/user/cfg/settings
 echo "OpenLGTV_BCM-INFO: exporting custom settings configuration variables" | tee -a /var/log/OpenLGTV_BCM.log
 for svar in `cat /mnt/user/cfg/settings | awk -F= '{print $1}'`; do export $svar; done
 
+/etc/rc.d/rc.modules
+
 # Mount-binding btusb.ko from /mnt/user/modules/
 if [ -f "/mnt/user/modules/btusb.ko" ]
 then
