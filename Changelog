@@ -108,7 +108,7 @@ Answer for people asking if they can use it if they have already made modificati
 
     * FIX: workaround to enable password for users with password set (BusyBox 'passwd' command haven't done it while changing password) - passwords are enabled at next boot
 
-0.3.0 (WORK IN PROGRESS)
+0.3.0
 
     * FIX: Updated BusyBox binary with 'passwd' patch
     * FIX: NVRAM dump on US models
@@ -171,3 +171,9 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: shorten USB storage check time to minimal with info how much time has it took
     * WARN: from now on, install.sh makes installation automaticaly and reboots TV after successful flash, without confirmation
     * WARN: from this release there's already default password set for telnet, SSH and web server - "openlgtv"
+
+0.4.0:
+
+    * ADD: static list of kernel modules loading support from /lib/modules, /home/modules, /mnt/user/modules
+    * ADD: kernel modules included in /lib/modules: cifs.ko, evdev.ko, fuse.ko, hid.ko, input-core.ko, usbhid.ko
+    * CHANGE: sstripped binaries for reduce image size
