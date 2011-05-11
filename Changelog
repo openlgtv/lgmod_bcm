@@ -178,6 +178,6 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: kernel modules included in /lib/modules: cifs.ko, evdev.ko, fuse.ko, hid.ko, input-core.ko, usbhid.ko
     * ADD: keyboard (only partial yet) and mouse support in built-in web browser - WebUI switchable option, not enabled by default
     * UPDATE: haserl updated to 0.9.29
-    * CHANGE: sstripped binaries for reduce image size
+    * CHANGE: sstripped binaries for reduce image size (only busybox and uClibc libs left, yet)
     * REMOVE: removed strace and ltrace binaries
     * REMOVE: libz.so.1.2.3 - libz.so* libs are now linked to /usr/local/lib/libz.so*
