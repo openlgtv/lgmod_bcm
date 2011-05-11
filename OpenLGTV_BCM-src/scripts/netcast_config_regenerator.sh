@@ -9,13 +9,24 @@ then
     id_link=http://127.0.0.1:88/
     yid_name=yahoo
     org_cfgxml=$1
-    tmp_cfgxml=$org_cfgxml.tmp
-    new_cfgxml=$org_cfgxml.new
+    #tmp_cfgxml=$org_cfgxml.tmp
+    tmp1_cfgxml=/tmp/config.xml.tmp1
+    tmp2_cfgxml=/tmp/config.xml.tmp2
+    new_cfgxml=/tmp/config.xml.new
     bck_cfgxml=$org_cfgxml.backup
     if [ "$2" = "enable_all" ]
     then
 	echo "OpenLGTV BCM-INFO: NetCast config generator: \"enable_all\" argument passed, regenerating new config.xml: $org_cfgxml with all services"
-	cat $org_cfgxml | tr -d '\r' | sed -e 's/<!--//g' -e 's/-->//g' | sed -e 's/^ *//g' -e 's/^\t*//g' | grep -v "^$" | sed -e 's/^ *//g' | sed -e 's/>j$/>/g' | grep -v '<.*xml>' | grep -v '<.*country.*>' | tr -d '\n' | sed -e 's#</item><item#</item>\n<item#g' | sed -e 's/\"\([a-zA-Z]*\)=/\" \1=/g' | sort | uniq > $tmp_cfgxml
+	cat $org_cfgxml | tr -d '\r' | sed -e 's/<!--//g' -e 's/-->//g' | sed -e 's/^ *//g' -e 's/^\t*//g' | grep -v "^$" | sed -e 's/^ *//g' | sed -e 's/>j$/>/g' | grep -v '<.*xml>' | grep -v '<.*country.*>' | tr -d '\n' | sed -e 's#</item><item#</item>\n<item#g' | sed -e 's/\"\([a-zA-Z]*\)=/\" \1=/g' | sort | uniq > $tmp1_cfgxml
+	rm -f $tmp2_cfgxml
+	for s_id in `cat $tmp1_cfgxml | awk '{print $2}' | sed -e 's/id=//g' -e 's/\"//g'`
+	do
+	    # v- NEEDS FIX FOR TERRA - many times generated
+	    if [ -f "/home/netcast_icons/icon_$s_id.swf" ]
+	    then
+		cat $tmp1_cfgxml | grep "id=\"$s_id\"" >> $tmp2_cfgxml
+	    fi
+	done
 	echo -e '<xml>\r' > $new_cfgxml
 	#for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | sort | uniq`
 	for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | grep COMMON | sort | uniq`
@@ -23,12 +34,13 @@ then
 	    echo -e "\t<country code=\"$cntry\">\r" >> $new_cfgxml
 	    # v- busybox sed has problems with handling '\r'
 	    #cat $tmp_cfgxml | sed -e 's/^/\t\t/g'| sed -e 's/></>\r\n\t\t\t</g' -e 's#\t</item>.*#</item>\r#g' >> $new_cfgxml
-	    cat $tmp_cfgxml | sed -e 's/^/\t\t/g'| sed -e 's/></>\n\t\t\t</g' -e 's#\t</item>.*#</item>#g' >> $new_cfgxml
+	    cat $tmp2_cfgxml | sed -e 's/^/\t\t/g'| sed -e 's/></>\n\t\t\t</g' -e 's#\t</item>.*#</item>#g' >> $new_cfgxml
 	    echo -e "\t</country>\r" >> $new_cfgxml
 	    echo -e "\r" >> $new_cfgxml
 	done
 	echo -e "</xml>\r" >> $new_cfgxml
-	#rm -f $tmp_cfgxml
+	rm -f $tmp1_cfgxml
+	rm -f $tmp2_cfgxml
 	mv -f $new_cfgxml $org_cfgxml
     else
 	if [ "$2" = "add_openlgtv" ]
