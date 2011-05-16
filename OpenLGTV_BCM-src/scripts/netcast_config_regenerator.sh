@@ -21,7 +21,6 @@ then
 	rm -f $tmp2_cfgxml
 	for s_id in `cat $tmp1_cfgxml | awk '{print $2}' | sed -e 's/id=//g' -e 's/\"//g'`
 	do
-	    # v- NEEDS FIX FOR TERRA - many times generated
 	    if [ -f "/home/netcast_icons/icon_$s_id.swf" ]
 	    then
 		cat $tmp1_cfgxml | grep "id=\"$s_id\"" >> $tmp2_cfgxml
@@ -34,7 +33,7 @@ then
 	    echo -e "\t<country code=\"$cntry\">\r" >> $new_cfgxml
 	    # v- busybox sed has problems with handling '\r'
 	    #cat $tmp_cfgxml | sed -e 's/^/\t\t/g'| sed -e 's/></>\r\n\t\t\t</g' -e 's#\t</item>.*#</item>\r#g' >> $new_cfgxml
-	    cat $tmp2_cfgxml | sed -e 's/^/\t\t/g'| sed -e 's/></>\n\t\t\t</g' -e 's#\t</item>.*#</item>#g' >> $new_cfgxml
+	    cat $tmp2_cfgxml | sort | uniq | sed -e 's/^/\t\t/g'| sed -e 's/></>\n\t\t\t</g' -e 's#\t</item>.*#</item>#g' >> $new_cfgxml
 	    echo -e "\t</country>\r" >> $new_cfgxml
 	    echo -e "\r" >> $new_cfgxml
 	done
