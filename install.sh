@@ -1,17 +1,19 @@
 #!/bin/sh
-# OpenLGTV BCM installation script v.1.0 by xeros
+# OpenLGTV BCM installation script v.1.1 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
 
 # if 'confirmations' is set to '1' then it asks for confirmation, if '0' then autoconfirm
 # if 'rebooting' is set to '1' then TV is autorebooted after after successful flashing
+# if 'make_backup' is set to '1' then installer makes full backup of firmware if OpenLGTV BCM haven't been installed yet
 
 # vars set
 #confirmations=1
 confirmations=0
 #rebooting=0
 rebooting=1
+make_backup=1
 
 # enforce variables from settings file
 if [ -f "/mnt/user/cfg/settings" ]
@@ -24,6 +26,11 @@ then
     confirmations=0
     rebooting=1
     autoupgrade=1
+else
+    if [ "$2" = "no_backup" ]
+    then
+	make_backup=0
+    fi
 fi
 
 ver=0.4.0-devel
@@ -59,6 +66,17 @@ lginit_backup=lginit-$backup
 rootfs_backup=rootfs-$backup
 suffix=flashed
 backup2=$suffix-backup
+ver_installed=`cat $dir/etc/ver2 2>/dev/null`
+
+mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
+mkdir -p /mnt/usb2/Drive1/OpenLGTV_BCM > /dev/null 2>&1
+
+if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+then
+    export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+else
+    export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+fi
 
 touch $log
 if [ "$?" -ne "0" ]
@@ -88,6 +106,25 @@ then
     confirmations=0
     rebooting=1
     autoupgrade=1
+fi
+
+# making current firmware backup if it's first installation
+if [ "$make_backup" = "1" -a -d "$OpenLGTV_BCM_USB" -a "$ver_installed" = "" ]
+then
+    back_dir="$OpenLGTV_BCM_USB/backup"
+    echo "Looks like OpenLGTV BCM installation is being run for the first time - making backup of current firmware to $back_dir" | tee -a $log
+    mkdir -p "$back_dir" 2>&1 | tee -a $log
+    for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/'`
+    do
+	echo "Making standard backup of $i ..." | tee -a $log
+	cat /dev/`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'` > $back_dir/$i
+    done
+    for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
+    do
+	echo "Making tar archive backup of $mount_path ..." | tee -a $log
+	tar cvf `echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar $mount_path 2>&1 | tee -a $log
+    done
+    echo "Backup done." | tee -a $log
 fi
 
 # check for files existence
@@ -143,12 +180,6 @@ else
 fi
 if [ "$development" = "1" -a ! -f "/mnt/user/lock/development-logs-dumped.lock" ]
 then
-    if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
-    then
-	export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
-    else
-	export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
-    fi
     devel_dir=$OpenLGTV_BCM_USB/development-logs
     mkdir -p $devel_dir
     if [ "$?" -eq "0" ]

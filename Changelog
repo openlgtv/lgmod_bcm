@@ -178,6 +178,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: static list of kernel modules loading support from /lib/modules, /home/modules, /mnt/user/modules
     * ADD: kernel modules included in /lib/modules: cifs.ko, evdev.ko, fuse.ko, hid.ko, input-core.ko, usbhid.ko
     * ADD: keyboard (only partial yet) and mouse support in built-in web browser - WebUI switchable option, not enabled by default
+    * ADD: install.sh script makes now firmware backup if the OpenLGTV BCM installation is run for the first time
     * UPDATE: haserl updated to 0.9.29
     * CHANGE: sstripped binaries for reduce image size (only busybox and uClibc libs left, yet)
     * CHANGE: BusyBox is now dynamic linked instead of static (more free space for other things)
