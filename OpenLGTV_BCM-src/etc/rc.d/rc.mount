@@ -3,6 +3,8 @@
 # MTD Partitions Mounting Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+#mount -t proc proc /proc
+#mount -t ramfs tmp /tmp
 echo "OpenLGTV_BCM-INFO: system mounts..."                               | tee -a /tmp/OpenLGTV_BCM.log
 mount -t sysfs sysfs /sys                                           2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 mount -t usbfs usbfs /proc/bus/usb                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
