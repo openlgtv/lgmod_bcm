@@ -389,7 +389,7 @@ document.defaultAction = true;
 			</tr>
 			<tr>
 				<td colspan=2>
-					<img src="Images/Keyboard/green_button.png" align="middle" Border="0" />
+					<a onClick='javascript:top.frames["MainPage"].focus();' href="#"><img src="Images/Keyboard/green_button.png" align="middle" Border="0" /></a>
 					<b>Switch Page</b>
 				</td>
 			</tr>

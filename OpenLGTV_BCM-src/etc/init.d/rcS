@@ -394,12 +394,6 @@ fi
 source /etc/rc.d/rc.netcast
 source /etc/rc.d/rc.ywe
 
-if [ ! -d /mnt/user/www ]
-then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."  | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/www                                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-fi
-
 # Making nvram copy
 if [ "$country_model" = "EU" ]
 then
@@ -408,6 +402,18 @@ then
 else
     echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd23 partition..."        | tee -a /var/log/OpenLGTV_BCM.log
     cat /dev/mtd23 > /tmp/nvram
+fi
+
+if [ ! -d /mnt/user/www ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."  | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/www                                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+fi
+
+if [ ! -f /mnt/user/www/bookmarks.inc ]
+then
+    echo "OpenLGTV_BCM-INFO: web browser bookmarks file not found, creating default from template in: /mnt/user/www/bookmarks.inc..."  | tee -a /var/log/OpenLGTV_BCM.log
+    cp /var/www/browser/templates/bookmarks.inc /mnt/user/www/                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 /etc/rc.d/rc.usb &

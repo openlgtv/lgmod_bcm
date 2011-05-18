@@ -19,8 +19,8 @@ content-type: text/html
   </HEAD>
   <FRAMESET cols="263,*" frameborder=0 border="0" framespacing="0">
   <frame name="Keyboard" src="browser/keyboard.cgi" scrolling="no">
-  <!-- frame name="MainPage" src="browser/mainpage.html" scrolling="no" -->
-  <frame name="MainPage" src="browser/mainpage.html">
+  <!-- frame name="MainPage" src="browser/mainpage.cgi" scrolling="no" -->
+  <frame name="MainPage" src="browser/mainpage.cgi">
   </FRAMESET>
   <NOFRAMES>
     <BODY>
