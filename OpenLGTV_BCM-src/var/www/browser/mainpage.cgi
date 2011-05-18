@@ -26,7 +26,8 @@ var ArrLines = new Array();
 function CreateBookmark() {
 
 	txtFile.open("GET", "http://<?= $HTTP_HOST ?>/user/bookmarks.inc", false);
-	txtFile.onreadystatechange = function() 
+	// v- onreadystatechange does not work on FireFox < 4.0
+	txtFile.onreadystatechange = function()
 		{	
 		//alert(txtFile.readyState);
 		//alert(txtFile.status);
@@ -92,12 +93,14 @@ function check(e)
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
+		//alert('key: '+key+' current: '+current+' next: '+next);
 		if (key==37|key==38|key==39|key==40)
 			{
 			//Move to the next key on the keyboard
 			var code=document.links['link' + next].name;
 			document.links['link' + next].focus();
 			current = next;
+			//alert('key: '+key+' current: '+current);
 			}
 		else if (key==404) 
 			{
@@ -121,9 +124,11 @@ function check(e)
 			{
 			//the back button on the remote control have been pressed
 			//NetCastBack API
-			window.NetCastBack();
+			//window.NetCastBack();
+			//let's get back to WebUI instead of closing NetCast service
+			history.go(-1);
 			}
-		else if (key==1000) 
+		else if (key==1001) 
 			{
 			//the exit button on the remote control have been pressed
 			//NetCastExit API
@@ -135,7 +140,8 @@ function check(e)
 function setCurrent(element)
 	{
 	var string = element.id;
-	current = string.slice(1,string.length);
+	//cut number after 'link' name
+	current = string.slice(4,string.length);
 	}
 	
 function OnLoadSetCurrent()
