@@ -163,18 +163,23 @@ document.defaultAction = true;
 <div align="center">
 	<table border=0>
 		<tr>
+			<!-- td background="Images/EmptyBookmarkFocus.png" style="background-position: -2000px -2000px;" -->
 			<td>
 				<a id="link1" onKeyPress="javascript:setCurrent(this);return false" href="mainpage.cgi"><img id="img1" src="Images/EmptyBookmark.png" border="0" height="113px" width="150px"></a>
 			</td>
+			<!-- td background="Images/EmptyBookmarkFocus.png" style="background-position: -2000px -2000px;" -->
 			<td>
 				<a id="link2" onKeyPress="javascript:setCurrent(this);return false" href="mainpage.cgi"><img id="img2" src="Images/EmptyBookmark.png" border="0" height="113px" width="150px"></a>
 			</td>
+			<!-- td background="Images/EmptyBookmarkFocus.png" style="background-position: -2000px -2000px;" -->
 			<td>
 				<a id="link3" onKeyPress="javascript:setCurrent(this);return false" href="mainpage.cgi"><img id="img3" src="Images/EmptyBookmark.png" border="0" height="113px" width="150px"></a>
 			</td>
+			<!-- td background="Images/EmptyBookmarkFocus.png" style="background-position: -2000px -2000px;" -->
 			<td>
 				<a id="link4" onKeyPress="javascript:setCurrent(this);return false" href="mainpage.cgi"><img id="img4" src="Images/EmptyBookmark.png" border="0" height="113px" width="150px"></a>
 			</td>
+			<!-- td background="Images/EmptyBookmarkFocus.png" style="background-position: -2000px -2000px;" -->
 			<td>
 				<a id="link5" onKeyPress="javascript:setCurrent(this);return false" href="mainpage.cgi"><img id="img5" src="Images/EmptyBookmark.png" border="0" height="113px" width="150px"></a>
 			</td>
