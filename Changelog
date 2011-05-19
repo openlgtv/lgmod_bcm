@@ -180,7 +180,8 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: keyboard (only partial yet) and mouse support in built-in web browser - WebUI switchable option, not enabled by default
     * ADD: install.sh script makes now firmware backup if the OpenLGTV BCM installation is run for the first time
     * ADD: editable 25 bookmarks feature to Internet Browser WebUI option (work by nicola_12345)
-    * ADD: support for reset OpenLGTV_BCM settings back to default - if OpenLGTV_BCM/reset_config file exists on USB storage device then move /mnt/user/* to OpenLGTV_BCM/config_backup/ and reboot
+    * ADD: support for reset OpenLGTV_BCM settings back to default - if OpenLGTV_BCM/reset_config file exists on USB storage device then move /mnt/user/* to OpenLGTV_BCM/config_backup/ and reboot (idea from LGMOD by lprot)
+    * ADD: boot scripts execution time measurement
     * UPDATE: haserl updated to 0.9.29
     * CHANGE: sstripped binaries for reduce image size (only busybox and uClibc libs left, yet)
     * CHANGE: BusyBox is now dynamic linked instead of static (more free space for other things)

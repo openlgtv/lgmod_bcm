@@ -7,6 +7,7 @@
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
 k=0;
+echo "OpenLGTV_BCM-INFO: rc.usb starting..."               | tee -a /var/log/OpenLGTV_BCM.log
 while [ ! -d "$USB1_DIR/OpenLGTV_BCM" -a ! -d "$USB2_DIR/OpenLGTV_BCM" ]; 
 do
     sleep 1;
@@ -23,6 +24,7 @@ else
     export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
 fi
 
+/bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device in $k seconds..."                  | tee -a /var/log/OpenLGTV_BCM.log
@@ -50,17 +52,19 @@ then
     if [ -f "$OpenLGTV_BCM_USB/make_backup" ]
     then
         echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/make_backup file, starting backup to USB storage device..." | tee -a /var/log/OpenLGTV_BCM.log
-        /scripts/backup.sh $OpenLGTV_BCM_USB/backup                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-        rm -f $OpenLGTV_BCM_USB/make_backup                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+        /scripts/backup.sh $OpenLGTV_BCM_USB/backup                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+        mv -f $OpenLGTV_BCM_USB/make_backup $OpenLGTV_BCM_USB/make_backup.used 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                       | tee -a /var/log/OpenLGTV_BCM.log
     fi
     if [ -f "$OpenLGTV_BCM_USB/reset_config" ]; then
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM configs from /mnt/user/* to USB storage device..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p "$OpenLGTV_BCM_USB/config_backup"                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	cp -r /mnt/user/* $OpenLGTV_BCM_USB/config_backup/                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	rm -rf /mnt/user/*                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	mv $OpenLGTV_BCM_USB/reset_config $OpenLGTV_BCM_USB/reset_config.used 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	sync                                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	mkdir -p "$OpenLGTV_BCM_USB/config_backup"                             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -r /mnt/user/* $OpenLGTV_BCM_USB/config_backup/                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	rm -rf /mnt/user/*                                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	mv $OpenLGTV_BCM_USB/reset_config $OpenLGTV_BCM_USB/reset_config.used  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	sync                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	echo "OpenLGTV_BCM-INFO: config folder is copied to USB drive and deleted. Rebooting..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                       | tee -a /var/log/OpenLGTV_BCM.log
 	cp -f /var/log/OpenLGTV_BCM.log $OpenLGTV_BCM_USB/config_backup/
 	umount -f /mnt/usb1/Drive1 > /dev/null 2>&1
 	umount -f /mnt/usb2/Drive1 > /dev/null 2>&1
@@ -75,6 +79,7 @@ then
         #export ywe_usb_ywe_lg=1
         #export ywedata_usb_widget_data=1
         source /etc/rc.d/rc.ywe
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                       | tee -a /var/log/OpenLGTV_BCM.log
     fi
     if [ -d "$OpenLGTV_BCM_USB/autorun" ]
     then
@@ -83,6 +88,7 @@ then
 	do
 	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."               | tee -a /var/log/OpenLGTV_BCM.log
 	    $scr_autorun                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                           | tee -a /var/log/OpenLGTV_BCM.log
 	done
     fi
     if [ -d "$OpenLGTV_BCM_USB/WebUI-devel" ]
@@ -101,8 +107,10 @@ then
 	else
 	    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a /var/log/OpenLGTV_BCM.log
 	fi
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                       | tee -a /var/log/OpenLGTV_BCM.log
     fi
     /etc/rc.d/rc.mount-netshare
+    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                           | tee -a /var/log/OpenLGTV_BCM.log
     if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM.log" ]
     then
         echo "OpenLGTV_BCM-INFO: making copy of /var/log/OpenLGTV_BCM.log log file to $OpenLGTV_BCM_USB/"     | tee -a /var/log/OpenLGTV_BCM.log
@@ -111,3 +119,4 @@ then
 else
     echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device"                              | tee -a /var/log/OpenLGTV_BCM.log
 fi
+/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                               | tee -a /var/log/OpenLGTV_BCM.log
