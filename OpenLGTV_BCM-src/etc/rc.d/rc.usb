@@ -53,6 +53,20 @@ then
         /scripts/backup.sh $OpenLGTV_BCM_USB/backup                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
         rm -f $OpenLGTV_BCM_USB/make_backup                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
+    if [ -f "$OpenLGTV_BCM_USB/reset_config" ]; then
+	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM configs from /mnt/user/* to USB storage device..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	mkdir -p "$OpenLGTV_BCM_USB/config_backup"                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -r /mnt/user/* $OpenLGTV_BCM_USB/config_backup/                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	rm -rf /mnt/user/*                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	mv $OpenLGTV_BCM_USB/reset_config $OpenLGTV_BCM_USB/reset_config.used 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	sync                                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: config folder is copied to USB drive and deleted. Rebooting..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -f /var/log/OpenLGTV_BCM.log $OpenLGTV_BCM_USB/config_backup/
+	umount -f /mnt/usb1/Drive1 > /dev/null 2>&1
+	umount -f /mnt/usb2/Drive1 > /dev/null 2>&1
+	sync
+	reboot
+    fi
     if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" ]
     then
         echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs in $OpenLGTV_BCM_USB/ - executing Yahoo Widgets configs setup again" | tee -a /var/log/OpenLGTV_BCM.log

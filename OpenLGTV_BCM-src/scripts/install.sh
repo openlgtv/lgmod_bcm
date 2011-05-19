@@ -114,7 +114,7 @@ then
     back_dir="$OpenLGTV_BCM_USB/backup"
     echo "Looks like OpenLGTV BCM installation is being run for the first time - making backup of current firmware to $back_dir" | tee -a $log
     mkdir -p "$back_dir" 2>&1 | tee -a $log
-    for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/'`
+    for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/' -e 's/://g'`
     do
 	echo "Making standard backup of $i ..." | tee -a $log
 	cat /dev/`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'` > $back_dir/$i
@@ -122,7 +122,7 @@ then
     for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
     do
 	echo "Making tar archive backup of $mount_path ..." | tee -a $log
-	tar cvf `echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar $mount_path 2>&1 | tee -a $log
+	tar cvf $back_dir/`echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar $mount_path 2>&1 | tee -a $log
     done
     echo "Backup done." | tee -a $log
 fi

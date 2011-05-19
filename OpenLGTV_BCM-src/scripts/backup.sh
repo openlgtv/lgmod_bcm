@@ -27,7 +27,7 @@ if [ "$2" != "writable_only" ]
 then
   #cat /proc/mtd | sed 's/mtd\(.\):/mtd0\1:/'
   #for i in `cat /proc/mtd | grep -v erasesize | awk "BEGIN {printf \"mtd%02d_%s\", \"$1\", \"$4\"}" | sed 's/\"//g' | sed 's/://g'`
-  for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/'`
+  for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/' -e 's/://g'`
   do
     if [ "$make_catdump" = "1" ]
     then
@@ -48,7 +48,7 @@ then
     for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
     do
 	echo "Making tar.gz backup of $mount_path ..."
-	tar czvf `echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar.gz $mount_path
+	tar czvf $back_dir/`echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar.gz $mount_path
     done
 fi
 echo "Backup DONE."

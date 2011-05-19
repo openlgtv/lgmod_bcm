@@ -28,7 +28,7 @@ then
 	done
 	echo -e '<xml>\r' > $new_cfgxml
 	#for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | sort | uniq`
-	for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | grep COMMON | sort | uniq`
+	for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | grep COMMON | sort | uniq` AUS
 	do
 	    echo -e "\t<country code=\"$cntry\">\r" >> $new_cfgxml
 	    # v- busybox sed has problems with handling '\r'
