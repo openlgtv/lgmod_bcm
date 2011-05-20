@@ -110,7 +110,7 @@ fi
 
 backup_error=0
 # making current firmware backup if it's first installation
-if [ "$make_backup" = "1" -a -d "$OpenLGTV_BCM_USB" -a "$ver_installed" = "" ]
+if [ "$make_backup" = "1" -a -d "$OpenLGTV_BCM_USB" -a "$ver_installed" = "" -a ! -f "/mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock" ]
 then
     back_dir="$OpenLGTV_BCM_USB/backup"
     echo "Looks like OpenLGTV BCM installation is being run for the first time - making backup of current firmware to $back_dir" | tee -a $log
@@ -135,6 +135,8 @@ then
 	    backup_error=1
 	fi
     done
+    mkdir -p /mnt/user/lock > /dev/null 2>&1
+    touch /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock 2>&1 | tee -a $log
     echo "Backup done." | tee -a $log
 fi
 
@@ -146,6 +148,8 @@ read answer
 if [ "$answer" != "YES" ]
 then
     echo "OK, not flashing" | tee -a $log
+    echo "If you want to make backup again at second installation attempt then remove /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock file:" | tee -a $log
+    echo "rm -f /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock" | tee -a $log
     exit 1
 fi
 

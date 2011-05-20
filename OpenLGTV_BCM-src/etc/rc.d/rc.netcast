@@ -7,10 +7,10 @@
 export netcast_config_ok=1
 if [ ! -f "/mnt/user/netcast/config.xml" ]
 then
-    echo "OpenLGTV_BCM-INFO: first run NetCast configs preparation..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: first run NetCast configs preparation..."                   | tee -a /var/log/OpenLGTV_BCM.log
     if [ -f "/mnt/addon/contents/config.xml" ]
     then
-	echo "OpenLGTV_BCM-INFO: checking if /mnt/addon/contents/config.xml file has supported format..." | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: checking if /mnt/addon/contents/config.xml file has supported format..."               | tee -a /var/log/OpenLGTV_BCM.log
 	if [ -z "`grep '<exec_engine>' /mnt/addon/contents/config.xml`" -o -z "`grep '<exec_app>' /mnt/addon/contents/config.xml`" -o -z "`grep 'check_network' /mnt/addon/contents/config.xml`" -o -z "`grep 'native' /mnt/addon/contents/config.xml`" ]
 	then
 	    echo "OpenLGTV_BCM-ERROR: /mnt/addon/contents/config.xml file has NOT SUPPORTED format, please upgrade yours firmware - stopping NetCast preparation..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -34,7 +34,7 @@ then
 fi
 if [ -d "/mnt/addon/contents/netcast" -a "$netcast_config_ok" = "1" ]
 then
-    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                | tee -a /var/log/OpenLGTV_BCM.log
     if [ ! -d "/home/netcast_icons" ]
     then
 	echo "OpenLGTV_BCM-INFO: creating /home/netcast_icons dir for NetCast icons copy..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -45,7 +45,7 @@ then
 	    cp /mnt/addon/contents/netcast/* /home/netcast_icons/                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     fi
-    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                | tee -a /var/log/OpenLGTV_BCM.log
     if [ ! -f "/home/netcast_icons/icon_openlgtv.swf" ]
     then
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM NetCast icon from /var/icons/openlgtv.swf to /home/netcast_icons/icon_openlgtv.swf..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -100,9 +100,9 @@ then
 	    echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..."                 | tee -a /var/log/OpenLGTV_BCM.log
 	    cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                                        | tee -a /var/log/OpenLGTV_BCM.log
 	source /etc/rc.d/rc.netcast-modify
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                                        | tee -a /var/log/OpenLGTV_BCM.log
 	if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..."                           | tee -a /var/log/OpenLGTV_BCM.log
@@ -117,11 +117,11 @@ then
 	fi
 	if [ -f "/mnt/user/netcast/run3556" ]
 	then
-		echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..."       | tee -a /var/log/OpenLGTV_BCM.log
-		mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556                                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..."      | tee -a /var/log/OpenLGTV_BCM.log
+		mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     fi
-    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                                            | tee -a /var/log/OpenLGTV_BCM.log
 else
     if [ "$netcast_config_ok" = "1" ]
     then
@@ -165,8 +165,8 @@ else
 		real_run3556="/mnt/browser/run3556"
 	fi
 	echo "OpenLGTV_BCM-INFO: using real Web Browser startup script file: $real_run3556 ..." | tee -a /var/log/OpenLGTV_BCM.log
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                   | tee -a /var/log/OpenLGTV_BCM.log
 	source /etc/rc.d/rc.netcast-modify
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                   | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi

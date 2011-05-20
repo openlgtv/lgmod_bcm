@@ -41,5 +41,5 @@ then
 	echo "OpenLGTV_BCM-WARN: /mnt/browser/lib/directfb-1.2-0/inputdrivers dir NOT FOUND - skipping libs config..." | tee -a /var/log/OpenLGTV_BCM.log
     fi
 else
-    echo "OpenLGTV_BCM-INFO: rc.directfb - not touching DirectFB configuration..."                             | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: rc.directfb - not touching DirectFB configuration..."                                     | tee -a /var/log/OpenLGTV_BCM.log
 fi
