@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script v.1.1 by xeros
+# OpenLGTV BCM installation script v.1.2 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -27,20 +27,20 @@ then
     rebooting=1
     autoupgrade=1
 else
-    if [ "$2" = "no_backup" ]
+    if [ "$2" = "no_backup" -o "$1" = "no_backup" ]
     then
 	make_backup=0
     fi
 fi
 
-ver=0.4.0-beta2
+ver=0.4.0-devel
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 development=1
 
 tmp=/tmp
 dir=`dirname $0`
 
-if [ "$1" != "" ]
+if [ "$1" != "" -a "$1" != "no_backup" ]
 then
     ver=`basename $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`
     dir=`dirname $1`
@@ -66,7 +66,7 @@ lginit_backup=lginit-$backup
 rootfs_backup=rootfs-$backup
 suffix=flashed
 backup2=$suffix-backup
-ver_installed=`cat $dir/etc/ver2 2>/dev/null`
+ver_installed=`cat /etc/ver2 2>/dev/null`
 
 mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
 mkdir -p /mnt/usb2/Drive1/OpenLGTV_BCM > /dev/null 2>&1
@@ -108,6 +108,7 @@ then
     autoupgrade=1
 fi
 
+backup_error=0
 # making current firmware backup if it's first installation
 if [ "$make_backup" = "1" -a -d "$OpenLGTV_BCM_USB" -a "$ver_installed" = "" ]
 then
@@ -117,14 +118,35 @@ then
     for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/' -e 's/://g'`
     do
 	echo "Making standard backup of $i ..." | tee -a $log
-	cat /dev/`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'` > $back_dir/$i
+	cat /dev/`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'` > $back_dir/$i 2>$log
+	if [ "$?" -ne "0" ]
+	then
+	    echo "ERROR: Problem making backup of /dev/`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'` to $back_dir/$i" 2>&1 | tee -a $log
+	    backup_error=1
+	fi
     done
     for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
     do
 	echo "Making tar archive backup of $mount_path ..." | tee -a $log
-	tar cvf $back_dir/`echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar $mount_path 2>&1 | tee -a $log
+	tar cvf $back_dir/`echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar $mount_path >> $log 2>&1
+	if [ "$?" -ne "0" ]
+	then
+	    echo "ERROR: Problem making backup of $mount_path to $back_dir/`echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar" 2>&1 | tee -a $log
+	    backup_error=1
+	fi
     done
     echo "Backup done." | tee -a $log
+fi
+
+echo "Backup of some of the partitions was not done correctly. Are you sure you want to install OpenLGTV BCM?" | tee -a $log
+echo "Type \"YES\" or \"NO\"" | tee -a $log
+# confirmation handling
+answer=NO
+read answer
+if [ "$answer" != "YES" ]
+then
+    echo "OK, not flashing" | tee -a $log
+    exit 1
 fi
 
 # check for files existence
@@ -272,11 +294,20 @@ then
 	echo "Making tar backup of $mount_path ..." | tee -a $log
 	# v- theres not gzip in default firmware
 	#tar czvf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar.gz $mount_path
-	tar cf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar $mount_path | tee -a $log
+	tar cf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar $mount_path 2>&1 | tee -a $log
     done
     mkdir -p /mnt/user/lock
     touch /mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock
 fi
+
+# kill web browser, addon_mgr and stagecraft to gain some free memory
+echo "Stopping web browser process to gain some more free memory..." | tee -a $log
+killall lb4wk                                                   2>&1 | tee -a $log
+echo "Stopping addon_mgr process to gain more free memory..."        | tee -a $log
+killall addon_mgr                                               2>&1 | tee -a $log
+echo "Stopping stagecraft process to gain more free memory..."       | tee -a $log
+killall stagecraft                                              2>&1 | tee -a $log
+sleep 1                                                         2>&1 | tee -a $log
 
 # check free ram
 currfreemem=`free | grep Mem | awk '{print $4}'`
@@ -286,8 +317,7 @@ reqavailmem=$((2*$reqfreemem))
 if [ "$currfreemem" -lt "$reqfreemem" -a "$curravailmem" -lt "$reqavailmem" ]
 then
     echo "There might be problem as you have only $currfreemem KB RAM free (+$currbuffmem KB on buffers), its less than $reqfreemem KB ($reqavailmem KB with buffers)." | tee -a $log
-    echo "(The builtin web browser is set to send OutOfMemory signals if there is less than 20MB free RAM)" | tee -a $log
-    echo "Refusing to flash" | tee -a $log
+    echo "Refusing to flash as later there could be problem with available memory." | tee -a $log
     echo "Dont worry - just reboot TV (or power off and on) and try install again." | tee -a $log
     exit 1
 else
