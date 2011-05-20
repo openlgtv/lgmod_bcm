@@ -19,10 +19,10 @@ devpts			/dev/pts		devpts		rw			0		0
 tmpfs			/usr/local/etc		tmpfs		defaults,size=1024k	0		0
 /dev/mtdblock15		/mnt/addon		squashfs	defaults		0		0
 /dev/mtdblock23		/mnt/lg/ciplus/cert	squashfs	defaults		0		0
-/dev/mtdblock24		/mnt/lg/ciplus/authcxt	yaffs2		defaults		0		0
+#/dev/mtdblock24	/mnt/lg/ciplus/authcxt	yaffs2		defaults		0		0
 /dev/mtdblock7		/mnt/lg/cmn_data	yaffs2		rw,noatime		0		0
 /mnt/lg/cmn_data	/mnt/flash/data		bind		defaults,bind		0		0
-/dev/mtdblock25		/mnt/user		jffs2		defaults		0		0
+#/dev/mtdblock25	/mnt/user		jffs2		defaults		0		0
 /dev/mtdblock22		/mnt/idfile		squashfs	defaults		0		0
 /dev/mtdblock16		/mnt/game		squashfs	defaults		0		0
 /dev/mtdblock17		/mnt/cache/flash	yaffs2		rw,noatime		0		0

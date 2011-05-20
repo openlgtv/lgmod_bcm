@@ -489,22 +489,23 @@ fi
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                          | tee -a /var/log/OpenLGTV_BCM.log
 (sleep 10; /etc/rc.d/rc.directfb)&
 
-echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"                | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
 
 if [ "$RELEASE_in_tmux" != "0" ]
 then
+    echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"            | tee -a /var/log/OpenLGTV_BCM.log
+    echo ""                                                    | tee -a /var/log/OpenLGTV_BCM.log
     /usr/bin/tmux new-session -n 'RELEASE' '/lg/lgapp/RELEASE 0'
-    /bin/sh
+    #/bin/sh
+else
+    echo "OpenLGTV_BCM-INFO: start RELEASE"                    | tee -a /var/log/OpenLGTV_BCM.log
+    echo ""                                                    | tee -a /var/log/OpenLGTV_BCM.log
+    /lg/lgapp/RELEASE 0
 fi
 
-echo "OpenLGTV_BCM-INFO: start RELEASE"                        | tee -a /var/log/OpenLGTV_BCM.log
-echo ""
-
-/lg/lgapp/RELEASE 0
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                          | tee -a /var/log/OpenLGTV_BCM.log
-/bin/sh
+#/bin/sh
 
 echo "OpenLGTV_BCM-INFO: Done...login now"                     | tee -a /var/log/OpenLGTV_BCM.log
 echo ""
@@ -631,6 +632,7 @@ if [ "$AUTORUN" == "" ]; then
 			echo "$SERVER_USER::0:0:$SERVER_USER:/home/$SERVER_USER:/bin/sh" >> /usr/etc/passwd
 		fi
 	done
+	echo "openlgtv::0:0:OpenLGTV_BCM:/home:/bin/sh" >> /usr/etc/passwd
 fi
 
 export TERM=vt100
