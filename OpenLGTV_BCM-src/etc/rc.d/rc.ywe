@@ -206,12 +206,13 @@ then
 	    then
 		# Check if YWE dir was not properly unpacked - missing links of FAT partitions
 		ywe_usb_copy_libs=0
+		echo "OpenLGTV_BCM-INFO: checking if Yahoo Widgets Engine libs are OK..."                      | tee -a /var/log/OpenLGTV_BCM.log
 		if [ -f "$ywedir_usb/lib/libKonfabulator.so" -a ! -f "$ywedir_usb/lib/libKonfabulator.so.0" ]
 		then
 		    ywe_usb_copy_libs=1
 		    ywe_err_msg="$ywedir_usb/lib/libKonfabulator.so.0 file does not exist"
 		else
-		    if [ "`ls -al $ywedir_usb/lib/libKonfabulator.so.0 | awk '{print $4}'`" -lt "8000000" ]
+		    if [ "`ls -al $ywedir_usb/lib/libKonfabulator.so.0 2>> /var/log/OpenLGTV_BCM.log | awk '{print $5}'`" -lt "8000000" ]
 		    then
 			ywe_usb_copy_libs=1
 			ywe_err_msg="$ywedir_usb/lib/libKonfabulator.so.0 file has wrong size (less than 8MB)"
