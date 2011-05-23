@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script v.1.2 by xeros
+# OpenLGTV BCM installation script v.1.3 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -140,17 +140,20 @@ then
     echo "Backup done." | tee -a $log
 fi
 
-echo "Backup of some of the partitions was not done correctly. Are you sure you want to install OpenLGTV BCM?" | tee -a $log
-echo "Type \"YES\" or \"NO\"" | tee -a $log
-# confirmation handling
-answer=NO
-read answer
-if [ "$answer" != "YES" ]
+if [ "$backup_error" = "1" ]
 then
-    echo "OK, not flashing" | tee -a $log
-    echo "If you want to make backup again at second installation attempt then remove /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock file:" | tee -a $log
-    echo "rm -f /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock" | tee -a $log
-    exit 1
+    echo "Backup of some of the partitions was not done correctly. Are you sure you want to install OpenLGTV BCM?" | tee -a $log
+    echo "Type \"YES\" or \"NO\"" | tee -a $log
+    # confirmation handling
+    answer=NO
+    read answer
+    if [ "$answer" != "YES" ]
+    then
+        echo "OK, not flashing" | tee -a $log
+        echo "If you want to make backup again at second installation attempt then remove /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock file:" | tee -a $log
+        echo "rm -f /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock" | tee -a $log
+        exit 1
+    fi
 fi
 
 # check for files existence
