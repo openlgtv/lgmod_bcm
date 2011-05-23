@@ -385,7 +385,8 @@ echo "OpenLGTV_BCM-INFO: exporting custom settings configuration variables" | te
 for svar in `cat /mnt/user/cfg/settings | awk -F= '{print $1}'`; do export $svar; done
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                            | tee -a /var/log/OpenLGTV_BCM.log
-/etc/rc.d/rc.modules
+# Lets load modules in background to shorten boot time
+/etc/rc.d/rc.modules &
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                            | tee -a /var/log/OpenLGTV_BCM.log
 
 # Mount-binding btusb.ko from /mnt/user/modules/
@@ -433,21 +434,6 @@ fi
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                               | tee -a /var/log/OpenLGTV_BCM.log
 /etc/rc.d/rc.usb &
 
-if [ ! -d /mnt/user/init.d ]
-then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/init.d                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-fi
-
-if [ -d /mnt/user/init.d ]
-then
-    echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"  | tee -a /var/log/OpenLGTV_BCM.log
-    for scr_file in /mnt/user/init.d/*
-    do
-	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                           | tee -a /var/log/OpenLGTV_BCM.log
-	$scr_file                                                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    done
-fi
 
 md5password="`grep ^root: /etc/shadow | awk -F: '{print $2}'`"
 
@@ -488,6 +474,22 @@ fi
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                          | tee -a /var/log/OpenLGTV_BCM.log
 (sleep 10; /etc/rc.d/rc.directfb)&
+
+if [ ! -d /mnt/user/init.d ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/init.d                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+fi
+
+if [ -d /mnt/user/init.d ]
+then
+    echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"  | tee -a /var/log/OpenLGTV_BCM.log
+    for scr_file in /mnt/user/init.d/*
+    do
+	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                           | tee -a /var/log/OpenLGTV_BCM.log
+	$scr_file                                                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    done
+fi
 
 echo ""
 
