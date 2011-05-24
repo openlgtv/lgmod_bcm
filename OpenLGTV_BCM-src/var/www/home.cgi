@@ -26,13 +26,13 @@ content-type: text/html
 					<b><font size="+1">Web Browser User Agent string:</font></b> <br />
 					<font size="-1"><? echo "$HTTP_USER_AGENT" ?></font>
 				</div>
-			</div>
 			<? 
 			  if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]
 			  then
 			    echo "-->"
 			  fi
 			?>
+			</div>
 			<div id="txtURLParent" style="background-color:white;height:60px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 0px; height:30;">
 					<b>Shell command to execute: (use Save button to execute)</b>
@@ -87,7 +87,20 @@ content-type: text/html
 			?>
 
 		</form>
-	</div>	
+	</div>
+	<? if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]
+	then
+	    echo "<!--"
+	fi ?>
+	<div id="footer2" class="footer2">
+		<ul>
+			<a onClick="javascript:window.location='home.cgi?qURL=reboot&run=Run';" href="#" style="text-decoration:none; color:white"><li class="red"><span><img src="Images/Keyboard/stop_button.png" border="0" /></span>Reboot TV</li></a>
+		</ul>
+	</div>
+	<? if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]
+	then
+	    echo "-->"
+	fi ?>
 
 
 </body>

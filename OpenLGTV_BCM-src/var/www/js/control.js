@@ -441,6 +441,12 @@ function check(e)
 			//Switch to the next control
 			NextControl();
 			}
+		else if (key==413) 
+			{
+			//the stop button on the remote control have been pressed
+			//Reboot TV
+			window.location='home.cgi?qURL=reboot&run=Run';
+			}
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed

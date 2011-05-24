@@ -15,7 +15,7 @@ body{
 	left:0px;
 }
 
-.footer{
+.footer, .footer2{
 	background:rgb(42,42,42);
 	position:absolute;
 	bottom:0;
@@ -24,13 +24,17 @@ body{
 	overflow:hidden;
 	width:100%;
 }
-.footer li span{
+.footer2{
+	bottom:50px;
+	width:66%;
+}
+.footer li span, .footer2 li span{
 	width:46px;
 	height:30px;
 	margin:8px;
 	float:left;
 }
-.footer li{
+.footer li, .footer2 li{
 	width:208px;
 	height:45px;
 	line-height:47px;
@@ -42,10 +46,10 @@ body{
 	overflow:hidden;
 	float:left;
 }
-.footer li:hover{
+.footer li:hover, .footer2 li:hover{
 	background:#2B3856;
 }
-.footer ul{
+.footer ul, .footer2 ul{
 	margin:0;
 	padding:0;
 }
