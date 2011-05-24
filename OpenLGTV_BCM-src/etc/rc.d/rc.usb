@@ -25,6 +25,8 @@ else
 fi
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+/etc/rc.d/rc.usb-remount
+
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device in $k seconds..."                  | tee -a /var/log/OpenLGTV_BCM.log
