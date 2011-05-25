@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/haserl
 Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -43,7 +43,7 @@ function check(e)
 			//the back button on the remote control have been pressed
 			//NetCastBack API
 			//window.NetCastBack();
-			//let's get back to WebUI instead of closing NetCast service
+			//lets get back to WebUI instead of closing NetCast service
 			history.go(-1);
 			}
 		else if (key==1001) 
