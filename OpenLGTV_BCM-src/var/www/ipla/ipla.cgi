@@ -115,7 +115,7 @@ then
     done
 else
     echo '<font size="+1">'
-    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0>'
+    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
     if [ "$type" = "category" ]
@@ -132,7 +132,7 @@ else
 	    # v- not proper regex code but looks like backslash (in "\uXXXX") is being lost somewhere with BusyBox tools
 	    feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 	    echo "<td>"
-	    echo "<a href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/>$feedTitle</a><br/>"
+	    echo "<a href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/></td><td>$feedTitle</a><br/>"
 	    echo "</td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
