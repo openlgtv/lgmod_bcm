@@ -178,6 +178,7 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: netcast_config_enable_all option can be used now multiple times
     * FIX: ywe libs fixing on 0-sized files now works properly
     * FIX: using NTFS for ywedata should make ywe work more stable, reliable and a bit better performance than using ywedata EXT3 fs image on FAT fs
+    * FIX: install.sh improvements - now checks if the current path is /tmp and if files to be flashed do not exist in script dir then checks current dir
     * ADD: static list of kernel modules loading support from /lib/modules, /home/modules, /mnt/user/modules
     * ADD: kernel modules included in /lib/modules: cifs.ko, evdev.ko, fuse.ko, hid.ko, input-core.ko, usbhid.ko
     * ADD: keyboard (only partial yet) and mouse support in built-in web browser - WebUI switchable option, not enabled by default

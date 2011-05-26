@@ -159,10 +159,17 @@ fi
 # check for files existence
 if [ -f $cdir/$file.sqf -a -f $cdir/$file.sha1 ]
 then
-    echo "Comparing flash file size and SHA1 checksum..." | tee -a $log
+    echo "Comparing flash file size and SHA1 checksum..."     | tee -a $log
 else
-    echo "Cannot continue, file $file.sqf or $file.sha1 does not exist." | tee -a $log
-    exit 1
+    if [ -f ./$file.sqf -a -f ./file.sha1 ]
+    then
+	echo "Found needed files in current dir..."           | tee -a $log
+	export cdir=.
+	echo "Comparing flash file size and SHA1 checksum..." | tee -a $log
+    else
+	echo "Cannot continue, file $file.sqf or $file.sha1 does not exist in install.sh script dir and current dir." | tee -a $log
+	exit 1
+    fi
 fi
 # comparing size
 if [ "`cat $cdir/$file.sqf | wc -c`" -ne "$size" ]
@@ -179,11 +186,17 @@ then
     exit 1
 fi
 # copy to /tmp/
-cp $cdir/$file.sqf $cdir/$file.sha1 $tmp/ 
-if [ "$?" -ne "0" ]
+if [ "`echo $cdir | awk '{print substr($1,1,4)}'`" = "/tmp" ]
 then
-    echo "Something is wrong. Cannot copy the files to $tmp/" | tee -a $log
-    exit 1
+    echo "Current dir is inside /tmp, skipping copying files to /tmp"
+    export tmp=$cdir
+else
+    cp $cdir/$file.sqf $cdir/$file.sha1 $tmp/ 
+    if [ "$?" -ne "0" ]
+    then
+	echo "Something is wrong. Cannot copy the files to $tmp/" | tee -a $log
+	exit 1
+    fi
 fi
 # sha1sum compare
 #cat $tmp/$file.sha1 | sed "s#$file#$tmp/$file#" > $tmp/$file.2.sha1 2>$tmpout | tee -a $log
