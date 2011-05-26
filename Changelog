@@ -189,6 +189,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: NTFS partitions are now remounted with read/write support at boot
     * ADD: support for OpenLGTV_BCM on NTFS formated USB storage devices
     * ADD: ipla.tv alternative player - Polish VOD service
+    * ADD: tvp.pl alternative player - Polish VOD service
     * UPDATE: haserl updated to 0.9.29
     * CHANGE: sstripped binaries for reduce image size (only busybox and uClibc libs left, yet)
     * CHANGE: BusyBox is now dynamic linked instead of static (more free space for other things)
