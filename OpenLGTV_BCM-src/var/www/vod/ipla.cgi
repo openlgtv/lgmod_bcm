@@ -104,7 +104,7 @@ wget -q -U "$useragent" -O - "$url" > $log_file
 
 if [ "$type" = "menu" ]
 then
-    echo '<img src="http://www.ipla.tv/images/logo.png"/><font size="+3"> alternative</font><br/>by xeros<br/><br/>'
+    echo '<center><img src="http://www.ipla.tv/images/logo.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
     echo '<font size="+3">'
     #for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ *//g' -e '/^$/d' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
     for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ */ /g' -e 's/ "/"/g' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
@@ -131,9 +131,7 @@ else
 	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed 's/\\u\(....\)/\&\#x\1\;/g'`
 	    # v- not proper regex code but looks like backslash (in "\uXXXX") is being lost somewhere with BusyBox tools
 	    feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-	    echo "<td>"
-	    echo "<a href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/></td><td>$feedTitle</a><br/>"
-	    echo "</td>"
+	    echo "<td width='110px'><a href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/></td><td width='33%'>$feedTitle</a></td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
 		echo "</tr><tr>"
@@ -150,9 +148,7 @@ else
 		feedThumb=`echo $content | awk -F\; '{print $2}' | tr -d '\"'`
 		feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 		feedVideo=`echo $content | awk -F\; '{print $4}' | tr -d '\"'`
-		echo "<td>"
-		echo "<a href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/>$feedDate<br/>$feedTitle</a><br/>"
-		echo "</td>"
+		echo "<td width='33%'><center><a href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/>$feedDate<br/>$feedTitle</a></center></td>"
 		if [ "$(($item_nr % 3))" = "0" ]
 		then
 		    echo "</tr><tr>"
@@ -167,5 +163,5 @@ else
 fi
 
 ?>
-</font>
+</font></center>
 </BODY></HTML>

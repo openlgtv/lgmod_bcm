@@ -30,7 +30,19 @@ then
     then
 	echo "OpenLGTV_BCM-INFO: no available Yahoo Widgets Engine dirs - /mnt/addon/ywe or $OpenLGTV_BCM_USB/ywe - skipping YWE configuration..." | tee -a /var/log/OpenLGTV_BCM.log
     else
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                       | tee -a /var/log/OpenLGTV_BCM.log
+	if [ -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/ywe.tar.gz file - trying use it as Yahoo Widgets Engine..."   | tee -a /var/log/OpenLGTV_BCM.log
+	    curr_dir=`pwd`
+	    cd $OpenLGTV_BCM_USB/                                                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: unpacking $OpenLGTV_BCM_USB/ywe.tar.gz file"              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    tar xzvf ywe.tar.gz                                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: removing $OpenLGTV_BCM_USB/ywe.tar.gz file"               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    rm -f ywe.tar.gz                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    cd $curr_dir                                                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                   | tee -a /var/log/OpenLGTV_BCM.log
+	fi
 	if [ -d "$ywedir_usb" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Engine dir in $OpenLGTV_BCM_USB/ywe - setting it as ywedir..." | tee -a /var/log/OpenLGTV_BCM.log
