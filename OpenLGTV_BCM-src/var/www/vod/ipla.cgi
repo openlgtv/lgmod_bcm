@@ -22,6 +22,10 @@ Content-type: text/html
 <script type="text/javascript">
 <!--
 
+var col = 3; //number of 'cells' in a row
+var current;
+var next;
+
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
      
@@ -31,8 +35,26 @@ function check(e)
 	(e.keyCode) ? key = e.keyCode : key = e.which;
 	try
 		{
-
-		if (key==404) 
+		switch(key)
+			{
+			case 37: next = current - 1; break; //left
+			case 38: next = current - col; break; //up
+			case 39: next = (1*current) + 1; break; //right
+			case 40: next = (1*current) + col; break; //down
+			}
+		//alert('key: '+key+' current: '+current+' next: '+next);
+		if (key==37|key==38|key==39|key==40)
+			{
+			//Move to the next bookmark
+			var code=document.links['link' + next].name;
+			document.links['link' + next].focus();
+			//set TD background
+			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
+			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
+			//set current=next
+			current = next;
+			}
+		else if (key==404) 
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the Keyboard
@@ -55,8 +77,17 @@ function check(e)
 		}catch(Exception){}
 	}
 
+function setCurrent(element)
+	{
+	var string = element.id;
+	//cut number after 'link' name
+	current = string.slice(4,string.length);
+	}
+	
+
 	function OnLoadSetCurrent(element)
 	{
+	current=1;
 	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
@@ -131,7 +162,7 @@ else
 	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed 's/\\u\(....\)/\&\#x\1\;/g'`
 	    # v- not proper regex code but looks like backslash (in "\uXXXX") is being lost somewhere with BusyBox tools
 	    feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-	    echo "<td width='110px'><a href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/></td><td width='33%'>$feedTitle</a></td>"
+	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/></td><td width='33%'>$feedTitle</a></td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
 		echo "</tr><tr>"
@@ -148,7 +179,7 @@ else
 		feedThumb=`echo $content | awk -F\; '{print $2}' | tr -d '\"'`
 		feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 		feedVideo=`echo $content | awk -F\; '{print $4}' | tr -d '\"'`
-		echo "<td width='33%'><center><a href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/>$feedDate<br/>$feedTitle</a></center></td>"
+		echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/>$feedDate<br/>$feedTitle</a></center></td>"
 		if [ "$(($item_nr % 3))" = "0" ]
 		then
 		    echo "</tr><tr>"

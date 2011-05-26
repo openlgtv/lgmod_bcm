@@ -17,10 +17,14 @@ Content-type: text/html
 	text-decoration:bold;
     }
 </style>
-<title>vod.tvp.pl alternative by xeros</title>
+<title>tvp.pl alternative by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript">
 <!--
+
+var col = 3; //number of 'cells' in a row
+var current;
+var next;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
@@ -31,8 +35,26 @@ function check(e)
 	(e.keyCode) ? key = e.keyCode : key = e.which;
 	try
 		{
-
-		if (key==404) 
+		switch(key)
+			{
+			case 37: next = current - 1; break; //left
+			case 38: next = current - col; break; //up
+			case 39: next = (1*current) + 1; break; //right
+			case 40: next = (1*current) + col; break; //down
+			}
+		//alert('key: '+key+' current: '+current+' next: '+next);
+		if (key==37|key==38|key==39|key==40)
+			{
+			//Move to the next bookmark
+			var code=document.links['link' + next].name;
+			document.links['link' + next].focus();
+			//set TD background
+			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
+			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
+			//set current=next
+			current = next;
+			}
+		else if (key==404) 
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the Keyboard
@@ -55,8 +77,17 @@ function check(e)
 		}catch(Exception){}
 	}
 
+function setCurrent(element)
+	{
+	var string = element.id;
+	//cut number after 'link' name
+	current = string.slice(4,string.length);
+	}
+	
+
 	function OnLoadSetCurrent(element)
 	{
+	current=1;
 	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
@@ -129,7 +160,7 @@ then
 	feedTitle=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
 	feedThumb=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
 	#echo "$feedUrl"
-	echo "<td width='33%'><center><a href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>"
+	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>"
 	if [ "$(($item_nr % 3))" = "0" ]
 	then
 	    echo "</tr><tr>"
@@ -157,7 +188,7 @@ else
 	    # v- not proper regex code but looks like backslash (in "\uXXXX") is being lost somewhere with BusyBox tools
 	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 	    feedTitle=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
-	    echo "<td><center><a href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
+	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
 		echo "</tr><tr>"
