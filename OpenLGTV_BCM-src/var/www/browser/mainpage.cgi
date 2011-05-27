@@ -122,6 +122,11 @@ function check(e)
 			//set current=next
 			current = next;
 			}
+		else if (key==403) 
+			{
+			//the red button on the remote control have been pressed
+			window.location='links.html';
+			}
 		else if (key==404) 
 			{
 			//the green button on the remote control have been pressed
@@ -277,8 +282,8 @@ document.defaultAction = true;
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td colspan=2>
-					<a onClick="javascript:alert('TODO');" href="#"><img src="Images/Keyboard/red_button.png" align="middle" Border="0" /></a>
-					<b>xxxxx</b>
+					<a onClick="javascript:window.location='links.html';" href="#"><img src="Images/Keyboard/red_button.png" align="middle" Border="0" /></a>
+					<b>NetCast services</b>
 				</td>
 				<td colspan=2>
 					<a onClick='javascript:top.frames["Keyboard"].focus();' href="#"><img src="Images/Keyboard/green_button.png" align="middle" Border="0" /></a>
