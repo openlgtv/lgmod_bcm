@@ -97,43 +97,11 @@ content-type: text/html
 
 
 <div style="position: absolute; left: 5px; bottom: 110px; height:85; background-color:red;">
-<div class="posthead">Upload the firmware file (*.epk) to USB drive (it should be FAT32 or NTFS) into LG_DTV folder if it's LG upgrade&nbsp;<br/>
-		      or (OpenLGTV_BCM*.zip) into OpenLGTV_BCM/upgrade if it's OpenLGTV BCM upgrade.</div><div class="posttext">
-<form action="home.cgi" method="post" enctype="multipart/form-data" >
-    <input type=file name=uploadfile><input type=submit value=Upload><br>
-     <? if [ -n "$FORM_uploadfile_name" ]; then 
-	    file_ext=`basename $FORM_uploadfile_name | sed 's/.*\.//g'`
-	    echo "$FORM_uploadfile_name" > /tmp/file.txt
-	    if [ "$file_ext" = "epk" -o "$file_ext" = "EPK" ]
-	    then
-		upload_dir=/mnt/usb1/Drive1/LG_DTV
-		file_ok=1
-	    else
-		if [ "$file_ext" = "zip" -o "$file_ext" = "ZIP" ]
-		then
-		    upload_dir=/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade
-		    file_ok=1
-		else
-		    file_ok=0
-		fi
-	    fi
-	    if [ ! -d "$upload_dir" -a "$file_ok" = "1" ]; then
-		mkdir -p "$upload_dir"
-	    fi
-	    if [ -d "$upload_dir" -a "$file_ok" = "1" ]; then
-		cp -f $HASERL_uploadfile_path $upload_dir/$FORM_uploadfile_name
-		sync
-		if [ -f $upload_dir/$FORM_uploadfile_name ]; then
-		    echo "File <b>$FORM_uploadfile_name</b> is uploaded to $upload_dir folder to the USB drive."
-		else
-		    echo "<b>Error! Cannot upload file. Probably USB drive is read only."
-		fi
-	    else
-		echo "Cannot create $upload_dir folder or the firmware file you have uploaded is wrong."
-	    fi
-	else
-	    echo "Select file and press Upload button. &nbsp;[OPTION AVAILABLE ONLY REMOTELY] &nbsp; [DOESN'T WORK YET]"
-	fi ?>
+<div class="posthead"><center>Upload the firmware file (*.epk) to USB drive (it should be FAT32 or NTFS) into LG_DTV folder if it's LG upgrade&nbsp;<br/>
+		      or (OpenLGTV_BCM*.zip) into OpenLGTV_BCM/upgrade if it's OpenLGTV BCM upgrade.</center></div><div class="posttext">
+<form action="cgi-bin/firmware-upgrade.cgix" method="post" enctype="multipart/form-data" >
+    <center><input type=file name=uploadfile><input type=submit value=Upload><br/>
+    Select file and press Upload button. &nbsp; [OPTION AVAILABLE ONLY REMOTELY] &nbsp; [NEEDS TESTING]</center>
 </form>
 </div></div>
 

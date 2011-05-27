@@ -1,0 +1,60 @@
+#!/bin/haserl --upload-limit=110000 --upload-dir=/tmp
+content-type: text/html
+
+<html>
+  <HEAD>
+	<!-- Code for OpenLGTV BCM Browser by xeros -->
+	<!-- Source code released under GPL License -->
+
+	<!-- This file is still WORK-IN-PROGRESS, so quite hacky, yet -->
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<style>
+	body {
+	    overflow: hidden;
+	    overflow-y: hidden;
+	    overflow-x: hidden;
+	}
+	</style>
+    <TITLE>OpenLGTV BCM Firmware Upgrade</TITLE>
+     <? if [ -n "$FORM_uploadfile_name" ]; then 
+	    file_ext=`basename $FORM_uploadfile_name | sed 's/.*\.//g'`
+	    echo "$FORM_uploadfile_name" > /tmp/file.txt
+	    if [ "$file_ext" = "epk" -o "$file_ext" = "EPK" ]
+	    then
+		upload_dir=/mnt/usb1/Drive1/LG_DTV
+		file_ok=1
+	    else
+		if [ "$file_ext" = "zip" -o "$file_ext" = "ZIP" ]
+		then
+		    upload_dir=/mnt/usb1/Drive1/OpenLGTV_BCM/upgrade
+		    file_ok=1
+		else
+		    file_ok=0
+		fi
+	    fi
+	    if [ ! -d "$upload_dir" -a "$file_ok" = "1" ]; then
+		mkdir -p "$upload_dir"
+	    fi
+	    if [ -d "$upload_dir" -a "$file_ok" = "1" ]; then
+		cp -f $HASERL_uploadfile_path $upload_dir/$FORM_uploadfile_name
+		sync
+		if [ -f $upload_dir/$FORM_uploadfile_name ]; then
+		    echo "File <b>$FORM_uploadfile_name</b> is uploaded to $upload_dir folder to the USB drive."
+		else
+		    echo "<b>Error! Cannot upload file. Probably USB drive is read only."
+		fi
+	    else
+		echo "Cannot create $upload_dir folder or the firmware file you have uploaded is wrong."
+	    fi
+	else
+	    echo "Select file and press Upload button. &nbsp;[OPTION AVAILABLE ONLY REMOTELY] &nbsp; [DOESN'T WORK YET]"
+	fi
+	echo "<br/>Going back to previous page...<br/>"
+	echo '<meta HTTP-EQUIV="REFRESH" content="5; url=../home.cgi">'
+	?>
+  </HEAD>
+<body>
+</body></html>
