@@ -46,18 +46,24 @@ then
 		then
 		    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file - trying use it for OpenLGTV BCM upgrade..."   | tee -a /var/log/OpenLGTV_BCM.log
 		    curr_dir=`pwd`
-		    cd $OpenLGTV_BCM_USB/upgrade/                                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    echo "OpenLGTV_BCM-INFO: unzipping $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file"      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    unzip OpenLGTV_BCM-v*.zip                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    echo "OpenLGTV_BCM-INFO: removing $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file"       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    rm -f OpenLGTV_BCM-v*.zip                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    cd $curr_dir                                                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cd $OpenLGTV_BCM_USB/upgrade/                                                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: unzipping $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file"                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    unzip OpenLGTV_BCM-v*.zip                                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: removing $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file"                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    rm -f OpenLGTV_BCM-v*.zip                                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cd $curr_dir                                                                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		fi
 		if [ "$sqf_file_count" -lt 1 ]
 		then
 		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade" | tee -a /var/log/OpenLGTV_BCM.log
 		else
-		    /scripts/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    if [ -f "$OpenLGTV_BCM_USB/upgrade/install.sh" ]
+		    then
+			echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/install.sh script, using it instead of builtin one" | tee -a /var/log/OpenLGTV_BCM.log
+			$OpenLGTV_BCM_USB/upgrade/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    else
+			/scripts/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    fi
 		    #exit $?
 		fi
 	    fi
