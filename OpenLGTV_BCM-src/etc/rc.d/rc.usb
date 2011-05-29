@@ -79,11 +79,16 @@ then
     if [ -f "$OpenLGTV_BCM_USB/reset_config" ]; then
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM configs from /mnt/user/* to USB storage device..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	mkdir -p "$OpenLGTV_BCM_USB/config_backup"                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	cp -r /mnt/user/* $OpenLGTV_BCM_USB/config_backup/                                        2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -rf /mnt/user/* $OpenLGTV_BCM_USB/config_backup/                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -rf /mnt/user/.* $OpenLGTV_BCM_USB/config_backup/                                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	echo "OpenLGTV_BCM-INFO: erasing data from /mnt/user/..."                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	rm -rf /mnt/user/*                                                                        2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM configs from /home/* to USB storage device..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -rf /home/.ash_history /home/.hush_history /home/.ssh $OpenLGTV_BCM_USB/config_backup/ 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: erasing OpenLGTV BCM configs from /home/* ..."                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	rm -rf /home/.ash_history /home/.hush_history /home/.ssh                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	echo "OpenLGTV_BCM-INFO: making copy of custom NetCast icons from /home/netcast_icons/* to USB storage device..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	cp -r /home/netcast_icons $OpenLGTV_BCM_USB/config_backup/                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -rf /home/netcast_icons $OpenLGTV_BCM_USB/config_backup/                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	echo "OpenLGTV_BCM-INFO: erasing custom NetCast icons from /home/netcast_icons/..."       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	rm -rf /home/netcast_icons                                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	echo "OpenLGTV_BCM-INFO: erasing DirectFB input drivers from /home/inputdrivers/..."      2>&1 | tee -a /var/log/OpenLGTV_BCM.log

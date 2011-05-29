@@ -33,7 +33,7 @@ else
     fi
 fi
 
-ver=0.4.0-devel
+ver=0.4.0-rc1
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 development=1
 
@@ -59,6 +59,7 @@ cdir=$dir
 #log=$dir/$file.log
 log="$dir/$file.log $tmp/$file.log"
 tmpout=$tmp/output.log
+tmpoutflashed=$tmp/flashed/output.log
 reqfreemem=20000
 
 backup=pre-backup
@@ -188,14 +189,20 @@ fi
 # copy to /tmp/
 if [ "`echo $cdir | awk '{print substr($1,1,4)}'`" = "/tmp" ]
 then
-    echo "Current dir is inside /tmp, skipping copying files to /tmp"
+    echo "Script and files dir is inside /tmp, skipping copying files to /tmp"
     export tmp=$cdir
 else
-    cp $cdir/$file.sqf $cdir/$file.sha1 $tmp/ 
-    if [ "$?" -ne "0" ]
+    if [ "$cdir" = "." -a "`pwd | awk '{print substr($1,1,4)}'`" = "/tmp" ]
     then
-	echo "Something is wrong. Cannot copy the files to $tmp/" | tee -a $log
-	exit 1
+	echo "Current dir is inside /tmp, skipping copying files to /tmp"
+	export tmp=$cdir
+    else
+	cp $cdir/$file.sqf $cdir/$file.sha1 $tmp/ 
+	if [ "$?" -ne "0" ]
+	then
+	    echo "Something is wrong. Cannot copy the files to $tmp/" | tee -a $log
+	    exit 1
+	fi
     fi
 fi
 # sha1sum compare
@@ -483,7 +490,7 @@ then
     mkdir -p $dir/flashed $tmp/flashed
     mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
     log=`echo $log | sed "s#$file#flashed/$file#"`
-    cat $tmpout | tee -a $log
+    cat $tmpoutflashed | tee -a $log
     date 2>&1 | tee -a $log
     echo "" | tee -a $log
     sync
@@ -554,7 +561,7 @@ echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
 mkdir -p $dir/flashed $tmp/flashed
 mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
-cat $tmpout | tee -a $log
+cat $tmpoutflashed | tee -a $log
 sync
 date 2>&1 | tee -a $log
 echo "" | tee -a $log
