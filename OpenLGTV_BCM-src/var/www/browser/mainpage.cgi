@@ -131,8 +131,7 @@ function check(e)
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the Keyboard
-			document.bgColor = '#D3D3D3';
-			top.frames["Keyboard"].document.bgColor = '#FFFFFF';
+			ChangeBgColor();
 			top.frames["Keyboard"].focus();
 			}
 		else if (key==405) 
@@ -163,7 +162,14 @@ function check(e)
 			}
 		}catch(Exception){}
 	}
-
+	
+function ChangeBgColor()
+	{
+	//Change the page's BgColor.
+	document.bgColor = '#D3D3D3';
+	top.frames["Keyboard"].document.bgColor = '#FFFFFF';
+	}
+	
 function setCurrent(element)
 	{
 	var string = element.id;
@@ -177,6 +183,10 @@ function OnLoadSetCurrent()
 	document.links['link1'].focus();
 	//set TD background
 	document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
+	
+	//change page's BgColor
+	document.bgColor = '#FFFFFF';
+	top.frames["Keyboard"].document.bgColor = '#D3D3D3';
 	}	
 	
 document.defaultAction = true;

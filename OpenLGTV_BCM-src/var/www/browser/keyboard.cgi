@@ -257,8 +257,7 @@ function check(e)
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the MainPage
-			document.bgColor = '#D3D3D3';
-			top.frames["MainPage"].document.bgColor = '#FFFFFF';
+			ChangeBgColor();
 			top.frames["MainPage"].focus();
 			}
 		else if (key==461) 
@@ -310,6 +309,14 @@ function GoToURL()
 		}
 	}	
 
+
+function ChangeBgColor()
+	{
+	//Change the page's BgColor.
+	document.bgColor = '#D3D3D3';
+	top.frames["MainPage"].document.bgColor = '#FFFFFF';
+	}
+	
 function BackSpace()
 	{
 	//I send a backspace on the currFocusedElement field
@@ -334,6 +341,11 @@ function OnLoadSetCurrent()
 	{
 	current = 1;
 	document.links['c1'].focus();
+	
+	//change page's BgColor
+	document.bgColor = '#FFFFFF';
+	top.frames["MainPage"].document.bgColor = '#D3D3D3';
+	
 	elem=document.forms['URL'].elements[currElementName];
 	elem.focused = false;
 	elem.hasFocus = function()
