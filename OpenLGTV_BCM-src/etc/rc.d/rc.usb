@@ -78,18 +78,27 @@ then
     fi
     if [ -f "$OpenLGTV_BCM_USB/reset_config" ]; then
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM configs from /mnt/user/* to USB storage device..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p "$OpenLGTV_BCM_USB/config_backup"                             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	cp -r /mnt/user/* $OpenLGTV_BCM_USB/config_backup/                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	rm -rf /mnt/user/*                                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	mv $OpenLGTV_BCM_USB/reset_config $OpenLGTV_BCM_USB/reset_config.used  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	sync                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	echo "OpenLGTV_BCM-INFO: config folder is copied to USB drive and deleted. Rebooting..."                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                       | tee -a /var/log/OpenLGTV_BCM.log
+	mkdir -p "$OpenLGTV_BCM_USB/config_backup"                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -r /mnt/user/* $OpenLGTV_BCM_USB/config_backup/                                        2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: erasing data from /mnt/user/..."                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	rm -rf /mnt/user/*                                                                        2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: making copy of custom NetCast icons from /home/netcast_icons/* to USB storage device..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp -r /home/netcast_icons $OpenLGTV_BCM_USB/config_backup/                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: erasing custom NetCast icons from /home/netcast_icons/..."       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	rm -rf /home/netcast_icons                                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: erasing DirectFB input drivers from /home/inputdrivers/..."      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	rm -rf /home/inputdrivers                                                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	mv $OpenLGTV_BCM_USB/reset_config $OpenLGTV_BCM_USB/reset_config.used                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	sync                                                                                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	#echo "OpenLGTV_BCM-INFO: config folder is copied to USB drive and deleted. Rebooting..." 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: config folder is copied to USB drive and deleted."               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                          | tee -a /var/log/OpenLGTV_BCM.log
 	cp -f /var/log/OpenLGTV_BCM.log $OpenLGTV_BCM_USB/config_backup/
-	umount -f /mnt/usb1/Drive1 > /dev/null 2>&1
-	umount -f /mnt/usb2/Drive1 > /dev/null 2>&1
-	sync
-	reboot
+	#umount -f /mnt/usb1/Drive1 > /dev/null 2>&1
+	#umount -f /mnt/usb2/Drive1 > /dev/null 2>&1
+	#sync
+	#reboot
+	exit 0
     fi
     if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" ]
     then

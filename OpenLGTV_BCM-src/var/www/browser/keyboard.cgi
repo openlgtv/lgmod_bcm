@@ -257,6 +257,8 @@ function check(e)
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the MainPage
+			document.bgColor = '#D3D3D3';
+			top.frames["MainPage"].document.bgColor = '#FFFFFF';
 			top.frames["MainPage"].focus();
 			}
 		else if (key==461) 
@@ -356,7 +358,7 @@ document.defaultAction = true;
 
 
 </head>
-<body bgcolor="lightgray">
+<body bgcolor="#D3D3D3">
 
 	<div style="position: absolute; left: 0px; top: 5px;">
 		<form id="URL" name="URL">

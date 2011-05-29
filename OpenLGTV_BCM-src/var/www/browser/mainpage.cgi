@@ -131,6 +131,8 @@ function check(e)
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the Keyboard
+			document.bgColor = '#D3D3D3';
+			top.frames["Keyboard"].document.bgColor = '#FFFFFF';
 			top.frames["Keyboard"].focus();
 			}
 		else if (key==405) 
