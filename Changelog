@@ -195,6 +195,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: ywe.tar.gz file support as Yahoo Widgets Engine - when this file exist in OpenLGTV_BCM dir on USB storage device it gets unpacked before ywe setup
     * ADD: red button in Internet Browser binded to NetCast web-based links page
     * ADD: now there's on upgrade install.sh script used that's provided with upgrade (if exist), not the one that's already in running firmware
+    * ADD: NetPlayer alternative via cgi script
     * CHANGE: sstripped binaries for reduce image size (only busybox and uClibc libs left, yet)
     * CHANGE: BusyBox is now dynamic linked instead of static (more free space for other things)
     * CHANGE: MTD partitions mounting has been separated from rcS to rc.mount script

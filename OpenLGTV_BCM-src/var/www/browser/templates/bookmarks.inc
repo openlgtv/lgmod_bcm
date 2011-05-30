@@ -20,6 +20,6 @@ http://www.tiscali.it
 
 
 
-
+http://127.0.0.1:88/vod/netplayer.cgi
 http://127.0.0.1:88/vod/tvp.cgi
 http://127.0.0.1:88/vod/ipla.cgi
