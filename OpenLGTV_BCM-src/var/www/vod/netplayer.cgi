@@ -89,7 +89,7 @@ function setCurrent(element)
 	}
 	
 
-	function OnLoadSetCurrent(element)
+function OnLoadSetCurrent(element)
 	{
 	current=1;
 	//top.frames["Keyboard"].focus();
@@ -149,6 +149,7 @@ fi
 if [ "$type" = "text/xml" ]
 then
     wget -q -U "$useragent" -O - "$url" > $log_file
+    echo '<BODY bgcolor="black">'
     echo '<font size="+3" color="green">'
     echo '<center><!-- img src="http://www.ipla.tv/images/logo.png"/ --><font size="+3">NetPlayer<br/>alternative</font><br/>by xeros<br/><br/>'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
@@ -164,7 +165,7 @@ then
 	feedUrl=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	feedType=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	#echo "feedTitle: $feedTitle feedDescription: $feedDescription feedUrl: $feedUrl feedType: $feedType <br/>"
-	echo "<td width='33%'><center><font size='+2'><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&url=$feedUrl\">$feedTitle<br/></font>$feedDescription<font size='+2'></a><br/><br/></center></td>"
+	echo "<td width='33%'><center><font size='+2'><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&url=$feedUrl\">$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
 	if [ "$(($item_nr % 2))" = "0" ]
 	then
 	    echo "</tr><tr>"
@@ -174,12 +175,15 @@ then
     echo '</tr>'
     echo '</table>'
     #echo "item_nr: $item_nr"
+    echo '</font></center>'
+    echo '</BODY>'
 else
+    echo "<meta HTTP-EQUIV='REFRESH' content=\"1; url=$url\">"
+    echo '<BODY bgcolor="black">'
     echo "Loading URL: $url ..."
-    echo "<meta HTTP-EQUIV='REFRESH' content=\"1; url=$url\""
+    echo '</font></center>'
+    echo '</BODY>'
 fi
 
 ?>
-</font></center>
-<BODY bgcolor="black">
-</BODY></HTML>
+</HTML>
