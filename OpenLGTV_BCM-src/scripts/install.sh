@@ -33,7 +33,7 @@ else
     fi
 fi
 
-ver=0.4.0-rc1
+ver=0.4.0
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 development=1
 

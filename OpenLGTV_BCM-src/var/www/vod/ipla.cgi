@@ -22,7 +22,29 @@ Content-type: text/html
 <script type="text/javascript">
 <!--
 
-var col = 3; //number of 'cells' in a row
+<?
+
+useragent="tv_samsung/4"
+menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
+
+#deviceid="`cat /mnt/user/ywe/deviceid`"
+
+if [ "$FORM_url" != "" ]
+then
+    url="$FORM_url"
+    type="$FORM_type"
+    log_file=/tmp/$type.log
+    echo "var col = 3; //number of 'cells' in a row"
+else
+    url="$menuLoc"
+    type=menu
+    log_file=/tmp/$type.log
+    echo "var col = 1; //number of 'cells' in a row"
+fi
+
+#url="$menuLoc"
+?>
+
 var current;
 var next;
 
@@ -103,26 +125,6 @@ document.defaultAction = true;
 <!-- BODY background="background.png" -->
 <BODY bgcolor="green">
 
-<?
-
-useragent="tv_samsung/4"
-menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
-
-#deviceid="`cat /mnt/user/ywe/deviceid`"
-
-if [ "$FORM_url" != "" ]
-then
-    url="$FORM_url"
-    type="$FORM_type"
-    log_file=/tmp/$type.log
-else
-    url="$menuLoc"
-    type=menu
-    log_file=/tmp/$type.log
-fi
-
-#url="$menuLoc"
-?>
 
 
 <?
@@ -137,12 +139,15 @@ if [ "$type" = "menu" ]
 then
     echo '<center><img src="http://www.ipla.tv/images/logo.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
     echo '<font size="+3">'
+    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+    item_nr=1
     #for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ *//g' -e '/^$/d' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
     for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ */ /g' -e 's/ "/"/g' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
     do
 	feedUrl=`echo $content | awk -F\; '{print $1}' | tr -d '\"'`
 	feedTitle=`echo $content | awk -F\; '{print $2}' | tr -d '\"' | sed -e 's/\\\u\(....\)/\&#x\1;/g'`
-	echo "<a href=\"ipla.cgi?type=category&url=$feedUrl\">$feedTitle</a><br/>"
+	echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
+	item_nr=$(($item_nr+1))
     done
 else
     echo '<font size="+1">'
