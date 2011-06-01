@@ -165,7 +165,7 @@ then
 	feedUrl=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	feedType=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	#echo "feedTitle: $feedTitle feedDescription: $feedDescription feedUrl: $feedUrl feedType: $feedType <br/>"
-	echo "<td width='33%'><center><font size='+2'><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&url=$feedUrl\">$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
+	echo "<td width='33%'><center><font size='+2'><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&url=$feedUrl\"  target=\"_parent\">$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
 	if [ "$(($item_nr % 2))" = "0" ]
 	then
 	    echo "</tr><tr>"
