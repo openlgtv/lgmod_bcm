@@ -16,6 +16,10 @@ Content-type: text/html
 	color:white;
 	text-decoration:bold;
     }
+    a:visited {
+	color:yellow;
+	text-decoration:bold;
+    }
 </style>
 <title>NetPlayer alternative by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -156,9 +160,9 @@ then
     do
 	#feedTitle=`echo $content | awk -F"</*title>" '{print $2}' | tr -d '\"' | sed -e 's/\\\u\(....\)/\&#x\1;/g'`
 	feedTitle=`echo $content | awk -F"</*title>" '{print $2}' | sed 's/|/ /g' | tr -d '\"'`
-	feedDescription=`echo $content | awk -F"</*description>" '{print $2}' | sed 's/|/ /g' | tr -d '\"' | sed 's#>#><br/>#g'`
-	feedUrl=`echo $content | awk -F"<enclosure|" '{print $2}' | awk -F"|/>" '{print $1}' | awk -F"url=\"" '{print $2}' | awk -F"\"|" '{print $1}' | tr -d '\"'`
-	feedType=`echo $content | awk -F"<enclosure|" '{print $2}' | awk -F"|/>" '{print $1}' | awk -F"type=\"" '{print $2}' | awk -F"\"|" '{print $1}' | tr -d '\"'`
+	feedDescription=`echo $content | awk -F"</*description>" '{print $2}' | sed -e 's/|/ /g' -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's#>#><br/>#g'`
+	feedUrl=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
+	feedType=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	#echo "feedTitle: $feedTitle feedDescription: $feedDescription feedUrl: $feedUrl feedType: $feedType <br/>"
 	echo "<td width='33%'><center><font size='+2'><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&url=$feedUrl\">$feedTitle<br/></font>$feedDescription<font size='+2'></a><br/><br/></center></td>"
 	if [ "$(($item_nr % 2))" = "0" ]
