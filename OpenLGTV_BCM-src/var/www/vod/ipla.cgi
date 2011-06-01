@@ -8,7 +8,7 @@ Content-type: text/html
 <!-- ipla.cgi by xeros -->
 <!-- Source code released under GPL License -->
 
-<style>
+<style type="text/css">
     body {
 	font-family:"TiresiasScreenfont";
     }

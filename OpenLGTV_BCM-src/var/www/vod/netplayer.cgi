@@ -8,7 +8,7 @@ Content-type: text/html
 <!-- netplayer.cgi by xeros -->
 <!-- Source code released under GPL License -->
 
-<style>
+<style type="text/css">
     body {
 	font-family:"TiresiasScreenfont";
     }
@@ -152,7 +152,7 @@ then
     echo '<BODY bgcolor="black">'
     echo '<font size="+3" color="green">'
     echo '<center><!-- img src="http://www.ipla.tv/images/logo.png"/ --><font size="+3">NetPlayer<br/>alternative</font><br/>by xeros<br/><br/>'
-    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+    echo '<Table id="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
     #for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ *//g' -e '/^$/d' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
@@ -165,7 +165,7 @@ then
 	feedUrl=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	feedType=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	#echo "feedTitle: $feedTitle feedDescription: $feedDescription feedUrl: $feedUrl feedType: $feedType <br/>"
-	echo "<td width='33%'><center><font size='+2'><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&url=$feedUrl\"  target=\"_parent\">$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
+	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
 	if [ "$(($item_nr % 2))" = "0" ]
 	then
 	    echo "</tr><tr>"
@@ -175,13 +175,13 @@ then
     echo '</tr>'
     echo '</table>'
     #echo "item_nr: $item_nr"
-    echo '</font></center>'
+    echo '</center></font>'
     echo '</BODY>'
 else
     echo "<meta HTTP-EQUIV='REFRESH' content=\"1; url=$url\">"
     echo '<BODY bgcolor="black">'
     echo "Loading URL: $url ..."
-    echo '</font></center>'
+    echo '</center></font>'
     echo '</BODY>'
 fi
 
