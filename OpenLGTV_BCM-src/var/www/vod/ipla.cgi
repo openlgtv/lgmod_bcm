@@ -27,8 +27,6 @@ Content-type: text/html
 useragent="tv_samsung/4"
 menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
 
-#deviceid="`cat /mnt/user/ywe/deviceid`"
-
 if [ "$FORM_url" != "" ]
 then
     url="$FORM_url"
@@ -47,8 +45,6 @@ then
     mkdir -p /tmp/vod/ipla
 fi
 
-
-#url="$menuLoc"
 ?>
 
 var current;
@@ -128,14 +124,9 @@ document.defaultAction = true;
 
 
 </HEAD>
-<!-- BODY background="background.png" -->
 <BODY bgcolor="green">
 
-
-
 <?
-
-#log_file=$RANDOM
 
 wget -q -U "$useragent" -O - "$url" > $log_file
 
@@ -147,12 +138,16 @@ then
     echo '<font size="+3">'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     item_nr=1
-    #for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ *//g' -e '/^$/d' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
-    for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ */ /g' -e 's/ "/"/g' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
+    for content in `cat $log_file | tr '\n' ' ' | tr '{}' '\n' | grep feed | sed -e 's/ */ /g' -e 's/ \"/\"/g' -e 's#http://##g' -e 's/ /\#\#/g'`
     do
-	feedUrl=`echo $content | awk -F\; '{print $1}' | tr -d '\"'`
-	feedTitle=`echo $content | awk -F\; '{print $2}' | tr -d '\"' | sed -e 's/\\\u\(....\)/\&#x\1;/g'`
-	echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
+	feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | awk -F: '{print $2}' | tr -d '\"'`
+	feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | awk -F: '{print $2}' | sed 's/\#\#/ /g' | tr -d '\"'`
+	if [ "`echo $content | grep '/category/'`" ]
+	then
+	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
+	else
+	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=related&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
+	fi
 	item_nr=$(($item_nr+1))
     done
 else
@@ -162,22 +157,12 @@ else
     item_nr=1
     if [ "$type" = "category" ]
     then
-	#for content in `cat $log_file | egrep '\"thumb\"|\"url\"|\"title\"|{|}' | tr '\n' ' ' | tr '{}' '\n' | sed -e 's/ *//g' -e '/^$/d' -e 's/\"url\"://g' -e 's/,\"thumb\":/;/g' -e 's/,\"title\":/;/g' | grep "/category/"`
-	#for content in `cat $log_file | egrep '\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | sed -e 's/ */ /g' -e 's/ "/"/g' -e 's/\"url\"://g' -e 's/,\"thumb\":/;/g' -e 's/,\"title\":/;/g' -e 's/ /\#\#/g' | grep "/category/"`
-	for content in `cat $log_file | egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | sed -e 's/ */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g' | grep -i "/category/"`
+	for content in `cat $log_file | egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | grep -i "/category/" | sed -e 's/ */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://##g'`
 	do
-	    #feedUrl=`echo $content | awk -F\; '{print $1}' | tr -d '\"'`
-	    feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-	    #feedThumb=`echo $content | awk -F\; '{print $2}' | tr -d '\"'`
-	    feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-	    # v- better works on PC
-	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\\\u\(....\)/\&#x\1;/g'`
-	    # v- better work in TV
-	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed 's/\\u\(....\)/\&\#x\1\;/g'`
-	    # v- not proper regex code but looks like backslash (in "\uXXXX") is being lost somewhere with BusyBox tools
-	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-	    feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | tr -d '\"' | sed -e 's#http//#http://#g' -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>"
+	    feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | awk -F: '{print $2}' | tr -d '\"'`
+	    feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | tr -d '\"'`
+	    feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
+	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=http://$feedUrl\" target=\"_parent\"><img src=\"http://$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
 		echo "</tr><tr>"
@@ -185,19 +170,12 @@ else
 	    item_nr=$(($item_nr+1))
 	done
     else
-	if [ "$type" = "category2" ]
-	then
-	    #for content in `cat $log_file | egrep '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|{|}' | tr '\n' ' ' | tr '{}' '\n' | sed -e 's/ *//g' -e '/^$/d' -e 's/\"date\"://g' -e 's/,\"thumb\":/;/g' -e 's/,\"title\":/;/g' -e 's/,\"video\":/;/g' | grep "/movies/"`
-	    #for content in `cat $log_file | egrep '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | sed -e 's/ */ /g' -e 's/ "/"/g' -e 's/\"date\"://g' -e 's/,\"thumb\":/;/g' -e 's/,\"title\":/;/g' -e 's/,\"video\":/;/g' -e 's/ /\#\#/g' | grep "/movies/"`
-	    for content in `cat $log_file | egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | sed -e 's/ */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g' | grep -i "/movies/"`
+	#if [ "$type" = "category2" ]
+	    for content in `cat $log_file | egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | grep -i "/movies/" | sed -e 's/ */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
 	    do
-		#feedDate=`echo $content | awk -F\; '{print $1}' | tr -d '\"'`
 		feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | awk -F: '{print $2}' | tr -d '\"'`
-		#feedThumb=`echo $content | awk -F\; '{print $2}' | tr -d '\"'`
 		feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-		#feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 		feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-		#feedVideo=`echo $content | awk -F\; '{print $4}' | tr -d '\"'`
 		feedVideo=`echo $content | sed 's/!#!/\n/g' | grep -i "\"video\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
 		echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate<br/>$feedTitle</b></a></center></td>"
 		if [ "$(($item_nr % 3))" = "0" ]
@@ -206,7 +184,7 @@ else
 		fi
 		item_nr=$(($item_nr+1))
 	    done
-	fi
+	#fi
     fi
     echo '</tr>'
     echo '</table>'

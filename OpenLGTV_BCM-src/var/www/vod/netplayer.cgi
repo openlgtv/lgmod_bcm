@@ -102,17 +102,12 @@ document.defaultAction = true;
 // -->
 </script>
 
-
 </HEAD>
-<!-- BODY background="background.png" -->
 
 <?
 
 useragent="tv_samsung/4"
-#menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
 menuLoc="http://tvwidget.pl/xml/linki.xml"
-
-#deviceid="`cat /mnt/user/ywe/deviceid`"
 
 if [ "$FORM_url" != "" ]
 then
@@ -131,14 +126,6 @@ fi
 type2=`echo $type | awk -F/ '{print $2}'`
 log_file=/tmp/vod/netplayer/$type2.log
 
-#url="$menuLoc"
-?>
-
-
-<?
-
-#log_file=$RANDOM
-
 #echo "$url $log_file <br/>"
 
 if [ ! -d "/tmp/vod/netplayer" ]
@@ -155,17 +142,15 @@ then
     echo '<Table id="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
-    #for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ *//g' -e '/^$/d' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
-    #for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ */ /g' -e 's/ "/"/g' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
-    for content in `cat $log_file | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | grep "<item>" | awk -F"</*item>" '{print $2}'`
+    for content in `cat $log_file | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}'`
     do
-	#feedTitle=`echo $content | awk -F"</*title>" '{print $2}' | tr -d '\"' | sed -e 's/\\\u\(....\)/\&#x\1;/g'`
 	feedTitle=`echo $content | awk -F"</*title>" '{print $2}' | sed 's/|/ /g' | tr -d '\"'`
 	feedDescription=`echo $content | awk -F"</*description>" '{print $2}' | sed -e 's/|/ /g' -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's#>#><br/>#g'`
-	feedUrl=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
-	feedType=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}' | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
-	#echo "feedTitle: $feedTitle feedDescription: $feedDescription feedUrl: $feedUrl feedType: $feedType <br/>"
+	feedEnclosure=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}'`
+	feedUrl=`echo $feedEnclosure | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
+	feedType=`echo $feedEnclosure | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
+	#echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\" onKeyPress=\"javascript:setCurrent(this);return false\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
 	if [ "$(($item_nr % 2))" = "0" ]
 	then
 	    echo "</tr><tr>"

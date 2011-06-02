@@ -102,10 +102,7 @@ document.defaultAction = true;
 
 useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"
 
-#menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
 menuLoc="http://www.tvp.pl/pub/stat/websitelisting?object_id=2919829&child_mode=SIMPLE&rec_count=32&with_subdirs=true&link_as_copy=true&xslt=internet-tv/samsung/websites_listing.xslt&q=&samsungwidget=1&v=2&5"
-
-#deviceid="`cat /mnt/user/ywe/deviceid`"
 
 if [ "$FORM_url" != "" ]
 then
@@ -123,11 +120,6 @@ then
     mkdir -p /tmp/vod/tvp
 fi
 
-
-#url="$menuLoc"
-
-#log_file=$RANDOM
-
 #echo "$url $log_file <br/>"
 
 wget -q -U "$useragent" -O - "$url" > $log_file
@@ -138,18 +130,7 @@ then
     cat $log_file | grep "video_url" | sed -e 's/.*video_url="/<meta HTTP-EQUIV="REFRESH" content="1; url=/g' -e 's/">.*/">/g'
 fi
 
-?>
-
-
-</HEAD>
-<!-- BODY background="background.png" -->
-<BODY bgcolor="lightblue">
-
-
-
-<?
-
-
+echo '</HEAD><BODY bgcolor="lightblue">'
 
 if [ "$type" = "menu-tvp" ]
 then
@@ -158,11 +139,9 @@ then
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
-    #for content in `cat $log_file | grep "\"feed" | tr '\n' ' ' | sed -e 's/\(\"feedUrl\"\)/\n\1/g' -e 's/ */ /g' -e 's/ "/"/g' -e 's/\"feedUrl\"://g' -e 's/,\"feedTitle\":/;/g' | grep "/category/"`
     for content in `cat $log_file | grep -v "^$" | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
     do
 	feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
-	#feedTitle=`echo $content | awk -F\; '{print $2}' | tr -d '\"' | sed -e 's/\\\u\(....\)/\&#x\1;/g'`
 	feedTitle=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
 	feedThumb=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
 	#echo "$feedUrl"
@@ -187,12 +166,6 @@ else
 	do
 	    feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
 	    feedThumb=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
-	    # v- better works on PC
-	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\\\u\(....\)/\&#x\1;/g'`
-	    # v- better work in TV
-	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed 's/\\u\(....\)/\&\#x\1\;/g'`
-	    # v- not proper regex code but looks like backslash (in "\uXXXX") is being lost somewhere with BusyBox tools
-	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 	    feedTitle=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
 	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
