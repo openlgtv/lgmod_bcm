@@ -111,12 +111,18 @@ if [ "$FORM_url" != "" ]
 then
     url=`echo "$FORM_url" | tr '@$' '?&'`
     type="$FORM_type"
-    log_file=/tmp/$type.log
+    log_file=/tmp/vod/tvp/$type.log
 else
     url="$menuLoc"
     type=menu-tvp
-    log_file=/tmp/$type.log
+    log_file=/tmp/vod/tvp/$type.log
 fi
+
+if [ ! -d "/tmp/vod/tvp" ]
+then
+    mkdir -p /tmp/vod/tvp
+fi
+
 
 #url="$menuLoc"
 

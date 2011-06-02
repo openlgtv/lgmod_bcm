@@ -201,3 +201,8 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: MTD partitions mounting has been separated from rcS to rc.mount script
     * REMOVE: removed strace and ltrace binaries
     * REMOVE: libz.so.1.2.3 - libz.so* libs are now linked to /usr/local/lib/libz.so*
+
+0.4.1:
+
+    * FIX: ipla.cgi is now more tolerant for minor communication protocol changes
+    * FIX: better place for vod apps logs/communication files: /tmp/vod/{ipla,tvp,netplayer}/
