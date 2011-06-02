@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/haserl
 Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -31,18 +31,18 @@ if [ "$FORM_url" != "" ]
 then
     url="$FORM_url"
     type="$FORM_type"
-    log_file=/tmp/vod/ipla/$type.log
+    log_file=/tmp/log/vod/ipla/$type.log
     echo "var col = 3; //number of 'cells' in a row"
 else
     url="$menuLoc"
     type=menu
-    log_file=/tmp/vod/ipla/$type.log
+    log_file=/tmp/log/vod/ipla/$type.log
     echo "var col = 1; //number of 'cells' in a row"
 fi
 
-if [ ! -d "/tmp/vod/ipla" ]
+if [ ! -d "/tmp/log/vod/ipla" ]
 then
-    mkdir -p /tmp/vod/ipla
+    mkdir -p /tmp/log/vod/ipla
 fi
 
 ?>
