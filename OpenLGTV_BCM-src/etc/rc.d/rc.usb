@@ -29,7 +29,7 @@ fi
 
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
-    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir on mounted USB storage device in $k seconds..."                  | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."               | tee -a /var/log/OpenLGTV_BCM.log
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
@@ -105,7 +105,7 @@ then
 	#reboot
 	exit 0
     fi
-    if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" ]
+    if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" -o -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
     then
         echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs in $OpenLGTV_BCM_USB/ - executing Yahoo Widgets configs setup again" | tee -a /var/log/OpenLGTV_BCM.log
         #umount /mnt/widget.data
