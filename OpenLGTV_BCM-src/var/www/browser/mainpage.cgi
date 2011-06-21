@@ -33,7 +33,7 @@ var ArrLines = new Array();
 
 function CreateBookmark() {
 
-	txtFile.open("GET", "http://<?= $HTTP_HOST ?>/user/bookmarks.inc", false);
+	txtFile.open("GET", "http://<?= $HTTP_HOST ?>/user/bookmarks.inc?T="+new Date().valueOf(), false);
 	// v- onreadystatechange does not work on FireFox < 4.0
 	txtFile.onreadystatechange = function()
 		{	

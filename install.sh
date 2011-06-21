@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script v.1.3 by xeros
+# OpenLGTV BCM installation script v.1.4 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -328,13 +328,15 @@ then
 fi
 
 # kill web browser, addon_mgr and stagecraft to gain some free memory
-echo "Stopping web browser process to gain some more free memory..." | tee -a $log
-killall lb4wk                                                   2>&1 | tee -a $log
-echo "Stopping addon_mgr process to gain more free memory..."        | tee -a $log
-killall addon_mgr                                               2>&1 | tee -a $log
-echo "Stopping stagecraft process to gain more free memory..."       | tee -a $log
-killall stagecraft                                              2>&1 | tee -a $log
-sleep 1                                                         2>&1 | tee -a $log
+echo "Stopping web browser process to gain some more free memory..."  | tee -a $log
+killall lb4wk                                                    2>&1 | tee -a $log
+echo "Stopping konfabulator process to gain some more free memory..." | tee -a $log
+killall konfabulator                                             2>&1 | tee -a $log
+echo "Stopping addon_mgr process to gain more free memory..."         | tee -a $log
+killall addon_mgr                                                2>&1 | tee -a $log
+echo "Stopping stagecraft process to gain more free memory..."        | tee -a $log
+killall stagecraft                                               2>&1 | tee -a $log
+sleep 1                                                          2>&1 | tee -a $log
 
 # check free ram
 currfreemem=`free | grep Mem | awk '{print $4}'`

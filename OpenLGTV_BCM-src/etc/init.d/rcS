@@ -33,6 +33,10 @@ export FLASH_EMANUAL_PATH=/mnt/addon/contents/emanual/emmanager.swf
 export ADDON_PRELOADED_PATH=/mnt/addon/contents
 export HOME=/home
 export DEPLOY_DIR=/mnt/browser
+export ADDON_UP_CTRL=up_ctrl
+export PREMIUM_MASTER=master.swf
+export STORE_MASTER=StoreMaster.swf
+export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
 
 export TERMINFO_DIRS=/usr/share/terminfo
 
@@ -89,7 +93,7 @@ fi
 #
 
 echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data"           | tee -a /tmp/OpenLGTV_BCM.log
-mkdir -p /tmp/run /tmp/log /tmp/service /tmp/lib/hwclock /tmp/lib/misc /tmp/spool/cron 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 cat /dev/null > /var/run/utmp
 cat /dev/null > /var/log/wtmp
 cat /dev/null > /var/log/lastlog
@@ -649,6 +653,10 @@ export FLASH_EMANUAL_PATH=/mnt/addon/contents/emanual/emmanager.swf
 export ADDON_PRELOADED_PATH=/mnt/addon/contents
 export HOME=/home
 export DEPLOY_DIR=/mnt/browser
+export ADDON_UP_CTRL=up_ctrl
+export PREMIUM_MASTER=master.swf
+export STORE_MASTER=StoreMaster.swf
+export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
 
 
 echo "Done...login now"

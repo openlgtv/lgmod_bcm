@@ -207,3 +207,7 @@ Answer for people asking if they can use it if they have already made modificati
 
     * FIX: ipla.cgi is now more tolerant for minor communication protocol changes
     * FIX: better place for vod apps logs/communication files: /tmp/vod/{ipla,tvp,netplayer}/
+
+0.5.0:
+    * FIX: got rid bookmarks file caching (thanks gra3l)
+    * ADD: experimental support for SmartTV models

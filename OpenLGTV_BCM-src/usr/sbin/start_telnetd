@@ -2,4 +2,5 @@
 
 mount -t tmpfs none /usr/etc
 cp /etc/passwd.org /usr/etc/passwd
+mount -t devpts none /dev/pts
 telnetd
