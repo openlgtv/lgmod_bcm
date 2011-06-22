@@ -211,3 +211,4 @@ Answer for people asking if they can use it if they have already made modificati
 0.5.0:
     * FIX: got rid bookmarks file caching (thanks gra3l)
     * ADD: experimental support for SmartTV models
+    * ADD: new NetCast web browser based links (from SmartTV NetCast 2.0) in Internet Browser page - 132 links currently compared to 68 before
