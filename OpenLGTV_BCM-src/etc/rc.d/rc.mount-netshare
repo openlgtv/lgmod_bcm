@@ -87,6 +87,9 @@ then
 	then
 	    echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..." | tee -a /var/log/OpenLGTV_BCM.log
 	    exit $mount_err_code
+	else
+	    echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..." | tee -a /var/log/OpenLGTV_BCM.log
+	    nice -n 20 ls -alR "$USB_DIR/NetShare" > /dev/null 2>&1 &
 	fi
     fi
 else
