@@ -12,7 +12,7 @@ mount -t devpts devpts /dev/pts                                     2>&1 | tee -
 mount -t tmpfs none /usr/etc                                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 mount -t tmpfs bt /mnt/lg/bt -o size=10M                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
-if [ "`cat /proc/mtd | wc -l`" = "39" -a "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
+if [ "`cat /proc/mtd | wc -l`" -lt "41" -a "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: setting country_model to US..."             | tee -a /tmp/OpenLGTV_BCM.log
     export country_model=US

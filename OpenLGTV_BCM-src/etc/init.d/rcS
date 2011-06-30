@@ -206,6 +206,7 @@ if [ $? -ne 0 ]
 then
     echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a /var/log/OpenLGTV_BCM.log
     mount -t tmpfs tmpfs /mnt/user               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/etc                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
 if [ ! -d "/mnt/user/cfg" ]

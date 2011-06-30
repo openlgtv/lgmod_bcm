@@ -208,8 +208,17 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: ipla.cgi is now more tolerant for minor communication protocol changes
     * FIX: better place for vod apps logs/communication files: /tmp/vod/{ipla,tvp,netplayer}/
 
-0.5.0:
+0.4.2:
+    * FIX: installation log file handling - raised errors that can't make backup because couldn't save logs
+
+0.4.3:
+    * FIX: proper US firmware check
     * FIX: got rid bookmarks file caching (thanks gra3l)
+    * FIX: install.sh could not make reboot TV after proper flashing on pure TVs giving garbage on console instead
+    * FIX: install.sh mem requirements lowered for 3D TVs where's less available mem
+    * FIX: install.sh kill konfabulator before installation to get more free memory
+    * ADD: new NetCast web browser based links (from SmartTV NetCast 2.0) in Internet Browser page - 132 links currently compared to 68 before (by nicola_12345)
+
+0.5.0:
     * FIX: workaround for network shares invisible dirs (thanks xren)
     * ADD: experimental support for SmartTV models
-    * ADD: new NetCast web browser based links (from SmartTV NetCast 2.0) in Internet Browser page - 132 links currently compared to 68 before
