@@ -221,4 +221,7 @@ Answer for people asking if they can use it if they have already made modificati
 
 0.5.0:
     * FIX: workaround for network shares invisible dirs (thanks xren)
+    * FIX: upgrade from zip file on USB storage device
+    * FIX: ywe first time configuration
+    * FIX: abc.net.au link fix
     * ADD: experimental support for SmartTV models

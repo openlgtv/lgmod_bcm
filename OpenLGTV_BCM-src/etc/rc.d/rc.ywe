@@ -26,7 +26,7 @@ then
     then
 	mkdir -p /mnt/user/ywe/samsung 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
-    if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" ]
+    if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" -a ! -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
     then
 	echo "OpenLGTV_BCM-INFO: no available Yahoo Widgets Engine dirs - /mnt/addon/ywe or $OpenLGTV_BCM_USB/ywe - skipping YWE configuration..." | tee -a /var/log/OpenLGTV_BCM.log
     else
@@ -114,7 +114,7 @@ then
 		cp $ywedir/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	fi
-	if [ -n "`grep '^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH' /mnt/user/ywe/konfabulator.sh`" ]
+	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -n "`grep '^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH' /mnt/user/ywe/konfabulator.sh`" ]
 	then
 	    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
 	    echo "OpenLGTV_BCM-INFO: setting browser partition library path in Yahoo Widgets Engine startup script - $ywedir/bin/konfabulator.sh..." | tee -a /var/log/OpenLGTV_BCM.log
@@ -168,7 +168,7 @@ then
 		fi
 	    fi
 	    /bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
-	    if [ ! -f "/mnt/user/ywe/samsung/konfabulator.sh" ]
+	    if [ -f "/mnt/user/ywe/konfabulator.sh" -a ! -f "/mnt/user/ywe/samsung/konfabulator.sh" ]
 	    then
 		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
 		then

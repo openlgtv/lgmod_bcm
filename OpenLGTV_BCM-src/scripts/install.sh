@@ -56,11 +56,12 @@ lginit_size=262144
 
 
 cdir=$dir
-#log=$dir/$file.log
-log="$dir/$file.log $tmp/$file.log"
+log=$dir/$file.log
+#log="$dir/$file.log $tmp/$file.log"
 tmpout=$tmp/output.log
 tmpoutflashed=$tmp/flashed/output.log
-reqfreemem=20000
+reqfreemem=19000
+reqavailmem=25000
 
 backup=pre-backup
 lginit_backup=lginit-$backup
@@ -342,7 +343,7 @@ sleep 1                                                          2>&1 | tee -a $
 currfreemem=`free | grep Mem | awk '{print $4}'`
 currbuffmem=`free | grep Mem | awk '{print $6}'`
 curravailmem=$(($currfreemem + $currbuffmem))
-reqavailmem=$((2*$reqfreemem))
+#reqavailmem=$((2*$reqfreemem))
 if [ "$currfreemem" -lt "$reqfreemem" -a "$curravailmem" -lt "$reqavailmem" ]
 then
     echo "There might be problem as you have only $currfreemem KB RAM free (+$currbuffmem KB on buffers), its less than $reqfreemem KB ($reqavailmem KB with buffers)." | tee -a $log
@@ -563,7 +564,8 @@ echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
 mkdir -p $dir/flashed $tmp/flashed
 mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
-cat $tmpoutflashed | tee -a $log
+#cat $tmpoutflashed | tee -a $log
+cat $tmpout | tee -a $log
 sync
 date 2>&1 | tee -a $log
 echo "" | tee -a $log

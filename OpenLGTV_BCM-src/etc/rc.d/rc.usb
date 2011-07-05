@@ -25,7 +25,7 @@ else
 fi
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                      | tee -a /var/log/OpenLGTV_BCM.log
-/etc/rc.d/rc.usb-remount
+source /etc/rc.d/rc.usb-remount
 
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
@@ -44,25 +44,28 @@ then
 	    else
 		if [ "$zip_file_count" = 1 ]
 		then
-		    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file - trying use it for OpenLGTV BCM upgrade..."   | tee -a /var/log/OpenLGTV_BCM.log
+		    zip_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip`
+		    echo "OpenLGTV_BCM-INFO: found $zip_upgrade_file file - trying use it for OpenLGTV BCM upgrade..."   | tee -a /var/log/OpenLGTV_BCM.log
 		    curr_dir=`pwd`
-		    cd $OpenLGTV_BCM_USB/upgrade/                                                                               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    echo "OpenLGTV_BCM-INFO: unzipping $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file"                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    unzip OpenLGTV_BCM-v*.zip                                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    echo "OpenLGTV_BCM-INFO: removing $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip file"                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    rm -f OpenLGTV_BCM-v*.zip                                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    cd $curr_dir                                                                                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cd $OpenLGTV_BCM_USB/upgrade/                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: unzipping $zip_upgrade_file file"                                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    unzip -o $zip_upgrade_file -d $OpenLGTV_BCM_USB/upgrade/                                        2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: removing $zip_upgrade_file file"                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    rm -f $zip_upgrade_file                                                                         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    cd $curr_dir                                                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
 		fi
 		if [ "$sqf_file_count" -lt 1 ]
 		then
 		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade" | tee -a /var/log/OpenLGTV_BCM.log
 		else
+		    sqf_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf`
 		    if [ -f "$OpenLGTV_BCM_USB/upgrade/install.sh" ]
 		    then
 			echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/install.sh script, using it instead of builtin one" | tee -a /var/log/OpenLGTV_BCM.log
-			$OpenLGTV_BCM_USB/upgrade/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+			$OpenLGTV_BCM_USB/upgrade/install.sh $sqf_upgrade_file autoupgrade                          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    else
-			/scripts/install.sh $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf autoupgrade                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+			/scripts/install.sh $sqf_upgrade_file autoupgrade                                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    fi
 		    #exit $?
 		fi
@@ -107,7 +110,7 @@ then
     fi
     if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" -o -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
     then
-        echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs in $OpenLGTV_BCM_USB/ - executing Yahoo Widgets configs setup again" | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs or ywe.tar.gz file in $OpenLGTV_BCM_USB/ - executing Yahoo Widgets configs setup again" | tee -a /var/log/OpenLGTV_BCM.log
         #umount /mnt/widget.data
         #mount --bind $OpenLGTV_BCM_USB/ywedata /mnt/widget.data
         #export ywe_usb_ywe_lg=1

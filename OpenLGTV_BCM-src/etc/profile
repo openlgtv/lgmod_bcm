@@ -30,6 +30,12 @@ export FLASH_EMANUAL_PATH=/mnt/addon/contents/emanual/emmanager.swf
 export ADDON_PRELOADED_PATH=/mnt/addon/contents
 export HOME=/home
 export DEPLOY_DIR=/mnt/browser
+export ADDON_UP_CTRL=up_ctrl
+export PREMIUM_MASTER=master.swf
+export STORE_MASTER=StoreMaster.swf
+export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
+
+export TERMINFO_DIRS='/usr/share/terminfo'
 
 alias ll="ls -al"
 alias dir="ls -al"
