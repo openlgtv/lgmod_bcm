@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script v.1.4 by xeros
+# OpenLGTV BCM installation script v.1.5 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -35,6 +35,7 @@ fi
 
 ver=0.5.0-devel
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
+supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
 
 tmp=/tmp
@@ -47,13 +48,24 @@ then
 fi
 
 file=OpenLGTV_BCM-v$ver
+file2011=OpenLGTV_BCM_2011-v$ver
 size=3145728
+size2011=4194304
 mtd=3
 magic=hsqs
 magic_clean=377377377377
 lginit=4
 lginit_size=262144
+lginit_size2011=524288
 
+# 2011 BCM model check
+if [ "`cat /etc/ver | awk -F, '{print $1}'`" = "$supported_rootfs_ver2" ]
+then
+    supported_rootfs_ver="$supported_rootfs_ver2011"
+    file=$file2011
+    size=$size2011
+    lginit_size=$lginit_size2011
+fi
 
 cdir=$dir
 log=$dir/$file.log
