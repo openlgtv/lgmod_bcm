@@ -6,8 +6,8 @@ size2011=4194304
 dir=OpenLGTV_BCM-src
 dir2011=OpenLGTV_BCM-2011-src
 ver=`cat $dir/etc/ver2`
-ofile=OpenLGTV_BCM-v$ver
-ofile2011=OpenLGTV_BCM_2011-v$ver
+ofile=OpenLGTV_BCM-GP2B-v$ver
+ofile2011=OpenLGTV_BCM-GP3B-v$ver
 sed -i -e "s/^ver=.*/ver=$ver/g" install.sh
 cp -f install.sh $dir/scripts/
 sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd.org
@@ -40,14 +40,14 @@ osize=`wc -c $ofile.sqf | awk '{print $1}'`
 osize2011=`wc -c $ofile2011.sqf | awk '{print $1}'`
 if [ "$osize" -gt "$size" ]
 then
-    echo "ERROR: Partition image for 2010 BCM is too big for flashing."
+    echo "ERROR: Partition image for GP2B is too big for flashing."
     #rm -rf squashfs-root
     exit 1
 else
     if [ "$osize" -lt "$size" ]
     then
 	abytes=$(($size-$osize))
-	echo "Partition image size ( $osize ) for 2010 BCM is small, adding $abytes bytes to fill the partition up to the end ( $size )."
+	echo "Partition image size ( $osize ) for GP2B is small, adding $abytes bytes to fill the partition up to the end ( $size )."
 	for i in `seq $abytes`
 	do
 	    printf '\xff' >> $ofile.sqf
@@ -56,14 +56,14 @@ else
 fi
 if [ "$osize2011" -gt "$size2011" ]
 then
-    echo "ERROR: Partition image for 2011 BCM is too big for flashing."
+    echo "ERROR: Partition image for GP3B is too big for flashing."
     #rm -rf squashfs-root-2011
     exit 1
 else
     if [ "$osize2011" -lt "$size2011" ]
     then
 	abytes=$(($size2011-$osize2011))
-	echo "Partition image size ( $osize2011 ) for 2011 BCM is small, adding $abytes bytes to fill the partition up to the end ( $size2011 )."
+	echo "Partition image size ( $osize2011 ) for GP3B is small, adding $abytes bytes to fill the partition up to the end ( $size2011 )."
 	for i in `seq $abytes`
 	do
 	    printf '\xff' >> $ofile2011.sqf

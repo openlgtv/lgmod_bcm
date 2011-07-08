@@ -61,16 +61,19 @@ source /tmp/partitions.list
 # quite ugly model checks, needs rewrite
 if [ "`cat /proc/mtd | wc -l`" -lt "41" -a "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: setting country_model to US - recognised US 2010 BCM model"     | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: setting country_model to US - recognised US 2010 BCM (GP2B) model"     | tee -a /tmp/OpenLGTV_BCM.log
     export country_model=US
+    export platform=GP2B
 else
     if [ "`cat /proc/mtd | wc -l`" -gt "50" ]
     then
-	echo "OpenLGTV_BCM-INFO: setting country_model to SM - recognised 2011 BCM model"    | tee -a /tmp/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: setting country_model to SM - recognised 2011 BCM (GP3B) model"    | tee -a /tmp/OpenLGTV_BCM.log
 	export country_model=SM
+	export platform=GP3B
     else
-	echo "OpenLGTV_BCM-INFO: setting country_model to EU - recognised non-US 2010 model" | tee -a /tmp/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: setting country_model to EU - recognised non-US 2010 (GP2B) model" | tee -a /tmp/OpenLGTV_BCM.log
 	export country_model=EU
+	export platform=GP2B
     fi
 fi
 
@@ -90,10 +93,13 @@ mount -t tmpfs tmpfs /usr/local/etc -o size=1M                                  
 echo "OpenLGTV_BCM-INFO: addon - mtdblock$mtd_addon in /mnt/addon"                           | tee -a /tmp/OpenLGTV_BCM.log
 mount -t squashfs /dev/mtdblock$mtd_addon /mnt/addon                                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
-if [ "$country_model" = "EU" ]
+if [ "$mtd_cert" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: cert - mtdblock$mtd_cert in /mnt/lg/ciplus/cert"                | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_cert /mnt/lg/ciplus/cert                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+fi
+if [ "$mtd_authcxt" != "" ]
+then
     echo "OpenLGTV_BCM-INFO: authcxt - mtdblock$mtd_authcxt in /mnt/lg/ciplus/authcxt"       | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_authcxt /mnt/lg/ciplus/authcxt                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
@@ -114,18 +120,11 @@ fi
 echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/lg/cmn_data /mnt/flash/data"                      | tee -a /tmp/OpenLGTV_BCM.log
 mount --bind /mnt/lg/cmn_data /mnt/flash/data                                           2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
-if [ "$country_model" = "EU" ]
-then
-    echo "OpenLGTV_BCM-INFO: user - mtdblock$mtd_user in /mnt/user"                          | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t jffs2 /dev/mtdblock$mtd_user /mnt/user                                     2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: idfile - mtdblock$mtd_idfile in /mnt/idfile (ignore error)"     | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t squashfs /dev/mtdblock$mtd_idfile /mnt/idfile                              2>&1 | tee -a /tmp/OpenLGTV_BCM.log  # empty on EU fw, but lginit still tries to mount it
-else
-    echo "OpenLGTV_BCM-INFO: browser - mtdblock$mtd_browser in /mnt/user"                    | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t jffs2 /dev/mtdblock$mtd_browser /mnt/user                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: idfile - mtdblock$mtd_idfile in /mnt/idfile"                    | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t squashfs /dev/mtdblock$mtd_idfile /mnt/idfile                              2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-fi
+echo "OpenLGTV_BCM-INFO: user - mtdblock$mtd_user in /mnt/user"                              | tee -a /tmp/OpenLGTV_BCM.log
+mount -t jffs2 /dev/mtdblock$mtd_user /mnt/user                                         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: idfile - mtdblock$mtd_idfile in /mnt/idfile (ignore error)"         | tee -a /tmp/OpenLGTV_BCM.log
+mount -t squashfs /dev/mtdblock$mtd_idfile /mnt/idfile                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log  # empty on EU fw, but lginit still tries to mount it
+
 echo "OpenLGTV_BCM-INFO: game - mtdblock$mtd_game in /mnt/game"                              | tee -a /tmp/OpenLGTV_BCM.log
 mount -t squashfs /dev/mtdblock$mtd_game /mnt/game                                      2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 echo "OpenLGTV_BCM-INFO: fladata - mtdblock$mtd_fladata in /mnt/cache/flash"                 | tee -a /tmp/OpenLGTV_BCM.log
@@ -142,7 +141,7 @@ then
     fi
 fi
 
-if [ "$country_model" = "EU" ]
+if [ "$mtd_browser" != "" -a "$mtd_brodata" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: browser - mtdblock$mtd_browser in /mnt/browser"                 | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_browser /mnt/browser                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
@@ -168,7 +167,10 @@ then
 	rm -f /mnt/cache/browser/browser_application.txt                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 	cp /mnt/browser/browser_application.txt /mnt/cache/browser/                     2>&1 | tee -a /tmp/OpenLGTV_BCM.log #shouldnt be addon instead of browser? but thats from the lginit code (lginit bug?)
     fi
-else
+fi
+
+if [ "$mtd_ywedata" != "" ]
+then
     echo "OpenLGTV_BCM-INFO: ywedata - mtdblock$mtd_ywedata in /mnt/widget.data"             | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_ywedata /mnt/widget.data                          2>&1 | tee -a /tmp/OpenLGTV_BCM.log # US fw lginit does not handle erasing ywedata if it's not mountable
 fi

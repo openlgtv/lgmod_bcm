@@ -47,8 +47,8 @@ then
     dir=`dirname $1`
 fi
 
-file=OpenLGTV_BCM-v$ver
-file2011=OpenLGTV_BCM_2011-v$ver
+file=OpenLGTV_BCM-GP2B-v$ver
+file2011=OpenLGTV_BCM-GP3B-v$ver
 size=3145728
 size2011=4194304
 mtd=3
@@ -57,6 +57,7 @@ magic_clean=377377377377
 lginit=4
 lginit_size=262144
 lginit_size2011=524288
+platform=GP2B
 
 # 2011 BCM model check
 if [ "`cat /etc/ver | awk -F, '{print $1}'`" = "$supported_rootfs_ver2" ]
@@ -65,6 +66,7 @@ then
     file=$file2011
     size=$size2011
     lginit_size=$lginit_size2011
+    platform=GP3B
 fi
 
 cdir=$dir
@@ -112,7 +114,7 @@ ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1
 
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
-echo "OpenLGTV BCM $ver installation script by xeros" | tee -a $log
+echo "OpenLGTV BCM $ver installation script for $platform platform by xeros" | tee -a $log
 
 if [ "$2" = "autoupgrade" ]
 then
