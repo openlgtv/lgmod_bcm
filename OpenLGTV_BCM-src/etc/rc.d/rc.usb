@@ -29,22 +29,22 @@ source /etc/rc.d/rc.usb-remount
 
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
-    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."               | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."         | tee -a /var/log/OpenLGTV_BCM.log
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
 	#if [ -f "$OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf" ]
 	#then
-	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM upgrade..."   | tee -a /var/log/OpenLGTV_BCM.log
-	    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
-	    zip_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip | wc -l`
+	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM $platform upgrade..."   | tee -a /var/log/OpenLGTV_BCM.log
+	    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf | wc -l`
+	    zip_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.zip | wc -l`
 	    if [ "$sqf_file_count" -gt 1 -o "$zip_file_count" -gt 1 ]
 	    then
 		echo "OpenLGTV_BCM-WARN: theres too much OpenLGTV BCM upgrade (.sqf or .zip) files in $OpenLGTV_BCM_USB/upgrade/, refusing to autoupgrade" | tee -a /var/log/OpenLGTV_BCM.log
 	    else
 		if [ "$zip_file_count" = 1 ]
 		then
-		    zip_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.zip`
+		    zip_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.zip`
 		    echo "OpenLGTV_BCM-INFO: found $zip_upgrade_file file - trying use it for OpenLGTV BCM upgrade..."   | tee -a /var/log/OpenLGTV_BCM.log
 		    curr_dir=`pwd`
 		    cd $OpenLGTV_BCM_USB/upgrade/                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
@@ -53,13 +53,13 @@ then
 		    echo "OpenLGTV_BCM-INFO: removing $zip_upgrade_file file"                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    rm -f $zip_upgrade_file                                                                         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 		    cd $curr_dir                                                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-		    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf | wc -l`
+		    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf | wc -l`
 		fi
 		if [ "$sqf_file_count" -lt 1 ]
 		then
 		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade" | tee -a /var/log/OpenLGTV_BCM.log
 		else
-		    sqf_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf`
+		    sqf_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf`
 		    if [ -f "$OpenLGTV_BCM_USB/upgrade/install.sh" ]
 		    then
 			echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/install.sh script, using it instead of builtin one" | tee -a /var/log/OpenLGTV_BCM.log
