@@ -59,19 +59,26 @@ source /tmp/partitions.list
 #mtd_boot=0
 
 # quite ugly model checks, needs rewrite
-if [ "`cat /proc/mtd | wc -l`" -lt "41" -a "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
+if [ "`cat /proc/mtd | wc -l`" -lt "41" ]
 then
-    echo "OpenLGTV_BCM-INFO: setting country_model to US - recognised US 2010 BCM (GP2B) model"     | tee -a /tmp/OpenLGTV_BCM.log
-    export country_model=US
-    export platform=GP2B
+    if [ "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
+    then
+	echo "OpenLGTV_BCM-INFO: setting country_model to US - recognised North American 2010 BCM3549 (GP2B) model" | tee -a /tmp/OpenLGTV_BCM.log
+	export country_model=US
+	export platform=GP2B
+    else
+	echo "OpenLGTV_BCM-INFO: setting country_model to KR - recognised Korean 2010 BCM BCM3549 (GP2B) model"     | tee -a /tmp/OpenLGTV_BCM.log
+	export country_model=KR
+	export platform=GP2B
+    fi
 else
     if [ "`cat /proc/mtd | wc -l`" -gt "50" ]
     then
-	echo "OpenLGTV_BCM-INFO: setting country_model to SM - recognised 2011 BCM (GP3B) model"    | tee -a /tmp/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: setting country_model to SM - recognised 2011 BCM3520 (GP3B) SmartTV model"        | tee -a /tmp/OpenLGTV_BCM.log
 	export country_model=SM
 	export platform=GP3B
     else
-	echo "OpenLGTV_BCM-INFO: setting country_model to EU - recognised non-US 2010 (GP2B) model" | tee -a /tmp/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: setting country_model to EU - recognised non-US BCM3556 2010 (GP2B) model"         | tee -a /tmp/OpenLGTV_BCM.log
 	export country_model=EU
 	export platform=GP2B
     fi
@@ -141,10 +148,22 @@ then
     fi
 fi
 
-if [ "$mtd_browser" != "" -a "$mtd_brodata" != "" ]
+if [ "$mtd_browser" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: browser - mtdblock$mtd_browser in /mnt/browser"                 | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_browser /mnt/browser                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+fi
+
+if [ -e "/mnt/addon/krbrowser/run3556" -a ! -e "/mnt/browser/run3556" ]
+then
+    export KRBROWSER=/mnt/addon/krbrowser
+    export MEMORY_CACHE_SIZE_FORCED=10485760
+    echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/addon/krbrowser /mnt/browser"                 | tee -a /tmp/OpenLGTV_BCM.log
+    mount --bind /mnt/addon/krbrowser /mnt/browser
+fi
+
+if [ "$mtd_brodata" != "" ]
+then
     echo "OpenLGTV_BCM-INFO: brodata - mtdblock$mtd_brodata in /mnt/cache/browser"           | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_brodata /mnt/cache/browser                                   >> /tmp/OpenLGTV_BCM.log 2>&1
     if [ "$?" -ne "0" ]
@@ -173,6 +192,16 @@ if [ "$mtd_ywedata" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: ywedata - mtdblock$mtd_ywedata in /mnt/widget.data"             | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_ywedata /mnt/widget.data                          2>&1 | tee -a /tmp/OpenLGTV_BCM.log # US fw lginit does not handle erasing ywedata if it's not mountable
+fi
+
+if [ "$mtd_preloaded" != "" -a "$mtd_kids" != "" -a "$mtd_story" != "" ]
+then
+    echo "OpenLGTV_BCM-INFO: preloaded - mtdblock$mtd_preloaded in /mnt/preloaded"           | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock$mtd_preloaded /mnt/preloaded                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: kids - mtdblock$mtd_kids in /mnt/preloaded/kids"                | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock$mtd_kids /mnt/preloaded/kids                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: story - mtdblock$mtd_story in /mnt/preloaded/story"             | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock$mtd_story /mnt/preloaded/kids/story                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ -n "`grep appxip_addr /proc/cmdline`" ]

@@ -226,4 +226,5 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: abc.net.au link fix
     * ADD: experimental support for SmartTV models
     * ADD: build and installation scripts can now handle 2011 BCM model images
+    * ADD: support for KR 2010 BCM models
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
