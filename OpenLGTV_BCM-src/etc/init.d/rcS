@@ -60,6 +60,12 @@ echo "OpenLGTV_BCM-INFO: starting in AUTORUN mode"                       | tee -
 source /etc/rc.d/rc.mount
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                    | tee -a /tmp/OpenLGTV_BCM.log
 
+if [ -e "/mnt/lg/res/lglib/bcmdriver.ko" ]
+then
+    echo "OpenLGTV_BCM-INFO: loading /mnt/lg/res/lglib/bcmdriver.ko kernel module..." | tee -a /tmp/OpenLGTV_BCM.log
+    insmod /mnt/lg/res/lglib/bcmdriver.ko                                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+fi
+
 # mount partitons (/etc/fstab)
 #mount -a			# rcS default
 #mount --bind /mnt/flash/data	/mnt/lg/recdb
