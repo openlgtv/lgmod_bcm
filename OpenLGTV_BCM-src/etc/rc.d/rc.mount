@@ -89,8 +89,6 @@ echo "OpenLGTV_BCM-INFO: model - mtdblock$mtd_model in /mnt/lg/model"           
 mount -t squashfs /dev/mtdblock$mtd_model /mnt/lg/model                                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 echo "OpenLGTV_BCM-INFO: lgres - mtdblock$mtd_lgres in /mnt/lg/res/lgres"                    | tee -a /tmp/OpenLGTV_BCM.log
 mount -t squashfs /dev/mtdblock$mtd_lgres /mnt/lg/res/lgres                             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: ezcal - mtdblock$mtd_ezcal in /mnt/lg/res/ezcal"                    | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock$mtd_ezcal /mnt/lg/res/ezcal                             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
 if [ "$mtd_estreamer" != "" ]
 then
@@ -125,6 +123,8 @@ then
 else
     echo "OpenLGTV_BCM-INFO: addon - mtdblock$mtd_addon in /mnt/addon"                       | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_addon /mnt/addon                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: ezcal - mtdblock$mtd_ezcal in /mnt/lg/res/ezcal"                | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock$mtd_ezcal /mnt/lg/res/ezcal                         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ "$mtd_cert" != "" ]
@@ -138,19 +138,19 @@ then
     mount -t yaffs2 /dev/mtdblock$mtd_authcxt /mnt/lg/ciplus/authcxt                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
-echo "OpenLGTV_BCM-INFO: data - mtdblock$mtd_data in /mnt/lg/cmn_data"                       | tee -a /tmp/OpenLGTV_BCM.log
-mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime                                 >> /tmp/OpenLGTV_BCM.log 2>&1
-if [ "$?" -ne "0" ]
+if [ "$mtd_data" != "" ]
 then
-    echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd$mtd_data - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
-    if [ -n "`cat /proc/mtd | grep ^mtd${mtd_data}: | grep data`" ]
+    echo "OpenLGTV_BCM-INFO: data - mtdblock$mtd_data in /mnt/lg/cmn_data"                   | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime                             >> /tmp/OpenLGTV_BCM.log 2>&1
+    if [ "$?" -ne "0" ]
     then
+	echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd$mtd_data - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
 	flash_eraseall /dev/mtd$mtd_data                                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+	sync
 	mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime              2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    else
-	echo "OpenLGTV_BCM-ERROR: /dev/mtd$mtd_data is not 'data' partition - NOT erasing it..."            | tee -a /tmp/OpenLGTV_BCM.log
     fi
 fi
+
 echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/lg/cmn_data /mnt/flash/data"                      | tee -a /tmp/OpenLGTV_BCM.log
 mount --bind /mnt/lg/cmn_data /mnt/flash/data                                           2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
@@ -175,22 +175,28 @@ then
     mount -t squashfs /dev/mtdblock$mtd_pqldb /mnt/pqldb                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
-echo "OpenLGTV_BCM-INFO: idfile - mtdblock$mtd_idfile in /mnt/idfile (ignore error)"         | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock$mtd_idfile /mnt/idfile                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log  # empty on EU fw, but lginit still tries to mount it
-
-echo "OpenLGTV_BCM-INFO: game - mtdblock$mtd_game in /mnt/game"                              | tee -a /tmp/OpenLGTV_BCM.log
-mount -t squashfs /dev/mtdblock$mtd_game /mnt/game                                      2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: fladata - mtdblock$mtd_fladata in /mnt/cache/flash"                 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t yaffs2 /dev/mtdblock$mtd_fladata /mnt/cache/flash -o noatime                              >> /tmp/OpenLGTV_BCM.log 2>&1
-if [ "$?" -ne "0" ]
+if [ "$mtd_idfile" != "" ]
 then
-    echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd$mtd_fladata - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
-    if [ -n "`cat /proc/mtd | grep ^mtd${mtd_fladata}: | grep fladata`" ]
+    echo "OpenLGTV_BCM-INFO: idfile - mtdblock$mtd_idfile in /mnt/idfile (ignore error)"     | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock$mtd_idfile /mnt/idfile                              2>&1 | tee -a /tmp/OpenLGTV_BCM.log  # empty on EU fw, but lginit still tries to mount it
+fi
+
+if [ "$mtd_game" != "" ]
+then
+    echo "OpenLGTV_BCM-INFO: game - mtdblock$mtd_game in /mnt/game"                          | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock$mtd_game /mnt/game                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+fi
+
+if [ "$mtd_fladata" != "" ]
+then
+    echo "OpenLGTV_BCM-INFO: fladata - mtdblock$mtd_fladata in /mnt/cache/flash"             | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t yaffs2 /dev/mtdblock$mtd_fladata /mnt/cache/flash -o noatime                          >> /tmp/OpenLGTV_BCM.log 2>&1
+    if [ "$?" -ne "0" ]
     then
+	echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd$mtd_fladata - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
 	flash_eraseall /dev/mtd$mtd_fladata                                             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+	sync
 	mount -t yaffs2 /dev/mtdblock$mtd_fladata /mnt/cache/flash -o noatime 2>&1           | tee -a /tmp/OpenLGTV_BCM.log
-    else
-	echo "OpenLGTV_BCM-ERROR: /dev/mtd$mtd_fladata is not 'fladata' partition - NOT erasing it..." | tee -a /tmp/OpenLGTV_BCM.log
     fi
 fi
 
@@ -226,13 +232,9 @@ then
     if [ "$?" -ne "0" ]
     then
 	echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd$mtd_brodata - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
-	if [ -n "`cat /proc/mtd | grep ^mtd${mtd_brodata}: | grep brodata`" ]
-	then
-	    flash_eraseall /dev/mtd$mtd_brodata                                         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-	    mount -t yaffs2 /dev/mtdblock$mtd_brodata /mnt/cache/browser                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-	else
-	    echo "OpenLGTV_BCM-ERROR: /dev/mtd$mtd_brodata is not 'brodata' partition - NOT erasing it..." | tee -a /tmp/OpenLGTV_BCM.log
-	fi
+	flash_eraseall /dev/mtd$mtd_brodata                                             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+	sync
+	mount -t yaffs2 /dev/mtdblock$mtd_brodata /mnt/cache/browser                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
     fi
     echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/cache/browser /home"                          | tee -a /tmp/OpenLGTV_BCM.log
     mount --bind /mnt/cache/browser /home                                               2>&1 | tee -a /tmp/OpenLGTV_BCM.log

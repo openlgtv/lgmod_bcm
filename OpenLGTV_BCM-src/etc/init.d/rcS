@@ -422,8 +422,11 @@ source /etc/rc.d/rc.ywe
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                            | tee -a /var/log/OpenLGTV_BCM.log
 
 # Making nvram copy
-echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd$mtd_nvram partition..."    | tee -a /var/log/OpenLGTV_BCM.log
-cat /dev/mtd$mtd_nvram > /tmp/nvram
+if [ "$mtd_nvram" != "" ]
+then
+    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd$mtd_nvram partition..."    | tee -a /var/log/OpenLGTV_BCM.log
+    cat /dev/mtd$mtd_nvram > /tmp/nvram
+fi
 
 if [ ! -d /mnt/user/www ]
 then
@@ -510,7 +513,6 @@ else
     echo ""                                                    | tee -a /var/log/OpenLGTV_BCM.log
     /lg/lgapp/RELEASE 0
 fi
-
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T"                          | tee -a /var/log/OpenLGTV_BCM.log
 #/bin/sh
