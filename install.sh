@@ -14,6 +14,7 @@ confirmations=0
 #rebooting=0
 rebooting=1
 make_backup=1
+backup_at_home_force=0
 
 # enforce variables from settings file
 if [ -f "/mnt/user/cfg/settings" ]
@@ -82,6 +83,10 @@ lginit_backup=lginit-$backup
 rootfs_backup=rootfs-$backup
 suffix=flashed
 backup2=$suffix-backup
+
+lginit_bck=/home/backup/lginit.bck
+rootfs_bck=/home/backup/rootfs.bck
+
 ver_installed=`cat /etc/ver2 2>/dev/null`
 
 mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
@@ -306,81 +311,111 @@ if [ ! -d "/home/backup" ]
 then
     mkdir -p /home/backup 2>&1 | tee -a $log
 fi
-if [ "$autoupgrade" != "1" -a ! -f "/etc/ver2" -a -z "NEED_TO_ENABLE_IT_WHEN_FINISHED" ]
+# Backup files to store check
+lginit_src="`ls $dir/*-$lginit_backup.sqf 2> /dev/null`"
+rootfs_src="`ls $dir/*-$rootfs_backup.sqf 2> /dev/null`"
+if [ -n "$lginit_src" -a -n "$rootfs_src" ]
+then
+    backup_at_home_force=1
+else
+    lginit_src="`ls $dir/*4_lginit 2> /dev/null`"
+    rootfs_src="`ls $dir/*3_rootfs 2> /dev/null`"
+    if [ -n "$lginit_src" -a -n "$rootfs_src" ]
+    then
+	backup_at_home_force=1
+    fi
+fi
+if [ "$autoupgrade" != "1" -a ! -f "/etc/ver2" -o "$backup_at_home_force" = "1" ]
 then
     # LGINIT backup
-    if [ ! -f "/home/backup/lginit.bck" -a ! -f "/home/backup/lginit.bck.gz" ]
+    if [ ! -f "$lginit_bck" -a ! -f "$lginit_bck.gz" ]
     then
-	lginit_src="`ls $dir/*-$lginit_backup.sqf 2> /dev/null`"
 	if [ -z "$lginit_src" ]
 	then
-	    lginit_src=/dev/mtd4
+	    lginit_src=/dev/mtd$lginit
 	fi
 	echo "Storing lginit partition copy in /home/backup/lginit.img" | tee -a $log
-	sh -c "cat $lginit_src > /home/backup/lginit.bck" > $tmpout 2>&1
+	sh -c "cat $lginit_src > $lginit_bck" > $tmpout 2>&1
 	if [ "$?" -ne "0" ]
 	then
 	    cat $tmpout | tee -a $log
 	    echo "Cannot make current firmware dump from $lginit_src" | tee -a $log
 	    echo "Refusing to flash" | tee -a $log
-	    rm -f /home/backup/lginit.bck 2>&1 | tee -a $log
+	    rm -f $lginit_bck 2>&1 | tee -a $log
 	    exit 1
 	fi
 	# compare dump size
-	if [ "`cat /home/backup/lginit.bck | wc -c`" -ne "$lginit_size" ]
+	if [ "`cat $lginit_bck | wc -c`" -ne "$lginit_size" ]
 	then
 	    echo "Gathered dump from $lginit_src partition has wrong size." | tee -a $log
 	    echo "Refusing to flash" | tee -a $log
-	    rm -f /home/backup/lginit.bck 2>&1 | tee -a $log
+	    rm -f $lginit_bck 2>&1 | tee -a $log
 	    exit 1
 	fi
 	sync
 	# check sqf magic
-	if [ "`head -c4 /home/backup/lginit.bck | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
+	if [ "`head -c4 $lginit_bck | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
 	then
 	    echo "Gathered dump header from $lginit_src is incorrect." | tee -a $log
 	    echo "Refusing to flash" | tee -a $log
-	    rm -f /home/backup/lginit.bck 2>&1 | tee -a $log
+	    rm -f $lginit_bck 2>&1 | tee -a $log
 	    exit 1
 	fi
     fi
     # ROOTFS backup
-    if [ ! -f "/home/backup/rootfs.bck" -a ! -f "/home/backup/rootfs.bck.gz" ]
+    if [ ! -f "$rootfs_bck" -a ! -f "$rootfs_bck.gz" ]
     then
-	rootfs_src="`ls $dir/*-$rootfs_backup.sqf 2> /dev/null`"
 	if [ -z "$rootfs_src" ]
 	then
-	    rootfs_src=/dev/mtd3
+	    rootfs_src=/dev/mtd$mtd
 	fi
 	echo "Storing rootfs partition copy in /home/backup/rootfs.img" | tee -a $log
-	sh -c "cat /dev/mtd3 > /home/backup/rootfs.bck" > $tmpout 2>&1
+	sh -c "cat /dev/mtd3 > $rootfs_bck" > $tmpout 2>&1
 	if [ "$?" -ne "0" ]
 	then
 	    cat $tmpout | tee -a $log
 	    echo "Cannot make current firmware dump from partition /dev/mtd3" | tee -a $log
 	    echo "Refusing to flash" | tee -a $log
-	    rm -f /home/backup/rootfs.bck 2>&1 | tee -a $log
+	    rm -f $rootfs_bck 2>&1 | tee -a $log
 	    exit 1
 	fi
 	# compare dump size
-	if [ "`cat /home/backup/rootfs.bck | wc -c`" -ne "$size" ]
+	if [ "`cat $rootfs_bck | wc -c`" -ne "$size" ]
 	then
 	    echo "Gathered dump from /dev/mtd3 partition has wrong size." | tee -a $log
 	    echo "Refusing to flash" | tee -a $log
-	    rm -f /home/backup/rootfs.bck 2>&1 | tee -a $log
+	    rm -f $rootfs_bck 2>&1 | tee -a $log
 	    exit 1
 	fi
 	sync
 	# check sqf magic
-        if [ "`head -c4 /home/backup/lginit.bck | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
+        if [ "`head -c4 $rootfs_bck | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
 	then
 	    echo "Gathered dump header from /dev/mtd4 partition is incorrect." | tee -a $log
 	    echo "Refusing to flash" | tee -a $log
-	    rm -f /home/backup/rootfs.bck 2>&1 | tee -a $log
+	    rm -f $rootfs_bck 2>&1 | tee -a $log
 	    exit 1
 	fi
     fi
+    # v- not much space gain on rootfs after compressing using gzip or bzip2 using busybox applets
+    #if [ -f "$rootfs_bck" ]
+    #then
+    #	echo "Compressing $rootfs_bck file"  | tee -a $log
+    #	gzip -9 /home/backup/rootfs.bck 2>&1 | tee -a $log
+    #fi
+    #sync
+    #if [ -f "$lginit_bck" ]
+    #then
+    #	echo "Compressing $lginit_bck file"  | tee -a $log
+    #	gzip -9 /home/backup/lginit.bck 2>&1 | tee -a $log
+    #fi
+    sync
 fi
+
+echo "Making cache cleanup..." | tee -a $log
+echo 3 > /proc/sys/vm/drop_caches
+sleep 1
+sync
 
 echo "Making backup from /dev/mtd$mtd to $dir/$file-$rootfs_backup.sqf" | tee -a $log
 #cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf 2>$tmpout

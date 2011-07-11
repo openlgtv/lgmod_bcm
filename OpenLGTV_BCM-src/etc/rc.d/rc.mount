@@ -142,13 +142,14 @@ if [ "$mtd_data" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: data - mtdblock$mtd_data in /mnt/lg/cmn_data"                   | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime                             >> /tmp/OpenLGTV_BCM.log 2>&1
-    if [ "$?" -ne "0" ]
-    then
-	echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd$mtd_data - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
-	flash_eraseall /dev/mtd$mtd_data                                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-	sync
-	mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime              2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    fi
+    # v- /home partition is rather important so it shouldn't be erased
+    #if [ "$?" -ne "0" ]
+    #then
+    #	echo "OpenLGTV_BCM-WARNING: problem mounting /dev/mtd$mtd_data - trying to erase it and mount again..." | tee -a /tmp/OpenLGTV_BCM.log
+    #	flash_eraseall /dev/mtd$mtd_data                                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    #	sync
+    #	mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime              2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    #fi
 fi
 
 echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/lg/cmn_data /mnt/flash/data"                      | tee -a /tmp/OpenLGTV_BCM.log

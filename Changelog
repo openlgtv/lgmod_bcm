@@ -228,4 +228,5 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: build and installation scripts can now handle 2011 BCM model images
     * ADD: support for KR 2010 BCM models
     * ADD: /scripts/readspeedtest.sh script from mmm4m5m for read transfer rate measurement (thanks lprot for measurement hint)
+    * ADD: storing rootfs and lginit backups at installation into /home/backup/{rootfs,lginit}.bck files
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
