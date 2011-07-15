@@ -4,7 +4,7 @@
 # Source code released under GPL License
 
 export listen_port=8888
-export usleep_time=100
+export usleep_time=80
 
 export id=1
 while true

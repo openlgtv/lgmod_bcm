@@ -6,26 +6,34 @@
 
 # it's still better to set web browser max connections to 1 to minimalize risk of connection drops
 
+export wait_time=4
+export connect_port=80
+
 for linex in request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12
 do
     read -t 1 $linex
 done
 
 #connect_to=`echo $host | grep 'Host:' | awk '{print $2}' | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
-connect_to=`echo $host | awk '{print $2}' | tr -d '\r'`
+#connect_to=`echo $host | awk '{print $2}' | tr -d '\r'`
+connect_to=`/bin/echo -e "$host\n$line3\n$line4" | grep 'Host:' | awk '{print $2}' | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
 
 echo "ID $id CONNECT $connect_to" >&2
 
 #/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | sed -e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' -e 's/\(Accept-Encoding:\).*/\1/g' | tee -a $log | busybox nc -w2 $connect_to 80 | tee -a $log
 /bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | \
-    busybox sed -e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
+    busybox sed  \
 	-e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' \
-	-e 's/\(Accept-Encoding:\).*/\1/g' | \
-    busybox nc -w5 $connect_to 80 2>&1 | \
-    busybox sed -e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
-    \n\
+	-e 's#^POST http://[A-Za-z0-9\.\-]*/\(.*\)#POST /\1#g' \
+	-e 's#HTTP/1.1#HTTP/1.0#g' \
+	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
+	-e 's/\(Connection:\).*/\1 close/g' | \
+    busybox nc -w$wait_time $connect_to $connect_port | \
+    busybox sed \
+	-e 's/\(Content-Length:\).*/\1/' \
+	-e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
+	-e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
     	<script type='text/javascript'>\n\
-\n\
 	//******** MOBILE PHONE-STYLE KEYPAD *********\n\
 	var keys = new Array();\n\
 \n\
@@ -35,7 +43,7 @@ echo "ID $id CONNECT $connect_to" >&2
 \n\
 	keys['1'] = new Object();\n\
 	keys['1'].ctr = 0;\n\
-	keys['1'].char = ['.',':','/','1',',','@','\\','\$','%','\#'];\n\
+	keys['1'].char = ['.',':','/','1',',','@','\\\\\\\','\$','%','\#'];\n\
 \n\
 	keys['2'] = new Object();\n\
 	keys['2'].ctr = 0;\n\
@@ -77,10 +85,9 @@ echo "ID $id CONNECT $connect_to" >&2
 	function keypad(num)\n\
 	{\n\
 	  var currFocusedElement = document.activeElement;\n\
-	 \n\
 	  if (currFocusedElement.type == 'text' || currFocusedElement.type == 'textarea')\n\
 		  {\n\
-		  if (prevNum!=null && prevNum!=num)\n\
+		  if (prevNum!=null \&\& prevNum!=num)\n\
 			{\n\
 			 append=true;\n\
 			}\n\
@@ -105,7 +112,6 @@ echo "ID $id CONNECT $connect_to" >&2
 		  timer=setTimeout(function(){append=true;}, 2000);\n\
 		  }\n\
 	}\n\
-\n\
 \n\
 	//******** END OF MOBILE PHONE-STYLE KEYPAD *********\n\
 \n\
@@ -243,12 +249,9 @@ echo "ID $id CONNECT $connect_to" >&2
 				}\n\
 			}catch(Exception){}\n\
 		}\n\
-		\n\
 \n\
 document.onkeydown = check;\n\
 //window.onload = OnLoadSetCurrent;\n\
-\n\
-\n\
 \n\
 	function BackSpace()\n\
 		{\n\
@@ -258,9 +261,5 @@ document.onkeydown = check;\n\
 		}\n\
 		\n\
 		document.defaultAction = true;\n\
-\n\
-\n\
 	</script>\n\
-\n\
     #"
-
