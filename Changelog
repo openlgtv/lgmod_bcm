@@ -229,4 +229,5 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: support for KR 2010 BCM models
     * ADD: /scripts/readspeedtest.sh script from mmm4m5m for read transfer rate measurement (thanks lprot for measurement hint)
     * ADD: storing rootfs and lginit backups at installation into /home/backup/{rootfs,lginit}.bck files
+    * ADD: web proxy script for JavaScript code injection to improve Internet Browser (work in progress)
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
