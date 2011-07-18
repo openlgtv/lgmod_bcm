@@ -6,29 +6,85 @@
 
 # it's still better to set web browser max connections to 1 to minimalize risk of connection drops
 
-export wait_time=4
-export connect_port=80
+[ -z "$proxy_wait_time" ]    && proxy_wait_time=10
+[ -z "$proxy_connect_port" ] && proxy_connect_port=80
+[ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
 
-for linex in request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12
+read_lines="request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12 line13 line14 line15 line16 line17 line18 line19 line20"
+
+#for linex in request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12
+for linex in `eval echo $read_lines`
 do
     read -t 1 $linex
+    content=$(eval echo "$`eval echo $linex`")
+    if [ "$proxy_log_debug" -ge "2" ]
+    then
+	echo `echo $content` >&2
+    fi
+    if [ "`echo $content | awk '{print $1}'`" = "Content-Length:" ]
+    then
+	content_length="`echo $content | awk '{print $2}' | tr -d '\r'`"
+	if [ "$proxy_log_debug" -ge "1" ]
+	then
+	    echo "ID $id CONTENT-LENGTH: $content_length" >&2
+	fi
+    fi
+    if [ "`echo $content | wc -w`" = "0" ]
+    then
+	if [ "$content_length" != "" ]
+	then
+	    read -n $content_length content_post
+	fi
+	break
+    fi
 done
 
 #connect_to=`echo $host | grep 'Host:' | awk '{print $2}' | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
 #connect_to=`echo $host | awk '{print $2}' | tr -d '\r'`
 connect_to=`/bin/echo -e "$host\n$line3\n$line4" | grep 'Host:' | awk '{print $2}' | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
+connect_to_port_test=`echo $connect_to | busybox awk -F: '{print $2}'"`
+connect_to=`echo $connect_to | busybox awk -F: '{print $1}'"`
 
-echo "ID $id CONNECT $connect_to" >&2
+if [ -n "$connect_to_port_test" ]
+then
+    connect_to_port="$connect_to_port_test"
+else
+    connect_to_port="$proxy_connect_port"
+fi
+
+if [ "$proxy_log_debug" -ge "1" ]
+then
+    echo "ID $id CONNECT $connect_to $connect_to_port" >&2
+fi
+#	-e 's#HTTP/1.1#HTTP/1.0#g' \
+#	-e 's/\(Accept-Encoding:\).*/\1 identity`/bin/echo -e "\r\n"`Transfer-Encoding: identity`/bin/echo -e "\r"/g' \
+#	-e 's/\(Accept-Encoding:\).*/\1 identity\nTransfer-Encoding: identity\n/g' \
+#	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
+#	-e 's/\(Accept-Encoding:\).*/\1 identity\nTransfer-Encoding: identity/g' \
 
 #/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | sed -e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' -e 's/\(Accept-Encoding:\).*/\1/g' | tee -a $log | busybox nc -w2 $connect_to 80 | tee -a $log
-/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | \
+#/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | \
+/bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi) | \
+    sed 's/^ //g' | \
+    if [ "$proxy_log_debug" -ge "3" ]
+    then
+	tee -a $proxy_log_file
+    else
+	cat
+    fi | \
     busybox sed  \
 	-e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' \
 	-e 's#^POST http://[A-Za-z0-9\.\-]*/\(.*\)#POST /\1#g' \
 	-e 's#HTTP/1.1#HTTP/1.0#g' \
-	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
-	-e 's/\(Connection:\).*/\1 close/g' | \
-    busybox nc -w$wait_time $connect_to $connect_port | \
+	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
+	-e 's/\(Connection:\).*/\1 close/g' | \
+    if [ "$proxy_log_debug" -ge "3" ]
+    then
+	tee -a $proxy_log_file
+    else
+	cat
+    fi | \
+    busybox nc -w$proxy_wait_time $connect_to $connect_to_port | \
     busybox sed \
 	-e 's/\(Content-Length:\).*/\1/' \
 	-e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
@@ -262,4 +318,10 @@ document.onkeydown = check;\n\
 		\n\
 		document.defaultAction = true;\n\
 	</script>\n\
-    #"
+    #" | \
+if [ "$proxy_log_debug" -ge "3" ]
+then
+    tee -a $proxy_log_file
+else
+    cat
+fi
