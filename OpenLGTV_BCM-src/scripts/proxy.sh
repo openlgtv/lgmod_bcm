@@ -64,7 +64,7 @@ fi
 
 #/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | sed -e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' -e 's/\(Accept-Encoding:\).*/\1/g' | tee -a $log | busybox nc -w2 $connect_to 80 | tee -a $log
 #/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | \
-/bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi) | \
+/bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi; /bin/echo -e "\r\n") | \
     sed 's/^ //g' | \
     if [ "$proxy_log_debug" -ge "3" ]
     then
