@@ -231,3 +231,5 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: storing rootfs and lginit backups at installation into /home/backup/{rootfs,lginit}.bck files
     * ADD: web proxy script for JavaScript code injection to improve Internet Browser (work in progress)
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
+    * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
+    * CHANGE: partition mounting based on partition names instead of static mtd numbers - this should improve compatibility even with unknown models

@@ -557,6 +557,8 @@ then
 	sync
     fi
 fi
+# trying to read reboot path to make it preloaded for case of rootfs content changed
+ls -al `which reboot` > /dev/null 2>&1
 # making second dump
 #cat /dev/mtd$mtd > $dir/$file-$backup2.sqf 2>$tmpout
 sh -c "cat /dev/mtd$mtd > $dir/$file-$backup2.sqf" > $tmpout 2>&1

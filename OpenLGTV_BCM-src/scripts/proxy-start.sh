@@ -1,7 +1,9 @@
 #!/bin/ash
-# OpenLGTV BCM script proxy-respawner.sh by xeros
-# Proxy script for JavaScript code injection respawner
+# OpenLGTV BCM script proxy-start.sh by xeros
+# Proxy script for JavaScript code injection starting
 # Source code released under GPL License
+
+# this script is not finished, currently it's better to use proxy-respawner.sh instead
 
 # proxy_log_debug values:
 # 0 - no logging at all
@@ -13,8 +15,8 @@
 [ -z "$proxy_usleep_time" ]  && proxy_usleep_time=80
 #[ -z "$proxy_log_debug" ]    && proxy_log_debug=3
 [ -z "$proxy_log_debug" ]    && proxy_log_debug=0
-[ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
-#[ -z "$proxy_log_file" ]     && proxy_log_file=log.log
+#[ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
+[ -z "$proxy_log_file" ]     && proxy_log_file=log.log
 [ -z "$proxy_wait_time" ]    && proxy_wait_time=4
 [ -z "$proxy_connect_port" ] && proxy_connect_port=80
 #[ -z "$proxy_sh" ]           && proxy_sh=./proxy.sh
@@ -23,10 +25,14 @@
 export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_wait_time proxy_connect_port proxy_log_file
 
 export id=1
+echo IDX $id SPAWN >&2
 #busybox nc -l -p $proxy_listen_port -e $proxy_sh
-#if [ "$proxy_log_debug" -ge "1" ]; then echo ID $id EXIT; fi
+busybox nc -l -p $proxy_listen_port -e ./proxy-respawner.sh
+exit 0
 
-#echo Running loop >&2
+if [ "$proxy_log_debug" -ge "1" ]; then echo ID $id EXIT; fi
+export id=$(($id+1))
+
 while true
 do
 	if [ -z "`busybox netstat -t -l -n | grep :$proxy_listen_port`" ]
@@ -37,12 +43,7 @@ do
 		fi
 		$(busybox nc -l -l -p $proxy_listen_port -e $proxy_sh; if [ "$proxy_log_debug" -ge "1" ]; then echo echo ID $id EXIT; fi) &
 		export id=$(($id+1))
-		# TODO: better check and quicker start of new connection listeners without more resources usage
+		# TODO: better check and quicker start of new connection listeners
 		busybox usleep $proxy_usleep_time
 	fi
-done &
-#echo After loop >&2
-
-#echo ID $id SPAWN >&2
-##$proxy_sh; if [ "$proxy_log_debug" -ge "1" ]; then echo echo ID $id EXIT >&2; fi
-##export id=$(($id+1))
+done
