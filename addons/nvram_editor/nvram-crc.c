@@ -20,11 +20,14 @@
  *    Algorithm    = bit-by-bit-fast
  *****************************************************************************/
 #include "pycrc_stdout.h"     /* include the header file generated with pycrc */
+/*
+#include "u_types.h"
+#include "nvm.h"
+*/
 #include "nvram_map.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
 
 /**
  * Update the crc value with new data.
@@ -65,9 +68,11 @@ crc_t crc_update(crc_t crc, const unsigned char *data, size_t data_len)
 #include <stdbool.h>
 #include <string.h>
 
+
 //static char str[256] = "123456789";
 //unsigned char str[133120];
-unsigned char str[NVRAM_SIZE];
+//unsigned char str[NVRAM_SIZE];
+unsigned char str[NVRAM_SIZE2];
 //unsigned char str_out[1048576];
 unsigned char str_out[NVRAM_FULL_SIZE];
 unsigned char num1a[1];
@@ -80,10 +85,10 @@ FILE *foutput;
 int ninput;
 int noutput;
 int write_ofile=0;
-int debug_status=0;
-int debug_status_new=0;
+int debug_status=9; // lets pickup wrong values at start
+int debug_status_new=9;
 char debug_status_str[]="0";
-int baudrate=0;
+int baudrate=9;
 int baudrate_new=9;
 char baudrate_str[]="0";
 int recalculate_crc=0;
@@ -94,7 +99,6 @@ static bool verbose = false;
 
 void print_params(void);
 static int get_config(int argc, char *argv[]);
-
 
 static int get_config(int argc, char *argv[])
 {
@@ -177,6 +181,22 @@ char* substring(const char* strn, size_t begin, size_t len)
   return strndup(strn + begin, len);
 }
 
+int get_offset(int in_offset)
+{
+    return in_offset+(((in_offset/NVRAM_BLOCK_DATA_SIZE)+1)*NVRAM_BLOCK_HEADER_SIZE);
+}
+
+int get_size(int in_size)
+{
+    if ( in_size % NVRAM_BLOCK_DATA_SIZE == 0 )
+    {
+	return in_size+((in_size/NVRAM_BLOCK_DATA_SIZE)*NVRAM_BLOCK_HEADER_SIZE);
+    } else {
+	return in_size+(((in_size/NVRAM_BLOCK_DATA_SIZE)+1)*NVRAM_BLOCK_HEADER_SIZE);
+    }
+}
+
+
 /**
  * C main function.
  *
@@ -215,7 +235,76 @@ int main(int argc, char *argv[])
     debug_status=str[NVRAM_DEBUG_STATUS];
     baudrate=str[NVRAM_BAUDRATE];
     
-    if ((debug_status < 3) || (debug_status > 5) || (baudrate > 7))
+    char model[NVRAM_MODEL_LEN];
+    char serial[NVRAM_SERIAL_LEN];
+
+    int nr;
+    for (nr = 0; nr <= NVRAM_MODEL_LEN; nr++)
+    {
+	model[nr]=str[NVRAM_MODEL+nr];
+    }
+    printf("Model name:       %s\n", model);
+
+    for (nr = 0; nr <= NVRAM_SERIAL_LEN; nr++)
+    {
+	serial[nr]=str[NVRAM_SERIAL+nr];
+    }
+    printf("Serial number:    %s\n", serial);
+    
+    
+    /*
+    printf("Debug status offset: %x\n", NVRAM_DEBUG_STATUS-((NVRAM_DEBUG_STATUS/NVRAM_BLOCK_DATA_SIZE)*NVRAM_BLOCK_HEADER_SIZE));
+    printf("Debug status offset: %x\n", get_offset(NVRAM_DEBUG_STATUS));
+    */
+    
+    if (debug_status < 3)
+    {
+	printf("Platform:         MSTAR Saturn7\n");
+    } else {
+	if (debug_status < 6)
+	{
+	    printf("Platform:         Broadcom BCM3549/3556\n");
+	} else {
+	    printf("Platform:         UNKNOWN!\n");
+	}
+    }
+/*
+printf(" NVM_ID_BASE : \t\t 0x%x \t\t %i \t %i\n", NVM_ID_BASE, NVM_ID_BASE, NVM_ID_SIZE );
+printf(" NVM_HEADER_BASE : \t 0x%x \t\t %i \t %i\n", NVM_HEADER_BASE, NVM_HEADER_BASE, NVM_HEADER_SIZE );
+printf(" TNVM_MAGIC_BASE : \t 0x%x \t\t %i \t %i\n", TNVM_MAGIC_BASE, TNVM_MAGIC_BASE, TNVM_MAGIC_SIZE );
+printf(" SYS_DB_BASE : \t\t 0x%x \t\t %i \t %i\n", SYS_DB_BASE, SYS_DB_BASE, SYS_DB_SIZE );
+printf(" ANA_DB_BASE : \t\t 0x%x \t\t %i \t %i\n", ANA_DB_BASE, ANA_DB_BASE, ANA_DB_SIZE );
+printf(" TOOL_OPTION_DB_BASE : \t 0x%x \t\t %i\n", TOOL_OPTION_DB_BASE, TOOL_OPTION_DB_BASE );
+printf(" FACTORY_DB_BASE : \t 0x%x \t\t %i\n", FACTORY_DB_BASE, FACTORY_DB_BASE );
+printf(" UI_DB_BASE : \t\t 0x%x \t\t %i\n", UI_DB_BASE, UI_DB_BASE );
+printf(" UI_EXPERT_DB_BASE : \t 0x%x \t %i\n", UI_EXPERT_DB_BASE, UI_EXPERT_DB_BASE );
+printf(" CH_DB_BASE : \t\t 0x%x \t %i\n", CH_DB_BASE, CH_DB_BASE );
+printf(" BT_DB_BASE : \t\t 0x%x \t %i\n", BT_DB_BASE, BT_DB_BASE );
+printf(" EMP_DB_BASE : \t\t 0x%x \t %i\n", EMP_DB_BASE, EMP_DB_BASE );
+printf(" ACAP_DB_BASE : \t 0x%x \t %i\n", ACAP_DB_BASE, ACAP_DB_BASE );
+printf(" THX_DB_BASE : \t\t 0x%x \t %i\n", THX_DB_BASE, THX_DB_BASE );
+printf(" NVRAM_SIZE : \t\t 0x%x \t %i\n", NVRAM_SIZE, NVRAM_SIZE );
+
+printf("NVRAM OFFSETS:\n");
+
+printf(" NVM_ID_BASE : \t\t 0x%x \t\t %i \t %i\n", get_offset(NVM_ID_BASE), NVM_ID_BASE, NVM_ID_SIZE );
+printf(" NVM_HEADER_BASE : \t 0x%x \t\t %i \t %i\n", get_offset(NVM_HEADER_BASE), NVM_HEADER_BASE, NVM_HEADER_SIZE );
+printf(" TNVM_MAGIC_BASE : \t 0x%x \t\t %i \t %i\n", get_offset(TNVM_MAGIC_BASE), TNVM_MAGIC_BASE, TNVM_MAGIC_SIZE );
+printf(" SYS_DB_BASE : \t\t 0x%x \t\t %i \t %i\n", get_offset(SYS_DB_BASE), SYS_DB_BASE, SYS_DB_SIZE );
+printf(" ANA_DB_BASE : \t\t 0x%x \t\t %i \t %i\n", get_offset(ANA_DB_BASE), ANA_DB_BASE, ANA_DB_SIZE );
+printf(" TOOL_OPTION_DB_BASE : \t 0x%x \t\t %i\n", get_offset(TOOL_OPTION_DB_BASE), TOOL_OPTION_DB_BASE );
+printf(" FACTORY_DB_BASE : \t 0x%x \t\t %i\n", get_offset(FACTORY_DB_BASE), FACTORY_DB_BASE );
+printf(" UI_DB_BASE : \t\t 0x%x \t\t %i\n", get_offset(UI_DB_BASE), UI_DB_BASE );
+printf(" UI_EXPERT_DB_BASE : \t 0x%x \t %i\n", get_offset(UI_EXPERT_DB_BASE), UI_EXPERT_DB_BASE );
+printf(" CH_DB_BASE : \t\t 0x%x \t %i\n", get_offset(CH_DB_BASE), CH_DB_BASE );
+printf(" BT_DB_BASE : \t\t 0x%x \t %i\n", get_offset(BT_DB_BASE), BT_DB_BASE );
+printf(" EMP_DB_BASE : \t\t 0x%x \t %i\n", get_offset(EMP_DB_BASE), EMP_DB_BASE );
+printf(" ACAP_DB_BASE : \t 0x%x \t %i\n", get_offset(ACAP_DB_BASE), ACAP_DB_BASE );
+printf(" THX_DB_BASE : \t\t 0x%x \t %i\n", get_offset(THX_DB_BASE), THX_DB_BASE );
+printf(" NVRAM_SIZE : \t\t 0x%x \t %i\n", get_size(NVRAM_SIZE), NVRAM_SIZE );
+printf(" NVMDRV_TOTAL_SIZE : \t\t 0x%x \t %i \t %i\n", get_size(NVMDRV_TOTAL_SIZE), get_size(NVMDRV_TOTAL_SIZE), NVMDRV_TOTAL_SIZE );
+*/
+    if ((debug_status > 5) || (baudrate > 7))
     {
 	printf("NVRAM DUMP IS WRONG!\nPoweroff and poweron TV to get good one (do not use reboot) or use yours older NVRAM dump!\n");
 	return -1;
@@ -226,6 +315,7 @@ int main(int argc, char *argv[])
 
     printf("Debug status:     %s (%i)\n", *debug_status_type, debug_status);
     printf("Baudrate:         %s bps (%i)\n", *baudrate_type, baudrate);
+
 
     crc = crc_init();
     crc = crc_update(crc, (unsigned char *)str, sizeof(str));
