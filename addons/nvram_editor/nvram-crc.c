@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 {
 
     printf("Broadcom platform based LG Digital TV NVRAM editor\n");
-    printf("Version 0.0.2 by xeros (openlgtv.org.ru) 22.07.2011\n\n");
+    printf("Version 0.0.3 by xeros (openlgtv.org.ru) 28.07.2011\n\n");
 
     crc_t crc;
 
@@ -343,9 +343,12 @@ printf(" NVMDRV_TOTAL_SIZE : \t\t 0x%x \t %i \t %i\n", get_size(NVMDRV_TOTAL_SIZ
     printf("\n");
     printf("Read CRC:         %x %x %x %x\n", *num1a, *num2a, *num3a, *num4a);
     printf("Calculated CRC:   %s %s %s %s\n", num1, num2, num3, num4);
-    char crc1[8], crc2[8];
+    char crc1[9], crc2[9];
     int ret  = sprintf(crc1, "%x%x%x%x", *num1a, *num2a, *num3a, *num4a);
     int ret2 = sprintf(crc2, "%s%s%s%s", num1, num2, num3, num4);
+    //printf("Read CRC:         %s\n", crc1);
+    //printf("Calculated CRC:   %s\n", crc2);
+    //printf("ret, ret2: %i, %i\n",ret,ret2);
     if (strcmp(crc1, crc2))
     {
 	printf("\nChecksum is WRONG!\n\n");
