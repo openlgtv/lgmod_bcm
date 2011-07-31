@@ -325,3 +325,9 @@ then
 else
     cat
 fi
+
+if [ ! -f "$proxy_lock_file" ]
+then
+    echo "`basename $0`: Proxy lock file ($proxy_lock_file) removed - exiting!" >&2
+    exit 0
+fi
