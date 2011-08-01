@@ -258,6 +258,8 @@ if [ "$mtd_ywedata" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: ywedata - mtdblock$mtd_ywedata in /mnt/widget.data"             | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_ywedata /mnt/widget.data                          2>&1 | tee -a /tmp/OpenLGTV_BCM.log # US fw lginit does not handle erasing ywedata if it's not mountable
+    echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/widget.data /home"                            | tee -a /tmp/OpenLGTV_BCM.log
+    mount --bind /mnt/widget.data /home                                                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log # US models do not have /home mounted, lets use ywedata as /home instead
 fi
 
 if [ "$mtd_preloaded" != "" -a "$mtd_kids" != "" -a "$mtd_story" != "" ]
