@@ -6,7 +6,8 @@
 
 # it's still better to set web browser max connections to 1 to minimalize risk of connection drops
 
-[ -z "$proxy_wait_time" ]    && proxy_wait_time=10
+# those vars should be set by proxy-start.sh or proxy-respawner.sh
+[ -z "$proxy_wait_time" ]    && proxy_wait_time=4
 [ -z "$proxy_connect_port" ] && proxy_connect_port=80
 [ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
 

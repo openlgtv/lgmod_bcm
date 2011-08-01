@@ -170,3 +170,10 @@ else
 	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                   | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi
+
+# TODO: improve that later...
+echo "OpenLGTV_BCM-INFO: running proxy in background ..."
+/scripts/proxy-start.sh &
+
+echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 30s delay ..."
+(sleep 30; /scripts/links_icons_preload.sh) &

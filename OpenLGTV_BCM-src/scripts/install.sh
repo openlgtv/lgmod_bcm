@@ -8,6 +8,15 @@
 # if 'rebooting' is set to '1' then TV is autorebooted after after successful flashing
 # if 'make_backup' is set to '1' then installer makes full backup of firmware if OpenLGTV BCM haven't been installed yet
 
+# TODO - ensure that env is stable after erasing rootfs:
+# - make installation in chrooted env:
+# # mkdir /tmp/rootfs
+# # mount /tmp/OpenLGTV_BCM*sqf /tmp/rootfs
+# # for i in `cat /proc/mounts | awk '{print $2}' | grep -v "^/$"`; do mount --bind $i /tmp/rootfs$i; done
+# # chroot /tmp/rootfs /tmp/install.sh
+# - make erase lginit first, then rootfs (?)
+# or - copy /bin/busybox to /tmp/busybox and use it as prefix for commands after rootfs erase
+
 # vars set
 #confirmations=1
 confirmations=0

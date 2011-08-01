@@ -11,18 +11,18 @@
 # 2 - logging whole request on stderr
 # 3 - logging request and answer to file
 
-[ -z "$proxy_listen_port" ]  && proxy_listen_port=8888
-[ -z "$proxy_usleep_time" ]  && proxy_usleep_time=80
-#[ -z "$proxy_log_debug" ]   && proxy_log_debug=3
-[ -z "$proxy_log_debug" ]    && proxy_log_debug=0
-#[ -z "$proxy_log_file" ]    && proxy_log_file=/var/log/proxy.log
-[ -z "$proxy_log_file" ]     && proxy_log_file=log.log
-[ -z "$proxy_lock_file" ]    && proxy_lock_file=/var/run/proxy.lock
-[ -z "$proxy_wait_time" ]    && proxy_wait_time=4
-[ -z "$proxy_connect_port" ] && proxy_connect_port=80
-#[ -z "$proxy_sh" ]          && proxy_sh=./proxy.sh
-[ -z "$proxy_sh" ]           && proxy_sh=/scripts/proxy.sh
-[ -z "$proxy_respawner" ]    && proxy_sh=/scripts/proxy-respawner.sh
+[ -z "$proxy_connect_port" ]      && proxy_connect_port=80
+[ -z "$proxy_listen_port" ]       && proxy_listen_port=8888
+[ -z "$proxy_listen_port_hex" ]   && proxy_listen_port_hex=22B8
+[ -z "$proxy_usleep_time" ]       && proxy_usleep_time=80
+[ -z "$proxy_wait_time" ]         && proxy_wait_time=4
+[ -z "$proxy_respawn_run_check" ] && proxy_respawn_run_check=0
+#[ -z "$proxy_log_debug" ]        && proxy_log_debug=3
+[ -z "$proxy_log_debug" ]         && proxy_log_debug=0
+[ -z "$proxy_log_file" ]          && proxy_log_file=/var/log/proxy.log
+[ -z "$proxy_lock_file" ]         && proxy_lock_file=/var/run/proxy.lock
+[ -z "$proxy_sh" ]                && proxy_sh=/scripts/proxy.sh
+[ -z "$proxy_respawner" ]         && proxy_sh=/scripts/proxy-respawner.sh
 
 export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_wait_time proxy_connect_port proxy_log_file proxy_lock_file
 
@@ -38,7 +38,6 @@ fi
 touch $proxy_lock_file
 
 busybox nc -l -p $proxy_listen_port -e $proxy_sh
-#busybox nc -l -p $proxy_listen_port -e ./proxy-respawner.sh
 
 #echo "respawner"
 
