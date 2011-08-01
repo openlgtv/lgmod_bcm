@@ -22,9 +22,9 @@
 [ -z "$proxy_log_file" ]          && proxy_log_file=/var/log/proxy.log
 [ -z "$proxy_lock_file" ]         && proxy_lock_file=/var/run/proxy.lock
 [ -z "$proxy_sh" ]                && proxy_sh=/scripts/proxy.sh
-[ -z "$proxy_respawner" ]         && proxy_sh=/scripts/proxy-respawner.sh
+[ -z "$proxy_respawner" ]         && proxy_respawner=/scripts/proxy-respawner.sh
 
-export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_wait_time proxy_connect_port proxy_log_file proxy_lock_file
+export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_wait_time proxy_connect_port proxy_log_file proxy_lock_file proxy_respawn_run_check
 
 export id=1
 #echo IDX $id SPAWN >&2
