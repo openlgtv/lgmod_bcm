@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script v.1.5 by xeros
+# OpenLGTV BCM installation script v.1.6 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -59,15 +59,20 @@ fi
 
 file=OpenLGTV_BCM-GP2B-v$ver
 file2011=OpenLGTV_BCM-GP3B-v$ver
-size=3145728
-size2011=4194304
-mtd=3
 magic=hsqs
 magic_clean=377377377377
-lginit=4
+mtd_rootfs=3
+mtd_lginit=4
+size=3145728
+size2011=4194304
 lginit_size=262144
 lginit_size2011=524288
 platform=GP2B
+
+proxy_lock_file=/var/run/proxy.lock
+KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd djmount'
+	# LG: addon_mgr stagecraft konfabulator lb4wk
+	# OpenLGTV BCM: nc udhcpc telnetd httpd [ntpd tcpsvd djmount]
 
 # 2011 BCM model check
 if [ "`cat /etc/ver | awk -F, '{print $1}'`" = "$supported_rootfs_ver2" ]
@@ -113,7 +118,7 @@ if [ "$?" -ne "0" ]
 then
     echo "WARNING: Could not create flashing log in $dir, the partition might not be writable."
     echo "Trying to create log in $tmp/ instead..."
-    echo "This will be path for current firmware /dev/mtd$mtd partition backup, too."
+    echo "This will be path for current firmware /dev/mtd$mtd_rootfs partition backup, too."
     dir=$tmp
     log=$dir/$file.log
     touch $log
@@ -249,11 +254,11 @@ then
 fi
 cat $tmpout | tee -a $log
 # char and block devices search
-if [ -c /dev/mtd$mtd -a -b /dev/mtdblock$mtd ]
+if [ -c /dev/mtd$mtd_rootfs -a -b /dev/mtdblock$mtd_rootfs ]
 then
-    echo "/dev/mtd$mtd and /dev/mtdblock$mtd exist... - good" | tee -a $log
+    echo "/dev/mtd$mtd_rootfs and /dev/mtdblock$mtd_rootfs exist... - good" | tee -a $log
 else
-    echo "Did you run this installation script in TV? Looks like the device dont have the proper /dev/mtd$mtd and /dev/mtdblock$mtd devices." | tee -a $log
+    echo "Did you run this installation script in TV? Looks like the device dont have the proper /dev/mtd$mtd_rootfs and /dev/mtdblock$mtd_rootfs devices." | tee -a $log
     exit 1
 fi
 if [ "$development" = "1" -a ! -f "/mnt/user/lock/development-logs-dumped.lock" ]
@@ -283,8 +288,8 @@ then
 	cat /mnt/addon/contents/config.xml > $devel_dir/mnt_addon_contents_config.xml
 	cat /mnt/addon/bin/addon_mgr.bat > $devel_dir/mnt_addon_bin_addon_mgr.bat
 	cat /mnt/addon/browser/browser_application.txt > $devel_dir/mnt_addon_browser_browser_application.txt
-	cat /dev/mtd$mtd > $devel_dir/mtd$mtd.rootfs.dump
-	cat /dev/mtd$lginit > $devel_dir/mtd$lginit.lginit.dump
+	cat /dev/mtd$mtd_rootfs > $devel_dir/mtd$mtd_rootfs.rootfs.dump
+	cat /dev/mtd$mtd_lginit > $devel_dir/mtd$mtd_lginit.lginit.dump
 	free > $devel_dir/free2.log
 	#cp -r /mnt/addon $devel_dir > /dev/null 2>&1
 	#cp -r /mnt/browser $devel_dir > /dev/null 2>&1
@@ -302,15 +307,15 @@ then
     echo "OpenLGTV BCM is not installed and no changes have been made to yours TV firmware" | tee -a $log
     exit 1
 fi
-if [ -z "`cat /proc/mtd | grep ^mtd$mtd: | grep rootfs`" ]
+if [ -z "`cat /proc/mtd | grep ^mtd$mtd_rootfs: | grep rootfs`" ]
 then
-    echo "ERROR: /dev/mtd$mtd IS NOT rootfs parition, please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
+    echo "ERROR: /dev/mtd$mtd_rootfs IS NOT rootfs parition, please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
     echo "OpenLGTV BCM is not installed and no changes have been made to yours TV firmware" | tee -a $log
     exit 1
 fi
-if [ -z "`cat /proc/mtd | grep ^mtd$lginit: | grep lginit`" ]
+if [ -z "`cat /proc/mtd | grep ^mtd$mtd_lginit: | grep lginit`" ]
 then
-    echo "ERROR: /dev/mtd$lginit IS NOT lginit parition, please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
+    echo "ERROR: /dev/mtd$mtd_lginit IS NOT lginit parition, please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
     echo "OpenLGTV BCM is not installed and no changes have been made to yours TV firmware" | tee -a $log
     exit 1
 fi
@@ -341,7 +346,7 @@ then
     then
 	if [ -z "$lginit_src" ]
 	then
-	    lginit_src=/dev/mtd$lginit
+	    lginit_src=/dev/mtd$mtd_lginit
 	fi
 	echo "Storing lginit partition copy in /home/backup/lginit.img" | tee -a $log
 	sh -c "cat $lginit_src > $lginit_bck" > $tmpout 2>&1
@@ -376,7 +381,7 @@ then
     then
 	if [ -z "$rootfs_src" ]
 	then
-	    rootfs_src=/dev/mtd$mtd
+	    rootfs_src=/dev/mtd$mtd_rootfs
 	fi
 	echo "Storing rootfs partition copy in /home/backup/rootfs.img" | tee -a $log
 	sh -c "cat /dev/mtd3 > $rootfs_bck" > $tmpout 2>&1
@@ -426,20 +431,20 @@ echo 3 > /proc/sys/vm/drop_caches
 sleep 1
 sync
 
-echo "Making backup from /dev/mtd$mtd to $dir/$file-$rootfs_backup.sqf" | tee -a $log
+echo "Making backup from /dev/mtd$mtd_rootfs to $dir/$file-$rootfs_backup.sqf" | tee -a $log
 #cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf 2>$tmpout
 sh -c "cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf" > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
-    echo "Cannot make current firmware dump from partition /dev/mtd$mtd" | tee -a $log
+    echo "Cannot make current firmware dump from partition /dev/mtd$mtd_rootfs" | tee -a $log
     echo "Refusing to flash" | tee -a $log
     exit 1
 fi
 # compare dump size
 if [ "`cat $dir/$file-$rootfs_backup.sqf | wc -c`" -ne "$size" ]
 then
-    echo "Gathered dump from /dev/mtd$mtd partition has wrong size." | tee -a $log
+    echo "Gathered dump from /dev/mtd$mtd_rootfs partition has wrong size." | tee -a $log
     echo "Refusing to flash" | tee -a $log
     exit 1
 fi
@@ -449,7 +454,7 @@ sync
 #if [ "`head -c4 $dir/$file-$rootfs_backup.sqf`" != "$magic" ]
 if [ "`head -c4 $dir/$file-$rootfs_backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
 then
-    echo "Gathered dump header from /dev/mtd$mtd partition is incorrect. Maybe you try to flash to wrong partition?" | tee -a $log
+    echo "Gathered dump header from /dev/mtd$mtd_rootfs partition is incorrect. Maybe you try to flash to wrong partition?" | tee -a $log
     exit 1
 fi
 
@@ -466,16 +471,11 @@ then
     touch /mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock
 fi
 
-# kill web browser, addon_mgr and stagecraft to gain some free memory
-echo "Stopping web browser process to gain some more free memory..."  | tee -a $log
-killall lb4wk                                                    2>&1 | tee -a $log
-echo "Stopping konfabulator process to gain some more free memory..." | tee -a $log
-killall konfabulator                                             2>&1 | tee -a $log
-echo "Stopping addon_mgr process to gain more free memory..."         | tee -a $log
-killall addon_mgr                                                2>&1 | tee -a $log
-echo "Stopping stagecraft process to gain more free memory..."        | tee -a $log
-killall stagecraft                                               2>&1 | tee -a $log
-sleep 1                                                          2>&1 | tee -a $log
+echo 'NOTE: Freeing memory (killing daemons) ...'
+echo "Stopping proxy ..."
+rm -f $proxy_lock_file
+for prc in $KILL; do pkill $prc && echo "Stopping $prc ..."; killall $prc 2> /dev/null; done
+sleep 2
 
 # check free ram
 currfreemem=`free | grep Mem | awk '{print $4}'`
@@ -492,7 +492,7 @@ else
     echo "You have $currfreemem KB RAM free (+$currbuffmem KB on buffers) - good." | tee -a $log
 fi
 # question
-echo "Do you really want to flash the /dev/mtd$mtd (`cat /proc/mtd | grep mtd$mtd: | awk '{print $4}'`) device?" | tee -a $log
+echo "Do you really want to flash the /dev/mtd$mtd_rootfs (`cat /proc/mtd | grep mtd$mtd_rootfs: | awk '{print $4}'`) device?" | tee -a $log
 echo "Type \"YES\" or \"NO\"" | tee -a $log
 # confirmation handling
 if [ "$confirmations" = "1" ]
@@ -509,25 +509,25 @@ then
 fi
 # ERASING
 echo "From now on DO NOT POWER OFF YOURS TV AND PC" | tee -a $log
-echo "Erasing /dev/mtd$mtd partition... for prepare it to flash" | tee -a $log
-flash_eraseall /dev/mtd$mtd 2>$tmpout
+echo "Erasing /dev/mtd$mtd_rootfs partition... for prepare it to flash" | tee -a $log
+flash_eraseall /dev/mtd$mtd_rootfs 2>$tmpout
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
-    echo "ERROR: Erasing /dev/mtd$mtd partition havent succeed." | tee -a $log
+    echo "ERROR: Erasing /dev/mtd$mtd_rootfs partition havent succeed." | tee -a $log
     errorr=1
 else
     echo "Erasing succeed." | tee -a $log
-    echo "Now starting to flash /dev/mtd$mtd partition..." | tee -a $log
+    echo "Now starting to flash /dev/mtd$mtd_rootfs partition..." | tee -a $log
     echo "Still DO NOT POWER OFF YOURS TV AND PC" | tee -a $log
     sync
     # FLASHING
-    #cat $tmp/$file.sqf > /dev/mtd$mtd 2>$tmpout
-    sh -c "cat $tmp/$file.sqf > /dev/mtd$mtd" > $tmpout 2>&1
+    #cat $tmp/$file.sqf > /dev/mtd$mtd_rootfs 2>$tmpout
+    sh -c "cat $tmp/$file.sqf > /dev/mtd$mtd_rootfs" > $tmpout 2>&1
     if [ "$?" -ne "0" ]
     then
 	cat $tmpout | tee -a $log
-	echo "ERROR: Flashing /dev/mtd$mtd partition havent succeed." | tee -a $log
+	echo "ERROR: Flashing /dev/mtd$mtd_rootfs partition havent succeed." | tee -a $log
 	errorr=1
     else
 	echo "Flashing process succeeded, but wait until the script ends and gets back to shell" | tee -a $log
@@ -542,22 +542,22 @@ fi
 # ERROR handling
 if [ "$errorr" = "1" ]
 then
-    echo "Trying to flash through /dev/mtdblock$mtd instead..." | tee -a $log
+    echo "Trying to flash through /dev/mtdblock$mtd_rootfs instead..." | tee -a $log
     echo "This method is not as good for flashing by hand but still could work as eraseing and flashing is handled by driver" | tee -a $log
     echo "This flashing method should take about 5 minutes for ensuring the saftyness" | tee -a $log
-    #cat $tmp/$file.sqf > /dev/mtdblock$mtd 2>$tmpout
-    sh -c "cat $tmp/$file.sqf > /dev/mtdblock$mtd" > $tmpout 2>&1
+    #cat $tmp/$file.sqf > /dev/mtdblock$mtd_rootfs 2>$tmpout
+    sh -c "cat $tmp/$file.sqf > /dev/mtdblock$mtd_rootfs" > $tmpout 2>&1
     if [ "$?" -ne "0" ]
     then
 	cat $tmpout | tee -a $log
-	echo "ERROR: Flashing to /dev/mtdblock$mtd partition havent succeed." | tee -a $log
-	echo "Flashing to /dev/mtdblock$mtd partition havent succeed." | tee -a $log
+	echo "ERROR: Flashing to /dev/mtdblock$mtd_rootfs partition havent succeed." | tee -a $log
+	echo "Flashing to /dev/mtdblock$mtd_rootfs partition havent succeed." | tee -a $log
 	echo "Go ask for help at #openlgtv IRC channel at irc.freenode.net server." | tee -a $log
 	echo "DONT REBOOT OR POWER OFF TV AS IT MIGHT NOT POWER ON AGAIN" | tee -a $log
 	exit 1
     else
 	sync
-	echo "Looks like flashing through /dev/mtdblock$mtd succeed." | tee -a $log
+	echo "Looks like flashing through /dev/mtdblock$mtd_rootfs succeed." | tee -a $log
 	echo "But you cant reboot or poweroff TV yet" | tee -a $log
 	sync
 	echo "Theres some erasing/flashing done in background." | tee -a $log
@@ -569,8 +569,8 @@ fi
 # trying to read reboot path to make it preloaded for case of rootfs content changed
 ls -al `which reboot` > /dev/null 2>&1
 # making second dump
-#cat /dev/mtd$mtd > $dir/$file-$backup2.sqf 2>$tmpout
-sh -c "cat /dev/mtd$mtd > $dir/$file-$backup2.sqf" > $tmpout 2>&1
+#cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf 2>$tmpout
+sh -c "cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf" > $tmpout 2>&1
 cat $tmpout | tee -a $log
 sync
 diff $dir/$file-$backup2.sqf $dir/$file.sqf > $tmpout 2>&1 
@@ -583,8 +583,8 @@ then
     sync
     sleep 120
     sync
-    #cat /dev/mtd$mtd > $dir/$file-$backup2.sqf 2>$tmpout
-    sh -c "cat /dev/mtd$mtd > $dir/$file-$backup2.sqf" > $tmpout 2>&1
+    #cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf 2>$tmpout
+    sh -c "cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf" > $tmpout 2>&1
     cat $tmpout | tee -a $log
     sync
     diff $dir/$file-$backup2.sqf $dir/$file.sqf > $tmpout 2>&1
@@ -615,20 +615,20 @@ else
 fi
 sync
 # making backup of lginit
-echo "Making backup of lginit from /dev/mtd$lginit partition..." | tee -a $log
-#cat /dev/mtd$lginit > $dir/$file-$lginit_backup.sqf 2>$tmpout
-sh -c "cat /dev/mtd$lginit > $dir/$file-$lginit_backup.sqf" > $tmpout 2>&1
+echo "Making backup of lginit from /dev/mtd$mtd_lginit partition..." | tee -a $log
+#cat /dev/mtd$mtd_lginit > $dir/$file-$lginit_backup.sqf 2>$tmpout
+sh -c "cat /dev/mtd$mtd_lginit > $dir/$file-$lginit_backup.sqf" > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
-    echo "WARNING: could not make dump of lginit (/dev/mtd$lginit) partition" | tee -a $log
+    echo "WARNING: could not make dump of lginit (/dev/mtd$mtd_lginit) partition" | tee -a $log
     warnr=1
 fi
 sync
 # comparing magic bytes of lginit dump
 if [ "`head -c4 $dir/$file-$lginit_backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" = "$magic_clean" ]
 then
-    echo "Gathered dump header from /dev/mtd$mtd partition shows that the lginit partition is already erased - good." | tee -a $log
+    echo "Gathered dump header from /dev/mtd$mtd_rootfs partition shows that the lginit partition is already erased - good." | tee -a $log
     echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
     mkdir -p $dir/flashed $tmp/flashed
     mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
@@ -647,7 +647,7 @@ then
     exit 0
 fi
 # question
-echo "Do you really want to erase the /dev/mtd$lginit (`cat /proc/mtd | grep mtd$lginit: | awk '{print $4}'`) device?" | tee -a $log
+echo "Do you really want to erase the /dev/mtd$mtd_lginit (`cat /proc/mtd | grep mtd$mtd_lginit: | awk '{print $4}'`) device?" | tee -a $log
 echo "Type \"YES\" or \"NO\"" | tee -a $log
 # confirmation handling
 if [ "$confirmations" = "1" ]
@@ -664,31 +664,31 @@ then
 fi
 # erasing lginit partition
 echo "Trying to remove lginit..." | tee -a $log
-flash_eraseall /dev/mtd$lginit 2>$tmpout
+flash_eraseall /dev/mtd$mtd_lginit 2>$tmpout
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
-    echo "WARNING: Erasing lginit (/dev/mtd$lginit) partition problem." | tee -a $log
+    echo "WARNING: Erasing lginit (/dev/mtd$mtd_lginit) partition problem." | tee -a $log
     echo "Trying fallback with zeroing this partition..." | tee -a $log
     warnr=1
-    echo "Trying to flash through /dev/mtdblock$lginit instead..." | tee -a $log
+    echo "Trying to flash through /dev/mtdblock$mtd_lginit instead..." | tee -a $log
     echo "This method is not as good for flashing by hand but still could work as eraseing and flashing is handled by driver" | tee -a $log
     echo "This flashing method should take about 5 minutes for ensuring the saftyness" | tee -a $log
     head -c$lginit_size /dev/zero > $tmp/lginit-zeroed.img 2>$tmpout
     cat $tmpout | tee -a $log
-    #cat $tmp/lginit-zeroed.img > /dev/mtdblock$lginit 2>$tmpout
-    sh -c "cat $tmp/lginit-zeroed.img > /dev/mtdblock$lginit" > $tmpout 2>&1
+    #cat $tmp/lginit-zeroed.img > /dev/mtdblock$mtd_lginit 2>$tmpout
+    sh -c "cat $tmp/lginit-zeroed.img > /dev/mtdblock$mtd_lginit" > $tmpout 2>&1
     if [ "$?" -ne "0" ]
     then
 	cat $tmpout | tee -a $log
-	echo "ERROR: Flashing zeroed partition to /dev/mtdblock$lginit partition havent succeed." | tee -a $log
+	echo "ERROR: Flashing zeroed partition to /dev/mtdblock$mtd_lginit partition havent succeed." | tee -a $log
 	echo "TV should still boot ok after reboot, but still might work like original LG firmware" | tee -a $log
 	echo "After reboot try to erase the partition yourself using this command (copy and paste it to not make mistake):" | tee -a $log
-	echo "flash_eraseall /dev/mtd$lginit" | tee -a $log
+	echo "flash_eraseall /dev/mtd$mtd_lginit" | tee -a $log
 	sync
     else
 	sync
-	echo "Looks like flashing by zeroing through /dev/mtdblock$lginit succeed." | tee -a $log
+	echo "Looks like flashing by zeroing through /dev/mtdblock$mtd_lginit succeed." | tee -a $log
 	echo "But you cant reboot or poweroff TV yet" | tee -a $log
 	sync
 	echo "Theres some erasing/flashing done in background." | tee -a $log

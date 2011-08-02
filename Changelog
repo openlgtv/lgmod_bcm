@@ -224,17 +224,20 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: upgrade from zip file on USB storage device
     * FIX: ywe first time configuration
     * FIX: abc.net.au link fix
+    * FIX: /home was not writable on US and KR 2010 BCM models
     * ADD: experimental support for SmartTV models
     * ADD: build and installation scripts can now handle 2011 BCM model images
     * ADD: support for KR 2010 BCM models
     * ADD: /scripts/readspeedtest.sh script from mmm4m5m for read transfer rate measurement (thanks lprot for measurement hint)
     * ADD: storing rootfs and lginit backups at installation into /home/backup/{rootfs,lginit}.bck files
-    * ADD: web proxy script for JavaScript code injection to improve Internet Browser (work in progress)
+    * ADD: web proxy script for JavaScript code injection to improve Internet Browser - settings for start at boot (disabled by default)
     * ADD: NVRAM commandline editor
     * ADD: get_RELEASE_info.sh script for getting LG firmware version
     * ADD: NetCast links icons preloading at boot - much quicker links.html page load time
     * ADD: mtdinfo.sh script for getting info about mtd partitions by mmm4m5m
     * ADD: yavido service alternate player (prototype for now)
+    * ADD: rc.fwinfo to get info about TV model and LG firmware logged at boot
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
     * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
     * CHANGE: partition mounting based on partition names instead of static mtd numbers - this should improve compatibility even with unknown models
+    * CHANGE: settings separated from rcS into /etc/rc.d/rc.settings
