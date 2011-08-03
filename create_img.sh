@@ -1,6 +1,9 @@
 #!/bin/bash
 # OpenLGTV BCM rootfs image creation script by xeros
 # Source code released under GPL License
+
+# TODO: try with bigger block size - multiple of 128KB (131072)
+
 size=3145728
 size2011=4194304
 dir=OpenLGTV_BCM-src
@@ -8,6 +11,7 @@ dir2011=OpenLGTV_BCM-2011-src
 ver=`cat $dir/etc/ver2`
 ofile=OpenLGTV_BCM-GP2B-v$ver
 ofile2011=OpenLGTV_BCM-GP3B-v$ver
+squashfs_opts="-all-root -noappend -always-use-fragments"
 sed -i -e "s/^ver=.*/ver=$ver/g" install.sh
 cp -f install.sh $dir/scripts/
 sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd.org
@@ -25,24 +29,24 @@ rm -f dev.tar.gz etc_passwd.tar.gz
 find . -name '.svn' | xargs rm -rf
 cd ..
 rm -f $ofile.sqf $ofile.md5 $ofile.sha1 $ofile.zip
-mksquashfs squashfs-root $ofile.sqf
+mksquashfs squashfs-root $ofile.sqf $squashfs_opts
 cp -r squashfs-root squashfs-root-2011
 cp -r --remove-destination $dir2011/* squashfs-root-2011
 cd squashfs-root-2011
 tar xzvf dev-add.tar.gz
+# no modules for 2011 models compile yet, so remove the 2010 models modules
 rm -f dev-add.tar.gz lib/modules/*.ko
 find . -name '.svn' | xargs rm -rf
 cd ..
-# no modules for 2011 models compile yet, so remove the 2010 models modules
 rm -f $ofile2011.sqf $ofile2011.md5 $ofile2011.sha1 $ofile2011.zip
-mksquashfs squashfs-root-2011 $ofile2011.sqf
+mksquashfs squashfs-root-2011 $ofile2011.sqf $squashfs_opts
 osize=`wc -c $ofile.sqf | awk '{print $1}'`
 osize2011=`wc -c $ofile2011.sqf | awk '{print $1}'`
 if [ "$osize" -gt "$size" ]
 then
-    echo "ERROR: Partition image for GP2B is too big for flashing."
+    echo "ERROR: Partition image for GP2B is too big for flashing by $(($osize-$size)) bytes."
     #rm -rf squashfs-root
-    exit 1
+    #exit 1
 else
     if [ "$osize" -lt "$size" ]
     then
@@ -53,12 +57,13 @@ else
 	    printf '\xff' >> $ofile.sqf
 	done
     fi
+    echo "OpenLGTV BCM installation package for GP2B is generated"
 fi
 if [ "$osize2011" -gt "$size2011" ]
 then
-    echo "ERROR: Partition image for GP3B is too big for flashing."
+    echo "ERROR: Partition image for GP3B is too big for flashing by $(($osize2011-$size2011)) bytes."
     #rm -rf squashfs-root-2011
-    exit 1
+    #exit 1
 else
     if [ "$osize2011" -lt "$size2011" ]
     then
@@ -69,9 +74,10 @@ else
 	    printf '\xff' >> $ofile2011.sqf
 	done
     fi
+    echo "OpenLGTV BCM installation package for GP3B is generated"
 fi
 sha1sum $ofile.sqf > $ofile.sha1
 sha1sum $ofile2011.sqf > $ofile2011.sha1
 zip $ofile.zip $ofile.sqf $ofile.sha1 install.sh
 zip $ofile2011.zip $ofile2011.sqf $ofile2011.sha1 install.sh
-rm -rf squashfs-root squashfs-root-2011
+#rm -rf squashfs-root squashfs-root-2011

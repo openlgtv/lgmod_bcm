@@ -51,6 +51,11 @@ then
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM NetCast icon from /var/icons/openlgtv.swf to /home/netcast_icons/icon_openlgtv.swf..." | tee -a /var/log/OpenLGTV_BCM.log
 	cp /var/icons/openlgtv.swf /home/netcast_icons/icon_openlgtv.swf            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
+    if [ ! -f "/home/netcast_icons/icon_www.swf" ]
+    then
+	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM Internet Browser icon from /var/icons/www.swf to /home/netcast_icons/icon_www.swf..."  | tee -a /var/log/OpenLGTV_BCM.log
+	cp /var/icons/www.swf /home/netcast_icons/icon_www.swf                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    fi
     if [ ! -f "/home/netcast_icons/icon_yahoo.swf" ]
     then
 	echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets icon from /var/icons/y.swf to /home/netcast_icons/icon_yahoo.swf..." | tee -a /var/log/OpenLGTV_BCM.log
