@@ -171,9 +171,5 @@ else
     fi
 fi
 
-# TODO: improve that later...
-echo "OpenLGTV_BCM-INFO: running proxy in background ..."
-/scripts/proxy-start.sh &
-
-echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 30s delay ..."
+echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 30s delay ..."      | tee -a /var/log/OpenLGTV_BCM.log
 (sleep 30; /scripts/links_icons_preload.sh) &

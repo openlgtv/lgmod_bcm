@@ -241,3 +241,4 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
     * CHANGE: partition mounting based on partition names instead of static mtd numbers - this should improve compatibility even with unknown models
     * CHANGE: settings separated from rcS into /etc/rc.d/rc.settings
+    * CHANGE: Internet Browser can be separated from WebUI (and proxied) with it's own NetCast icon in WebUI settings

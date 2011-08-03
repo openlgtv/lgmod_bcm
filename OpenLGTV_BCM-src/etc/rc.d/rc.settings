@@ -1,0 +1,73 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.settings
+# Settings setup script by xeros
+# Source code released under GPL License
+
+/bin/date +"OpenLGTV_BCM-TIME: %F %T"                            | tee -a /var/log/OpenLGTV_BCM.log
+if [ -f "/mnt/user/cfg/settings" -a ! -f "/mnt/user/cfg/settings.default" ]
+then
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM default settings config file (/mnt/user/cfg/settings.default) not found, but current settings file found, creating new files and reseting settings to default values" | tee -a /var/log/OpenLGTV_BCM.log
+    mv -f /mnt/user/cfg/settings /mnt/user/cfg/settings.bck 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    settings_read_from_backup=1
+fi
+
+if [ ! -f "/mnt/user/cfg/settings" ]
+then
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a /var/log/OpenLGTV_BCM.log
+    touch /mnt/user/cfg/settings                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+fi
+
+if [ -n "`grep '#' /mnt/user/cfg/settings`" ]
+then
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) is BROKEN, creating new settings files with default values" | tee -a /var/log/OpenLGTV_BCM.log
+    rm -f /mnt/user/cfg/settings*                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    touch /mnt/user/cfg/settings                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+fi
+
+# need to rethink if loading configuration shouldnt be earlier, even before telnet and ssh, but need to make safety checks to not break boot if config is bad
+echo "OpenLGTV_BCM-INFO: reading custom settings configuration and updating variables if they do not exist there" | tee -a /var/log/OpenLGTV_BCM.log
+source /mnt/user/cfg/settings
+
+# v- removed from 0.5.0
+#if [ "$confirmations" = "" ];                 then echo "confirmations=0#Should installer ask for confirmations?"                          | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+#if [ "$rebooting" = "" ];                     then echo "rebooting=1#Should installer reboot after successful flash?"                      | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$samsung_ywe" = "" ];                    then echo "samsung_ywe=1#Should YWE configs be copied to use Samsung YWE?"                   | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$use_samsung_ywe_instead_of_lg" = "" ];  then echo "use_samsung_ywe_instead_of_lg=1#Replace LG YWE using Samsung YWE config?"         | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$RELEASE_in_tmux" = "" ];                then echo "RELEASE_in_tmux=1#Running RELEASE in tmux virtual terminal"                       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_netcast" = "" ];      then echo "force_copy_config_netcast=0#Forcing making copy of NetCast configs"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$force_copy_config_ywe" = "" ];          then echo "force_copy_config_ywe=0#Forcing making copy of YWE configs"                       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_openlgtv" = "" ];    then echo "netcast_config_add_openlgtv=1#Add OpenLGTV BCM icon to NetCast conf?"             | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+#if [ "$netcast_config_add_yahoo" = "" ];      then echo "netcast_config_add_yahoo=1#Add Yahoo Widgets icon to NetCast conf?"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_yahoo" = "" ];       then echo "netcast_config_add_yahoo=0#Add Yahoo Widgets icon to NetCast conf?"               | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_add_www" = "" ];         then echo "netcast_config_add_www=0#Add WWW icon to NetCast conf?"                           | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_config_enable_all" = "" ];      then echo "netcast_config_enable_all=0#Rewrite NetCast conf, enable all services BE CAREFUL" | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+#if [ "$netcast_kill_browser" = "" ];          then echo "netcast_kill_browser=1#Modify Web Browser script for Browser after YWE fix"       | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_keyboard_mouse_support" = "" ]; then echo "netcast_keyboard_mouse_support=0#Support for USB keyboard and mouse in NetCast"   | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+if [ "$netcast_webproxy" = "" ];               then echo "netcast_webproxy=0#Web proxy for navigation controls on external sites"           | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
+# more to come...
+
+settings_depreciated="confirmations rebooting netcast_kill_browser"
+
+#v- this could make inconsistency between default settings and current ones, so disabling it for now
+#if [ "$settings_read_from_backup" = "1" ]
+#then
+#    echo "OpenLGTV_BCM-WARN: bringing back current settings file on top of default config... " | tee -a /var/log/OpenLGTV_BCM.log
+#    mv -f /mnt/user/cfg/settings.bck /mnt/user/cfg/settings
+#    settings_read_from_backup=0
+#    source /mnt/user/cfg/settings.default
+#fi
+
+if [ "$uver" != "$ver" ]
+then
+    echo "OpenLGTV_BCM-INFO: last booted version ($uver) is different than current one ($ver) - removing depreciated settings" | tee -a /var/log/OpenLGTV_BCM.log
+    settings_sed=""
+    for svar in $settings_depreciated; do settings_sed=" -e '/^$svar=/d'$settings_sed"; done                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    sed -i $settings_sed /mnt/user/cfg/settings                                                                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    sed -i $settings_sed /mnt/user/cfg/settings.default                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+fi
+
+echo "OpenLGTV_BCM-INFO: re-reading custom settings configuration..."                                                          | tee -a /var/log/OpenLGTV_BCM.log
+source /mnt/user/cfg/settings
+
+echo "OpenLGTV_BCM-INFO: exporting custom settings configuration variables"                                                    | tee -a /var/log/OpenLGTV_BCM.log
+for svar in `cat /mnt/user/cfg/settings | awk -F= '{print $1}'`; do export $svar; done

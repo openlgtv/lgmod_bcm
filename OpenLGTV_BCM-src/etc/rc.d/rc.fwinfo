@@ -1,0 +1,16 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.fwinfo
+# LG firmware info gathering script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+/bin/date +"OpenLGTV_BCM-TIME: %F %T"                             | tee -a /var/log/OpenLGTV_BCM.log
+
+/scripts/get_RELEASE_info.sh                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+
+/bin/date +"OpenLGTV_BCM-TIME: %F %T"                             | tee -a /var/log/OpenLGTV_BCM.log
+
+echo "NVRAM information:"                                         | tee -a /var/log/OpenLGTV_BCM.log
+
+nvram-edit | egrep "Model name|Platform|Debug status|Baudrate"    | tee -a /var/log/OpenLGTV_BCM.log
+
+/bin/date +"OpenLGTV_BCM-TIME: %F %T"                             | tee -a /var/log/OpenLGTV_BCM.log
