@@ -95,6 +95,15 @@ then
 		chmod 775 /mnt/user/netcast/run3556                                                             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    fi
 	fi
+	if [ ! -f "/mnt/user/netcast/extra_conf" ]
+	then
+	    if [ -f "/mnt/addon/browser/extra_conf" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: making additional settings file for browser copy - /mnt/addon/browser/extra_conf..." | tee -a /var/log/OpenLGTV_BCM.log
+		cp /mnt/addon/browser/extra_conf /mnt/user/netcast/extra_conf                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		chmod 775 /mnt/user/netcast/extra_conf                                                          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    fi
+	fi
 	if [ ! -f "/mnt/user/netcast/config.xml" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making StageCraft config copy - /mnt/addon/contents/config.xml..."              | tee -a /var/log/OpenLGTV_BCM.log
@@ -116,14 +125,19 @@ then
 	fi
 	if [ -f "/mnt/user/netcast/browser_application.txt" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: using links to NetCast browser configs on browser partition..."                 | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: using links to NetCast browser configs on browser and addon partitions..."      | tee -a /var/log/OpenLGTV_BCM.log
 	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
+	if [ -f "/mnt/user/netcast/extra_conf" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: using link to NetCast browser additional settings config on addon partition..." | tee -a /var/log/OpenLGTV_BCM.log
+	    mount --bind /mnt/user/netcast/extra_conf /mnt/addon/browser/extra_conf                             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	fi
 	if [ -f "/mnt/user/netcast/run3556" ]
 	then
-		echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..."      | tee -a /var/log/OpenLGTV_BCM.log
-		mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..."          | tee -a /var/log/OpenLGTV_BCM.log
+	    mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556                                         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
     fi
     /bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                                            | tee -a /var/log/OpenLGTV_BCM.log

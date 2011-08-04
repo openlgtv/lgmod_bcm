@@ -18,11 +18,11 @@ then
 fi
 if [ "$real_extra_conf" = "" -a -f "/mnt/user/netcast/extra_conf" ]
 then
-    real_proxy_config_proxy="/mnt/user/netcast/proxy_config.txt"
+    real_extra_conf="/mnt/user/netcast/extra_conf"
 fi
 if [ "$proxy_config_proxy" = "" ]
 then
-    proxy_config_proxy="/mnt/user/netcast/proxy_config.txt"
+    proxy_config_proxy="/mnt/user/netcast/proxy_config-proxy.txt"
 fi
 
 if [ -f "$real_configxml" ]
@@ -52,7 +52,7 @@ then
 	if [ "$country_model" = "EU" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add Yahoo Widgets option (netcast_config_add_yahoo=1) file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
-	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml add_yahoo                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml add=yahoo                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	else
 	    echo "OpenLGTV_BCM-INFO: skipping adding Yahoo Widgets option (netcast_config_add_yahoo=1) in US TV models as it exists there..." | tee -a /var/log/OpenLGTV_BCM.log
 	fi
@@ -62,7 +62,7 @@ then
 	if [ -f "$real_browapptxt" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Web UI option (netcast_config_add_openlgtv=1) config.xml file: $real_configxml browser_application.txt file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
-	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml add_openlgtv browser_application_txt=$real_browapptxt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml add=openlgtv browser_application_txt=$real_browapptxt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	else
 	    echo "OpenLGTV_BCM-WARN: havent found any useful browser_application.txt file, skipping custom NetCast configuration (OpenLGTV BCM NetCast item)..." | tee -a /var/log/OpenLGTV_BCM.log
 	fi
@@ -72,7 +72,7 @@ then
 	if [ -f "$real_browapptxt" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Internet Browser option (netcast_config_add_www=1) config.xml file: $real_configxml browser_application.txt file: $real_browapptxt ..." | tee -a /var/log/OpenLGTV_BCM.log
-	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml add_www browser_application_txt=$real_browapptxt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml add=www browser_application_txt=$real_browapptxt 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	else
 	    echo "OpenLGTV_BCM-WARN: havent found any useful browser_application.txt file, skipping custom NetCast configuration (OpenLGTV BCM Internet Browser item)..." | tee -a /var/log/OpenLGTV_BCM.log
 	fi
@@ -95,7 +95,7 @@ fi
 if [ "$netcast_webproxy" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for proxy setup (netcast_webproxy=1) run3556 file: $real_run3556 extra_conf file: $real_extra_conf proxy_config.txt file: $proxy_config_proxy..." | tee -a /var/log/OpenLGTV_BCM.log
-    /scripts/netcast_config_regenerator.sh set_proxy run3556=$real_run3556 extra_conf=$real_extra_conf proxy_config=$proxy_config_proxy 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    /scripts/netcast_config_regenerator.sh set_proxy run3556=$real_run3556 extra_conf=$real_extra_conf proxy_config_txt=$proxy_config_proxy 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     echo "OpenLGTV_BCM-INFO: running proxy in background ..." | tee -a /var/log/OpenLGTV_BCM.log
     /scripts/proxy-start.sh &
 else

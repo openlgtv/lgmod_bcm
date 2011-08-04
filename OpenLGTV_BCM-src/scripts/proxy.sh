@@ -74,8 +74,8 @@ fi
 	cat
     fi | \
     busybox sed  \
-	-e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' \
-	-e 's#^POST http://[A-Za-z0-9\.\-]*/\(.*\)#POST /\1#g' \
+	-e 's#^GET http://[A-Za-z0-9\.\-\:]*/\(.*\)#GET /\1#g' \
+	-e 's#^POST http://[A-Za-z0-9\.\-\:]*/\(.*\)#POST /\1#g' \
 	-e 's#HTTP/1.1#HTTP/1.0#g' \
 	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
 	-e 's/\(Connection:\).*/\1 close/g' | \
