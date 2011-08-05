@@ -10,7 +10,7 @@ mount -t sysfs sysfs /sys                                           2>&1 | tee -
 mount -t usbfs usbfs /proc/bus/usb                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 mount -t devpts devpts /dev/pts                                     2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 mount -t tmpfs none /usr/etc                                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t tmpfs bt /mnt/lg/bt -o size=10M                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+mount -t tmpfs bt /mnt/lg/bt -o size=20M                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
 # partitions names to mtd numbers assignment
 cat /proc/mtd | sed -e 's/://g' -e 's/\"//g' -e 's/^mtd//g' | grep -v erasesize | awk '{print "mtd_" $4 "=" $1}' | tac > /tmp/partitions.list
@@ -85,32 +85,32 @@ else
 fi
 
 echo "OpenLGTV_BCM-INFO: mtdblock partitions mounts..."                                      | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: model - mtdblock$mtd_model in /mnt/lg/model"                        | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: model      - mtdblock$mtd_model in /mnt/lg/model"                   | tee -a /tmp/OpenLGTV_BCM.log
 mount -t squashfs /dev/mtdblock$mtd_model /mnt/lg/model                                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: lgres - mtdblock$mtd_lgres in /mnt/lg/res/lgres"                    | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: lgres      - mtdblock$mtd_lgres in /mnt/lg/res/lgres"               | tee -a /tmp/OpenLGTV_BCM.log
 mount -t squashfs /dev/mtdblock$mtd_lgres /mnt/lg/res/lgres                             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
 if [ "$mtd_estreamer" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: estreamer - mtdblock$mtd_estreamer in /mnt/lg/res/estreamer"    | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: estreamer  - mtdblock$mtd_estreamer in /mnt/lg/res/estreamer"   | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_estreamer /mnt/lg/res/estreamer                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 else
-    echo "OpenLGTV_BCM-INFO: estream - mtdblock$mtd_estream in /mnt/lg/res/estreamer"        | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: estream    - mtdblock$mtd_estream in /mnt/lg/res/estreamer"     | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_estream /mnt/lg/res/estreamer                   2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
-echo "OpenLGTV_BCM-INFO: opensrc - mtdblock$mtd_opensrc in /usr/local"                       | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: opensrc    - mtdblock$mtd_opensrc in /usr/local"                    | tee -a /tmp/OpenLGTV_BCM.log
 mount -t squashfs /dev/mtdblock$mtd_opensrc /usr/local                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: tmpfs - /usr/local/etc"                                             | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: tmpfs      - /usr/local/etc"                                        | tee -a /tmp/OpenLGTV_BCM.log
 mount -t tmpfs tmpfs /usr/local/etc -o size=1M                                          2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 
 if [ "$mtd_base" != "" -a "$mtd_patch" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: base - mtdblock$mtd_base in /mnt/nsu/base"                      | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: base       - mtdblock$mtd_base in /mnt/nsu/base"                | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_base /mnt/nsu/base                              2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: patch - mtdblock$mtd_patch in /mnt/nsu/patch"                   | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: patch      - mtdblock$mtd_patch in /mnt/nsu/patch"              | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_patch /mnt/nsu/patch                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: unionfs - none ro,dirs=/mnt/nsu/patch:/mnt/nsu/base=ro in /mnt/nsu/union" | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: unionfs    - none ro,dirs=/mnt/nsu/patch:/mnt/nsu/base=ro in /mnt/nsu/union" | tee -a /tmp/OpenLGTV_BCM.log
     mount -t unionfs none /mnt/nsu/union -o ro,dirs=/mnt/nsu/patch:/mnt/nsu/base=ro     2>&1 | tee -a /tmp/OpenLGTV_BCM.log
     echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/nsu/union/res/lglib in /mnt/lg/res/lglib"     | tee -a /tmp/OpenLGTV_BCM.log
     mount --bind /mnt/nsu/union/res/lglib /mnt/lg/res/lglib                             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
@@ -121,26 +121,26 @@ then
     echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/nsu/union/res/cert in /mnt/lg/res/cert"       | tee -a /tmp/OpenLGTV_BCM.log
     mount --bind /mnt/nsu/union/res/cert /mnt/lg/res/cert                               2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 else
-    echo "OpenLGTV_BCM-INFO: addon - mtdblock$mtd_addon in /mnt/addon"                       | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: addon      - mtdblock$mtd_addon in /mnt/addon"                  | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_addon /mnt/addon                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: ezcal - mtdblock$mtd_ezcal in /mnt/lg/res/ezcal"                | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: ezcal      - mtdblock$mtd_ezcal in /mnt/lg/res/ezcal"           | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_ezcal /mnt/lg/res/ezcal                         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ "$mtd_cert" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: cert - mtdblock$mtd_cert in /mnt/lg/ciplus/cert"                | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: cert       - mtdblock$mtd_cert in /mnt/lg/ciplus/cert"          | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_cert /mnt/lg/ciplus/cert                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 if [ "$mtd_authcxt" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: authcxt - mtdblock$mtd_authcxt in /mnt/lg/ciplus/authcxt"       | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: authcxt    - mtdblock$mtd_authcxt in /mnt/lg/ciplus/authcxt"    | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_authcxt /mnt/lg/ciplus/authcxt                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ "$mtd_data" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: data - mtdblock$mtd_data in /mnt/lg/cmn_data"                   | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: data       - mtdblock$mtd_data in /mnt/lg/cmn_data"             | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime                             >> /tmp/OpenLGTV_BCM.log 2>&1
     # v- /home partition is rather important so it shouldn't be erased
     #if [ "$?" -ne "0" ]
@@ -157,7 +157,7 @@ mount --bind /mnt/lg/cmn_data /mnt/flash/data                                   
 
 if [ "$mtd_user" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: user - mtdblock$mtd_user in /mnt/user"                          | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: user       - mtdblock$mtd_user in /mnt/user"                    | tee -a /tmp/OpenLGTV_BCM.log
     mount -t jffs2 /dev/mtdblock$mtd_user /mnt/user                                     2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 else
     echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/lg/cmn_data /mnt/user"                        | tee -a /tmp/OpenLGTV_BCM.log
@@ -166,31 +166,31 @@ fi
 
 if [ "$mtd_widevine" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: widevine - mtdblock$mtd_widevine in /mnt/lg/widevine"            | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t squashfs /dev/mtdblock$mtd_widevine /mnt/lg/widevine                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: widevine   - mtdblock$mtd_widevine in /mnt/lg/widevine"         | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t squashfs /dev/mtdblock$mtd_widevine /mnt/lg/widevine                       2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ "$mtd_pqldb" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: pqldb - mtdblock$mtd_pqldb in /mnt/pqldb"                       | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: pqldb      - mtdblock$mtd_pqldb in /mnt/pqldb"                  | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_pqldb /mnt/pqldb                                2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ "$mtd_idfile" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: idfile - mtdblock$mtd_idfile in /mnt/idfile (ignore error)"     | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: idfile     - mtdblock$mtd_idfile in /mnt/idfile (ignore error)" | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_idfile /mnt/idfile                              2>&1 | tee -a /tmp/OpenLGTV_BCM.log  # empty on EU fw, but lginit still tries to mount it
 fi
 
 if [ "$mtd_game" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: game - mtdblock$mtd_game in /mnt/game"                          | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: game       - mtdblock$mtd_game in /mnt/game"                    | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_game /mnt/game                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ "$mtd_fladata" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: fladata - mtdblock$mtd_fladata in /mnt/cache/flash"             | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: fladata    - mtdblock$mtd_fladata in /mnt/cache/flash"          | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_fladata /mnt/cache/flash -o noatime                          >> /tmp/OpenLGTV_BCM.log 2>&1
     if [ "$?" -ne "0" ]
     then
@@ -203,18 +203,18 @@ fi
 
 if [ "$mtd_sdpdata" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: sdpdata - mtdblock$mtd_sdpdata in /mnt/cache/sdp"               | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: sdpdata    - mtdblock$mtd_sdpdata in /mnt/cache/sdp"            | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_sdpdata /mnt/cache/sdp -o noatime                            >> /tmp/OpenLGTV_BCM.log 2>&1
     if [ -d "/mnt/cache/sdp/pkgs" ]
     then
-	echo "OpenLGTV_BCM-INFO: tmpfs - /mnt/cache/sdp/pkgs"                                | tee -a /tmp/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: tmpfs      - /mnt/cache/sdp/pkgs"                           | tee -a /tmp/OpenLGTV_BCM.log
 	mount -t tmpfs tmpfs /mnt/cache/sdp/pkgs                                                   >> /tmp/OpenLGTV_BCM.log 2>&1
     fi
 fi
 
 if [ "$mtd_browser" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: browser - mtdblock$mtd_browser in /mnt/browser"                 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: browser    - mtdblock$mtd_browser in /mnt/browser"              | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_browser /mnt/browser                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
@@ -228,7 +228,7 @@ fi
 
 if [ "$mtd_brodata" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: brodata - mtdblock$mtd_brodata in /mnt/cache/browser"           | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: brodata    - mtdblock$mtd_brodata in /mnt/cache/browser"        | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_brodata /mnt/cache/browser                                   >> /tmp/OpenLGTV_BCM.log 2>&1
     if [ "$?" -ne "0" ]
     then
@@ -250,13 +250,13 @@ fi
 
 if [ "$mtd_netflix" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: netflix - mtdblock$mtd_netflix in /mnt/addon/netflix"           | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: netflix    - mtdblock$mtd_netflix in /mnt/addon/netflix"        | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_netflix /mnt/addon/netflix                      2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 if [ "$mtd_ywedata" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: ywedata - mtdblock$mtd_ywedata in /mnt/widget.data"             | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: ywedata    - mtdblock$mtd_ywedata in /mnt/widget.data"          | tee -a /tmp/OpenLGTV_BCM.log
     mount -t yaffs2 /dev/mtdblock$mtd_ywedata /mnt/widget.data                          2>&1 | tee -a /tmp/OpenLGTV_BCM.log # US fw lginit does not handle erasing ywedata if it's not mountable
     echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/widget.data /home"                            | tee -a /tmp/OpenLGTV_BCM.log
     mount --bind /mnt/widget.data /home                                                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log # US models do not have /home mounted, lets use ywedata as /home instead
@@ -264,31 +264,31 @@ fi
 
 if [ "$mtd_preloaded" != "" -a "$mtd_kids" != "" -a "$mtd_story" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: preloaded - mtdblock$mtd_preloaded in /mnt/preloaded"           | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: preloaded  - mtdblock$mtd_preloaded in /mnt/preloaded"          | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_preloaded /mnt/preloaded                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: kids - mtdblock$mtd_kids in /mnt/preloaded/kids"                | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: kids       - mtdblock$mtd_kids in /mnt/preloaded/kids"          | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_kids /mnt/preloaded/kids                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    echo "OpenLGTV_BCM-INFO: story - mtdblock$mtd_story in /mnt/preloaded/story"             | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: story      - mtdblock$mtd_story in /mnt/preloaded/story"        | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_story /mnt/preloaded/kids/story                 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 appxip_addr=`cat /proc/cmdline | sed 's/ /\n/g' | grep appxip_addr | cut -d= -f 2`
 if [ -n "`grep appxip_addr /proc/cmdline`" -a "${appxip_addr}" != "0x0" -a "`devmem ${appxip_addr} 32`" = "0x28CD3D45" -a "`devmem $((${appxip_addr}+0x10)) 64`" = "0x73736572706D6F43" ]
 then
-    echo "OpenLGTV_BCM-INFO: lgapp - mounting LGAPP partition as XIP CRAMFS, memory address: $appxip_addr" | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: lgapp      - XIP CRAMFS, memory address: $appxip_addr"          | tee -a /tmp/OpenLGTV_BCM.log
     #mount -t cramfs lgapp_xip /mnt/lg/lgapp -o physaddr=0x2600000
     mount -t cramfs lgapp_xip /mnt/lg/lgapp -o physaddr=$appxip_addr                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 else
-    echo "OpenLGTV_BCM-INFO: lgapp - mtdblock$mtd_lgapp /mnt/lg/lgapp"                       | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: lgapp      - mtdblock$mtd_lgapp /mnt/lg/lgapp"                  | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_lgapp /mnt/lg/lgapp                             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 fontxip_addr=`cat /proc/cmdline | sed 's/ /\n/g' | grep fontxip_addr | cut -d= -f 2`
 if [ -n "`grep fontxip_addr /proc/cmdline`" -a "${fontxip_addr}" != "0x0" -a "`devmem ${fontxip_addr} 32`" = "0x28CD3D45" -a "`devmem $((${fontxip_addr}+0x10)) 64`" = "0x73736572706D6F43" ]
 then
-    echo "OpenLGTV_BCM-INFO: lgfont - mounting LGFONT partition as XIP CRAMFS, memory address: $fontxip_addr" | tee -a /tmp/OpenLGTV_BCM.log
-    mount -t cramfs lgfont_xip /mnt/lg/res/lgfont -o physaddr=$fontxip_addr  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: lgfont     - XIP CRAMFS, memory address: $fontxip_addr"         | tee -a /tmp/OpenLGTV_BCM.log
+    mount -t cramfs lgfont_xip /mnt/lg/res/lgfont -o physaddr=$fontxip_addr             2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 else
-    echo "OpenLGTV_BCM-INFO: lgfont - mtdblock$mtd_lgfont - /mnt/lg/res/lgfont"              | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: lgfont     - mtdblock$mtd_lgfont - /mnt/lg/res/lgfont"          | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_lgfont /mnt/lg/res/lgfont                       2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi

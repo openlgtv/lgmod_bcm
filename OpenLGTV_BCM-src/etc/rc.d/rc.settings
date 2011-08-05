@@ -3,7 +3,7 @@
 # Settings setup script by xeros
 # Source code released under GPL License
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T"                            | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                 | tee -a /var/log/OpenLGTV_BCM.log
 if [ -f "/mnt/user/cfg/settings" -a ! -f "/mnt/user/cfg/settings.default" ]
 then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM default settings config file (/mnt/user/cfg/settings.default) not found, but current settings file found, creating new files and reseting settings to default values" | tee -a /var/log/OpenLGTV_BCM.log

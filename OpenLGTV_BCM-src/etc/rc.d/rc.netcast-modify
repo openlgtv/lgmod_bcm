@@ -49,7 +49,7 @@ then
     fi
     if [ "$netcast_config_add_yahoo" = "1" ]
     then
-	if [ "$country_model" = "EU" ]
+	if [ "$country_model" != "US" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add Yahoo Widgets option (netcast_config_add_yahoo=1) file: $real_configxml ..." | tee -a /var/log/OpenLGTV_BCM.log
 	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml add=yahoo                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
@@ -101,7 +101,9 @@ then
 else
     if [ -f "$proxy_config_proxy" ]
     then
-	echo "OpenLGTV_BCM-INFO: removing proxy setup (netcast_webproxy=0) proxy_config.txt file: $proxy_config_proxy..." | tee -a /var/log/OpenLGTV_BCM.log
-	rm -f $proxy_config_proxy 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for removing proxy setup (netcast_webproxy=0) run3556 file: $real_run3556 extra_conf file: $real_extra_conf proxy_config.txt file: $proxy_config_proxy..." | tee -a /var/log/OpenLGTV_BCM.log
+	/scripts/netcast_config_regenerator.sh unset_proxy run3556=$real_run3556 extra_conf=$real_extra_conf proxy_config_txt=$proxy_config_proxy 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	#echo "OpenLGTV_BCM-INFO: removing proxy setup (netcast_webproxy=0) proxy_config.txt file: $proxy_config_proxy..." | tee -a /var/log/OpenLGTV_BCM.log
+	#rm -f $proxy_config_proxy 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     fi
 fi

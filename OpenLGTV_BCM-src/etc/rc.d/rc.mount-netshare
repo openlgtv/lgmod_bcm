@@ -49,7 +49,7 @@ then
 	then
 	    mkdir -p "$USB_DIR/NetShare"              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 	fi
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"              | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"   | tee -a /var/log/OpenLGTV_BCM.log
 	if [ "$fs_type" = "cifs" ]
 	then
 	    if [ "`grep ^cifs /proc/modules`" = "" ]
@@ -82,7 +82,7 @@ then
 		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp &
 	    fi
 	fi
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T"                                                          | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                               | tee -a /var/log/OpenLGTV_BCM.log
 	if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
 	then
 	    echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..." | tee -a /var/log/OpenLGTV_BCM.log
