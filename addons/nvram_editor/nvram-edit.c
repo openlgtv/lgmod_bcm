@@ -1,13 +1,28 @@
 /**
- * \file nvram-crc.c
+ * \file nvram-edit.c
  *
- * OpenLGTV BCM NVRAM checksum calculator and fixer by xeros, version 0.0.2
+ * OpenLGTV BCM NVRAM editor by xeros, version 0.0.4
  * Source code released under GPL License
  *
  * Default input file:  /tmp/nvram     (can be changed with -f /path/to/nvram_file parameter)
  * Default output file: /tmp/nvram-out (can be changed with -o /path/to/nvram-out_file parameter)
  *
- * copile: (mipsel-linux-)gcc -o nvram-crc nvram.c
+ * Other parameters:
+ * -d X - set Debug Status (for Saturn 7 values 0-2, for BCM 3-5):
+ *        0/3 - DEBUG
+ *        1/4 - EVENT
+ *        2/5 - RELEASE
+ * -b X - serial port baudrate for Debug Menu access:
+ *        0 - 1200bps
+ *        1 - 2400bps
+ *        2 - 4800bps
+ *        3 - 9600bps
+ *        4 - 19200bps
+ *        5 - 38400bps
+ *        6 - 57600bps
+ *        7 - 115200bps
+ *
+ * compile: (PATH=/path/to/crosscompiler/bin:$PATH) (mipsel-linux-)gcc -o nvram-crc nvram.c
  *
  * CRC calculation code generated for CRC32 MPEG2 checksum with pycrc v0.7.8, http://www.tty1.net/pycrc/
  * using the configuration:
@@ -74,7 +89,8 @@ crc_t crc_update(crc_t crc, const unsigned char *data, size_t data_len)
 //unsigned char str[NVRAM_SIZE];
 unsigned char str[NVRAM_SIZE2];
 //unsigned char str_out[1048576];
-unsigned char str_out[NVRAM_FULL_SIZE];
+unsigned char str_out[NVRAM_FULL_SIZE_BCM];
+unsigned int str_out_size=NVRAM_FULL_SIZE_BCM;
 unsigned char num1a[1];
 unsigned char num2a[1];
 unsigned char num3a[1];
@@ -88,8 +104,10 @@ int write_ofile=0;
 int debug_status=9; // lets pickup wrong values at start
 int debug_status_new=9;
 char debug_status_str[]="0";
+int debug_status_changed=0;
 int baudrate=9;
 int baudrate_new=9;
+int baudrate_changed=0;
 char baudrate_str[]="0";
 int recalculate_crc=0;
 unsigned char file[200] = "/tmp/nvram";
@@ -136,10 +154,12 @@ static int get_config(int argc, char *argv[])
             case 'd':
                 memcpy(debug_status_str, optarg, strlen(optarg) + 1);
                 debug_status_new=atoi(debug_status_str);
+                debug_status_changed=1;
                 break;
             case 'b':
                 memcpy(baudrate_str, optarg, strlen(optarg) + 1);
                 baudrate_new=atoi(baudrate_str);
+                baudrate_changed=1;
                 break;
             case 'v':
                 verbose = true;
@@ -206,7 +226,7 @@ int main(int argc, char *argv[])
 {
 
     printf("Broadcom platform based LG Digital TV NVRAM editor\n");
-    printf("Version 0.0.3 by xeros (openlgtv.org.ru) 28.07.2011\n\n");
+    printf("Version 0.0.4 by xeros (openlgtv.org.ru) 07.08.2011\n\n");
 
     crc_t crc;
 
@@ -357,7 +377,19 @@ printf(" NVMDRV_TOTAL_SIZE : \t\t 0x%x \t %i \t %i\n", get_size(NVMDRV_TOTAL_SIZ
 	printf("\nChecksum is OK!\n\n");
     }
 
-    if ((debug_status_new > 2) && (debug_status_new < 6))
+    if ((debug_status_changed == 1) && (debug_status < 3) && (debug_status_new > 2))
+    {
+	printf("ERROR: Debug Status value should be 0-2 for Saturn 7 platform\n");
+	return -1;
+    }
+
+    if ((debug_status_changed == 1) && ((debug_status > 2) && (debug_status < 6)) && ((debug_status_new < 3) || (debug_status_new > 5)))
+    {
+	printf("ERROR: Debug Status value should be 3-5 for Broadcom platform\n");
+	return -1;
+    }
+    
+    if (debug_status_new < 6)
     {
 	string *debug_status_old = &DEBUG_STATES[str[NVRAM_DEBUG_STATUS]];
 	string *debug_status_str = &DEBUG_STATES[debug_status_new];
@@ -367,6 +399,12 @@ printf(" NVMDRV_TOTAL_SIZE : \t\t 0x%x \t %i \t %i\n", get_size(NVMDRV_TOTAL_SIZ
 	str[NVRAM_DEBUG_STATUS]=debug_status;
 	
 	recalculate_crc=1;
+    }
+    
+    if ((baudrate_changed == 1) && (baudrate_new > 7))
+    {
+	printf("ERROR: Baudrate values should be 0-7 range\n");
+	return -1;
     }
 
     if ((baudrate_new < 8))
@@ -401,11 +439,17 @@ printf(" NVMDRV_TOTAL_SIZE : \t\t 0x%x \t %i \t %i\n", get_size(NVMDRV_TOTAL_SIZ
 
     if (write_ofile == 1)
     {
+	if (debug_status < 3) {
+	    str_out_size=NVRAM_FULL_SIZE_S7;
+	} else {
+	    str_out_size=NVRAM_FULL_SIZE_BCM;
+	}
 	//printf("Trying to write changed file to %s ...\n", ofile);
 	finput = fopen(file, "rb");
         if (finput)
 	{
-	    ninput = fread(str_out, sizeof(str_out), 1, finput);
+	    //ninput = fread(str_out, sizeof(str_out), 1, finput);
+	    ninput = fread(str_out, str_out_size, 1, finput);
 	    int num1x;
 	    int num2x;
 	    int num3x;
@@ -423,7 +467,8 @@ printf(" NVMDRV_TOTAL_SIZE : \t\t 0x%x \t %i \t %i\n", get_size(NVMDRV_TOTAL_SIZ
 	    foutput = fopen(ofile, "wb");
 	    if (foutput)
 	    {
-		noutput = fwrite(str_out, 1, sizeof(str_out), foutput);
+		//noutput = fwrite(str_out, 1, sizeof(str_out), foutput);
+		noutput = fwrite(str_out, 1, str_out_size, foutput);
 		fclose(foutput);
 		printf("File: %s saved.\n", ofile);
 		printf("\nTo commit changes, flash the %s file to nvram partition and reboot TV (do not use power button for that)!\n", ofile);
