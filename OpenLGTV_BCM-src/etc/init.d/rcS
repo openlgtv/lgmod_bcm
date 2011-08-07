@@ -200,12 +200,18 @@ then
 #    fi
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                      | tee -a /var/log/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: setting time via NTP server pool" | tee -a /var/log/OpenLGTV_BCM.log
-ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                             | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"                   | tee -a /var/log/OpenLGTV_BCM.log
+#ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
+ntpd -p pool.ntp.org > /dev/null 2>&1 &
 
-mkdir -p /mnt/user/etc                                      >> /var/log/OpenLGTV_BCM.log
-if [ $? -ne 0 ]
+if [ ! "-d /mnt/user/etc" ]
+then
+    echo "OpenLGTV_BCM-WARN: /mnt/user/etc dir does not exist, creating it"  | tee -a /var/log/OpenLGTV_BCM.log
+    mkdir -p /mnt/user/etc                                                         >> /var/log/OpenLGTV_BCM.log
+    user_readonly=$?
+fi
+if [ "$user_readonly" -ne "0" ]
 then
     echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a /var/log/OpenLGTV_BCM.log
     mount -t tmpfs tmpfs /mnt/user               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
@@ -217,7 +223,7 @@ then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM config dir (/mnt/user/cfg) not found, creating it" | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/cfg                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
-if [ ! -d /mnt/user/lock ]
+if [ ! -d "/mnt/user/lock" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock dir for one time script exectuting locks..." | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/lock                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
@@ -270,9 +276,9 @@ fi
 #fi
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                    | tee -a /var/log/OpenLGTV_BCM.log
-if [ ! -d /usr/etc/dropbear ]
+if [ ! -d "/usr/etc/dropbear" ]
 then
-    if [ -d /mnt/user/etc/dropbear ]
+    if [ -d "/mnt/user/etc/dropbear" ]
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys"         | tee -a /var/log/OpenLGTV_BCM.log
 	#cp -r /mnt/user/etc/dropbear /usr/etc/
@@ -373,13 +379,13 @@ fi
 
 /etc/rc.d/rc.fwinfo &
 
-if [ ! -d /mnt/user/www ]
+if [ ! -d "/mnt/user/www" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."  | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/www                                                     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
-if [ ! -f /mnt/user/www/bookmarks.inc ]
+if [ ! -f "/mnt/user/www/bookmarks.inc" ]
 then
     echo "OpenLGTV_BCM-INFO: web browser bookmarks file not found, creating default from template in: /mnt/user/www/bookmarks.inc..."  | tee -a /var/log/OpenLGTV_BCM.log
     cp /var/www/browser/templates/bookmarks.inc /mnt/user/www/                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
@@ -429,13 +435,13 @@ fi
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a /var/log/OpenLGTV_BCM.log
 (sleep 10; /etc/rc.d/rc.directfb)&
 
-if [ ! -d /mnt/user/init.d ]
+if [ ! -d "/mnt/user/init.d" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a /var/log/OpenLGTV_BCM.log
     mkdir -p /mnt/user/init.d                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi
 
-if [ -d /mnt/user/init.d ]
+if [ -d "/mnt/user/init.d" ]
 then
     echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"  | tee -a /var/log/OpenLGTV_BCM.log
     for scr_file in /mnt/user/init.d/*

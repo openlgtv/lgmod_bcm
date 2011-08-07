@@ -12,6 +12,7 @@ wid_name=www                                  #OpenLGTV BCM Internet Browser Net
 oid_link=http://127.0.0.1:88/                 #OpenLGTV BCM WebUI URL
 proxy_link=http://127.0.0.1:8888/             #Web proxy for remote navigation code injection URL
 wid_link=http://127.0.0.1:88/browser.cgi      #OpenLGTV BCM Internet Browser URL
+country_groups="KR US BR EU CN AU SG ZA VN TW XA XB IL ID MY IR ZZ"
 
 # default configs paths - should get new values with command line arguments
 org_cfgxml=/mnt/user/netcast/config.xml
@@ -109,8 +110,11 @@ then
 	done
 	echo -e '<xml>\r' > $new_cfgxml
 	#for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | sort | uniq`
-	for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | grep COMMON | sort | uniq` AUS
+	# v- that might not contain all country groups
+	#for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | grep COMMON | sort | uniq` AUS
+	for cntryx in $country_groups
 	do
+	    cntry=${cntryx}_COMMON
 	    echo -e "\t<country code=\"$cntry\">\r" >> $new_cfgxml
 	    # v- busybox sed has problems with handling '\r'
 	    #cat $tmp_cfgxml | sed -e 's/^/\t\t/g'| sed -e 's/></>\r\n\t\t\t</g' -e 's#\t</item>.*#</item>\r#g' >> $new_cfgxml
@@ -246,7 +250,7 @@ then
 		echo "OpenLGTV BCM-INFO: NetCast config generator: setting \"$wid_name\" id: $wid_number link: $wid_link for proxy in $proxy_config_txt"
 		cat "$org_run3556" | \
 		    sed -e 's/^export MAX_CONNECTION=.*/export MAX_CONNECTION=1/g' \
-			-e 's/^export MAX_CONNECTION_PER_HOST=/export MAX_CONNECTION_PER_HOST=1/g' \
+			-e 's/^export MAX_CONNECTION_PER_HOST=.*/export MAX_CONNECTION_PER_HOST=1/g' \
 			-e "s#^export PROXY_CONFIG_FILE_PATH=.*#export PROXY_CONFIG_FILE_PATH=\"$proxy_config_txt\"#g" \
 			-e "s#^EXTRA_CONF=.*#EXTRA_CONF=\"$extra_conf_proxy\"#g" \
 			> $run3556_proxy

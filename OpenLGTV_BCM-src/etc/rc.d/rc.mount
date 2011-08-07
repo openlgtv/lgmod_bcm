@@ -129,7 +129,7 @@ fi
 
 if [ "$mtd_cert" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: cert       - mtdblock$mtd_cert in /mnt/lg/ciplus/cert"          | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: cert       - mtdblock$mtd_cert in /mnt/lg/ciplus/cert (ignore error)" | tee -a /tmp/OpenLGTV_BCM.log
     mount -t squashfs /dev/mtdblock$mtd_cert /mnt/lg/ciplus/cert                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 if [ "$mtd_authcxt" != "" ]
@@ -239,7 +239,10 @@ then
     fi
     echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/cache/browser /home"                          | tee -a /tmp/OpenLGTV_BCM.log
     mount --bind /mnt/cache/browser /home                                               2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-    ln -sf /mnt/browser/.mozilla /mnt/cache/browser/.mozilla                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    if [ -d "/mnt/browser/.mozilla" -a ! -e "/mnt/cache/browser/.mozilla" ]
+    then
+	ln -sf /mnt/browser/.mozilla /mnt/cache/browser/.mozilla                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    fi
     if [ -f "/mnt/cache/browser/browser_application.txt" ]
     then
 	echo "OpenLGTV_BCM-INFO: found /mnt/cache/browser/browser_application.txt file, copying from /mnt/browser/ ..." | tee -a /tmp/OpenLGTV_BCM.log

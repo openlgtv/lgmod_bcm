@@ -3,6 +3,16 @@
 # Source code released under GPL License
 
 # TODO: try with bigger block size - multiple of 128KB (131072)
+# for 2010 models best results with 512KB block size (256KB not a much bigger than with 512KB)
+# for 2011 models best results with 1MB block size
+#-rwx------ 1 root root 3125248 2011-08-07 21:50 OpenLGTV_BCM-GP2B-v0.5.0-devel1mb.sqf
+#-rwx------ 1 root root 3129344 2011-08-07 21:51 OpenLGTV_BCM-GP2B-v0.5.0-devel256kb.sqf
+#-rwx------ 1 root root 3125248 2011-08-07 21:50 OpenLGTV_BCM-GP2B-v0.5.0-devel512kb.sqf
+#-rwx------ 1 root root 3145728 2011-08-07 21:36 OpenLGTV_BCM-GP2B-v0.5.0-devel.sqf
+#-rwx------ 1 root root 4190208 2011-08-07 21:52 OpenLGTV_BCM-GP3B-v0.5.0-devel1mb.sqf
+#-rwx------ 1 root root 4198400 2011-08-07 21:53 OpenLGTV_BCM-GP3B-v0.5.0-devel256kb.sqf
+#-rwx------ 1 root root 4194304 2011-08-07 21:52 OpenLGTV_BCM-GP3B-v0.5.0-devel512kb.sqf
+#-rwx------ 1 root root 4222976 2011-08-07 21:36 OpenLGTV_BCM-GP3B-v0.5.0-devel.sqf
 
 size=3145728
 size2011=4194304
@@ -11,7 +21,8 @@ dir2011=OpenLGTV_BCM-2011-src
 ver=`cat $dir/etc/ver2`
 ofile=OpenLGTV_BCM-GP2B-v$ver
 ofile2011=OpenLGTV_BCM-GP3B-v$ver
-squashfs_opts="-all-root -noappend -always-use-fragments"
+squashfs_opts="-all-root -noappend"
+squashfs2011_opts="-all-root -noappend -always-use-fragments -b 1048576"
 sed -i -e "s/^ver=.*/ver=$ver/g" install.sh
 cp -f install.sh $dir/scripts/
 sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd.org
@@ -39,7 +50,7 @@ rm -f dev-add.tar.gz lib/modules/*.ko
 find . -name '.svn' | xargs rm -rf
 cd ..
 rm -f $ofile2011.sqf $ofile2011.md5 $ofile2011.sha1 $ofile2011.zip
-mksquashfs squashfs-root-2011 $ofile2011.sqf $squashfs_opts
+mksquashfs squashfs-root-2011 $ofile2011.sqf $squashfs2011_opts
 osize=`wc -c $ofile.sqf | awk '{print $1}'`
 osize2011=`wc -c $ofile2011.sqf | awk '{print $1}'`
 if [ "$osize" -gt "$size" ]
@@ -80,4 +91,4 @@ sha1sum $ofile.sqf > $ofile.sha1
 sha1sum $ofile2011.sqf > $ofile2011.sha1
 zip $ofile.zip $ofile.sqf $ofile.sha1 install.sh
 zip $ofile2011.zip $ofile2011.sqf $ofile2011.sha1 install.sh
-#rm -rf squashfs-root squashfs-root-2011
+rm -rf squashfs-root squashfs-root-2011

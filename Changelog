@@ -225,6 +225,7 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: ywe first time configuration
     * FIX: abc.net.au link fix
     * FIX: /home was not writable on US and KR 2010 BCM models
+    * FIX: netcast_config_regenerator.sh should use all country groups now for 'enable_all' option
     * ADD: experimental support for SmartTV models
     * ADD: build and installation scripts can now handle 2011 BCM model images
     * ADD: support for KR 2010 BCM models
@@ -237,6 +238,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: mtdinfo.sh script for getting info about mtd partitions by mmm4m5m
     * ADD: yavido service alternate player (prototype for now)
     * ADD: rc.fwinfo to get info about TV model and LG firmware logged at boot
+    * ADD: nvram-edit tool to get info from NVRAM dump and change some locked values
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
     * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
     * CHANGE: partition mounting based on partition names instead of static mtd numbers - this should improve compatibility even with unknown models
