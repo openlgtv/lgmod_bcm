@@ -116,6 +116,7 @@ unsigned char ofile[200] = "/tmp/nvram-out";
 static bool verbose = false;
 
 void print_params(void);
+void print_usage(void);
 static int get_config(int argc, char *argv[]);
 
 static int get_config(int argc, char *argv[])
@@ -131,7 +132,7 @@ static int get_config(int argc, char *argv[])
     while (1) {
         option_index = 0;
 
-        c = getopt_long (argc, argv, "w:p:n:i:u:o:f:d:b:vt", long_options, &option_index);
+        c = getopt_long (argc, argv, "w:p:n:i:u:o:f:d:b:?hvt", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -161,11 +162,13 @@ static int get_config(int argc, char *argv[])
                 baudrate_new=atoi(baudrate_str);
                 baudrate_changed=1;
                 break;
+            case 'h':
+            case '?':
+                print_usage();
+                break;
             case 'v':
                 verbose = true;
                 break;
-            case '?':
-                return -1;
             case ':':
                 fprintf(stderr, "missing argument to option %c\n", c);
                 return -1;
@@ -191,6 +194,32 @@ void print_params(void)
     printf(format, "xor_out", (unsigned int)0x00000000);
     printf(format, "crc_mask", (unsigned int)0xffffffff);
     printf(format, "msb_mask", (unsigned int)0x80000000);
+}
+
+void print_usage(void)
+{
+    printf("Usage: nvram-edit [options]");
+    printf("\n");
+    printf("Default input file:  /tmp/nvram     (can be changed with -f /path/to/nvram_file argument)\n");
+    printf("Default output file: /tmp/nvram-out (can be changed with -o /path/to/nvram-out_file argument)\n");
+    printf("\n");
+    printf("Other options:\n");
+    printf("-b X - serial port baudrate for Debug Menu access, where X is:\n");
+    printf("       0 - 1200bps\n");
+    printf("       1 - 2400bps\n");
+    printf("       2 - 4800bps\n");
+    printf("       3 - 9600bps\n");
+    printf("       4 - 19200bps\n");
+    printf("       5 - 38400bps\n");
+    printf("       6 - 57600bps\n");
+    printf("       7 - 115200bps\n");
+    printf("-d X - set Debug Status (for Saturn 7 values 0-2, for BCM 3-5), where X is:\n");
+    printf("       0/3 - DEBUG\n");
+    printf("       1/4 - EVENT\n");
+    printf("       2/5 - RELEASE\n");
+    printf("-h/? - this help message\n");
+    printf("-v   - verbose (print CRC settings)\n");
+    printf("\n");
 }
 
 char* substring(const char* strn, size_t begin, size_t len)
