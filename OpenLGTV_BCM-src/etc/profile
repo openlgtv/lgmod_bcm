@@ -35,7 +35,8 @@ export PREMIUM_MASTER=master.swf
 export STORE_MASTER=StoreMaster.swf
 export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
 
-export TERMINFO_DIRS='/usr/share/terminfo'
+export TERMINFO_DIRS=/usr/share/terminfo
+export TERMCAP=/etc/termcap
 
 alias ll="ls -al"
 alias dir="ls -al"
@@ -43,6 +44,9 @@ alias dir="ls -al"
 alias vim="vi"
 alias screen="tmux"
 alias scr="tmux"
+
+alias dropc='echo 3 > /proc/sys/vm/drop_caches; free'
+alias tma='tmux attach-session'
 
 #alias unmount="for i in /mnt/usb*/*; do /bin/busybox2 umount $i 2>&1 | grep -v 'Invalid argument'; done"
 alias unmount="/bin/busybox2 hush -c \"echo umount /mnt/usb{1,2}/Drive{1,2,3,4} 2>&1 | grep -v 'Invalid argument'\""

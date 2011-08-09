@@ -265,4 +265,3 @@ then
 else
     echo "OpenLGTV_BCM-WARN: found modified Yahoo Widget Engine files on addon partition so you will have to check configs yourself..." | tee -a /var/log/OpenLGTV_BCM.log
 fi
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a /var/log/OpenLGTV_BCM.log
