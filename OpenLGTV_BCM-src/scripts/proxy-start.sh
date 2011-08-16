@@ -29,6 +29,7 @@ export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_
 export id=1
 #echo IDX $id SPAWN >&2
 
+# TODO: 0100007F:22B8 when using localhost 127.0.0.1 address
 if [ -n "`grep 00000000:$proxy_listen_port_hex /proc/net/tcp`" -o -f "$proxy_lock_file" ]
 then
     echo "Proxy is running!"
@@ -37,11 +38,13 @@ fi
 
 touch $proxy_lock_file
 
-busybox nc -l -p $proxy_listen_port -e $proxy_sh
+#depreciated - could handle properly only 1 connection at once# busybox nc -l -p $proxy_listen_port -e $proxy_sh
+#TODO: set when end of script debugging# busybox tcpsvd 127.0.0.1 $proxy_listen_port -e $proxy_sh
+busybox tcpsvd -v 0 $proxy_listen_port -e $proxy_sh
 
 #echo "respawner"
 
-$proxy_respawner
+#not needed with tcpsvd# $proxy_respawner
 
 rm $proxy_lock_file
 

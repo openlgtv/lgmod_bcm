@@ -10,6 +10,7 @@
 [ -z "$proxy_wait_time" ]    && proxy_wait_time=4
 [ -z "$proxy_connect_port" ] && proxy_connect_port=80
 [ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
+[ -z "$proxy_lock_file" ]    && proxy_lock_file=/var/run/proxy.lock
 
 read_lines="request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12 line13 line14 line15 line16 line17 line18 line19 line20"
 
