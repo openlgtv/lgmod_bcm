@@ -25,7 +25,7 @@ fi
 
 if [ -f "/mnt/user/cfg/ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
 then
-    echo "OpenLGTV_BCM-INFO: found Network Share configuration file /mnt/user/cfg/ndrvtab and mounted USB stick - parsing config content..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: found Network Share configuration file /mnt/user/cfg/ndrvtab and mounted USB stick - parsing config content..." | tee -a $bootlogf
     #cat /mnt/user/cfg/ndrvtab | while read ndrv < /mnt/user/cfg/ndrvtab
     #while read ndrv < /mnt/user/cfg/ndrvtab
     #cat /mnt/user/cfg/ndrvtab | read ndrv
@@ -42,57 +42,57 @@ then
 	#mntstat=`mount | grep "$src.*$dst"`
     ##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
     #done
-    echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..." | tee -a $bootlogf
     if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
     then
 	if [ ! -d "$USB_DIR/NetShare" ]
 	then
-	    mkdir -p "$USB_DIR/NetShare"              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	    mkdir -p "$USB_DIR/NetShare"              2>&1 | tee -a $bootlogf
 	fi
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"   | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"   | tee -a $bootlogf
 	if [ "$fs_type" = "cifs" ]
 	then
 	    if [ "`grep ^cifs /proc/modules`" = "" ]
 	    then
 		if [ -f "/mnt/user/modules/cifs.ko" ]
 		then
-		    echo "OpenLGTV_BCM-INFO: loading CIFS kernel module: /mnt/user/modules/cifs.ko..." | tee -a /var/log/OpenLGTV_BCM.log
-		    insmod /mnt/user/modules/cifs.ko                                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-INFO: loading CIFS kernel module: /mnt/user/modules/cifs.ko..." | tee -a $bootlogf
+		    insmod /mnt/user/modules/cifs.ko                                              2>&1 | tee -a $bootlogf
 		else
-		    echo "OpenLGTV_BCM-WARN: CIFS kernel module NOT FOUND in location: /mnt/user/modules/cifs.ko and module is not loaded... trying to mount CIFS without it" | tee -a /var/log/OpenLGTV_BCM.log
+		    echo "OpenLGTV_BCM-WARN: CIFS kernel module NOT FOUND in location: /mnt/user/modules/cifs.ko and module is not loaded... trying to mount CIFS without it" | tee -a $bootlogf
 		fi
 	    fi
 	    if [ "$WebUI_MOUNT" = "1" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."        | tee -a /var/log/OpenLGTV_BCM.log
-		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino  >> /var/log/OpenLGTV_BCM.log 2>&1
+		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."        | tee -a $bootlogf
+		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino  >> $bootlogf 2>&1
 		export mount_err_code="$?"
 	    else
-		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."                 | tee -a /var/log/OpenLGTV_BCM.log
+		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."                 | tee -a $bootlogf
 		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino &
 	    fi
 	else
 	    if [ "$WebUI_MOUNT" = "1" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."         | tee -a /var/log/OpenLGTV_BCM.log
-		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp                  >> /var/log/OpenLGTV_BCM.log 2>&1
+		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."         | tee -a $bootlogf
+		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp                  >> $bootlogf 2>&1
 		export mount_err_code="$?"
 	    else
-		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."                  | tee -a /var/log/OpenLGTV_BCM.log
+		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."                  | tee -a $bootlogf
 		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp &
 	    fi
 	fi
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                               | tee -a /var/log/OpenLGTV_BCM.log
+	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                               | tee -a $bootlogf
 	if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
 	then
-	    echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..." | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..." | tee -a $bootlogf
 	    exit $mount_err_code
 	else
-	    echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..." | tee -a /var/log/OpenLGTV_BCM.log
+	    echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..." | tee -a $bootlogf
 	    #$(sleep 10; echo nice -n 20 ls -alR "$USB_DIR/NetShare") > /dev/null 2>&1 &
 	    $(sleep 10; echo nice -n 20 ls -aR "$USB_DIR/NetShare") > /dev/null 2>&1 &
 	fi
     fi
 else
-    echo "OpenLGTV_BCM-INFO: NOT found Network Share configuration file /mnt/user/cfg/ndrvtab or mounted USB stick with OpenLGTV_BCM dir - skipping network share configuration..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: NOT found Network Share configuration file /mnt/user/cfg/ndrvtab or mounted USB stick with OpenLGTV_BCM dir - skipping network share configuration..." | tee -a $bootlogf
 fi

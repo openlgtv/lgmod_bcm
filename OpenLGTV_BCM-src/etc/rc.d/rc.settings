@@ -3,29 +3,29 @@
 # Settings setup script by xeros
 # Source code released under GPL License
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                 | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                 | tee -a $bootlogf
 if [ -f "/mnt/user/cfg/settings" -a ! -f "/mnt/user/cfg/settings.default" ]
 then
-    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM default settings config file (/mnt/user/cfg/settings.default) not found, but current settings file found, creating new files and reseting settings to default values" | tee -a /var/log/OpenLGTV_BCM.log
-    mv -f /mnt/user/cfg/settings /mnt/user/cfg/settings.bck 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM default settings config file (/mnt/user/cfg/settings.default) not found, but current settings file found, creating new files and reseting settings to default values" | tee -a $bootlogf
+    mv -f /mnt/user/cfg/settings /mnt/user/cfg/settings.bck 2>&1 | tee -a $bootlogf
     settings_read_from_backup=1
 fi
 
 if [ ! -f "/mnt/user/cfg/settings" ]
 then
-    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a /var/log/OpenLGTV_BCM.log
-    touch /mnt/user/cfg/settings                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) not found, creating it with default settings" | tee -a $bootlogf
+    touch /mnt/user/cfg/settings                            2>&1 | tee -a $bootlogf
 fi
 
 if [ -n "`grep '#' /mnt/user/cfg/settings`" ]
 then
-    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) is BROKEN, creating new settings files with default values" | tee -a /var/log/OpenLGTV_BCM.log
-    rm -f /mnt/user/cfg/settings*                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    touch /mnt/user/cfg/settings                            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) is BROKEN, creating new settings files with default values" | tee -a $bootlogf
+    rm -f /mnt/user/cfg/settings*                           2>&1 | tee -a $bootlogf
+    touch /mnt/user/cfg/settings                            2>&1 | tee -a $bootlogf
 fi
 
 # need to rethink if loading configuration shouldnt be earlier, even before telnet and ssh, but need to make safety checks to not break boot if config is bad
-echo "OpenLGTV_BCM-INFO: reading custom settings configuration and updating variables if they do not exist there" | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: reading custom settings configuration and updating variables if they do not exist there" | tee -a $bootlogf
 source /mnt/user/cfg/settings
 
 # v- removed from 0.5.0
@@ -51,7 +51,7 @@ settings_depreciated="confirmations rebooting netcast_kill_browser"
 #v- this could make inconsistency between default settings and current ones, so disabling it for now
 #if [ "$settings_read_from_backup" = "1" ]
 #then
-#    echo "OpenLGTV_BCM-WARN: bringing back current settings file on top of default config... " | tee -a /var/log/OpenLGTV_BCM.log
+#    echo "OpenLGTV_BCM-WARN: bringing back current settings file on top of default config... " | tee -a $bootlogf
 #    mv -f /mnt/user/cfg/settings.bck /mnt/user/cfg/settings
 #    settings_read_from_backup=0
 #    source /mnt/user/cfg/settings.default
@@ -59,16 +59,16 @@ settings_depreciated="confirmations rebooting netcast_kill_browser"
 
 if [ "$uver" != "$ver" ]
 then
-    echo "OpenLGTV_BCM-INFO: last booted version ($uver) is different than current one ($ver) - removing depreciated settings" | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: last booted version ($uver) is different than current one ($ver) - removing depreciated settings" | tee -a $bootlogf
     settings_sed=""
-    #for svar in $settings_depreciated; do settings_sed=" -e '/^$svar=/d'$settings_sed"; done                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    for svar in $settings_depreciated; do settings_sed=" -e /^$svar=/d$settings_sed"; done                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    sed -i $settings_sed /mnt/user/cfg/settings                                                                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    sed -i $settings_sed /mnt/user/cfg/settings.default                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    #for svar in $settings_depreciated; do settings_sed=" -e '/^$svar=/d'$settings_sed"; done                              2>&1 | tee -a $bootlogf
+    for svar in $settings_depreciated; do settings_sed=" -e /^$svar=/d$settings_sed"; done                                2>&1 | tee -a $bootlogf
+    sed -i $settings_sed /mnt/user/cfg/settings                                                                           2>&1 | tee -a $bootlogf
+    sed -i $settings_sed /mnt/user/cfg/settings.default                                                                   2>&1 | tee -a $bootlogf
 fi
 
-echo "OpenLGTV_BCM-INFO: re-reading custom settings configuration..."                                                          | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: re-reading custom settings configuration..."                                                          | tee -a $bootlogf
 source /mnt/user/cfg/settings
 
-echo "OpenLGTV_BCM-INFO: exporting custom settings configuration variables"                                                    | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: exporting custom settings configuration variables"                                                    | tee -a $bootlogf
 for svar in `cat /mnt/user/cfg/settings | awk -F= '{print $1}'`; do export $svar; done

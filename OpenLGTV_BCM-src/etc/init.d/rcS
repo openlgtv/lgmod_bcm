@@ -45,8 +45,12 @@ export ver=`cat /etc/ver2`
 mount -t proc proc /proc
 mount -t ramfs tmp /tmp
 
-echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."               | tee -a /tmp/OpenLGTV_BCM.log
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a /tmp/OpenLGTV_BCM.log
+mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron
+
+export bootlogf=/tmp/var/log/OpenLGTV_BCM.log
+
+echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."               | tee -a $bootlogf
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf
 
 AUTORUN=`cat /proc/cmdline | grep autorun`
 
@@ -55,15 +59,15 @@ then
 
 #mount -t ramfs tmp /tmp
 
-echo "OpenLGTV_BCM-INFO: starting in AUTORUN mode"                                    | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: starting in AUTORUN mode"                                    | tee -a $bootlogf
 
 source /etc/rc.d/rc.mount
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a /tmp/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf
 
 if [ -e "/mnt/lg/res/lglib/bcmdriver.ko" ]
 then
-    echo "OpenLGTV_BCM-INFO: loading /mnt/lg/res/lglib/bcmdriver.ko kernel module..." | tee -a /tmp/OpenLGTV_BCM.log
-    insmod /mnt/lg/res/lglib/bcmdriver.ko                                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: loading /mnt/lg/res/lglib/bcmdriver.ko kernel module..." | tee -a $bootlogf
+    insmod /mnt/lg/res/lglib/bcmdriver.ko                                        2>&1 | tee -a $bootlogf
 fi
 
 # mount partitons (/etc/fstab)
@@ -77,14 +81,14 @@ fi
 
 if [ ! -f "/mnt/flash/data/resolv.conf" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/resolv.conf file" | tee -a /tmp/OpenLGTV_BCM.log
-    touch /mnt/flash/data/resolv.conf                                    2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/resolv.conf file" | tee -a $bootlogf
+    touch /mnt/flash/data/resolv.conf                                    2>&1 | tee -a $bootlogf
 fi
 
 if [ ! -f "/mnt/flash/data/hosts" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/hosts file"       | tee -a /tmp/OpenLGTV_BCM.log
-    touch /mnt/flash/data/hosts                                          2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/hosts file"       | tee -a $bootlogf
+    touch /mnt/flash/data/hosts                                          2>&1 | tee -a $bootlogf
 fi
 
 export uver=`cat /mnt/user/etc/ver2`
@@ -93,74 +97,74 @@ export uver=`cat /mnt/user/etc/ver2`
 # Network parameters
 #
 
-echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data"                                   | tee -a /tmp/OpenLGTV_BCM.log
-mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron 2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-touch /var/run/utmp /var/log/wtmp /var/log/lastlog                       2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-chgrp utmp /var/run/utmp /var/log/wtmp                                   2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-chmod 0664 /var/run/utmp /var/log/wtmp                                   2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mv -f /tmp/OpenLGTV_BCM.log /var/log/
+echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data"                                   | tee -a $bootlogf
+#mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron 2>&1 | tee -a $bootlogf
+touch /var/run/utmp /var/log/wtmp /var/log/lastlog                       2>&1 | tee -a $bootlogf
+chgrp utmp /var/run/utmp /var/log/wtmp                                   2>&1 | tee -a $bootlogf
+chmod 0664 /var/run/utmp /var/log/wtmp                                   2>&1 | tee -a $bootlogf
+#mv -f $bootlogf /var/log/
 
 source /etc/rc.d/rc.network
 
 source /etc/rc.d/rc.kill-lginit
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                              | tee -a /var/log/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"                    | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                              | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"                    | tee -a $bootlogf
 #ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 ntpd -p pool.ntp.org > /dev/null 2>&1 &
 
 if [ ! "-d /mnt/user/etc" ]
 then
-    echo "OpenLGTV_BCM-WARN: /mnt/user/etc dir does not exist, creating it"   | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/etc                                                          >> /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-WARN: /mnt/user/etc dir does not exist, creating it"   | tee -a $bootlogf
+    mkdir -p /mnt/user/etc                                                          >> $bootlogf
     user_readonly=$?
 fi
 if [ "$user_readonly" -ne "0" ]
 then
-    echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a /var/log/OpenLGTV_BCM.log
-    mount -t tmpfs tmpfs /mnt/user               2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/etc                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a $bootlogf
+    mount -t tmpfs tmpfs /mnt/user               2>&1 | tee -a $bootlogf
+    mkdir -p /mnt/user/etc                       2>&1 | tee -a $bootlogf
 fi
 
 if [ ! -d "/mnt/user/cfg" ]
 then
-    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM config dir (/mnt/user/cfg) not found, creating it"      | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/cfg                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM config dir (/mnt/user/cfg) not found, creating it"      | tee -a $bootlogf
+    mkdir -p /mnt/user/cfg                       2>&1 | tee -a $bootlogf
 fi
 if [ ! -d "/mnt/user/lock" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock dir for one time script exectuting locks..." | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/lock                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock dir for one time script exectuting locks..." | tee -a $bootlogf
+    mkdir -p /mnt/user/lock                      2>&1 | tee -a $bootlogf
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"      | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"      | tee -a $bootlogf
 if [ ! -f "/usr/etc/passwd" ]
 then
     #mount -t tmpfs none /usr/etc
     if [ -f "/mnt/user/etc/passwd" ]
     then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/passwd file" | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/passwd file" | tee -a $bootlogf
 	#cp /mnt/user/etc/passwd /usr/etc/passwd
-	ln -sf /mnt/user/etc/passwd /usr/etc/passwd          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/passwd /usr/etc/passwd          2>&1 | tee -a $bootlogf
     else
-        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/passwd file based on default one" | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/passwd file based on default one" | tee -a $bootlogf
 	#cp /etc/passwd.org /usr/etc/passwd
-	cp /etc/passwd.org /mnt/user/etc/passwd              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	ln -sf /mnt/user/etc/passwd /usr/etc/passwd          2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp /etc/passwd.org /mnt/user/etc/passwd              2>&1 | tee -a $bootlogf
+	ln -sf /mnt/user/etc/passwd /usr/etc/passwd          2>&1 | tee -a $bootlogf
     fi
 fi
 if [ ! -f "/usr/etc/shadow" ]
 then
     if [ -f "/mnt/user/etc/shadow" ]
     then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/shadow file" | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/shadow file" | tee -a $bootlogf
 	#cp /mnt/user/etc/shadow /usr/etc/shadow
-	ln -sf /mnt/user/etc/shadow /usr/etc/shadow 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/shadow /usr/etc/shadow 2>&1 | tee -a $bootlogf
     else
-        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/shadow file based on default one" | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/shadow file based on default one" | tee -a $bootlogf
 	#cp /etc/shadow.org /usr/etc/shadow
-	cp /etc/shadow.org /mnt/user/etc/shadow     2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	ln -sf /mnt/user/etc/shadow /usr/etc/shadow 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	cp /etc/shadow.org /mnt/user/etc/shadow     2>&1 | tee -a $bootlogf
+	ln -sf /mnt/user/etc/shadow /usr/etc/shadow 2>&1 | tee -a $bootlogf
     fi
 fi
 
@@ -173,27 +177,27 @@ fi
 #	user_fix=`grep "^$i::" /mnt/user/etc/passwd | awk -F: '{print $1}'`
 #	if [ "$user_fix" != "" ]
 #	then
-#	    echo "OpenLGTV_BCM-WARN: enable password for user $user_fix in passwd file..." | tee -a /var/log/OpenLGTV_BCM.log
-#	    sed -i -e "s/^$user_fix::/$user_fix:x:/g" /mnt/user/etc/passwd            2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+#	    echo "OpenLGTV_BCM-WARN: enable password for user $user_fix in passwd file..." | tee -a $bootlogf
+#	    sed -i -e "s/^$user_fix::/$user_fix:x:/g" /mnt/user/etc/passwd            2>&1 | tee -a $bootlogf
 #	fi
 #    done
 #fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                             | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                             | tee -a $bootlogf
 if [ ! -d "/usr/etc/dropbear" ]
 then
     if [ -d "/mnt/user/etc/dropbear" ]
     then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys"         | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys"         | tee -a $bootlogf
 	#cp -r /mnt/user/etc/dropbear /usr/etc/
-	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear                                 2>&1 | tee -a $bootlogf
     else
-        echo "OpenLGTV_BCM-WARN: generating new SSH host keys in /mnt/user/etc/dropear path" | tee -a /var/log/OpenLGTV_BCM.log
-	mkdir -p /mnt/user/etc/dropbear                                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	dropbearkey -t dss -f /mnt/user/etc/dropbear/dropbear_dss_host_key              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-	dropbearkey -t rsa -f /mnt/user/etc/dropbear/dropbear_rsa_host_key              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+        echo "OpenLGTV_BCM-WARN: generating new SSH host keys in /mnt/user/etc/dropear path" | tee -a $bootlogf
+	mkdir -p /mnt/user/etc/dropbear                                                 2>&1 | tee -a $bootlogf
+	dropbearkey -t dss -f /mnt/user/etc/dropbear/dropbear_dss_host_key              2>&1 | tee -a $bootlogf
+	dropbearkey -t rsa -f /mnt/user/etc/dropbear/dropbear_rsa_host_key              2>&1 | tee -a $bootlogf
 	#cp -r /mnt/user/etc/dropbear /usr/etc/
-	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear                                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear                                 2>&1 | tee -a $bootlogf
     fi
 fi
 # v- not much useful, lets set static motd instead of such scripted modification
@@ -201,14 +205,14 @@ fi
 #then
 #    if [ -f "/mnt/user/etc/motd" ]
 #    then
-#        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/motd file" | tee -a /var/log/OpenLGTV_BCM.log
+#        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/motd file" | tee -a $bootlogf
 #	#cp /mnt/user/etc/shadow /usr/etc/shadow
-#	ln -sf /mnt/user/etc/motd /usr/etc/motd             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+#	ln -sf /mnt/user/etc/motd /usr/etc/motd             2>&1 | tee -a $bootlogf
 #    else
-#        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/motd file based on default one" | tee -a /var/log/OpenLGTV_BCM.log
+#        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/motd file based on default one" | tee -a $bootlogf
 #	#cp /etc/motd.org /usr/etc/motd
-#	cp /etc/motd.org /mnt/user/etc/motd                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
-#	ln -sf /mnt/user/etc/motd /usr/etc/motd             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+#	cp /etc/motd.org /mnt/user/etc/motd                 2>&1 | tee -a $bootlogf
+#	ln -sf /mnt/user/etc/motd /usr/etc/motd             2>&1 | tee -a $bootlogf
 #    fi
 #fi
 #if [ -f "/mnt/user/etc/motd" ]
@@ -216,38 +220,38 @@ fi
 #    ver_old=`cat /mnt/user/etc/motd | grep "Welcome to OpenLGTV BCM ver." | awk -F"ver. " '{print $2}' | sed 's/!//g'`
 #    if [ -n "$ver_old" ]
 #    then
-#        echo "OpenLGTV_BCM-INFO: setting correct OpenLGTV BCM version ($ver) in /tmp/motd file" | tee -a /var/log/OpenLGTV_BCM.log
+#        echo "OpenLGTV_BCM-INFO: setting correct OpenLGTV BCM version ($ver) in /tmp/motd file" | tee -a $bootlogf
 #	if [ "$ver_old" != "$ver" ]
 #	then
 #	    cat /mnt/user/etc/motd | sed "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver. $ver/g" > /tmp/motd
 #	else
-#	    cp /mnt/user/etc/motd /tmp/motd                 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+#	    cp /mnt/user/etc/motd /tmp/motd                 2>&1 | tee -a $bootlogf
 #	fi
 #    else
-#        echo "OpenLGTV_BCM-WARN: OpenLGTV BCM welcome string not found in /tmp/motd file" | tee -a /var/log/OpenLGTV_BCM.log
+#        echo "OpenLGTV_BCM-WARN: OpenLGTV BCM welcome string not found in /tmp/motd file" | tee -a $bootlogf
 #	cat /mnt/user/etc/motd > /tmp/motd
 #    fi
 #fi
 if [ ! -d "/mnt/user/.ssh" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/.ssh dir for storage of user SSH configs and keys"             | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir /mnt/user/.ssh                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/.ssh dir for storage of user SSH configs and keys"             | tee -a $bootlogf
+    mkdir /mnt/user/.ssh                                    2>&1 | tee -a $bootlogf
 fi
 if [ ! -d "/tmp/.ssh" ]
 then
-    echo "OpenLGTV_BCM-INFO: linking /tmp/.ssh to /mnt/user/.ssh dir for storage of user SSH configs and keys" | tee -a /var/log/OpenLGTV_BCM.log
-    ln -sf /mnt/user/.ssh /tmp/.ssh                         2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: linking /tmp/.ssh to /mnt/user/.ssh dir for storage of user SSH configs and keys" | tee -a $bootlogf
+    ln -sf /mnt/user/.ssh /tmp/.ssh                         2>&1 | tee -a $bootlogf
 fi
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                 | tee -a /var/log/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: starting portmapper..."                 | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                 | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: starting portmapper..."                 | tee -a $bootlogf
 portmap &
-echo "OpenLGTV_BCM-INFO: starting telnet server..."              | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: starting telnet server..."              | tee -a $bootlogf
 telnetd &
-echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."        | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."        | tee -a $bootlogf
 # v- output redirection makes dropbear stay in foreground, so need to add '&' after tee command
-dropbear                                                    2>&1 | tee -a /var/log/OpenLGTV_BCM.log &
-echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."    | tee -a /var/log/OpenLGTV_BCM.log
-hostname OpenLGTV_BCM                                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+dropbear                                                    2>&1 | tee -a $bootlogf &
+echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."    | tee -a $bootlogf
+hostname OpenLGTV_BCM                                       2>&1 | tee -a $bootlogf
 
 source /etc/rc.d/rc.settings
 
@@ -257,27 +261,27 @@ source /etc/rc.d/rc.settings
 # Mount-binding btusb.ko from /mnt/user/modules/
 if [ -f "/mnt/user/modules/btusb.ko" ]
 then
-    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/btusb.ko to /mnt/lg/res/lgres/btusb.ko..." | tee -a /var/log/OpenLGTV_BCM.log
-    mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko                       2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/btusb.ko to /mnt/lg/res/lgres/btusb.ko..." | tee -a $bootlogf
+    mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko                       2>&1 | tee -a $bootlogf
 fi
 
 # Mount-binding wl.ko from /mnt/user/modules/
 if [ -f "/mnt/user/modules/wl.ko" ]
 then
-    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko..."       | tee -a /var/log/OpenLGTV_BCM.log
-    mount --bind /mnt/user/modules/wl.ko /mnt/lg/res/lgres/wl.ko                             2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko..."       | tee -a $bootlogf
+    mount --bind /mnt/user/modules/wl.ko /mnt/lg/res/lgres/wl.ko                             2>&1 | tee -a $bootlogf
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a $bootlogf
 source /etc/rc.d/rc.netcast
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a $bootlogf
 source /etc/rc.d/rc.ywe
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a $bootlogf
 
 # Making nvram copy
 if [ "$mtd_nvram" != "" ]
 then
-    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd$mtd_nvram partition..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd$mtd_nvram partition..." | tee -a $bootlogf
     cat /dev/mtd$mtd_nvram > /tmp/nvram &
 fi
 
@@ -285,32 +289,32 @@ fi
 
 if [ ! -d "/mnt/user/www" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."   | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/www                                                      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."   | tee -a $bootlogf
+    mkdir -p /mnt/user/www                                                      2>&1 | tee -a $bootlogf
 fi
 
 if [ ! -f "/mnt/user/www/bookmarks.inc" ]
 then
-    echo "OpenLGTV_BCM-INFO: web browser bookmarks file not found, creating default from template in: /mnt/user/www/bookmarks.inc..."  | tee -a /var/log/OpenLGTV_BCM.log
-    cp /var/www/browser/templates/bookmarks.inc /mnt/user/www/                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: web browser bookmarks file not found, creating default from template in: /mnt/user/www/bookmarks.inc..."  | tee -a $bootlogf
+    cp /var/www/browser/templates/bookmarks.inc /mnt/user/www/                  2>&1 | tee -a $bootlogf
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                     | tee -a $bootlogf
 /etc/rc.d/rc.usb &
 
 md5password="`grep ^root: /etc/shadow | awk -F: '{print $2}'`"
 
 if [ ! -f "/mnt/user/etc/httpd.conf" ]
 then
-    echo "OpenLGTV_BCM-INFO: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..." | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..." | tee -a $bootlogf
     cat /etc/httpd.conf | sed 's/D:*/A:*/g' > /mnt/user/etc/httpd.conf
     if [ "`grep ^root:x /etc/passwd`" = "" ]
     then
-	echo "OpenLGTV_BCM-WARN: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it" | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-WARN: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it" | tee -a $bootlogf
 	#echo '/:openlgtv:openlgtv' >> /mnt/user/etc/httpd.conf
 	echo '/:openlgtv:$1$3X/HLa0A$UNzgE.VueZjnJG1wCNIgB0' >> /mnt/user/etc/httpd.conf
     else
-	echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf" | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf" | tee -a $bootlogf
 	echo "/:openlgtv:$md5password" >> /mnt/user/etc/httpd.conf
     fi
 fi
@@ -319,44 +323,44 @@ md5password_httpd="`grep ^/:openlgtv: /mnt/user/etc/httpd.conf | awk -F: '{print
 
 if [ "$md5password_httpd" != "$md5password" ]
 then
-    echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf config change" | tee -a /var/log/OpenLGTV_BCM.log
-    sed -i -e "s:^/\:openlgtv\:.*:/\:openlgtv\:$md5password:g" /mnt/user/etc/httpd.conf  | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf config change" | tee -a $bootlogf
+    sed -i -e "s:^/\:openlgtv\:.*:/\:openlgtv\:$md5password:g" /mnt/user/etc/httpd.conf  | tee -a $bootlogf
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a /var/log/OpenLGTV_BCM.log
-echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88" | tee -a /var/log/OpenLGTV_BCM.log
-#httpd -h /var/www | tee -a /var/log/OpenLGTV_BCM.log
-httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www      2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88" | tee -a $bootlogf
+#httpd -h /var/www | tee -a $bootlogf
+httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www      2>&1 | tee -a $bootlogf
 if [ -f "/mnt/user/etc/httpd.conf" ]
 then
-    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication" | tee -a /var/log/OpenLGTV_BCM.log
-    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" 2>&1          | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication" | tee -a $bootlogf
+    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" 2>&1          | tee -a $bootlogf
 else
-    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a $bootlogf
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a $bootlogf
 (sleep 10; /etc/rc.d/rc.directfb)&
 
 if [ "$uver" != "$ver" ]
 then
-    echo "OpenLGTV_BCM-INFO: last booted version is different from current, making /mnt/user/etc/ver2 file update" | tee -a /tmp/OpenLGTV_BCM.log
-    cp -f /etc/ver2 /mnt/user/etc/ver2                                         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: last booted version is different from current, making /mnt/user/etc/ver2 file update" | tee -a $bootlogf
+    cp -f /etc/ver2 /mnt/user/etc/ver2                                         2>&1 | tee -a $bootlogf
 fi
 
 if [ ! -d "/mnt/user/init.d" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a /var/log/OpenLGTV_BCM.log
-    mkdir -p /mnt/user/init.d                                                  2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a $bootlogf
+    mkdir -p /mnt/user/init.d                                                  2>&1 | tee -a $bootlogf
 fi
 
 if [ -d "/mnt/user/init.d" ]
 then
-    echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"  | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"  | tee -a $bootlogf
     for scr_file in /mnt/user/init.d/*
     do
-	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                           | tee -a /var/log/OpenLGTV_BCM.log
-	$scr_file                                                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                           | tee -a $bootlogf
+	$scr_file                                                              2>&1 | tee -a $bootlogf
     done
 fi
 
@@ -364,20 +368,20 @@ echo ""
 
 if [ "$RELEASE_in_tmux" != "0" ]
 then
-    echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"            | tee -a /var/log/OpenLGTV_BCM.log
-    echo ""                                                    | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"            | tee -a $bootlogf
+    echo ""                                                    | tee -a $bootlogf
     /usr/bin/tmux new-session -n 'RELEASE' '/lg/lgapp/RELEASE 0'
     #/bin/sh
 else
-    echo "OpenLGTV_BCM-INFO: start RELEASE"                    | tee -a /var/log/OpenLGTV_BCM.log
-    echo ""                                                    | tee -a /var/log/OpenLGTV_BCM.log
+    echo "OpenLGTV_BCM-INFO: start RELEASE"                    | tee -a $bootlogf
+    echo ""                                                    | tee -a $bootlogf
     /lg/lgapp/RELEASE 0
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a /var/log/OpenLGTV_BCM.log
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"               | tee -a $bootlogf
 #/bin/sh
 
-echo "OpenLGTV_BCM-INFO: Done...login now"                     | tee -a /var/log/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: Done...login now"                     | tee -a $bootlogf
 echo ""
 
 
