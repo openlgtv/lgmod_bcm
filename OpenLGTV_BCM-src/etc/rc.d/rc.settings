@@ -61,7 +61,8 @@ if [ "$uver" != "$ver" ]
 then
     echo "OpenLGTV_BCM-INFO: last booted version ($uver) is different than current one ($ver) - removing depreciated settings" | tee -a /var/log/OpenLGTV_BCM.log
     settings_sed=""
-    for svar in $settings_depreciated; do settings_sed=" -e '/^$svar=/d'$settings_sed"; done                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    #for svar in $settings_depreciated; do settings_sed=" -e '/^$svar=/d'$settings_sed"; done                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+    for svar in $settings_depreciated; do settings_sed=" -e /^$svar=/d$settings_sed"; done                                2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     sed -i $settings_sed /mnt/user/cfg/settings                                                                           2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     sed -i $settings_sed /mnt/user/cfg/settings.default                                                                   2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 fi

@@ -338,6 +338,12 @@ fi
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a /var/log/OpenLGTV_BCM.log
 (sleep 10; /etc/rc.d/rc.directfb)&
 
+if [ "$uver" != "$ver" ]
+then
+    echo "OpenLGTV_BCM-INFO: last booted version is different from current, making /mnt/user/etc/ver2 file update" | tee -a /tmp/OpenLGTV_BCM.log
+    cp -f /etc/ver2 /mnt/user/etc/ver2                                         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+fi
+
 if [ ! -d "/mnt/user/init.d" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a /var/log/OpenLGTV_BCM.log
@@ -352,12 +358,6 @@ then
 	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                           | tee -a /var/log/OpenLGTV_BCM.log
 	$scr_file                                                              2>&1 | tee -a /var/log/OpenLGTV_BCM.log
     done
-fi
-
-if [ "$uver" != "$ver" ]
-then
-    echo "OpenLGTV_BCM-INFO: last booted version is different from current, making /mnt/user/etc/ver2 file update" | tee -a /tmp/OpenLGTV_BCM.log
-    cp -f /etc/ver2 /mnt/user/etc/ver2                                         2>&1 | tee -a /tmp/OpenLGTV_BCM.log
 fi
 
 echo ""
