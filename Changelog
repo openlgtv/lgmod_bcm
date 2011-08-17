@@ -240,6 +240,8 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: rc.fwinfo to get info about TV model and LG firmware logged at boot
     * ADD: nvram-edit tool to get info from NVRAM dump and change some locked values
     * ADD: libncurses.so.5.7 and recompiled top binary to use the lib
+    * ADD: lua, luac, liblua.so.5.1.4
+    * ADD: libopenrelease.so
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
     * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
