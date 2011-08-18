@@ -3,8 +3,19 @@
 # Source code released under GPL License
 if [ ! -d "$ywedir" -a ! -h "$ywedir" ]
 then
-    echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: not found ywedir=$ywedir path, trying set it to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe instead..." | tee -a /var/log/OpenLGTV_BCM.log
-    ywedir=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
+    ywedir_old="$ywedir"
+    for usb_port in usb1 usb2
+    do
+	for drive in Drive1 Drive2 Drive3 Drive4
+	do
+	    [ -d "/mnt/$usb_port/$drive/OpenLGTV_BCM/ywe" ] && ywedir="/mnt/$usb_port/$drive/OpenLGTV_BCM/ywe"
+	done
+    done
+    if [ "$ywedir" != "$ywedir_old" ]
+    then
+	echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: ywe not found in ywedir=$ywedir_old path, but found in $ywedir..." | tee -a /var/log/OpenLGTV_BCM.log
+    fi
+    #ywedir=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
 fi
 
 if [ -f "$ywedir/bin/konfabulator.sh" -o -h "$ywedir/bin/konfabulator.sh" ]

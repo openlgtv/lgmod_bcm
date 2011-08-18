@@ -26,7 +26,7 @@ squashfs_opts="-all-root -noappend"
 squashfs2011_opts="-all-root -noappend -always-use-fragments -b 1048576"
 sed -i -e "s/^ver=.*/ver=$ver/g" install.sh
 cp -f install.sh $dir/scripts/
-sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd.org
+sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd
 find $dir -type d -exec chmod 775 '{}' \;
 chmod -R 755 $dir/bin/* $dir/sbin/* $dir/usr/bin/* $dir/usr/sbin/* $dir/etc/init.d/* $dir/etc/rc.d/* \
 	     $dir/scripts/* $dir/var/www/ywe/*.sh \

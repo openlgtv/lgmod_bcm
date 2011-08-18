@@ -131,7 +131,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: support for Yahoo Widgets Data used as ramdisk (set to max 80MB) if ywedata partition is not available in both NAND flash or USB storage device
     * ADD: support for Samsung Yahoo Widgets (by default drop support for LG Yahoo Widgets - Samsung offer all the LG has and it's newer platform and a lot more widgets)
     * ADD: adding Yahoo Widgets NetCast item by default for EU models
-    * ADD: if there's now 'ywe' dir on 'addon' partition then set Yahoo Widgets Engine dir to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe
+    * ADD: if there's no 'ywe' dir on 'addon' partition then set Yahoo Widgets Engine dir to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe
     * ADD: RELEASE is started now in tmux, so it's possible to control RELEASE over telnet or SSH, too
     * ADD: /mnt/user/cfg/settings file with configuration variables for OpenLGTV BCM scripts
     * ADD: possibility to enable all available NetCast services (disabled by default, be careful as it sorts all of them alphabetically and some do not have it's icons)
@@ -226,6 +226,7 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: abc.net.au link fix
     * FIX: /home was not writable on US and KR 2010 BCM models
     * FIX: netcast_config_regenerator.sh should use all country groups now for 'enable_all' option
+    * FIX: support for Yahoo Widgets Engine running from other usb ports and other partitions
     * ADD: experimental support for SmartTV models
     * ADD: build and installation scripts can now handle 2011 BCM model images
     * ADD: support for KR 2010 BCM models
@@ -249,3 +250,4 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: settings separated from rcS into /etc/rc.d/rc.settings
     * CHANGE: Internet Browser can be separated from WebUI (and proxied) with it's own NetCast icon in WebUI settings
     * CHANGE: increase Bluetooth transfer storage from 10MB to 20MB
+    * CHANGE: support for OpenLGTV_BCM dir on any partition number on any of two USB ports in TV

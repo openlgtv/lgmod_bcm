@@ -6,16 +6,22 @@
 # USB testing code for WebUI executed script
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
-if [ "$USB_DIR" = "" -o "$OpenLGTV_BCM_USB" = "" ]
+#if [ "$USB_DIR" = "" -o "$OpenLGTV_BCM_USB" = "" ]
+#then
+#    if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
+#    then
+#	export USB_DIR=$USB2_DIR
+#	export OpenLGTV_BCM_USB=$USB2_DIR/OpenLGTV_BCM
+#    else
+#	export USB_DIR=$USB1_DIR
+#	export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
+#    fi
+#fi
+
+if [ -f "/tmp/usbdir" ]
 then
-    if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
-    then
-	export USB_DIR=$USB2_DIR
-	export OpenLGTV_BCM_USB=$USB2_DIR/OpenLGTV_BCM
-    else
-	export USB_DIR=$USB1_DIR
-	export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
-    fi
+    export USB_DIR="`cat /tmp/usbdir`"
+    export OpenLGTV_BCM_USB="$USB_DIR/OpenLGTV_BCM"
 fi
 
 if [ "$1" = "WebUI_MOUNT" ]

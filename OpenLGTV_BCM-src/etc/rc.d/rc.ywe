@@ -13,11 +13,13 @@ then
     export ywedir=/mnt/addon/ywe
     if [ "$OpenLGTV_BCM_USB" = "" ]
     then
-	if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+	#if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+	if [ -f "/tmp/usbdir" ]
 	then
-	    export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
-	else
-	    export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+	    #export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+	    export OpenLGTV_BCM_USB="`cat /tmp/usbdir`/OpenLGTV_BCM"
+	#else
+	#    export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
 	fi
     fi
     export ywedir_usb=$OpenLGTV_BCM_USB/ywe

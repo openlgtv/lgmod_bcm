@@ -8,21 +8,23 @@ USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
 k=0;
 echo "OpenLGTV_BCM-INFO: rc.usb starting..."               | tee -a $bootlogf
-while [ ! -d "$USB1_DIR/OpenLGTV_BCM" -a ! -d "$USB2_DIR/OpenLGTV_BCM" ]; 
+while [ -z "`cat /proc/mounts | grep ^/dev/sd`" ]
 do
-    sleep 1;
+    sleep 1
     k=$(($k+1))
     if [ $k -gt 30 ]; then break; fi
-done;
+done
 
-if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
-then
-    export USB_DIR=$USB2_DIR
-    export OpenLGTV_BCM_USB=$USB2_DIR/OpenLGTV_BCM
-else
-    export USB_DIR=$USB1_DIR
-    export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
-fi
+for jj in 1 2 3 4
+do
+    for ii in 1 2
+    do
+	OpenLGTV_BCM_USB="/mnt/usb$ii/Drive$jj/OpenLGTV_BCM"
+	[ -d "$OpenLGTV_BCM_USB" ] || continue
+    done
+done
+export OpenLGTV_BCM_USB
+export USB_DIR=`echo $OpenLGTV_BCM_USB | sed 's#/OpenLGTV_BCM##g'`
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a $bootlogf
 source /etc/rc.d/rc.usb-remount
@@ -30,6 +32,7 @@ source /etc/rc.d/rc.usb-remount
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."         | tee -a $bootlogf
+    echo "$USB_DIR" > /tmp/usbdir
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
