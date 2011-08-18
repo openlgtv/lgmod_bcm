@@ -20,7 +20,7 @@ do
     for ii in 1 2
     do
 	OpenLGTV_BCM_USB="/mnt/usb$ii/Drive$jj/OpenLGTV_BCM"
-	[ -d "$OpenLGTV_BCM_USB" ] || continue
+	[ -d "$OpenLGTV_BCM_USB" ] && break 2
     done
 done
 export OpenLGTV_BCM_USB

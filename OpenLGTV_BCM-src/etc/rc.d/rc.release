@@ -7,13 +7,13 @@ if [ "$OPENRELEASE" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: setting OPENRELEASE to start"           | tee -a $bootlogf
     RELEASE_cmd="/usr/bin/OPENRELEASE"
-    if [ ! -f "/mnt/user/etc/openrelease.cfg" -o ! -f "/mnt/user/etc/openrelease_keymap.cfg" ]
+    if [ ! -f "/mnt/user/etc/openrelease/openrelease.cfg" -o ! -f "/mnt/user/etc/openrelease/openrelease_keymap.cfg" ]
     then
 	echo "OpenLGTV_BCM-WARN: OPENRELEASE configs not found in /mnt/user/etc/openrelease, preparing defaults"       | tee -a $bootlogf
 	mkdir -p /mnt/user/etc/openrelease                      2>&1 | tee -a $bootlogf
 	cp -f /etc/openrelease/* /mnt/user/etc/openrelease/     2>&1 | tee -a $bootlogf
     fi
-    if [ -f "/mnt/user/etc/openrelease.cfg" -a "/mnt/user/etc/openrelease_keymap.cfg" ]
+    if [ -f "/mnt/user/etc/openrelease/openrelease.cfg" -a "/mnt/user/etc/openrelease/openrelease_keymap.cfg" ]
     then
 	echo "OpenLGTV_BCM-INFO: mount-binding OPENRELEASE configs from /mnt/user/etc/openrelease to /etc/openrelease" | tee -a $bootlogf
 	mount --bind /mnt/user/etc/openrelease /etc/openrelease 2>&1 | tee -a $bootlogf

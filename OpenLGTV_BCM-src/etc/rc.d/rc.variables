@@ -13,7 +13,6 @@ export OSAMEM_SIZE=0x200000
 export LOAD_SYM=1
 export HOOK_SEGV=YES
 export IS_NFS=NO
-export TERM=vt100
 export ADDON_SYS_PATH=/mnt/addon
 export ADDON_RES_PATH=/mnt/lg/res/lgfont
 export ADDON_APP_CTRL=addon_mgr

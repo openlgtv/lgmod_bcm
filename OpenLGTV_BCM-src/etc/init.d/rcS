@@ -19,6 +19,9 @@ export LD_LIBRARY_PATH=.:/mnt/user/lib:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/
 
 source /etc/rc.d/rc.variables
 
+# TERM should be set only for boot, profile loaded at login shouldn't set it itself
+export TERM=vt100
+
 mount -t proc proc /proc
 mount -t ramfs tmp /tmp
 
