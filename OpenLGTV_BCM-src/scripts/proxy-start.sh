@@ -15,7 +15,8 @@
 [ -z "$proxy_listen_port" ]       && proxy_listen_port=8888
 [ -z "$proxy_listen_port_hex" ]   && proxy_listen_port_hex=22B8
 [ -z "$proxy_usleep_time" ]       && proxy_usleep_time=80
-[ -z "$proxy_wait_time" ]         && proxy_wait_time=4
+#[ -z "$proxy_wait_time" ]         && proxy_wait_time=4
+[ -z "$proxy_wait_time" ]         && proxy_wait_time=8
 [ -z "$proxy_respawn_run_check" ] && proxy_respawn_run_check=0
 #[ -z "$proxy_log_debug" ]        && proxy_log_debug=3
 [ -z "$proxy_log_debug" ]         && proxy_log_debug=0

@@ -4,10 +4,9 @@
 # Proxy script for JavaScript code injection
 # Source code released under GPL License
 
-# it's still better to set web browser max connections to 1 to minimalize risk of connection drops
-
 # those vars should be set by proxy-start.sh or proxy-respawner.sh
-[ -z "$proxy_wait_time" ]    && proxy_wait_time=4
+#[ -z "$proxy_wait_time" ]    && proxy_wait_time=4
+[ -z "$proxy_wait_time" ]    && proxy_wait_time=8
 [ -z "$proxy_connect_port" ] && proxy_connect_port=80
 [ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
 [ -z "$proxy_lock_file" ]    && proxy_lock_file=/var/run/proxy.lock
@@ -88,10 +87,13 @@ fi
     fi | \
     busybox nc -w$proxy_wait_time $connect_to $connect_to_port | \
     busybox sed \
-	-e 's/\(Content-Length:\).*/\1/' \
+	-e 's/\(Content-Length:\).*/\1/' | \
+    if [ "$connect_to" != "127.0.0.1" -a -z "`echo $request | grep '/favicon\.ico '`" ]
+    then
+      busybox sed \
 	-e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
 	-e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
-    	<script type='text/javascript'>\n\
+	<script type='text/javascript'>\n\
 	//******** MOBILE PHONE-STYLE KEYPAD *********\n\
 	var keys = new Array();\n\
 \n\
@@ -320,7 +322,10 @@ document.onkeydown = check;\n\
 		\n\
 		document.defaultAction = true;\n\
 	</script>\n\
-    #" | \
+      #"
+    else
+	cat
+    fi | \
 if [ "$proxy_log_debug" -ge "3" ]
 then
     tee -a $proxy_log_file

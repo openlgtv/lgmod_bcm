@@ -3,6 +3,8 @@
 # Proxy script for JavaScript code injection respawner
 # Source code released under GPL License
 
+# DEPRECIATED SCRIPT, NOT USED NOW
+
 # proxy_log_debug values:
 # 0 - no logging at all
 # 1 - logging only processes

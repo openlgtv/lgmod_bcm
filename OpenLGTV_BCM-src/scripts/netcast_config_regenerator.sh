@@ -1,5 +1,5 @@
 #!/bin/ash
-# OpenLGTV BCM NetCast config parser and regenerator v.0.6 by xeros
+# OpenLGTV BCM NetCast config parser and regenerator v.0.7 by xeros
 # Source code released under GPL License
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
 
@@ -13,6 +13,10 @@ oid_link=http://127.0.0.1:88/                 #OpenLGTV BCM WebUI URL
 proxy_link=http://127.0.0.1:8888/             #Web proxy for remote navigation code injection URL
 wid_link=http://127.0.0.1:88/browser.cgi      #OpenLGTV BCM Internet Browser URL
 country_groups="KR US BR EU CN AU SG ZA VN TW XA XB IL ID MY IR ZZ"
+#proxy_MAX_CONNECTION=1
+proxy_MAX_CONNECTION=6
+#proxy_MAX_CONNECTION_PER_HOST=1
+proxy_MAX_CONNECTION_PER_HOST=4
 
 # default configs paths - should get new values with command line arguments
 org_cfgxml=/mnt/user/netcast/config.xml
@@ -249,8 +253,8 @@ then
 	    then
 		echo "OpenLGTV BCM-INFO: NetCast config generator: setting \"$wid_name\" id: $wid_number link: $wid_link for proxy in $proxy_config_txt"
 		cat "$org_run3556" | \
-		    sed -e 's/^export MAX_CONNECTION=.*/export MAX_CONNECTION=1/g' \
-			-e 's/^export MAX_CONNECTION_PER_HOST=.*/export MAX_CONNECTION_PER_HOST=1/g' \
+		    sed -e "s/^export MAX_CONNECTION=.*/export MAX_CONNECTION=$proxy_MAX_CONNECTION/g" \
+			-e "s/^export MAX_CONNECTION_PER_HOST=.*/export MAX_CONNECTION_PER_HOST=$proxy_MAX_CONNECTION_PER_HOST/g" \
 			-e "s#^export PROXY_CONFIG_FILE_PATH=.*#export PROXY_CONFIG_FILE_PATH=\"$proxy_config_txt\"#g" \
 			-e "s#^EXTRA_CONF=.*#EXTRA_CONF=\"$extra_conf_proxy\"#g" \
 			> $run3556_proxy
