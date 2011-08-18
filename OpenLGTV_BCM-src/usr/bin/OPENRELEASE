@@ -1,0 +1,22 @@
+#!/bin/sh
+source /etc/rc.d/rc.variables
+
+config_defined=true
+
+config_file="/etc/openrelease/openrelease.cfg"
+
+args=$@
+if [ "${config_file}" != "" ]
+then
+	args="-c ${config_file} -l /var/log/OPENRELEASE.log -vvv -- 0 ${args}"
+	# -c FILE - config file to load from
+	# -d - become daemon (go to background)
+	# -h - help
+	# -l FILE - log file: used for debug printing
+	# -v - verbose level, multiple options are allowed: determines verbosity level for debug printing
+	# -V - OPENRELEASE version
+fi
+
+#export LD_LIBRARY_PATH=/mnt/user/lib:lib:/lib:$LD_LIBRARY_PATH
+export LD_PRELOAD=libopenrelease.so
+exec /lg/lgapp/RELEASE ${args}

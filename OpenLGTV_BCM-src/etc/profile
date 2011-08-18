@@ -5,38 +5,8 @@
 echo "Processing /etc/profile..."
 
 stty brkint
-#export PATH=.:$PATH
 
-#echo "OpenLGTV_BCM-INFO: variables initialization"
-#export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:.
-export PATH=.:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
-
-#export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib:/mnt/lg/res/lgres
-export LD_LIBRARY_PATH=.:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
-export LOG_CALLER=NO
-export OSAMEM_SIZE=0x200000
-export LOAD_SYM=1
-export HOOK_SEGV=YES
-export IS_NFS=NO
-#export TERM=vt100
-export ADDON_SYS_PATH=/mnt/addon
-export ADDON_RES_PATH=/mnt/lg/res/lgfont
-export ADDON_APP_CTRL=addon_mgr
-export ADDON_APP_BATCH_LIST=addon_mgr.bat
-export FLASH_APP_NAME=/mnt/addon/stagecraft/bin/stagecraft
-export FLASH_YOUTUBE_PATH=/mnt/addon/contents/youtube/exec_youtube.swf
-export FLASH_PICASA_PATH=/mnt/addon/contents/picasa/exec_picasa.swf
-export FLASH_EMANUAL_PATH=/mnt/addon/contents/emanual/emmanager.swf
-export ADDON_PRELOADED_PATH=/mnt/addon/contents
-export HOME=/home
-export DEPLOY_DIR=/mnt/browser
-export ADDON_UP_CTRL=up_ctrl
-export PREMIUM_MASTER=master.swf
-export STORE_MASTER=StoreMaster.swf
-export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
-
-export TERMINFO_DIRS=/usr/share/terminfo
-export TERMCAP=/etc/termcap
+source /etc/rc.d/rc.variables
 
 alias ll="ls -al"
 alias dir="ls -al"

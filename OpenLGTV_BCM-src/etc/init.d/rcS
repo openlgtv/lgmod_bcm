@@ -16,38 +16,13 @@ echo "OpenLGTV_BCM-INFO: variables initialization"
 export PATH=.:/mnt/user/bin:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
 #export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib:/mnt/lg/res/lgres
 export LD_LIBRARY_PATH=.:/mnt/user/lib:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
-export LOG_CALLER=NO
-export OSAMEM_SIZE=0x200000
-export LOAD_SYM=1
-export HOOK_SEGV=YES
-export IS_NFS=NO
-export TERM=vt100
-export ADDON_SYS_PATH=/mnt/addon
-export ADDON_RES_PATH=/mnt/lg/res/lgfont
-export ADDON_APP_CTRL=addon_mgr
-export ADDON_APP_BATCH_LIST=addon_mgr.bat
-export FLASH_APP_NAME=/mnt/addon/stagecraft/bin/stagecraft
-export FLASH_YOUTUBE_PATH=/mnt/addon/contents/youtube/exec_youtube.swf
-export FLASH_PICASA_PATH=/mnt/addon/contents/picasa/exec_picasa.swf
-export FLASH_EMANUAL_PATH=/mnt/addon/contents/emanual/emmanager.swf
-export ADDON_PRELOADED_PATH=/mnt/addon/contents
-export HOME=/home
-export DEPLOY_DIR=/mnt/browser
-export ADDON_UP_CTRL=up_ctrl
-export PREMIUM_MASTER=master.swf
-export STORE_MASTER=StoreMaster.swf
-export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
 
-export TERMINFO_DIRS=/usr/share/terminfo
-
-export ver=`cat /etc/ver2`
+source /etc/rc.d/rc.variables
 
 mount -t proc proc /proc
 mount -t ramfs tmp /tmp
 
 mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron
-
-export bootlogf=/tmp/var/log/OpenLGTV_BCM.log
 
 echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."               | tee -a $bootlogf
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf
@@ -366,17 +341,7 @@ fi
 
 echo ""
 
-if [ "$RELEASE_in_tmux" != "0" ]
-then
-    echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"            | tee -a $bootlogf
-    echo ""                                                    | tee -a $bootlogf
-    /usr/bin/tmux new-session -n 'RELEASE' '/lg/lgapp/RELEASE 0'
-    #/bin/sh
-else
-    echo "OpenLGTV_BCM-INFO: start RELEASE"                    | tee -a $bootlogf
-    echo ""                                                    | tee -a $bootlogf
-    /lg/lgapp/RELEASE 0
-fi
+source /etc/rc.d/rc.release
 
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"               | tee -a $bootlogf
 #/bin/sh
