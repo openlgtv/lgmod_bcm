@@ -40,7 +40,7 @@ touch $proxy_lock_file
 
 #depreciated - could handle properly only 1 connection at once# busybox nc -l -p $proxy_listen_port -e $proxy_sh
 #TODO: set when end of script debugging# busybox tcpsvd 127.0.0.1 $proxy_listen_port -e $proxy_sh
-busybox tcpsvd -v 0 $proxy_listen_port -e $proxy_sh
+busybox tcpsvd -v 0 $proxy_listen_port $proxy_sh
 
 #echo "respawner"
 
