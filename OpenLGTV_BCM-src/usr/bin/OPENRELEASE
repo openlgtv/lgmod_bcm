@@ -1,4 +1,7 @@
 #!/bin/sh
+# OPENRELEASE starting script
+# OPENRELEASE by rtokarev is licensed under BSD licence
+
 source /etc/rc.d/rc.variables
 
 config_defined=true
