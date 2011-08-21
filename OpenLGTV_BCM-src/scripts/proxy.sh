@@ -4,12 +4,17 @@
 # Proxy script for JavaScript code injection
 # Source code released under GPL License
 
-# those vars should be set by proxy-start.sh or proxy-respawner.sh
-#[ -z "$proxy_wait_time" ]    && proxy_wait_time=4
+# those vars should be set by proxy-start.sh or via env var in cmdline for testing
+#[ -z "$proxy_wait_time" ]   && proxy_wait_time=4
 [ -z "$proxy_wait_time" ]    && proxy_wait_time=8
 [ -z "$proxy_connect_port" ] && proxy_connect_port=80
 [ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
-[ -z "$proxy_lock_file" ]    && proxy_lock_file=/var/run/proxy.lock
+
+# for proxy testing on PC
+#[ -z "$awk" ]               && awk="busybox awk"
+[ -z "$awk" ]                && awk=awk
+[ -z "$sed" ]                && sed=sed
+[ -z "$nc" ]                 && nc=nc
 
 read_lines="request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12 line13 line14 line15 line16 line17 line18 line19 line20"
 
@@ -22,9 +27,9 @@ do
     then
 	echo `echo $content` >&2
     fi
-    if [ "`echo $content | awk '{print $1}'`" = "Content-Length:" ]
+    if [ "`echo $content | $awk '{print $1}'`" = "Content-Length:" ]
     then
-	content_length="`echo $content | awk '{print $2}' | tr -d '\r'`"
+	content_length="`echo $content | $awk '{print $2}' | tr -d '\r'`"
 	if [ "$proxy_log_debug" -ge "1" ]
 	then
 	    echo "ID $id CONTENT-LENGTH: $content_length" >&2
@@ -42,9 +47,9 @@ done
 
 #connect_to=`echo $host | grep 'Host:' | awk '{print $2}' | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
 #connect_to=`echo $host | awk '{print $2}' | tr -d '\r'`
-connect_to=`/bin/echo -e "$host\n$line3\n$line4" | grep 'Host:' | awk '{print $2}' | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
-connect_to_port_test=`echo $connect_to | busybox awk -F: '{print $2}'"`
-connect_to=`echo $connect_to | busybox awk -F: '{print $1}'"`
+connect_to=`/bin/echo -e "$host\n$line3\n$line4" | grep 'Host:' | $awk '{print $2}' | $sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
+connect_to_port_test=`echo $connect_to | $awk -F: '{print $2}'"`
+connect_to=`echo $connect_to | $awk -F: '{print $1}'"`
 
 if [ -n "$connect_to_port_test" ]
 then
@@ -63,17 +68,17 @@ fi
 #	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
 #	-e 's/\(Accept-Encoding:\).*/\1 identity\nTransfer-Encoding: identity/g' \
 
-#/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | sed -e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' -e 's/\(Accept-Encoding:\).*/\1/g' | tee -a $log | busybox nc -w2 $connect_to 80 | tee -a $log
+#/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | sed -e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' -e 's/\(Accept-Encoding:\).*/\1/g' | tee -a $log | $nc -w2 $connect_to 80 | tee -a $log
 #/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | \
 /bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi; /bin/echo -e "\r\n") | \
-    sed 's/^ //g' | \
+    $sed 's/^ //g' | \
     if [ "$proxy_log_debug" -ge "3" ]
     then
 	tee -a $proxy_log_file
     else
 	cat
     fi | \
-    busybox sed  \
+    $sed  \
 	-e 's#^GET http://[A-Za-z0-9\.\-\:]*/\(.*\)#GET /\1#g' \
 	-e 's#^POST http://[A-Za-z0-9\.\-\:]*/\(.*\)#POST /\1#g' \
 	-e 's#HTTP/1.1#HTTP/1.0#g' \
@@ -85,12 +90,12 @@ fi
     else
 	cat
     fi | \
-    busybox nc -w$proxy_wait_time $connect_to $connect_to_port | \
-    busybox sed \
+    $nc -w$proxy_wait_time $connect_to $connect_to_port | \
+    $sed \
 	-e 's/\(Content-Length:\).*/\1/' | \
     if [ "$connect_to" != "127.0.0.1" -a -z "`echo $request | grep '/favicon\.ico '`" ]
     then
-      busybox sed \
+      $sed \
 	-e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
 	-e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
 	<script type='text/javascript'>\n\
@@ -292,8 +297,9 @@ fi
 			else if (key==404)\n\
 				{\n\
 				//the green button on the remote control have been pressed\n\
-				//Switch to the MainPage\n\
-				top.frames[\"MainPage\"].focus();\n\
+				//Switch to the Keyboard\n\
+				ChangeBgColor();\n\
+				top.frames[\"Keyboard\"].focus();\n\
 				}\n\
 			else if (key==461)\n\
 				{\n\
@@ -313,6 +319,12 @@ fi
 document.onkeydown = check;\n\
 //window.onload = OnLoadSetCurrent;\n\
 \n\
+	function ChangeBgColor()\n\
+		{\n\
+		//Change the page's BgColor.
+		top.frames[\"Keyboard\"].document.bgColor = '#FFFFFF';\n\
+		}\n\
+		\n\
 	function BackSpace()\n\
 		{\n\
 		//I send a backspace on the currFocusedElement field\n\
@@ -331,10 +343,4 @@ then
     tee -a $proxy_log_file
 else
     cat
-fi
-
-if [ ! -f "$proxy_lock_file" ]
-then
-    echo "`basename $0`: Proxy lock file ($proxy_lock_file) removed - exiting!" >&2
-    exit 0
 fi

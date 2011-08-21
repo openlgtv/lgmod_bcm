@@ -72,7 +72,7 @@ platform=GP2B
 proxy_lock_file=/var/run/proxy.lock
 KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd djmount'
 	# LG: addon_mgr stagecraft konfabulator lb4wk
-	# OpenLGTV BCM: nc udhcpc telnetd httpd [ntpd tcpsvd djmount]
+	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd [djmount?]
 
 # 2011 BCM model check
 if [ "`cat /etc/ver | awk -F, '{print $1}'`" = "$supported_rootfs_ver2" ]
