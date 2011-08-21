@@ -35,7 +35,7 @@ export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_
 export id=1
 #echo IDX $id SPAWN >&2
 
-if [ "$proxy_localhost_only" ]
+if [ "$proxy_localhost_only" = "1" ]
 then
     proxy_listen_ip="127.0.0.1"
     proxy_listen_ip_hex="0100007F"

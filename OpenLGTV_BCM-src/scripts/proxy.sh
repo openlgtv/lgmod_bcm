@@ -299,7 +299,7 @@ fi
 				//the green button on the remote control have been pressed\n\
 				//Switch to the Keyboard\n\
 				ChangeBgColor();\n\
-				top.frames[\"Keyboard\"].focus();\n\
+				top.frames\[\"Keyboard\"\].focus();\n\
 				}\n\
 			else if (key==461)\n\
 				{\n\
@@ -321,8 +321,8 @@ document.onkeydown = check;\n\
 \n\
 	function ChangeBgColor()\n\
 		{\n\
-		//Change the page's BgColor.
-		top.frames[\"Keyboard\"].document.bgColor = '#FFFFFF';\n\
+		//Change the page\'s BgColor.\n\
+		top.frames\[\"Keyboard\"\].document.bgColor = '\#FFFFFF';\n\
 		}\n\
 		\n\
 	function BackSpace()\n\
