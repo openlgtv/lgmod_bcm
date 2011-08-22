@@ -14,13 +14,12 @@
 [ -z "$proxy_listen_port_hex" ]   && proxy_listen_port_hex=22B8
 [ -z "$proxy_usleep_time" ]       && proxy_usleep_time=80
 #[ -z "$proxy_wait_time" ]        && proxy_wait_time=4
-[ -z "$proxy_wait_time" ]         && proxy_wait_time=8
-[ -z "$proxy_respawn_run_check" ] && proxy_respawn_run_check=0
+#[ -z "$proxy_wait_time" ]         && proxy_wait_time=8
+[ -z "$proxy_wait_time" ]         && proxy_wait_time=6
 #[ -z "$proxy_log_debug" ]        && proxy_log_debug=3
 [ -z "$proxy_log_debug" ]         && proxy_log_debug=0
 [ -z "$proxy_log_file" ]          && proxy_log_file=/var/log/proxy.log
 [ -z "$proxy_sh" ]                && proxy_sh=/scripts/proxy.sh
-[ -z "$proxy_respawner" ]         && proxy_respawner=/scripts/proxy-respawner.sh
 [ -z "$proxy_localhost_only" ]    && proxy_localhost_only=1
 
 # for proxy testing on PC
@@ -30,10 +29,9 @@
 [ -z "$nc" ]                      && nc=nc
 [ -z "$tcpsvd" ]                  && tcpsvd=tcpsvd
 
-export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_wait_time proxy_connect_port proxy_log_file proxy_respawn_run_check
+export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_wait_time proxy_connect_port proxy_log_file
 
 export id=1
-#echo IDX $id SPAWN >&2
 
 if [ "$proxy_localhost_only" = "1" ]
 then
@@ -50,16 +48,11 @@ then
     exit 1
 fi
 
-#depreciated - could handle properly only 1 connection at once# $nc -l -p $proxy_listen_port -e $proxy_sh
 if [ "$proxy_log_debug" -ge "1" ]
 then
     $tcpsvd -v $proxy_listen_ip $proxy_listen_port $proxy_sh
 else
     $tcpsvd $proxy_listen_ip $proxy_listen_port $proxy_sh
 fi
-
-#echo "respawner"
-
-#not needed with tcpsvd# $proxy_respawner
 
 exit 0

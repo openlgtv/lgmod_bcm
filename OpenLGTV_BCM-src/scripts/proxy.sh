@@ -6,7 +6,8 @@
 
 # those vars should be set by proxy-start.sh or via env var in cmdline for testing
 #[ -z "$proxy_wait_time" ]   && proxy_wait_time=4
-[ -z "$proxy_wait_time" ]    && proxy_wait_time=8
+#[ -z "$proxy_wait_time" ]    && proxy_wait_time=8
+[ -z "$proxy_wait_time" ]    && proxy_wait_time=6
 [ -z "$proxy_connect_port" ] && proxy_connect_port=80
 [ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
 
@@ -45,8 +46,6 @@ do
     fi
 done
 
-#connect_to=`echo $host | grep 'Host:' | awk '{print $2}' | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
-#connect_to=`echo $host | awk '{print $2}' | tr -d '\r'`
 connect_to=`/bin/echo -e "$host\n$line3\n$line4" | grep 'Host:' | $awk '{print $2}' | $sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
 connect_to_port_test=`echo $connect_to | $awk -F: '{print $2}'"`
 connect_to=`echo $connect_to | $awk -F: '{print $1}'"`
@@ -62,14 +61,13 @@ if [ "$proxy_log_debug" -ge "1" ]
 then
     echo "ID $id CONNECT $connect_to $connect_to_port" >&2
 fi
-#	-e 's#HTTP/1.1#HTTP/1.0#g' \
-#	-e 's/\(Accept-Encoding:\).*/\1 identity`/bin/echo -e "\r\n"`Transfer-Encoding: identity`/bin/echo -e "\r"/g' \
-#	-e 's/\(Accept-Encoding:\).*/\1 identity\nTransfer-Encoding: identity\n/g' \
-#	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
-#	-e 's/\(Accept-Encoding:\).*/\1 identity\nTransfer-Encoding: identity/g' \
 
-#/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | sed -e 's#^GET http://[A-Za-z0-9\.\-]*/\(.*\)#GET /\1#g' -e 's/\(Accept-Encoding:\).*/\1/g' | tee -a $log | $nc -w2 $connect_to 80 | tee -a $log
-#/bin/echo -e "$request\n$host\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n\r\n" | \
+# Inject JavaScript code only to non-localhost connections excluding extenstions listed below
+if [ "$connect_to" != "127.0.0.1" -a -z "`echo $request | egrep -i '\.swf |\.jpg |\.png |\.ico |\.gif |\.js |\.css '`" ]
+then
+    inject=1
+fi
+
 /bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi; /bin/echo -e "\r\n") | \
     $sed 's/^ //g' | \
     if [ "$proxy_log_debug" -ge "3" ]
@@ -81,9 +79,15 @@ fi
     $sed  \
 	-e 's#^GET http://[A-Za-z0-9\.\-\:]*/\(.*\)#GET /\1#g' \
 	-e 's#^POST http://[A-Za-z0-9\.\-\:]*/\(.*\)#POST /\1#g' \
-	-e 's#HTTP/1.1#HTTP/1.0#g' \
-	-e 's/\(Accept-Encoding:\).*/\1 identity/g' \
 	-e 's/\(Connection:\).*/\1 close/g' | \
+    if [ "$inject" = "1" ]
+    then
+	$sed \
+	    -e 's#HTTP/1.1#HTTP/1.0#g' \
+	    -e 's/\(Accept-Encoding:\).*/\1 identity/g'
+    else
+	cat
+    fi | \
     if [ "$proxy_log_debug" -ge "3" ]
     then
 	tee -a $proxy_log_file
@@ -91,11 +95,10 @@ fi
 	cat
     fi | \
     $nc -w$proxy_wait_time $connect_to $connect_to_port | \
-    $sed \
-	-e 's/\(Content-Length:\).*/\1/' | \
-    if [ "$connect_to" != "127.0.0.1" -a -z "`echo $request | grep '/favicon\.ico '`" ]
+    if [ "$inject" = "1" ]
     then
       $sed \
+	-e 's/\(Content-Length:\).*/\1/' \
 	-e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
 	-e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
 	<script type='text/javascript'>\n\
@@ -282,6 +285,13 @@ fi
 				//Search on google the content of currFocusedElement field\n\
 				//SearchOnGoogle();\n\
 				}\n\
+			else if (key==404)\n\
+				{\n\
+				//the green button on the remote control have been pressed\n\
+				//Switch to the Keyboard\n\
+				ChangeBgColor();\n\
+				top.frames\[\"Keyboard\"\].focus();\n\
+				}\n\
 			else if (key==405)\n\
 				{\n\
 				//the yellow button on the remote control have been pressed\n\
@@ -293,13 +303,6 @@ fi
 				//the blue button on the remote control have been pressed\n\
 				//I send a backspace on the currFocusedElement field\n\
 				BackSpace();\n\
-				}\n\
-			else if (key==404)\n\
-				{\n\
-				//the green button on the remote control have been pressed\n\
-				//Switch to the Keyboard\n\
-				ChangeBgColor();\n\
-				top.frames\[\"Keyboard\"\].focus();\n\
 				}\n\
 			else if (key==461)\n\
 				{\n\
