@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM installation script v.1.6 by xeros
+# OpenLGTV BCM installation script v.1.80 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -49,12 +49,13 @@ supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
 
 tmp=/tmp
-dir=`dirname $0`
+
+[ "$chrooted" != "1" ] && dir=`dirname $0`
 
 if [ "$1" != "" -a "$1" != "no_backup" ]
 then
-    ver=`basename $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`
-    dir=`dirname $1`
+    ver="`basename $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`"
+    dir="`dirname $1`"
 fi
 
 file=OpenLGTV_BCM-GP2B-v$ver
@@ -70,12 +71,15 @@ lginit_size2011=524288
 platform=GP2B
 
 proxy_lock_file=/var/run/proxy.lock
-KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd djmount'
+KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount'
 	# LG: addon_mgr stagecraft konfabulator lb4wk
 	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd [djmount?]
+	# OpenLGTV BCM - processes which might be running at boot: ls wget
+
+[ "$chrooted" != "1" ] && current_rootfs_ver="`cat /etc/ver | awk -F, '{print $1}'`"
 
 # 2011 BCM model check
-if [ "`cat /etc/ver | awk -F, '{print $1}'`" = "$supported_rootfs_ver2" ]
+if [ "$current_rootfs_ver" = "$supported_rootfs_ver2" ]
 then
     supported_rootfs_ver="$supported_rootfs_ver2011"
     file=$file2011
@@ -101,7 +105,8 @@ backup2=$suffix-backup
 lginit_bck=/home/backup/lginit.bck
 rootfs_bck=/home/backup/rootfs.bck
 
-ver_installed=`cat /etc/ver2 2>/dev/null`
+# variable should be initiated by extract.sh before chrooting
+[ "$chrooted" != "1" ] && ver_installed=`cat /etc/ver2 2>/dev/null`
 
 mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
 mkdir -p /mnt/usb2/Drive1/OpenLGTV_BCM > /dev/null 2>&1
@@ -192,21 +197,25 @@ then
 fi
 
 # check for files existence
-if [ -f $cdir/$file.sqf -a -f $cdir/$file.sha1 ]
+if [ ! -f "$cdir/$file.sqf" -o ! -f "$cdir/$file.sha1" ]
 then
-    echo "Comparing flash file size and SHA1 checksum..."     | tee -a $log
-else
-    if [ -f ./$file.sqf -a -f ./file.sha1 ]
+    if [ -f "./$file.sqf" -a -f "./$file.sha1" ]
     then
 	echo "Found needed files in current dir..."           | tee -a $log
 	export cdir=.
-	echo "Comparing flash file size and SHA1 checksum..." | tee -a $log
     else
-	echo "Cannot continue, file $file.sqf or $file.sha1 does not exist in install.sh script dir and current dir." | tee -a $log
-	exit 1
+	if [ -f "$base/$file.sqf" -a -f "$base/$file.sha1" ]
+	then
+	    echo "Found needed files in $base dir..."         | tee -a $log
+	    export cdir="$base"
+	else
+	    echo "Cannot continue, file $file.sqf or $file.sha1 does not exist in install.sh script dir and current dir." | tee -a $log
+	    exit 1
+	fi
     fi
 fi
 # comparing size
+echo "Comparing flash file size and SHA1 checksum..." | tee -a $log
 if [ "`cat $cdir/$file.sqf | wc -c`" -ne "$size" ]
 then
     echo "$file.sqf file size is incorrect. Download firmware again." | tee -a $log
@@ -261,7 +270,8 @@ else
     echo "Did you run this installation script in TV? Looks like the device dont have the proper /dev/mtd$mtd_rootfs and /dev/mtdblock$mtd_rootfs devices." | tee -a $log
     exit 1
 fi
-if [ "$development" = "1" -a ! -f "/mnt/user/lock/development-logs-dumped.lock" ]
+# TODO: handle "development" logs while in chroot
+if [ "$development" = "1" -a "$chrooted" != "1" -a ! -f "/mnt/user/lock/development-logs-dumped.lock" ]
 then
     devel_dir=$OpenLGTV_BCM_USB/development-logs
     mkdir -p $devel_dir
@@ -301,7 +311,7 @@ then
 fi
 
 # Safety checks for supported rootfs version and partitions numbers
-if [ "`cat /etc/ver | awk -F, '{print $1}'`" != "$supported_rootfs_ver" ]
+if [ "$current_rootfs_ver" != "$supported_rootfs_ver" ]
 then
     echo "ERROR: found NOT SUPPORTED yet TV model (unknown rootfs version) - please give yours firmware dump to OpenLGTV BCM developers for making support yours TV model" | tee -a $log
     echo "OpenLGTV BCM is not installed and no changes have been made to yours TV firmware" | tee -a $log
@@ -607,7 +617,8 @@ rm -f $dir/$file-$backup2.sqf
 if [ "$dir" != "$tmp" ]
 then
     echo "Renaming original file to prevent second time flashing..." | tee -a $log
-    mv $dir/$file.sqf $dir/$file-$suffix.sqf > $tmpout 2>&1
+    [ -f "$dir/$file.sqf" ]    && mv $dir/$file.sqf    $dir/$file-$suffix.sqf    > $tmpout 2>&1
+    [ -f "$dir/$file.sh.zip" ] && mv $dir/$file.sh.zip $dir/$file-$suffix.sh.zip > $tmpout 2>&1
     cat $tmpout | tee -a $log
 else
     echo "Please rename the file $file.sqf yourself to prevent future flashing the same firmware again" | tee -a $log
@@ -631,7 +642,8 @@ then
     echo "Gathered dump header from /dev/mtd$mtd_rootfs partition shows that the lginit partition is already erased - good." | tee -a $log
     echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
     mkdir -p $dir/flashed $tmp/flashed
-    mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    [ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    [ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
     log=`echo $log | sed "s#$file#flashed/$file#"`
     cat $tmpoutflashed | tee -a $log
     date 2>&1 | tee -a $log
@@ -640,9 +652,14 @@ then
     if [ "$rebooting" = "1" ]
     then
 	echo "Rebooting TV..." | tee -a $log
+	# TODO: yuck, I have to improve that later
+	umount -f /mnt/usb1/Drive1 2>/dev/null
+	umount -f /mnt/usb2/Drive1 2>/dev/null
+	sync
+	sleep 1
 	reboot
     else
-	echo "You may now poweroff and poweron TV" | tee -a $log
+	echo "You may now power off/on or reboot yours TV" | tee -a $log
     fi
     exit 0
 fi
@@ -702,17 +719,23 @@ sleep 5
 sync
 echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
 mkdir -p $dir/flashed $tmp/flashed
-mv $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+[ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+[ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
 #cat $tmpoutflashed | tee -a $log
-cat $tmpout | tee -a $log
+=cat $tmpout | tee -a $log
 sync
 date 2>&1 | tee -a $log
 echo "" | tee -a $log
 if [ "$rebooting" = "1" ]
 then
     echo "Rebooting TV..." | tee -a $log
+    # TODO: yuck, I have to improve that later
+    umount -f /mnt/usb1/Drive1 2>/dev/null
+    umount -f /mnt/usb2/Drive1 2>/dev/null
+    sync
+    sleep 1
     reboot
 else
-    echo "You may now poweroff and poweron TV" | tee -a $log
+    echo "You may now power off/on or reboot yours TV" | tee -a $log
 fi
