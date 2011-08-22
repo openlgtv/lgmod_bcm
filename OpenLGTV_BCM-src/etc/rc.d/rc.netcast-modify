@@ -30,11 +30,13 @@ then
     if [ "$netcast_config_enable_all" = "1" ]
     then
 	echo "OpenLGTV_BCM-INFO: making copy of current StageCraft configuration: $real_configxml to $real_configxml.pre_netcast_enable_all"  | tee -a $bootlogf
-	cp -f "$real_configxml" "$real_configxml.pre_netcast_enable_all"                               2>&1 | tee -a $bootlogf
+	#cp -f "$real_configxml" "$real_configxml.pre_netcast_enable_all"                              2>&1 | tee -a $bootlogf
+	cat "$real_configxml" > "$real_configxml.pre_netcast_enable_all"                                         2>> $bootlogf
 	if [ -f "/mnt/addon/contents/config.xml" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using /mnt/addon/contents/config.xml as template for $real_configxml on netcast_enable_all option"       | tee -a $bootlogf
-	    cp -f /mnt/addon/contents/config.xml "$real_configxml"                                     2>&1 | tee -a $bootlogf
+	    #cp -f /mnt/addon/contents/config.xml "$real_configxml"                                    2>&1 | tee -a $bootlogf
+	    cat /mnt/addon/contents/config.xml > "$real_configxml"                                               2>> $bootlogf
 	fi
 	if [ -f "/mnt/user/lock/ywe_added_to_config_xml.lock" ]
 	then

@@ -4,8 +4,8 @@
 # Source code released under GPL License
 
 # this script might need cleanup after we will finally drop all support for lg yahoo widgets, even drop the variable
-if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" -o "$force_copy_config_ywe" = "1" ]
-then
+#if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" -o "$force_copy_config_ywe" = "1" ]
+#then
     if [ "$force_copy_config_ywe" = "1" ]
     then
 	echo "OpenLGTV_BCM-WARN: forced Yahoo Widgets Engine configs copy..." | tee -a $bootlogf
@@ -105,7 +105,9 @@ then
 	    if [ -f "$ywedir/config-oem.xml" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine config copy - $ywedir/config-oem.xml..." | tee -a $bootlogf
-		cp $ywedir/config-oem.xml /mnt/user/ywe/config-oem.xml                         2>&1 | tee -a $bootlogf
+		#cp $ywedir/config-oem.xml /mnt/user/ywe/config-oem.xml                        2>&1 | tee -a $bootlogf
+		cat $ywedir/config-oem.xml > /mnt/user/ywe/config-oem.xml                                2>> $bootlogf
+		chmod 644 /mnt/user/ywe/config-oem.xml                                         2>&1 | tee -a $bootlogf
 	    fi
 	fi
 	if [ ! -f "/mnt/user/ywe/konfabulator.sh" ]
@@ -113,7 +115,9 @@ then
 	    if [ -f "$ywedir/bin/konfabulator.sh" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine startup script copy - $ywedir/bin/konfabulator.sh..." | tee -a $bootlogf
-		cp $ywedir/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh                   2>&1 | tee -a $bootlogf
+		#cp $ywedir/bin/konfabulator.sh /mnt/user/ywe/konfabulator.sh                  2>&1 | tee -a $bootlogf
+		cat $ywedir/bin/konfabulator.sh > /mnt/user/ywe/konfabulator.sh                          2>> $bootlogf
+		chmod 755 /mnt/user/ywe/konfabulator.sh                                        2>&1 | tee -a $bootlogf
 	    fi
 	fi
 	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -n "`grep '^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH' /mnt/user/ywe/konfabulator.sh`" ]
@@ -177,11 +181,11 @@ then
 		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script with proper path for Samsung Widgets ONLY - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a $bootlogf
 		    #cp /mnt/user/ywe/konfabulator.sh /mnt/user/ywe/samsung/konfabulator.sh
 		    cat /mnt/user/ywe/konfabulator.sh | sed "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" > /mnt/user/ywe/samsung/konfabulator.sh
-		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a $bootlogf
+		    chmod 755 /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a $bootlogf
 		else
 		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets with proper engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..." | tee -a $bootlogf
 		    cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
-		    chmod +rx /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a $bootlogf
+		    chmod 755 /mnt/user/ywe/samsung/konfabulator.sh 2>&1 | tee -a $bootlogf
 		fi
 	    fi
 	    /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a $bootlogf
@@ -264,6 +268,6 @@ then
 	    echo "OpenLGTV_BCM-INFO: preparing Yahoo Widgets Engine configs for Samsung Widgets is disabled by samsung_ywe setting variable..." | tee -a $bootlogf
 	fi
     fi
-else
-    echo "OpenLGTV_BCM-WARN: found modified Yahoo Widget Engine files on addon partition so you will have to check configs yourself..." | tee -a $bootlogf
-fi
+#else
+#    echo "OpenLGTV_BCM-WARN: found modified Yahoo Widget Engine files on addon partition so you will have to check configs yourself..." | tee -a $bootlogf
+#fi

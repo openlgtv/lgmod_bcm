@@ -70,7 +70,8 @@ then
 	mount --bind /home/netcast_icons /mnt/addon/contents/netcast                2>&1 | tee -a $bootlogf
     fi
 fi
-if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
+#if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
+if [ -f "/mnt/addon/browser/browser_application.txt" -a -f "/mnt/browser/browser_application.txt" -a -f "/mnt/addon/contents/config.xml" -a -f "/mnt/addon/bin/addon_mgr.bat" -a -f "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
 then
     if [ "$netcast_config_ok" = "1" ]
     then
@@ -78,6 +79,7 @@ then
 	then
 	    echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..."                     | tee -a $bootlogf
 	fi
+	# TODO: rewrite those almost duplicate checks and copies for one loop on variable with all files list
 	if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
 	then
 	    #if [ -f "/mnt/browser/browser_application.txt" ]
@@ -85,7 +87,8 @@ then
 	    then
 		echo "OpenLGTV_BCM-INFO: making browser config copy - /mnt/addon/browser/browser_application.txt..." | tee -a $bootlogf
 		#cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
-		cp /mnt/addon/browser/browser_application.txt /mnt/user/netcast/browser_application.txt         2>&1 | tee -a $bootlogf
+		cat /mnt/addon/browser/browser_application.txt > /mnt/user/netcast/browser_application.txt                2>> $bootlogf
+		chmod 644 /mnt/user/netcast/browser_application.txt                                             2>&1 | tee -a $bootlogf
 	    fi
 	fi
 	if [ ! -f "/mnt/user/netcast/run3556" ]
@@ -93,7 +96,8 @@ then
 	    if [ -f "/mnt/browser/run3556" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making browser startup script copy - /mnt/browser/run3556..."               | tee -a $bootlogf
-		cp /mnt/browser/run3556 /mnt/user/netcast/run3556                                               2>&1 | tee -a $bootlogf
+		#cp /mnt/browser/run3556 /mnt/user/netcast/run3556                                              2>&1 | tee -a $bootlogf
+		cat /mnt/browser/run3556 > /mnt/user/netcast/run3556                                                      2>> $bootlogf
 		chmod 775 /mnt/user/netcast/run3556                                                             2>&1 | tee -a $bootlogf
 	    fi
 	fi
@@ -102,19 +106,30 @@ then
 	    if [ -f "/mnt/addon/browser/extra_conf" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making additional settings file for browser copy - /mnt/addon/browser/extra_conf..." | tee -a $bootlogf
-		cp /mnt/addon/browser/extra_conf /mnt/user/netcast/extra_conf                                   2>&1 | tee -a $bootlogf
+		#cp /mnt/addon/browser/extra_conf /mnt/user/netcast/extra_conf                                  2>&1 | tee -a $bootlogf
+		cat /mnt/addon/browser/extra_conf > /mnt/user/netcast/extra_conf                                          2>> $bootlogf
 		chmod 775 /mnt/user/netcast/extra_conf                                                          2>&1 | tee -a $bootlogf
 	    fi
 	fi
 	if [ ! -f "/mnt/user/netcast/config.xml" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: making StageCraft config copy - /mnt/addon/contents/config.xml..."              | tee -a $bootlogf
-	    cp /mnt/addon/contents/config.xml /mnt/user/netcast/config.xml                                      2>&1 | tee -a $bootlogf
+	    if [ -f "/mnt/addon/contents/config.xml" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: making StageCraft config copy - /mnt/addon/contents/config.xml..."          | tee -a $bootlogf
+		#cp /mnt/addon/contents/config.xml /mnt/user/netcast/config.xml                                 2>&1 | tee -a $bootlogf
+		cat /mnt/addon/contents/config.xml >> /mnt/user/netcast/config.xml                                        2>> $bootlogf
+		chmod 644 /mnt/user/netcast/config.xml                                                          2>&1 | tee -a $bootlogf
+	    fi
 	fi
 	if [ ! -f "/mnt/user/netcast/addon_mgr.bat" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..."                 | tee -a $bootlogf
-	    cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat                                     2>&1 | tee -a $bootlogf
+	    if [ -f "/mnt/addon/bin/addon_mgr.bat" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..."             | tee -a $bootlogf
+		#cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat                                2>&1 | tee -a $bootlogf
+		cat /mnt/addon/bin/addon_mgr.bat >> /mnt/user/netcast/addon_mgr.bat                                       2>> $bootlogf
+		chmod 644 /mnt/user/netcast/addon_mgr.bat                                                       2>&1 | tee -a $bootlogf
+	    fi
 	fi
 	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                                             | tee -a $bootlogf
 	source /etc/rc.d/rc.netcast-modify
@@ -142,53 +157,54 @@ then
 	    mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556                                         2>&1 | tee -a $bootlogf
 	fi
     fi
-else
-    if [ "$netcast_config_ok" = "1" ]
-    then
-	#echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a $bootlogf
-	echo "OpenLGTV_BCM-WARN: found modified addon or browser partition - trying to find where are the real configs..." | tee -a $bootlogf
-	custom_addonmgrbat=0
-	custom_configxml=0
-	custom_browapptxt=0
-	custom_run3556=0
-	if [ -h "/mnt/addon/bin/addon_mgr.bat" ]
-	then
-	    export real_addonmgrbat="`ls -al /mnt/addon/bin/addon_mgr.bat | awk -F\"> \" '{print $2}'`"
-	    export custom_addonmgrbat=1
-	else
-	    export real_addonmgrbat="/mnt/addon/bin/addon_mgr.bat"
-	fi
-	echo "OpenLGTV_BCM-INFO: using real Addon_Mgr config file: $real_addonmgrbat ..."  | tee -a $bootlogf
-	if [ -h "/mnt/addon/contents/config.xml" ]
-	then
-	    export real_configxml="`ls -al /mnt/addon/contents/config.xml | awk -F\"> \" '{print $2}'`"
-	    export custom_configxml=1
-	else
-	    export real_configxml="/mnt/addon/contents/config.xml"
-	fi
-	echo "OpenLGTV_BCM-INFO: using real StageCraft config file: $real_configxml ..."   | tee -a $bootlogf
-	# browser_application.txt file really used by built-in web browser is /mnt/addon/browser/browser_application.txt instead of /mnt/browser/browser_application.txt file
-	#if [ -h "/mnt/browser/browser_application.txt" ]
-	if [ -h "/mnt/addon/browser/browser_application.txt" ]
-	then
-	    export real_browapptxt="`ls -al /mnt/addon/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
-	    export custom_browapptxt=1
-	else
-	    export real_browapptxt="/mnt/addon/browser/browser_application.txt"
-	fi
-	echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a $bootlogf
-	if [ -h "/mnt/browser/run3556" ]
-	then
-		real_run3556="`ls -al /mnt/browser/run3556 | awk -F\"> \" '{print $2}'`"
-		custom_run3556=1
-	else
-		real_run3556="/mnt/browser/run3556"
-	fi
-	echo "OpenLGTV_BCM-INFO: using real Web Browser startup script file: $real_run3556 ..." | tee -a $bootlogf
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                        | tee -a $bootlogf
-	source /etc/rc.d/rc.netcast-modify
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                        | tee -a $bootlogf
-    fi
+# TODO: remove that crappy code
+#else
+#    if [ "$netcast_config_ok" = "1" ]
+#    then
+#	#echo "OpenLGTV_BCM-WARN: found modified addon or browser partition so you will have to check configs yourself..." | tee -a $bootlogf
+#	echo "OpenLGTV_BCM-WARN: found modified addon or browser partition - trying to find where are the real configs..." | tee -a $bootlogf
+#	custom_addonmgrbat=0
+#	custom_configxml=0
+#	custom_browapptxt=0
+#	custom_run3556=0
+#	if [ -h "/mnt/addon/bin/addon_mgr.bat" ]
+#	then
+#	    export real_addonmgrbat="`ls -al /mnt/addon/bin/addon_mgr.bat | awk -F\"> \" '{print $2}'`"
+#	    export custom_addonmgrbat=1
+#	else
+#	    export real_addonmgrbat="/mnt/addon/bin/addon_mgr.bat"
+#	fi
+#	echo "OpenLGTV_BCM-INFO: using real Addon_Mgr config file: $real_addonmgrbat ..."  | tee -a $bootlogf
+#	if [ -h "/mnt/addon/contents/config.xml" ]
+#	then
+#	    export real_configxml="`ls -al /mnt/addon/contents/config.xml | awk -F\"> \" '{print $2}'`"
+#	    export custom_configxml=1
+#	else
+#	    export real_configxml="/mnt/addon/contents/config.xml"
+#	fi
+#	echo "OpenLGTV_BCM-INFO: using real StageCraft config file: $real_configxml ..."   | tee -a $bootlogf
+#	# browser_application.txt file really used by built-in web browser is /mnt/addon/browser/browser_application.txt instead of /mnt/browser/browser_application.txt file
+#	#if [ -h "/mnt/browser/browser_application.txt" ]
+#	if [ -h "/mnt/addon/browser/browser_application.txt" ]
+#	then
+#	    export real_browapptxt="`ls -al /mnt/addon/browser/browser_application.txt | awk -F\"> \" '{print $2}'`"
+#	    export custom_browapptxt=1
+#	else
+#	    export real_browapptxt="/mnt/addon/browser/browser_application.txt"
+#	fi
+#	echo "OpenLGTV_BCM-INFO: using real Web Browser config file: $real_browapptxt ..." | tee -a $bootlogf
+#	if [ -h "/mnt/browser/run3556" ]
+#	then
+#		real_run3556="`ls -al /mnt/browser/run3556 | awk -F\"> \" '{print $2}'`"
+#		custom_run3556=1
+#	else
+#		real_run3556="/mnt/browser/run3556"
+#	fi
+#	echo "OpenLGTV_BCM-INFO: using real Web Browser startup script file: $real_run3556 ..." | tee -a $bootlogf
+#	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                        | tee -a $bootlogf
+#	source /etc/rc.d/rc.netcast-modify
+#	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                        | tee -a $bootlogf
+#    fi
 fi
 
 echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 30s delay ..."      | tee -a $bootlogf
