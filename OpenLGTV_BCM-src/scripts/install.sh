@@ -43,6 +43,8 @@ else
     fi
 fi
 
+rebooting=0
+
 ver=0.5.0-devel
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
@@ -50,7 +52,14 @@ development=1
 
 tmp=/tmp
 
-[ "$chrooted" != "1" ] && dir=`dirname $0`
+if [ "$chrooted" != "1" ]
+then
+    dir=`dirname $0`
+    current_rootfs_ver="`cat /etc/ver | awk -F, '{print $1}'`"
+    xdir="$dir"
+else
+    xdir="$base"
+fi
 
 if [ "$1" != "" -a "$1" != "no_backup" ]
 then
@@ -76,7 +85,6 @@ KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmo
 	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd [djmount?]
 	# OpenLGTV BCM - processes which might be running at boot: ls wget
 
-[ "$chrooted" != "1" ] && current_rootfs_ver="`cat /etc/ver | awk -F, '{print $1}'`"
 
 # 2011 BCM model check
 if [ "$current_rootfs_ver" = "$supported_rootfs_ver2" ]
@@ -564,6 +572,7 @@ then
 	echo "Flashing to /dev/mtdblock$mtd_rootfs partition havent succeed." | tee -a $log
 	echo "Go ask for help at #openlgtv IRC channel at irc.freenode.net server." | tee -a $log
 	echo "DONT REBOOT OR POWER OFF TV AS IT MIGHT NOT POWER ON AGAIN" | tee -a $log
+	[ "$chrooted" = "1" ] && /bin/sh
 	exit 1
     else
 	sync
@@ -583,7 +592,8 @@ ls -al `which reboot` > /dev/null 2>&1
 sh -c "cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf" > $tmpout 2>&1
 cat $tmpout | tee -a $log
 sync
-diff $dir/$file-$backup2.sqf $dir/$file.sqf > $tmpout 2>&1 
+#diff $dir/$file-$backup2.sqf $dir/$file.sqf > $tmpout 2>&1 
+diff $dir/$file-$backup2.sqf $tmp/$file.sqf > $tmpout 2>&1 
 if [ "$?" -ne "0" ]
 then
     cat $tmpout | tee -a $log
@@ -597,7 +607,7 @@ then
     sh -c "cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf" > $tmpout 2>&1
     cat $tmpout | tee -a $log
     sync
-    diff $dir/$file-$backup2.sqf $dir/$file.sqf > $tmpout 2>&1
+    diff $dir/$file-$backup2.sqf $tmp/$file.sqf > $tmpout 2>&1
     if [ "$?" -ne "0" ]
     then
 	cat $tmpout | tee -a $log
@@ -606,6 +616,7 @@ then
 	echo "If youre connected via telnet or SSH prepare RS232 Null-Modem cable..." | tee -a $log
 	echo "... to connect to the TV to try flashing through CFE bootloader" | tee -a $log
 	echo "DONT REBOOT OR POWER OFF TV AS IT MIGHT NOT POWER ON AGAIN" | tee -a $log
+	[ "$chrooted" = "1" ] && /bin/sh
 	exit 1
     fi
 fi
@@ -660,6 +671,7 @@ then
 	reboot
     else
 	echo "You may now power off/on or reboot yours TV" | tee -a $log
+	[ "$chrooted" = "1" ] && /bin/sh
     fi
     exit 0
 fi
@@ -677,6 +689,7 @@ fi
 if [ "$answer" != "YES" ]
 then
     echo "OK, not flashing" | tee -a $log
+    [ "$chrooted" = "1" ] && /bin/sh
     exit 1
 fi
 # erasing lginit partition
@@ -723,7 +736,7 @@ mkdir -p $dir/flashed $tmp/flashed
 [ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
 #cat $tmpoutflashed | tee -a $log
-=cat $tmpout | tee -a $log
+#cat $tmpout | tee -a $log
 sync
 date 2>&1 | tee -a $log
 echo "" | tee -a $log
@@ -738,4 +751,5 @@ then
     reboot
 else
     echo "You may now power off/on or reboot yours TV" | tee -a $log
+    [ "$chrooted" = "1" ] && /bin/sh
 fi
