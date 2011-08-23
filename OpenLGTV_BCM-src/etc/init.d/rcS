@@ -260,7 +260,8 @@ source /etc/rc.d/rc.ywe
 if [ "$mtd_nvram" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd$mtd_nvram partition..." | tee -a $bootlogf
-    cat /dev/mtd$mtd_nvram > /tmp/nvram &
+    #cat /dev/mtd$mtd_nvram > /tmp/nvram &
+    /etc/rc.d/rc.nvram &
 fi
 
 /etc/rc.d/rc.fwinfo &

@@ -1,0 +1,24 @@
+#!/bin/ash
+# Source code released under GPL License
+# rcS for Saturn7 by mmm4m5m
+# modified for OpenLGTV BCM by xeros
+
+iecho(){ echo "OpenLGTV_BCM-INFO: ${scriptname}: $*"; } # TODO: add such functions for INFO, ERROR, WARNING to upper level scripts
+wecho(){ echo "OpenLGTV_BCM-WARN: ${scriptname}: $*"; }
+eecho(){ echo "OpenLGTV_BCM-ERROR: ${scriptname}: $*"; }
+
+scriptname="`basename $0`"
+[ -z "$mtd_nvram" ] && mtd_nvram="`grep \"nvram\" /proc/mtd | sed -e 's/mtd\(..\):.*/\1/g'`"
+F=nvram; FF="/home/${F}"
+{ for f in $FF; do
+	h=$(hexdump -n64 -e'"%_c"' /dev/mtd${mtd_nvram})
+	[ "$h" = $'377*' ] && { wecho "backup: empty"; break; }
+	cat /dev/mtd$mtd_nvram > /tmp/${F}
+	#f=$f.gz; [ -f $f ] && continue; # TODO: force new backup if different
+	f=$f.gz; [ -f $f ] && break;
+	h=$(hexdump -vs1330 -n13 -e'"%_p"' /tmp/${F})
+	touch "/mnt/lg/cmn_data/model.${h%%.*}" "/mnt/user/model.${h%%.*}"; # expose model name
+	iecho "backup: $f"
+	cat /tmp/$F | gzip -1 > $f; sync; break
+done; } 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+# >/dev/kmsg 2>&1
