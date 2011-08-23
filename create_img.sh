@@ -24,7 +24,7 @@ ofile2011=OpenLGTV_BCM-GP3B-v$ver
 squashfs_opts="-all-root -noappend"
 #squashfs_opts="-all-root -noappend -b $((256*1024))"
 squashfs2011_opts="-all-root -noappend -always-use-fragments -b 1048576"
-sed -i -e "s/^ver=.*/ver=$ver/g" install.sh
+sed -i -e "s/^ver=.*/ver=$ver/g" -e "s/OpenLGTV BCM .* installation script/OpenLGTV BCM $ver installation script/g" install.sh extract.sh
 cp -f install.sh $dir/scripts/
 sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd
 find $dir -type d -exec chmod 775 '{}' \;
