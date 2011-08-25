@@ -90,9 +90,14 @@ else
 fi
 sha1sum $ofile.sqf > $ofile.sha1
 sha1sum $ofile2011.sqf > $ofile2011.sha1
-zip $ofile.zip $ofile.sqf $ofile.sha1 install.sh
-zip $ofile2011.zip $ofile2011.sqf $ofile2011.sha1 install.sh
-cat extract.sh $ofile.zip > $ofile.sh.zip
-cat extract.sh $ofile2011.zip > $ofile2011.sh.zip
-chmod a+rx $ofile.sh.zip $ofile2011.sh.zip
+#zip $ofile.zip $ofile.sqf $ofile.sha1 install.sh
+#zip $ofile2011.zip $ofile2011.sqf $ofile2011.sha1 install.sh
+#cat extract.sh $ofile.zip > $ofile.sh.zip
+#cat extract.sh $ofile2011.zip > $ofile2011.sh.zip
+tar cvf $ofile.tar $ofile.sqf $ofile.sha1 install.sh
+tar cvf $ofile2011.tar $ofile2011.sqf $ofile2011.sha1 install.sh
+cat extract.sh $ofile.tar > $ofile.tar.sh
+cat extract.sh $ofile2011.tar > $ofile2011.tar.sh
+#chmod a+rx $ofile.sh.zip $ofile2011.sh.zip
+chmod a+rx $ofile.tar.sh $ofile2011.tar.sh
 rm -rf squashfs-root squashfs-root-2011

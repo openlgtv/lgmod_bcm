@@ -84,7 +84,8 @@ KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmo
 	# LG: addon_mgr stagecraft konfabulator lb4wk
 	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd [djmount?]
 	# OpenLGTV BCM - processes which might be running at boot: ls wget
-
+pkill=pkill
+[ "`which pkill`" ] || pkill=killall
 
 # 2011 BCM model check
 if [ "$current_rootfs_ver" = "$supported_rootfs_ver2" ]
@@ -173,10 +174,10 @@ then
 	    backup_error=1
 	fi
     done
-    for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
+    for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}' | sed -e 's#^/##g'`
     do
 	echo "Making tar archive backup of $mount_path ..." | tee -a $log
-	tar cvf $back_dir/`echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar $mount_path >> $log 2>&1
+	tar cf $back_dir/`echo $mount_path | sed -e 's#/#_#g'`.tar -C / $mount_path >> $log 2>&1
 	if [ "$?" -ne "0" ]
 	then
 	    echo "ERROR: Problem making backup of $mount_path to $back_dir/`echo $mount_path | sed -e 's#^/##g' -e 's#/#_#g'`.tar" 2>&1 | tee -a $log
@@ -478,12 +479,12 @@ fi
 
 if [ ! -f "/mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock" ]
 then
-    for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}'`
+    for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}' | sed 's#^/##g'`
     do
 	echo "Making tar backup of $mount_path ..." | tee -a $log
 	# v- theres not gzip in default firmware
 	#tar czvf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar.gz $mount_path
-	tar cf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar $mount_path 2>&1 | tee -a $log
+	tar cf $dir/`echo $mount_path | sed 's#/#_#g'`.tar -C / $mount_path 2>&1 | tee -a $log
     done
     mkdir -p /mnt/user/lock
     touch /mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock
@@ -492,7 +493,7 @@ fi
 echo 'NOTE: Freeing memory (killing daemons) ...'
 echo "Stopping proxy ..."
 rm -f $proxy_lock_file
-for prc in $KILL; do pkill $prc && echo "Stopping $prc ..."; killall $prc 2> /dev/null; done
+for prc in $KILL; do $pkill $prc && echo "Stopping $prc ..."; killall $prc 2> /dev/null; done
 sleep 2
 
 # check free ram
@@ -630,6 +631,7 @@ then
     echo "Renaming original file to prevent second time flashing..." | tee -a $log
     [ -f "$dir/$file.sqf" ]    && mv $dir/$file.sqf    $dir/$file-$suffix.sqf    > $tmpout 2>&1
     [ -f "$dir/$file.sh.zip" ] && mv $dir/$file.sh.zip $dir/$file-$suffix.sh.zip > $tmpout 2>&1
+    [ -f "$dir/$file.tar.sh" ] && mv $dir/$file.tar.sh $dir/$file-$suffix.tar.sh > $tmpout 2>&1
     cat $tmpout | tee -a $log
 else
     echo "Please rename the file $file.sqf yourself to prevent future flashing the same firmware again" | tee -a $log
@@ -655,6 +657,7 @@ then
     mkdir -p $dir/flashed $tmp/flashed
     [ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
     [ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    [ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
     log=`echo $log | sed "s#$file#flashed/$file#"`
     cat $tmpoutflashed | tee -a $log
     date 2>&1 | tee -a $log
@@ -734,6 +737,7 @@ echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
 mkdir -p $dir/flashed $tmp/flashed
 [ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 [ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
+[ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
 #cat $tmpoutflashed | tee -a $log
 #cat $tmpout | tee -a $log
