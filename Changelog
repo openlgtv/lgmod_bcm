@@ -258,8 +258,8 @@ Remaining issues with 0.5.0 developement branch:
     * builtin web proxy code is still not perfect - proxy works properly, but problems are with modified web pages code:
 	 - problems with switching between frames, not all pages are loading and netcast apps have problems with injected code
     * autoupgrades from USB stick with new method are not tested, tar.sh file should be supported but no content verification before executing it
-    * after upgrade rebooting is disabled for more testing installation procedure
-    * playing too much with settings might make problems with netcast configuration (?) - need to track that
+    * after manual install/upgrade rebooting is disabled for more testing installation procedure
+    * playing too much with settings could make problems with netcast configuration (?) - need to track that
     * logging is ugly and not consistent - scripts running in multiple threads log to the same file at the same time, many timestamps in logs
     * no support for very old firmware versions NetCast configuration (for example in Argentina) - still leaving those untouched (issue with all OpenLGTV BCM versions)
     * compatibility break with autoupgrade method from older versions - need to install via telnet/ssh/serial

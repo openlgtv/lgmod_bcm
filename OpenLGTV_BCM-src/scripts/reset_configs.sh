@@ -35,7 +35,7 @@ else
 	[ -z "$cfg_bck_dir" ] && cfg_bck_dir="$OpenLGTV_BCM_USB/config_backup"
 	mkdir -p "$cfg_bck_dir"                                                                                           2>&1 | tee -a $bootlogf
 	cp -rf /mnt/user/* $cfg_bck_dir/                                                                                  2>&1 | tee -a $bootlogf
-	cp -rf /mnt/user/.* $cfg_bck_dir/                                                                                 2>&1 | tee -a $bootlogf
+	#cp -rf /mnt/user/.* $cfg_bck_dir/                                                                                2>&1 | tee -a $bootlogf
 	echo "OpenLGTV_BCM-INFO: erasing data from /mnt/user/..."                                                         2>&1 | tee -a $bootlogf
 	rm -rf /mnt/user/*                                                                                                2>&1 | tee -a $bootlogf
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM configs from /home/* to USB storage device..."               2>&1 | tee -a $bootlogf

@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.80 by xeros
+# OpenLGTV BCM 0.5.0-alpha1 installation script v.1.81 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 

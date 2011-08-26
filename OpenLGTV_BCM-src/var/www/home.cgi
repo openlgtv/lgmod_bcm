@@ -121,10 +121,10 @@ content-type: text/html
 			<li class=""></li>
 		</ul>
 		<ul>
-			<a onClick="javascript:window.location='home.cgi?qURL=reset_configs_netcast.sh&run=Run';" href="#" style="text-decoration:none; color:red"><li class="">NetCast cfg rst</li></a>
+			<a onClick="javascript:window.location='home.cgi?qURL=/scripts/reset_configs_netcast.sh&run=Run';" href="#" style="text-decoration:none; color:red"><li class="">NetCast cfg rst</li></a>
 		</ul>
 		<ul>
-			<a onClick="javascript:window.location='home.cgi?qURL=reset_configs.sh&run=Run';" href="#" style="text-decoration:none; color:white"><li class="">&nbsp;All cfg reset</li></a>
+			<a onClick="javascript:window.location='home.cgi?qURL=/scripts/reset_configs.sh&run=Run';" href="#" style="text-decoration:none; color:white"><li class="">&nbsp;All cfg reset</li></a>
 		</ul>
 	</div>
 	<? if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]
