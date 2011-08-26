@@ -42,7 +42,8 @@ content-type: text/html
 		upload_dir=$USB_DIR/LG_DTV
 		file_ok=1
 	    else
-		if [ "$file_ext" = "zip" ]
+		# TODO whats there - 'tar.sh' or 'sh'?
+		if [ "$file_ext" = "tar.sh" -o "$file_ext" = "sh" ]
 		then
 		    if [ "`echo $file_name | awk '{print substr($1,1,12)}'`" = "openlgtv_bcm" ]
 		    then

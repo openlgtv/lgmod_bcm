@@ -98,7 +98,7 @@ content-type: text/html
 <? if [ "$HTTP_HOST" = "127.0.0.1:88" ]; then echo "<!-- "; fi ?>
 <div style="position: absolute; left: 5px; bottom: 110px; height:85; background-color:red;">
 <div class="posthead"><center>Upload the firmware file (*.epk) to first partition of USB drive connected to USB1 port (FAT32 or NTFS)&nbsp;<br/>
-		              into LG_DTV dir if it's LG upgrade or (*.zip) into OpenLGTV_BCM/upgrade if it's OpenLGTV BCM upgrade.</center></div><div class="posttext">
+		              into LG_DTV dir if it's LG upgrade or (*.tar.sh) into OpenLGTV_BCM/upgrade if it's OpenLGTV BCM upgrade.</center></div><div class="posttext">
 <form action="cgi-bin/firmware-upgrade.cgix" method="post" enctype="multipart/form-data" >
     <center><input type=file name=uploadfile><input type=submit value=Upload><br/>
     Select file and press Upload button. &nbsp; [OPTION AVAILABLE ONLY REMOTELY] &nbsp;</center>
@@ -112,7 +112,19 @@ content-type: text/html
 	
 	<div id="footer2" class="footer2">
 		<ul>
-			<a onClick="javascript:window.location='home.cgi?qURL=reboot&run=Run';" href="#" style="text-decoration:none; color:white"><li class="red"><span><img src="Images/Keyboard/stop_button.png" border="0" /></span>Reboot TV</li></a>
+			<a onClick="javascript:window.location='home.cgi?qURL=reboot&run=Run';" href="#" style="text-decoration:none; color:white"><li class=""><span><img src="Images/Keyboard/stop_button.png" border="0" /></span>Reboot TV</li></a>
+		</ul>
+		<ul>
+			<a onClick="javascript:window.location='remote';" href="#" style="text-decoration:none; color:white"><li class="">Remote control</li></a>
+		</ul>
+		<ul>
+			<li class=""></li>
+		</ul>
+		<ul>
+			<a onClick="javascript:window.location='home.cgi?qURL=reset_configs_netcast.sh&run=Run';" href="#" style="text-decoration:none; color:red"><li class="">NetCast cfg rst</li></a>
+		</ul>
+		<ul>
+			<a onClick="javascript:window.location='home.cgi?qURL=reset_configs.sh&run=Run';" href="#" style="text-decoration:none; color:white"><li class="">&nbsp;All cfg reset</li></a>
 		</ul>
 	</div>
 	<? if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]

@@ -221,7 +221,6 @@ Answer for people asking if they can use it if they have already made modificati
 
 0.5.0:
     * FIX: workaround for network shares invisible dirs (thanks xren)
-    * FIX: upgrade from zip file on USB storage device
     * FIX: ywe first time configuration
     * FIX: abc.net.au link fix
     * FIX: /home was not writable on US and KR 2010 BCM models
@@ -243,6 +242,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: lua, luac, liblua.so.5.1.4
     * ADD: OPENRELEASE 2.0.0 by rtokarev
     * ADD: CGI web page for remote control by mihaifireball under http://ip_of_tv/remote/
+    * ADD: possibility to remove all OpenLGTV BCM configs or just NetCast configs for recreating defaults at next boot using WebUI
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
     * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
@@ -251,3 +251,15 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: Internet Browser can be separated from WebUI (and proxied) with it's own NetCast icon in WebUI settings
     * CHANGE: increase Bluetooth transfer storage from 10MB to 20MB
     * CHANGE: support for OpenLGTV_BCM dir on any partition number on any of two USB ports in TV
+    * CHANGE: installation is now being done via single installation file - OpenLGTV_BCM-vX.Y.Z.tar.sh
+    * CHANGE: for safety reasons installation is now being done in chrooted virtual environment to ensure rootfs stability while flashing procedure
+
+Remaining issues with 0.5.0 developement branch:
+    * builtin web proxy code is still not perfect - proxy works properly, but problems are with modified web pages code:
+	 - problems with switching between frames, not all pages are loading and netcast apps have problems with injected code
+    * autoupgrades from USB stick with new method are not tested, tar.sh file should be supported but no content verification before executing it
+    * after upgrade rebooting is disabled for more testing installation procedure
+    * playing too much with settings might make problems with netcast configuration (?) - need to track that
+    * logging is ugly and not consistent - scripts running in multiple threads log to the same file at the same time, many timestamps in logs
+    * no support for very old firmware versions NetCast configuration (for example in Argentina) - still leaving those untouched (issue with all OpenLGTV BCM versions)
+    * compatibility break with autoupgrade method from older versions - need to install via telnet/ssh/serial

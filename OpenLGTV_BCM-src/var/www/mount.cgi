@@ -90,7 +90,8 @@ fi
 				    then
 					if [ -f "/mnt/user/cfg/ndrvtab" ]
 					then
-					    if [ ! -d "/mnt/usb1/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+					    # TODO: replace this ugly check
+					    if [ ! -d "/mnt/usb1/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive4/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive4/OpenLGTV_BCM" ]
 					    then
 						echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount.cgi?mount=1';\" onClick=\"javascript:window.location='mount.cgi?mount=1';\" value=\"Mount button: You need to plug USB stick with OpenLGTV_BCM dir first\" style=\"width:600px\" disabled />"
 					    else
