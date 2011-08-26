@@ -243,6 +243,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: OPENRELEASE 2.0.0 by rtokarev
     * ADD: CGI web page for remote control by mihaifireball under http://ip_of_tv/remote/
     * ADD: possibility to remove all OpenLGTV BCM configs or just NetCast configs for recreating defaults at next boot using WebUI
+    * ADD: bootlog is copied at each boot with usb stick/disk plugged in to OpenLGTV_BCM/OpenLGTV_BCM.log file or OpenLGTV_BCM/OpenLGTV_BCM-firstboot.log when it's first boot
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
     * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
