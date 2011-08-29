@@ -96,6 +96,10 @@ sha1sum $ofile2011.sqf > $ofile2011.sha1
 #cat extract.sh $ofile2011.zip > $ofile2011.sh.zip
 tar cvf $ofile.tar $ofile.sqf $ofile.sha1 install.sh
 tar cvf $ofile2011.tar $ofile2011.sqf $ofile2011.sha1 install.sh
+
+SKIP_LINES=$((`cat extract.sh | wc -l`+1))
+sed -i -e "s/SKIP_LINES=.*/SKIP_LINES=$SKIP_LINES/g" extract.sh
+
 cat extract.sh $ofile.tar > $ofile.tar.sh
 cat extract.sh $ofile2011.tar > $ofile2011.tar.sh
 #chmod a+rx $ofile.sh.zip $ofile2011.sh.zip
