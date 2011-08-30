@@ -1,5 +1,5 @@
-#!/bin/ash
-# OpenLGTV BCM NetCast config parser and regenerator v.0.7 by xeros
+#!/bin/sh
+# OpenLGTV BCM NetCast config parser and regenerator v.0.7.1 by xeros
 # Source code released under GPL License
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
 
@@ -187,6 +187,7 @@ then
 			    then
 				echo "OpenLGTV BCM-INFO: NetCast config generator: found /mnt/addon/ywe, setting it as ywedir for \"$yid_name\" in existing config.xml: $org_cfgxml"
 				ywedir=/mnt/addon/ywe
+				ywe_konfab_sh=/scripts/konfabulator-exec.sh
 			    else
 				#echo "OpenLGTV BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywedir to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe for \"$yid_name\" in existing config.xml"
 				echo "OpenLGTV BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywe_konfab_sh to /scripts/konfabulator-exec.sh for \"$yid_name\" in existing config.xml: $org_cfgxml"
@@ -201,10 +202,16 @@ then
 			else
 			    if [ -n "`grep '/mnt/usb1/Drive1/OpenLGTV_BCM/ywe' $org_cfgxml`" ]
 			    then
-				echo "OpenLGTV BCM-WARN: NetCast config generator: found old settings for konfabulator.sh path (/mnt/usb1/Drive1/OpenLGTV_BCM/ywe) in \"$yid_name\" id, changing it to /scripts/konfabulator-exec.sh now in $org_cfgxml"
-				sed -i 's#/mnt/usb1/Drive1/OpenLGTV_BCM/ywe/bin/konfabulator.sh#/scripts/konfabulator-exec.sh#g' $org_cfgxml
+				echo "OpenLGTV BCM-WARN: NetCast config generator: found old settings for konfabulator.sh path (/mnt/usb1/Drive1/OpenLGTV_BCM/ywe/bin) in \"$yid_name\" id, changing it to /scripts/konfabulator-exec.sh now in $org_cfgxml"
+				sed -i 's#/mnt/addon/ywe/bin/konfabulator.sh#/scripts/konfabulator-exec.sh#g' $org_cfgxml
 			    else
-				echo "OpenLGTV BCM-INFO: NetCast config generator: \"$yid_name\" id should be already in current config.xml (/mnt/user/lock/ywe_added_to_config_xml.lock lockfile exist)"
+				if [ -n "`grep '/mnt/addon/ywe/bin/konfabulator.sh' $org_cfgxml`" ]
+				then
+				    echo "OpenLGTV BCM-WARN: NetCast config generator: found orig settings for konfabulator.sh path (/mnt/addon/ywe/bin/) in \"$yid_name\" id, changing it to /scripts/konfabulator-exec.sh now in $org_cfgxml"
+				    sed -i 's#/mnt/addon/ywe/bin/konfabulator.sh#/scripts/konfabulator-exec.sh#g' $org_cfgxml
+				else
+				    echo "OpenLGTV BCM-INFO: NetCast config generator: \"$yid_name\" id should be already in current config.xml"
+				fi
 			    fi
 			fi
 			;;
@@ -279,7 +286,7 @@ then
 	if [ "$unset_proxy" = "1" -a "$org_extra_conf" != "" -a "$proxy_config_txt" != "" ]
 	then
 	    echo "OpenLGTV BCM-INFO: NetCast config generator: disabling proxy for all services"
-	    cat $org_cfgxml | sed "s#$run3556_proxy#$run3556#g" > $new_cfgxml
+	    cat $org_cfgxml | sed "s#$run3556_proxy#$org_run3556#g" > $new_cfgxml
 	    mv -f $new_cfgxml $org_cfgxml
 	    if [ -f "$extra_conf_proxy" -a -f "$proxy_config_txt" -a -f "$run3556_proxy" ]
 	    then 

@@ -39,9 +39,9 @@
 	    curr_dir=`pwd`
 	    cd $OpenLGTV_BCM_USB/                                                              2>&1 | tee -a $bootlogf
 	    echo "OpenLGTV_BCM-INFO: unpacking $OpenLGTV_BCM_USB/ywe.tar.gz file"              2>&1 | tee -a $bootlogf
-	    tar xzvf ywe.tar.gz                                                                2>&1 | tee -a $bootlogf
+	    tar xzvf "$OpenLGTV_BCM_USB/ywe.tar.gz" -C "$OpenLGTV_BCM_USB"                     2>&1 | tee -a $bootlogf
 	    echo "OpenLGTV_BCM-INFO: removing $OpenLGTV_BCM_USB/ywe.tar.gz file"               2>&1 | tee -a $bootlogf
-	    rm -f ywe.tar.gz                                                                   2>&1 | tee -a $bootlogf
+	    rm -f "$OpenLGTV_BCM_USB/ywe.tar.gz"                                               2>&1 | tee -a $bootlogf
 	    cd $curr_dir                                                                       2>&1 | tee -a $bootlogf
 	    /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                        | tee -a $bootlogf
 	fi
@@ -147,17 +147,17 @@
 	then
 	    if [ ! -f "/mnt/user/ywe/deviceid" ]
 	    then
-		/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a $bootlogf
+		/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"        | tee -a $bootlogf
 		deviceid=$RANDOM
 		echo "OpenLGTV_BCM-INFO: generating Yahoo Widgets Engine device id: $deviceid in /mnt/user/ywe/deviceid..." | tee -a $bootlogf
 		echo $deviceid > /mnt/user/ywe/deviceid
-		/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a $bootlogf
+		/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"        | tee -a $bootlogf
 	    fi
 	    if [ ! -f "/mnt/user/ywe/samsung/config-oem.xml" ]
 	    then
 		if [ -f "/mnt/user/ywe/config-oem.xml" ]
 		then
-		    /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a $bootlogf
+		    /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"    | tee -a $bootlogf
 		    echo "OpenLGTV_BCM-INFO: preparing Yahoo Widgets Engine config-oem.xml for Samsung Widgets in $ywedir/samsung/config-oem.xml..." | tee -a $bootlogf
 		    cat /mnt/user/ywe/config-oem.xml | sed 's/.*fingerprints.*//g' | \
 			sed 's#\(<value key=\"gallery.gallery-url\">\).*\(</value>\)#\1http://127.0.0.1:88/ywe/update.sh?yaction=\2#g' | \
@@ -254,12 +254,12 @@
 		    /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a $bootlogf
 		fi
 	    fi
-	    if [ -e "$ywedir/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir/bin/konfabulator.sh`" ]
+	    if [ -e "$ywedir/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir/bin/konfabulator.sh 2>/dev/null`" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config ($ywedir/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..." | tee -a $bootlogf
 		echo -e "\nkillall lb4wk\n" >> "$ywedir/bin/konfabulator.sh"
 	    fi
-	    if [ -e "$ywedir_usb/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir_usb/bin/konfabulator.sh`" ]
+	    if [ -e "$ywedir_usb/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir_usb/bin/konfabulator.sh 2>/dev/null`" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config on USB storage device ($ywedir_usb/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..." | tee -a $bootlogf
 		echo -e "\nkillall lb4wk\n" >> "$ywedir_usb/bin/konfabulator.sh"

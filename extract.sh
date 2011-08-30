@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-alpha1 installation script v.1.81 by xeros
+# OpenLGTV BCM 0.5.0-alpha2 installation script v.1.82 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
@@ -7,7 +7,7 @@
 echo 'Extracting ...'; export base="/tmp/`basename ${0%.tar.sh}`"; export file_sqf="`basename ${0%.tar.sh}`.sqf"
 mkdir -p "$base"; echo 3 > /proc/sys/vm/drop_caches; sleep 1
 
-SKIP_LINES=54
+SKIP_LINES=51
 
 #tail -n +51 "$0" | unzip -o - -d "$base" || { echo "Error: Extraction failed."; exit 1; }; sync #no unzip in orig fw
 tail -n +$SKIP_LINES "$0" | tar xv -C "$base" || { echo "Error: Extraction failed."; exit 1; }; sync

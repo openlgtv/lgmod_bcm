@@ -2,9 +2,10 @@
 # konfabulator-exec.sh script by xeros
 # Source code released under GPL License
 
+[ -z "$ywedir" ] && ywedir=/mnt/addon/ywe
 
-if [ ! -d "$ywedir" -a ! -h "$ywedir" ]
-then
+#if [ ! -d "$ywedir" -a ! -h "$ywedir" ]
+#then
     if [ "$OpenLGTV_BCM_USB" = "" ]
     then
 	if [ -f "/tmp/usbdir" ]
@@ -13,19 +14,12 @@ then
 	fi
     fi
     ywedir_old="$ywedir"
-    #for usb_port in usb1 usb2
-    #do
-    #	for drive in Drive1 Drive2 Drive3 Drive4
-    #	do
-    #	    [ -d "/mnt/$usb_port/$drive/OpenLGTV_BCM/ywe" ] && ywedir="/mnt/$usb_port/$drive/OpenLGTV_BCM/ywe"
-    #	done
-    #done
     [ -d "$OpenLGTV_BCM_USB/ywe" ] && ywedir="$OpenLGTV_BCM_USB/ywe"
     if [ "$ywedir" != "$ywedir_old" ]
     then
 	echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: ywe not found in ywedir=$ywedir_old path, but found in $ywedir..." | tee -a /var/log/OpenLGTV_BCM.log
     fi
-fi
+#fi
 
 if [ -f "$ywedir/bin/konfabulator.sh" -o -h "$ywedir/bin/konfabulator.sh" ]
 then

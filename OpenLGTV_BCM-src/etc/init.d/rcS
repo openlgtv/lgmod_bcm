@@ -91,13 +91,12 @@ echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"                    | 
 #ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 ntpd -p pool.ntp.org > /dev/null 2>&1 &
 
-if [ ! "-d /mnt/user/etc" ]
+if [ ! -d "/mnt/user/etc" ]
 then
     echo "OpenLGTV_BCM-WARN: /mnt/user/etc dir does not exist, creating it"   | tee -a $bootlogf
-    mkdir -p /mnt/user/etc                                                          >> $bootlogf
-    user_readonly=$?
+    mkdir -p /mnt/user/etc                                                          >> $bootlogf || user_readonly=1
 fi
-if [ "$user_readonly" -ne "0" ]
+if [ "$user_readonly" = "1" ]
 then
     echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process" | tee -a $bootlogf
     mount -t tmpfs tmpfs /mnt/user               2>&1 | tee -a $bootlogf
@@ -318,29 +317,32 @@ else
     echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a $bootlogf
 fi
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                          | tee -a $bootlogf
+/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                       | tee -a $bootlogf
 (sleep 10; /etc/rc.d/rc.directfb)&
 
 if [ "$uver" != "$ver" ]
 then
     echo "OpenLGTV_BCM-INFO: last booted version is different from current, making /mnt/user/etc/ver2 file update" | tee -a $bootlogf
-    cp -f /etc/ver2 /mnt/user/etc/ver2                                         2>&1 | tee -a $bootlogf
+    cp -f /etc/ver2 /mnt/user/etc/ver2                                            2>&1 | tee -a $bootlogf
 fi
 
 if [ ! -d "/mnt/user/init.d" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts" | tee -a $bootlogf
-    mkdir -p /mnt/user/init.d                                                  2>&1 | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts"    | tee -a $bootlogf
+    mkdir -p /mnt/user/init.d                                                     2>&1 | tee -a $bootlogf
 fi
 
 if [ -d "/mnt/user/init.d" ]
 then
-    echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"  | tee -a $bootlogf
-    for scr_file in /mnt/user/init.d/*
-    do
-	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                           | tee -a $bootlogf
-	$scr_file                                                              2>&1 | tee -a $bootlogf
-    done
+    if [ "`ls /mnt/user/init.d/ | wc -l`" -gt "0" ]
+    then
+	echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/" | tee -a $bootlogf
+	for scr_file in /mnt/user/init.d/*
+	do
+	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."                          | tee -a $bootlogf
+	    $scr_file                                                             2>&1 | tee -a $bootlogf
+	done
+    fi
 fi
 
 echo ""

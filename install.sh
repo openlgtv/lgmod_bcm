@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-alpha1 installation script v.1.81 by xeros
+# OpenLGTV BCM 0.5.0-alpha2 installation script v.1.82 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -46,7 +46,7 @@ else
     fi
 fi
 
-ver=0.5.0-alpha1
+ver=0.5.0-alpha2
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
@@ -148,7 +148,7 @@ ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1
 
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
-echo "OpenLGTV BCM 0.5.0-alpha1 installation script for $platform platform by xeros" | tee -a $log
+echo "OpenLGTV BCM 0.5.0-alpha2 installation script for $platform platform by xeros" | tee -a $log
 
 if [ "$2" = "autoupgrade" ]
 then

@@ -62,10 +62,14 @@ if [ "$uver" != "$ver" ]
 then
     echo "OpenLGTV_BCM-INFO: last booted version ($uver) is different than current one ($ver) - removing depreciated settings" | tee -a $bootlogf
     settings_sed=""
-    #for svar in $settings_depreciated; do settings_sed=" -e '/^$svar=/d'$settings_sed"; done                              2>&1 | tee -a $bootlogf
-    for svar in $settings_depreciated; do settings_sed=" -e /^$svar=/d$settings_sed"; done                                2>&1 | tee -a $bootlogf
-    sed -i $settings_sed /mnt/user/cfg/settings                                                                           2>&1 | tee -a $bootlogf
-    sed -i $settings_sed /mnt/user/cfg/settings.default                                                                   2>&1 | tee -a $bootlogf
+    #for svar in $settings_depreciated; do settings_sed=" -e /^$svar=/d$settings_sed"; done                               2>&1 | tee -a $bootlogf
+    #sed -i $settings_sed /mnt/user/cfg/settings                                                                          2>&1 | tee -a $bootlogf
+    #sed -i $settings_sed /mnt/user/cfg/settings.default                                                                  2>&1 | tee -a $bootlogf
+    settings_egrep="^NONEXISTENT"
+    for svar in $settings_depreciated; do settings_egrep="^$svar=|$settings_egrep"; done                                  2>&1 | tee -a $bootlogf
+    cat /mnt/user/cfg/settings | egrep -v "$settings_egrep" > /tmp/settings.tmp                                                     2>> $bootlogf
+    cat /tmp/settings.tmp > /mnt/user/cfg/settings                                                                                  2>> $bootlogf
+    rm /tmp/settings.tmp                                                                                                  2>&1 | tee -a $bootlogf
 fi
 
 echo "OpenLGTV_BCM-INFO: re-reading custom settings configuration..."                                                          | tee -a $bootlogf

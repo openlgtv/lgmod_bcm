@@ -76,13 +76,13 @@ function CreateBookmark() {
 function DeleteBookmark()
 	{
 	// delete bookmark replacing bookmarks.inc N row 
-	top.frames["MainPage"].location = 'deletebookmark.cgi?bookmarkId=' + current;
+	window.location = 'deletebookmark.cgi?bookmarkId=' + current;
 	}
 	
 function SaveBookmark()
 	{
 	// save bookmark replacing bookmarks.inc N row 
-	var URLText = top.frames["Keyboard"].document.forms['URL'].elements['txtURL'].value;
+	var URLText = parent.document.forms['URL'].elements['txtURL'].value;
 	
 	if (URLText != '')
 		{
@@ -91,7 +91,7 @@ function SaveBookmark()
 			URLText = 'http://' + URLText;
 			}
 			
-		top.frames["MainPage"].location = 'savebookmark.cgi?bookmarkId=' + current + '&bookmarkURL=' + URLText;
+		window.location = 'savebookmark.cgi?bookmarkId=' + current + '&bookmarkURL=' + URLText;
 		}
 	}
 	
@@ -131,8 +131,7 @@ function check(e)
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the Keyboard
-			ChangeBgColor();
-			top.frames["Keyboard"].focus();
+			SwitchFocusedPage();
 			}
 		else if (key==405) 
 			{
@@ -162,12 +161,11 @@ function check(e)
 			}
 		}catch(Exception){}
 	}
-	
+		
 function ChangeBgColor()
 	{
 	//Change the page's BgColor.
 	document.bgColor = '#D3D3D3';
-	top.frames["Keyboard"].document.bgColor = '#FFFFFF';
 	}
 	
 function setCurrent(element)
@@ -184,10 +182,36 @@ function OnLoadSetCurrent()
 	//set TD background
 	document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
 	
-	//change page's BgColor
-	document.bgColor = '#FFFFFF';
-	top.frames["Keyboard"].document.bgColor = '#D3D3D3';
+	//set the focus on keyboard page
+	SwitchFocusedPage();
 	}	
+	
+	//windows.PostMessage management
+	//it is necessary to bypass browsers block on cross-domain frames communication.
+	window.addEventListener("message", receiveMessage, false);
+
+	function receiveMessage(event)
+		{
+		if (event.data == 'FocusToYou')
+			{
+			//Change the page's BgColor.
+			document.bgColor = '#FFFFFF';
+			//set focus on current document
+			document.links['link1'].focus();
+			}
+		return;
+		}
+	
+	function SwitchFocusedPage()
+	{
+	//Change the page's BgColor.
+	ChangeBgColor();
+	
+	//windows.PostMessage
+	//it is necessary to bypass browsers block on cross-domain frames communication.
+	parent.postMessage('FocusToYou', '*');
+	
+	}
 	
 document.defaultAction = true;
 
@@ -196,8 +220,7 @@ document.defaultAction = true;
 
 </head>
 
-<!-- body bgcolor="#ffffff" onLoad="javascript:CreateBookmark();" -->
-<body bgcolor="#d3d3d3" onLoad="javascript:CreateBookmark();">
+<body bgcolor="#D3D3D3" onLoad="javascript:CreateBookmark();">
 
 
 <div align="center">
@@ -298,7 +321,7 @@ document.defaultAction = true;
 					<b>NetCast services</b>
 				</td>
 				<td colspan=2>
-					<a onClick='javascript:top.frames["Keyboard"].focus();' href="#"><img src="Images/Keyboard/green_button.png" align="middle" Border="0" /></a>
+					<a onClick='javascript:SwitchFocusedPage(); return false;' href="#"><img src="Images/Keyboard/green_button.png" align="middle" Border="0" /></a>
 					<b>Switch Page</b>
 				</td>
 				<td>

@@ -289,8 +289,7 @@ fi
 				{\n\
 				//the green button on the remote control have been pressed\n\
 				//Switch to the Keyboard\n\
-				ChangeBgColor();\n\
-				top.frames\[\"Keyboard\"\].focus();\n\
+				SwitchFocusedPage();\n\
 				}\n\
 			else if (key==405)\n\
 				{\n\
@@ -322,11 +321,6 @@ fi
 document.onkeydown = check;\n\
 //window.onload = OnLoadSetCurrent;\n\
 \n\
-	function ChangeBgColor()\n\
-		{\n\
-		//Change the page\'s BgColor.\n\
-		top.frames\[\"Keyboard\"\].document.bgColor = '\#FFFFFF';\n\
-		}\n\
 		\n\
 	function BackSpace()\n\
 		{\n\
@@ -335,7 +329,36 @@ document.onkeydown = check;\n\
 		document.activeElement.value = str.slice(0,str.length-1);\n\
 		}\n\
 		\n\
-		document.defaultAction = true;\n\
+		\n\
+	//windows.PostMessage management\n\
+	//it is necessary to bypass browsers block on cross-domain frames communication.\n\
+	window.addEventListener(\"message\", receiveMessage, false);\n\
+	\n\
+	function receiveMessage(event)\n\
+		{\n\
+		if (event.data == 'FocusToYou')\n\
+			{\n\
+			//set focus on current document\n\
+			if (document.forms.length != 0)\n\
+				{\n\
+				document.forms[0].focus();\n\
+				}\n\
+			else\n\
+				{\n\
+				document.links[0].focus();\n\
+				}\n\
+			}\n\
+		return;\n\
+		}\n\
+	\n\
+	function SwitchFocusedPage()\n\
+	{\n\
+	//window.PostMessage\n\
+	//it is necessary to bypass browsers block on cross-domain frames communication.\n\
+	parent.postMessage('FocusToYou', '*');\n\
+	}\n\
+	\n\
+	document.defaultAction = true;\n\
 	</script>\n\
       #"
     else
