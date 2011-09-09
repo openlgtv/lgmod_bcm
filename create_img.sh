@@ -21,8 +21,10 @@ dir2011=OpenLGTV_BCM-2011-src
 ver=`cat $dir/etc/ver2`
 ofile=OpenLGTV_BCM-GP2B-v$ver
 ofile2011=OpenLGTV_BCM-GP3B-v$ver
-squashfs_opts="-all-root -noappend"
-#squashfs_opts="-all-root -noappend -b $((256*1024))"
+#squashfs_opts="-all-root -noappend"
+squashfs_opts="-all-root -noappend -b $((256*1024))"
+#squashfs_opts="-all-root -noappend -b $((512*1024))"
+#squashfs_opts="-all-root -noappend -b $((1024*1024))"
 squashfs2011_opts="-all-root -noappend -always-use-fragments -b 1048576"
 sed -i -e "s/^ver=.*/ver=$ver/g" -e "s/OpenLGTV BCM .* installation script/OpenLGTV BCM $ver installation script/g" install.sh extract.sh
 cp -f install.sh $dir/scripts/

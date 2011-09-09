@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-alpha2 installation script v.1.82 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.82 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
@@ -7,7 +7,7 @@
 echo 'Extracting ...'; export base="/tmp/`basename ${0%.tar.sh}`"; export file_sqf="`basename ${0%.tar.sh}`.sqf"
 mkdir -p "$base"; echo 3 > /proc/sys/vm/drop_caches; sleep 1
 
-SKIP_LINES=51
+SKIP_LINES=52
 
 #tail -n +51 "$0" | unzip -o - -d "$base" || { echo "Error: Extraction failed."; exit 1; }; sync #no unzip in orig fw
 tail -n +$SKIP_LINES "$0" | tar xv -C "$base" || { echo "Error: Extraction failed."; exit 1; }; sync
@@ -43,7 +43,8 @@ for i in `cat /proc/mounts | awk '{print $2}' | grep -v "^/$"`; do mount --bind 
 #TODO: use /scripts/install.sh and remove install.sh from zip file - need to add path handling in install.sh
 #chroot "$CHR" "$CHR/scripts/install.sh" "$base/$file_sqf" "$@"
 chmod 755 "${CHR}${base}/install.sh"
-chroot "$CHR" "$base/install.sh" "$@"
+# v- on pure LG rootfs /usr/sbin is not in $PATH
+/usr/sbin/chroot "$CHR" "$base/install.sh" "$@"
 
 #TODO: umount, autoupgrade, rest...
 

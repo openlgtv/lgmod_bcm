@@ -241,11 +241,13 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: nvram-edit commandline tool to get info from NVRAM dump and change some locked values
     * ADD: libncurses.so.5.7 and recompiled top binary to use the lib
     * ADD: lua, luac, liblua.so.5.1.4
-    * ADD: OPENRELEASE 2.0.0 by rtokarev
+    * ADD: libSDL-1.2.so.0.11.3 with DirectFB access for additional SDL apps that can now use TV screen
+    * ADD: OPENRELEASE 2.1.0 by rtokarev
     * ADD: CGI web page for remote control by mihaifireball under http://ip_of_tv/remote/
     * ADD: possibility to remove all OpenLGTV BCM configs or just NetCast configs for recreating defaults at next boot using WebUI
     * ADD: bootlog is copied at each boot with usb stick/disk plugged in to OpenLGTV_BCM/OpenLGTV_BCM.log file or OpenLGTV_BCM/OpenLGTV_BCM-firstboot.log when it's first boot
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
+    * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
     * CHANGE: improved cramfs xip partitions check before mounting - to prevent kernel crash in case of corrupted lgapp partition (RELEASE)
     * CHANGE: partition mounting based on partition names instead of static mtd numbers - this should improve compatibility even with unknown models
@@ -256,12 +258,13 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: installation is now being done via single installation file - OpenLGTV_BCM-vX.Y.Z.tar.sh
     * CHANGE: for safety reasons installation is now being done in chrooted virtual environment to ensure rootfs stability while flashing procedure
     * CHANGE: use konfabulator-exec.sh even for US models to give ability to run custom ywe from USB storage device
+    * CHANGE: squashfs image is now being build with 256KB block size for better compression of partition image
+    * REMOVE: tcpdump binary for space reasons
+    * REMOVE: top binary - use busybox applet instead
 
 Remaining issues with 0.5.0 developement branch:
-    * problem with reboot - need to track it (web browser or konfabulator is started on unmounting)
     * autoupgrades from USB stick with new method are not tested, tar.sh file should be supported but no content verification before executing it
     * after manual install/upgrade rebooting is disabled for more testing installation procedure
-    * proxy performance is somekind worse than native and not all pages are loading yet with yellow ('Go to URL') button
     * logging is ugly and not consistent - scripts running in multiple threads log to the same file at the same time, many timestamps in logs
     * no support for very old firmware versions NetCast configuration (for example in Argentina) - still leaving those untouched (issue with all OpenLGTV BCM versions)
     * compatibility break with autoupgrade method from older versions - need to install via telnet/ssh/serial

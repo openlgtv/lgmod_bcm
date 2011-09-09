@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-alpha2 installation script v.1.82 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.82 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -46,7 +46,7 @@ else
     fi
 fi
 
-ver=0.5.0-alpha2
+ver=0.5.0-devel
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
@@ -148,7 +148,7 @@ ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1
 
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
-echo "OpenLGTV BCM 0.5.0-alpha2 installation script for $platform platform by xeros" | tee -a $log
+echo "OpenLGTV BCM 0.5.0-devel installation script for $platform platform by xeros" | tee -a $log
 
 if [ "$2" = "autoupgrade" ]
 then
@@ -346,14 +346,14 @@ then
     mkdir -p /home/backup 2>&1 | tee -a $log
 fi
 # Backup files to store check
-lginit_src="`ls $dir/*-$lginit_backup.sqf 2> /dev/null`"
-rootfs_src="`ls $dir/*-$rootfs_backup.sqf 2> /dev/null`"
+lginit_src="`echo ${dir}/*-${lginit_backup}.sqf 2> /dev/null`"
+rootfs_src="`echo ${dir}/*-${rootfs_backup}.sqf 2> /dev/null`"
 if [ -n "$lginit_src" -a -n "$rootfs_src" ]
 then
     backup_at_home_force=1
 else
-    lginit_src="`ls $dir/*4_lginit 2> /dev/null`"
-    rootfs_src="`ls $dir/*3_rootfs 2> /dev/null`"
+    lginit_src="`echo ${dir}/*4_lginit 2> /dev/null`"
+    rootfs_src="`echo ${dir}/*3_rootfs 2> /dev/null`"
     if [ -n "$lginit_src" -a -n "$rootfs_src" ]
     then
 	backup_at_home_force=1
@@ -368,7 +368,7 @@ then
 	then
 	    lginit_src=/dev/mtd$mtd_lginit
 	fi
-	echo "Storing lginit partition copy in /home/backup/lginit.img" | tee -a $log
+	echo "Storing lginit partition copy from $lginit_src to $lginit_bck" | tee -a $log
 	sh -c "cat $lginit_src > $lginit_bck" > $tmpout 2>&1
 	if [ "$?" -ne "0" ]
 	then

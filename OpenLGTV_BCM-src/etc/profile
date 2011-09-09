@@ -20,7 +20,7 @@ alias tma='tmux attach-session'
 
 #alias unmount="for i in /mnt/usb*/*; do /bin/busybox2 umount $i 2>&1 | grep -v 'Invalid argument'; done"
 alias unmount="/bin/busybox2 hush -c \"echo umount /mnt/usb{1,2}/Drive{1,2,3,4} 2>&1 | grep -v 'Invalid argument'\""
-alias unmountall="umount -r $(cat /proc/mounts|grep -nv '^lgapp_xip /mnt/lg/lgapp cramfs'|grep -v '^rootfs'|sort -rn|cut -d' ' -f2)"
+alias unmountall='umount -r $(cat /proc/mounts|grep -nv "^lgapp_xip /mnt/lg/lgapp cramfs"|grep -v "^rootfs"|sort -rn|cut -d" " -f2)'
 #alias unmountall="umount -r $(cat /proc/mounts|grep -v '^rootfs'|grep -nv '^lgapp_xip /mnt/lg/lgapp cramfs'|sort -rn|grep -v " / "|cut -d' ' -f2)"
 
 #alias reboot="killall konfabulator 2>/dev/null; sleep 1; unmount; unmountall; sync; sleep 1; /sbin/reboot"
