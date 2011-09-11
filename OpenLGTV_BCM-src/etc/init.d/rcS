@@ -27,6 +27,8 @@ mount -t ramfs tmp /tmp
 
 mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron
 
+touch /var/log/boot /var/log/boot2                                               2>&1 | tee -a $bootlogf
+
 echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."               | tee -a $bootlogf
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf
 
@@ -39,7 +41,12 @@ then
 
 echo "OpenLGTV_BCM-INFO: starting in AUTORUN mode"                                    | tee -a $bootlogf
 
-source /etc/rc.d/rc.mount
+source /etc/rc.d/rc.mount1                                                       2>&1 | tee -a $bootlogf
+
+/sbin/bootlogd -p /var/run/bootlogd.pid -l /var/log/boot
+
+source /etc/rc.d/rc.mount2
+
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf
 
 if [ -e "/mnt/lg/res/lglib/bcmdriver.ko" ]

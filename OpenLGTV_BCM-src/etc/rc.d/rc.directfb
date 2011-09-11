@@ -7,7 +7,7 @@ echo "OpenLGTV_BCM-INFO: rc.directfb script starting..." | tee -a $bootlogf
 if [ "$netcast_keyboard_mouse_support" = "1" ]
 then
     DIRECTFBRC="/usr/local/etc/directfbrc"
-    pid=`pgrep RELEASE`
+    pid=`pgrep RELEASE | tail -n 1`
     v_res=1280x720
     v_start_hex=`cat /proc/${pid}/maps | grep "/dev/mem" | awk -F- '{ if(NR==3) printf("%s\n", $1) }'`
     v_start_dec=`echo $((0x${v_start_hex}))`

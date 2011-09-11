@@ -1,0 +1,13 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.mount1
+# Main Filesystems Mounting Script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+#mount -t proc proc /proc
+#mount -t ramfs tmp /tmp
+echo "OpenLGTV_BCM-INFO: main system mounts..."
+mount -t sysfs sysfs /sys
+mount -t usbfs usbfs /proc/bus/usb
+mount -t devpts devpts /dev/pts
+mount -t tmpfs none /usr/etc
+mount -t tmpfs bt /mnt/lg/bt -o size=20M

@@ -1,16 +1,9 @@
 #!/bin/sh
-# OpenLGTV BCM script rc.mount
+# OpenLGTV BCM script rc.mount2
 # MTD Partitions Mounting Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-#mount -t proc proc /proc
-#mount -t ramfs tmp /tmp
-echo "OpenLGTV_BCM-INFO: system mounts..."                               | tee -a /tmp/OpenLGTV_BCM.log
-mount -t sysfs sysfs /sys                                           2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t usbfs usbfs /proc/bus/usb                                  2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t devpts devpts /dev/pts                                     2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t tmpfs none /usr/etc                                        2>&1 | tee -a /tmp/OpenLGTV_BCM.log
-mount -t tmpfs bt /mnt/lg/bt -o size=20M                            2>&1 | tee -a /tmp/OpenLGTV_BCM.log
+echo "OpenLGTV_BCM-INFO: mtd mounts..."                                  | tee -a /tmp/OpenLGTV_BCM.log
 
 # partitions names to mtd numbers assignment
 cat /proc/mtd | sed -e 's/://g' -e 's/\"//g' -e 's/^mtd//g' | grep -v erasesize | awk '{print "mtd_" $4 "=" $1}' | tac > /tmp/partitions.list
