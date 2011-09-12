@@ -5,39 +5,39 @@
 
 if [ "$OPENRELEASE" = "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: setting OPENRELEASE to start"           | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: setting OPENRELEASE to start"
     RELEASE_cmd="/usr/bin/OPENRELEASE"
     if [ ! -f "/mnt/user/etc/openrelease/openrelease.cfg" -o ! -f "/mnt/user/etc/openrelease/openrelease_keymap.cfg" ]
     then
-	echo "OpenLGTV_BCM-WARN: OPENRELEASE configs not found in /mnt/user/etc/openrelease, preparing defaults"       | tee -a $bootlogf
-	mkdir -p /mnt/user/etc/openrelease                      2>&1 | tee -a $bootlogf
-	cp -f /etc/openrelease/* /mnt/user/etc/openrelease/     2>&1 | tee -a $bootlogf
+	echo "OpenLGTV_BCM-WARN: OPENRELEASE configs not found in /mnt/user/etc/openrelease, preparing defaults"
+	mkdir -p /mnt/user/etc/openrelease
+	cp -f /etc/openrelease/* /mnt/user/etc/openrelease/
     fi
     if [ -f "/mnt/user/etc/openrelease/openrelease.cfg" -a "/mnt/user/etc/openrelease/openrelease_keymap.cfg" ]
     then
-	echo "OpenLGTV_BCM-INFO: mount-binding OPENRELEASE configs from /mnt/user/etc/openrelease to /etc/openrelease" | tee -a $bootlogf
-	mount --bind /mnt/user/etc/openrelease /etc/openrelease 2>&1 | tee -a $bootlogf
+	echo "OpenLGTV_BCM-INFO: mount-binding OPENRELEASE configs from /mnt/user/etc/openrelease to /etc/openrelease"
+	mount --bind /mnt/user/etc/openrelease /etc/openrelease
     fi
     if [ -f "/mnt/user/lib/libopenrelease.so" ]
     then
-	echo "OpenLGTV_BCM-INFO: found /mnt/user/lib/libopenrelease.so, using it for OPENRELEASE"                      | tee -a $bootlogf
-	mount --bind /mnt/user/lib/libopenrelease.so /usr/lib/libopenrelease.so                                   2>&1 | tee -a $bootlogf
+	echo "OpenLGTV_BCM-INFO: found /mnt/user/lib/libopenrelease.so, using it for OPENRELEASE"
+	mount --bind /mnt/user/lib/libopenrelease.so /usr/lib/libopenrelease.so
     fi
 else
-    echo "OpenLGTV_BCM-INFO: setting RELEASE to start"               | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: setting RELEASE to start"
     RELEASE_cmd="/lg/lgapp/RELEASE 0"
 fi
 
 if [ "$RELEASE_in_tmux" = "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"                  | tee -a $bootlogf
-    echo ""                                                          | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"
+    echo ""
     #/usr/bin/tmux new-session -n 'RELEASE' '/lg/lgapp/RELEASE 0'
     /usr/bin/tmux new-session -n 'RELEASE' "$RELEASE_cmd"
     #/bin/sh
 else
-    echo "OpenLGTV_BCM-INFO: start RELEASE"                          | tee -a $bootlogf
-    echo ""                                                          | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: start RELEASE"
+    echo ""
     #/lg/lgapp/RELEASE 0
     $RELEASE_cmd
 fi

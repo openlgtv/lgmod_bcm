@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh
 # Source code released under GPL License
 # rcS for Saturn7 by mmm4m5m
 # modified for OpenLGTV BCM by xeros
@@ -20,5 +20,5 @@ F=nvram; FF="/home/${F}"
 	touch "/mnt/lg/cmn_data/model.${h%%.*}" "/mnt/user/model.${h%%.*}"; # expose model name
 	iecho "backup: $f"
 	cat /tmp/$F | gzip -1 > $f; sync; break
-done; } 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
+done; }
 # >/dev/kmsg 2>&1

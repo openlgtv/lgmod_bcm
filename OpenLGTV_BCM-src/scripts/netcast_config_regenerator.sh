@@ -1,6 +1,7 @@
 #!/bin/sh
 # OpenLGTV BCM NetCast config parser and regenerator v.0.7.1 by xeros
 # Source code released under GPL License
+
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
 
 # variables

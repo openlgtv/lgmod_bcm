@@ -3,11 +3,11 @@
 # Network setup script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-echo "OpenLGTV_BCM-INFO: starting network setup..."                                                           | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: starting network setup..."
 network_set=0
 if [ -n "`cat /proc/cmdline | grep ip=`" ]
 then
-    echo "OpenLGTV_BCM-INFO: using static network setup from kernel cmdline set from CFE"                     | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: using static network setup from kernel cmdline set from CFE"
     TARGET_IP=$(cat /proc/cmdline | awk 'BEGIN { RS="[ :]"; FS="="; } /ip=/ { print $2 } END {}')
     SERVER_IP=$(cat /proc/cmdline | awk 'BEGIN { RS="[ ]"; FS=":"; } /ip=/ { print $2 } END {}')
     GATEWAY=$(cat /proc/cmdline | awk 'BEGIN { RS="[ ]"; FS=":"; } /ip=/ { print $3 } END {}')
@@ -18,7 +18,7 @@ else
     then
 	if [ "`cat /mnt/flash/data/nm.rc | grep DHCP | awk -F= '{print $2}'`" -eq "0" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: using static network setup from NetworkManager config"                   | tee -a $bootlogf
+	    echo "OpenLGTV_BCM-INFO: using static network setup from NetworkManager config"
 	    TARGET_IP=`cat /mnt/flash/data/nm.rc | grep IP_Address | awk '{FS="="; print $2}'`
 	    SERVER_IP=`cat /mnt/flash/data/nm.rc | grep IP_Gateway | awk '{FS="="; print $2}'` 
 	    # we wont get server ip from NetworkManager config, so lets get gateway address instead
@@ -29,7 +29,7 @@ else
 	    network_set=0
 	fi
     else
-	echo "OpenLGTV_BCM-INFO: could not determine network setup, using defaults"                           | tee -a $bootlogf
+	echo "OpenLGTV_BCM-INFO: could not determine network setup, using defaults"
 	TARGET_IP=192.168.100.99 # if we cant get network config settings lets set some defaults
 	SERVER_IP=192.168.100.1
 	GATEWAY=192.168.100.1
@@ -41,19 +41,19 @@ fi
 #
 # Network setting
 #
-echo "OpenLGTV_BCM-INFO: setting loopback network connection..."                                              | tee -a $bootlogf
-ifconfig lo 127.0.0.1 netmask 255.0.0.0                                                                  2>&1 | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: setting loopback network connection..."
+ifconfig lo 127.0.0.1 netmask 255.0.0.0
 if [ "$network_set" -eq "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: TARGET_IP: $TARGET_IP SERVER_IP: $SERVER_IP GATEWAY: $GATEWAY NETMASK: $NETMASK" | tee -a $bootlogf
-    ifconfig eth0 $TARGET_IP netmask $NETMASK up                                                         2>&1 | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: TARGET_IP: $TARGET_IP SERVER_IP: $SERVER_IP GATEWAY: $GATEWAY NETMASK: $NETMASK"
+    ifconfig eth0 $TARGET_IP netmask $NETMASK up
     if [ -n "`grep USE_ETH=NO /mnt/flash/data/nm.rc`" ]
     then
-	echo "OpenLGTV_BCM-INFO: dropping default gateway as WLAN network is going to be configured later..." | tee -a $bootlogf
+	echo "OpenLGTV_BCM-INFO: dropping default gateway as WLAN network is going to be configured later..."
     else
-	route add default gw $GATEWAY                                                                    2>&1 | tee -a $bootlogf
+	route add default gw $GATEWAY
     fi
 else
-    echo "OpenLGTV_BCM-INFO: connecting to DHCP server for network setup (in background)"                     | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: connecting to DHCP server for network setup (in background)"
     udhcpc eth0 &
 fi

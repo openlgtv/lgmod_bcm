@@ -1,6 +1,7 @@
 #!/bin/sh
 # links_images_preload.sh script by xeros
 # Source code released under GPL License
+
 cur_dir=`pwd`
 mkdir -p /tmp/links_icons
 cd /tmp/links_icons

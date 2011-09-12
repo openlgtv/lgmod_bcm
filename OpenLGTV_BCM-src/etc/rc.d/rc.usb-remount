@@ -3,25 +3,25 @@
 # USB Storage Remounting Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."                                           | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
 for mnt in `cat /proc/mounts | grep ^/dev/sd | awk '{print $1 "#" $2 "#" $3}'`
 do
     mnt_src=`echo $mnt | awk -F# '{print $1}'`
     mnt_dst=`echo $mnt | awk -F# '{print $2}'`
     mnt_fs=`echo $mnt | awk -F# '{print $3}'`
-    echo "OpenLGTV_BCM-DEBUG: mnt_src: $mnt_src mnt_dst: $mnt_dst mnt_fs: $mnt_fs"             | tee -a $bootlogf
+    echo "OpenLGTV_BCM-DEBUG: mnt_src: $mnt_src mnt_dst: $mnt_dst mnt_fs: $mnt_fs"
     if [ "$mnt_fs" = "ntfs" ]
     then
-	echo "OpenLGTV_BCM-INFO: unmounting NTFS partition: $mnt_src mounted in $mnt_dst"      | tee -a $bootlogf
-	umount -f $mnt_dst                                                                2>&1 | tee -a $bootlogf
-	sync                                                                              2>&1 | tee -a $bootlogf
-	echo "OpenLGTV_BCM-INFO: mounting NTFS partition with ntfs-3g: $mnt_src into $mnt_dst" | tee -a $bootlogf
-	ntfs-3g $mnt_src $mnt_dst                                                         2>&1 | tee -a $bootlogf
+	echo "OpenLGTV_BCM-INFO: unmounting NTFS partition: $mnt_src mounted in $mnt_dst"
+	umount -f $mnt_dst
+	sync
+	echo "OpenLGTV_BCM-INFO: mounting NTFS partition with ntfs-3g: $mnt_src into $mnt_dst"
+	ntfs-3g $mnt_src $mnt_dst
     fi
     if [ "$mnt_dst" = "$USB_DIR" ]
     then
-	echo "OpenLGTV_BCM-INFO: setting USB_DIR_FS on $mnt_src to $mnt_fs"                    | tee -a $bootlogf
+	echo "OpenLGTV_BCM-INFO: setting USB_DIR_FS on $mnt_src to $mnt_fs"
 	export USB_DIR_FS=$mnt_fs
     fi
 done
-echo "OpenLGTV_BCM-INFO: rc.usb-remount end"                                                   | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: rc.usb-remount end"

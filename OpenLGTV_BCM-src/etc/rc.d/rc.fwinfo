@@ -3,16 +3,16 @@
 # LG firmware info gathering script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                         | tee -a $bootlogf
+#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
-/scripts/get_RELEASE_info.sh                                                        2>&1 | tee -a $bootlogf
+/scripts/get_RELEASE_info.sh
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                         | tee -a $bootlogf
+#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
-echo "NVRAM information:"                                                                | tee -a $bootlogf
+echo "NVRAM information:"
 
-nvram-edit | egrep "Model name|Platform|Debug status|Baudrate"                           | tee -a $bootlogf
+nvram-edit | egrep "Model name|Platform|Debug status|Baudrate"
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                         | tee -a $bootlogf
+#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
-cat /mnt/lg/model/RELEASE.cfg | grep szOtaid | awk -F, '{print "Model code:       " $2}' | tee -a $bootlogf
+cat /mnt/lg/model/RELEASE.cfg | grep szOtaid | awk -F, '{print "Model code:       " $2}'

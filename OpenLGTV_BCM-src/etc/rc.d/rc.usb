@@ -7,7 +7,7 @@
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
 k=0;
-echo "OpenLGTV_BCM-INFO: rc.usb starting..."               | tee -a $bootlogf
+echo "OpenLGTV_BCM-INFO: rc.usb starting..."
 while [ -z "`cat /proc/mounts | grep ^/dev/sd`" ]
 do
     sleep 1
@@ -26,51 +26,51 @@ done
 export OpenLGTV_BCM_USB
 export USB_DIR=`echo $OpenLGTV_BCM_USB | sed 's#/OpenLGTV_BCM##g'`
 
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"           | tee -a $bootlogf
+#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 source /etc/rc.d/rc.usb-remount
 
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
-    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."         | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."
     echo "$USB_DIR" > /tmp/usbdir
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
 	#if [ -f "$OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf" ]
 	#then
-	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM $platform upgrade..."   | tee -a $bootlogf
+	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM $platform upgrade..."
 	    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf | wc -l`
 	    tarsh_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.tar.sh | wc -l`
 	    if [ "$sqf_file_count" -gt 1 -o "$tarsh_file_count" -gt 1 ]
 	    then
-		echo "OpenLGTV_BCM-WARN: theres too much OpenLGTV BCM upgrade (.sqf or .tar.sh) files in $OpenLGTV_BCM_USB/upgrade/, refusing to autoupgrade" | tee -a $bootlogf
+		echo "OpenLGTV_BCM-WARN: theres too much OpenLGTV BCM upgrade (.sqf or .tar.sh) files in $OpenLGTV_BCM_USB/upgrade/, refusing to autoupgrade"
 	    else
 		if [ "$tarsh_file_count" = 1 ]
 		then
 		    tarsh_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.tar.sh`
-		    echo "OpenLGTV_BCM-INFO: found $tarsh_upgrade_file file - trying use it for OpenLGTV BCM upgrade..." | tee -a $bootlogf
+		    echo "OpenLGTV_BCM-INFO: found $tarsh_upgrade_file file - trying use it for OpenLGTV BCM upgrade..."
 		    curr_dir=`pwd`
-		    cd $OpenLGTV_BCM_USB/upgrade/                                                                   2>&1 | tee -a $bootlogf
-		    #echo "OpenLGTV_BCM-INFO: unzipping $zip_upgrade_file file"                                     2>&1 | tee -a $bootlogf
-		    #unzip -o $zip_upgrade_file -d $OpenLGTV_BCM_USB/upgrade/                                       2>&1 | tee -a $bootlogf
-		    #echo "OpenLGTV_BCM-INFO: removing $zip_upgrade_file file"                                      2>&1 | tee -a $bootlogf
-		    #rm -f $zip_upgrade_file                                                                        2>&1 | tee -a $bootlogf
-		    $tarsh_upgrade_file autoupgrade                                                                 2>&1 | tee -a $bootlogf
+		    cd $OpenLGTV_BCM_USB/upgrade/
+		    #echo "OpenLGTV_BCM-INFO: unzipping $zip_upgrade_file file"
+		    #unzip -o $zip_upgrade_file -d $OpenLGTV_BCM_USB/upgrade/
+		    #echo "OpenLGTV_BCM-INFO: removing $zip_upgrade_file file"
+		    #rm -f $zip_upgrade_file
+		    $tarsh_upgrade_file autoupgrade
 		    exit 0
-		    #cd $curr_dir                                                                                   2>&1 | tee -a $bootlogf
+		    #cd $curr_dir
 		    #sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf | wc -l`
 		fi
 		if [ "$sqf_file_count" -lt 1 ]
 		then
-		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade" | tee -a $bootlogf
+		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade"
 		else
 		    sqf_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf`
 		    if [ -f "$OpenLGTV_BCM_USB/upgrade/install.sh" ]
 		    then
-			echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/install.sh script, using it instead of builtin one" | tee -a $bootlogf
-			$OpenLGTV_BCM_USB/upgrade/install.sh $sqf_upgrade_file autoupgrade                          2>&1 | tee -a $bootlogf
+			echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/install.sh script, using it instead of builtin one"
+			$OpenLGTV_BCM_USB/upgrade/install.sh $sqf_upgrade_file autoupgrade
 		    else
-			/scripts/install.sh $sqf_upgrade_file autoupgrade                                           2>&1 | tee -a $bootlogf
+			/scripts/install.sh $sqf_upgrade_file autoupgrade
 		    fi
 		    exit 0
 		    #exit $?
@@ -80,10 +80,10 @@ then
     fi
     if [ -f "$OpenLGTV_BCM_USB/make_backup" ]
     then
-        echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/make_backup file, starting backup to USB storage device..." | tee -a $bootlogf
-        /scripts/backup.sh $OpenLGTV_BCM_USB/backup                            2>&1 | tee -a $bootlogf
-        mv -f $OpenLGTV_BCM_USB/make_backup $OpenLGTV_BCM_USB/make_backup.used 2>&1 | tee -a $bootlogf
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                            | tee -a $bootlogf
+        echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/make_backup file, starting backup to USB storage device..."
+        /scripts/backup.sh $OpenLGTV_BCM_USB/backup
+        mv -f $OpenLGTV_BCM_USB/make_backup $OpenLGTV_BCM_USB/make_backup.used
+	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     fi
     if [ -f "$OpenLGTV_BCM_USB/reset_config" ]
     then
@@ -92,52 +92,52 @@ then
     fi
     if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" -o -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
     then
-        echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs or ywe.tar.gz file in $OpenLGTV_BCM_USB/ - executing Yahoo Widgets configs setup again" | tee -a $bootlogf
+        echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs or ywe.tar.gz file in $OpenLGTV_BCM_USB/ - executing Yahoo Widgets configs setup again"
         #umount /mnt/widget.data
         #mount --bind $OpenLGTV_BCM_USB/ywedata /mnt/widget.data
         #export ywe_usb_ywe_lg=1
         #export ywedata_usb_widget_data=1
         source /etc/rc.d/rc.ywe
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                            | tee -a $bootlogf
+	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     fi
     if [ -d "$OpenLGTV_BCM_USB/autorun" ]
     then
-        echo "OpenLGTV_BCM-INFO: executing custom autorun scripts from $OpenLGTV_BCM_USB/autorun/" | tee -a $bootlogf
+        echo "OpenLGTV_BCM-INFO: executing custom autorun scripts from $OpenLGTV_BCM_USB/autorun/"
 	for scr_autorun in $OpenLGTV_BCM_USB/autorun/*
 	do
-	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."               | tee -a $bootlogf
-	    $scr_autorun                                               2>&1 | tee -a $bootlogf
-	    /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                | tee -a $bootlogf
+	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
+	    $scr_autorun
+	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	done
     fi
     if [ -d "$OpenLGTV_BCM_USB/WebUI-devel" ]
     then
-        echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/WebUI-devel dir, mount-binding it to /var/www and restarting web servers..." | tee -a $bootlogf
-	mount --bind $OpenLGTV_BCM_USB/WebUI-devel /var/www            2>&1 | tee -a $bootlogf
-	killall httpd                                                  2>&1 | tee -a $bootlogf
+        echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/WebUI-devel dir, mount-binding it to /var/www and restarting web servers..."
+	mount --bind $OpenLGTV_BCM_USB/WebUI-devel /var/www
+	killall httpd
 	sleep 1
-	echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"      | tee -a $bootlogf
-	#httpd -h /var/www | tee -a $bootlogf
-	httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www           2>&1 | tee -a $bootlogf
+	echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"
+	#httpd -h /var/www
+	httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www
 	if [ -f "/mnt/user/etc/httpd.conf" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication" | tee -a $bootlogf
-	    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI"          2>&1 | tee -a $bootlogf
+	    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication"
+	    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI"
 	else
-	    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC" | tee -a $bootlogf
+	    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC"
 	fi
-	/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                            | tee -a $bootlogf
+	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     fi
     /etc/rc.d/rc.mount-netshare
-    /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                | tee -a $bootlogf
+    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log" ]
     then
-        echo "OpenLGTV_BCM-INFO: making copy of firstboot $bootlogf log file to $OpenLGTV_BCM_USB/"     | tee -a $bootlogf
-	cp -f $bootlogf $OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log           2>&1 | tee -a $bootlogf
+        echo "OpenLGTV_BCM-INFO: making copy of firstboot $bootlogf log file to $OpenLGTV_BCM_USB/"
+	cp -f $bootlogf $OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log
     fi
-    echo "OpenLGTV_BCM-INFO: making copy of $bootlogf log file to $OpenLGTV_BCM_USB/"                   | tee -a $bootlogf
-    cp -f $bootlogf $OpenLGTV_BCM_USB/                                         2>&1 | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: making copy of $bootlogf log file to $OpenLGTV_BCM_USB/"
+    cp -f $bootlogf $OpenLGTV_BCM_USB/
 else
-    echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device"    | tee -a $bootlogf
+    echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device"
 fi
-/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                    | tee -a $bootlogf
+#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"

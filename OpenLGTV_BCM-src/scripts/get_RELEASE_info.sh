@@ -1,6 +1,7 @@
 #!/bin/sh
 # get_RELEASE_info.sh script by xeros
 # this script get some useful info from RELEASE binary
+# Source code released under GPL License
 
 # works on all TV platforms from Saturn 6 up to SmartTV worldwide models
 # update: modified only for 2010 BCM models for speedup run time

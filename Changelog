@@ -259,12 +259,12 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: for safety reasons installation is now being done in chrooted virtual environment to ensure rootfs stability while flashing procedure
     * CHANGE: use konfabulator-exec.sh even for US models to give ability to run custom ywe from USB storage device
     * CHANGE: squashfs image is now being build with 256KB block size for better compression of partition image
+    * CHANGE: bootlogd is now used for boot logging instead of ugly 'tee' redirections and 'date' timestamps
     * REMOVE: tcpdump binary for space reasons
     * REMOVE: top binary - use busybox applet instead
 
 Remaining issues with 0.5.0 developement branch:
     * autoupgrades from USB stick with new method are not tested, tar.sh file should be supported but no content verification before executing it
     * after manual install/upgrade rebooting is disabled for more testing installation procedure
-    * logging is ugly and not consistent - scripts running in multiple threads log to the same file at the same time, many timestamps in logs
     * no support for very old firmware versions NetCast configuration (for example in Argentina) - still leaving those untouched (issue with all OpenLGTV BCM versions)
     * compatibility break with autoupgrade method from older versions - need to install via telnet/ssh/serial
