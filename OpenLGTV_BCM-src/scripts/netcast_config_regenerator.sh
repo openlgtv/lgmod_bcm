@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.7.1 by xeros
+# OpenLGTV BCM NetCast config parser and regenerator v.0.7.2 by xeros
 # Source code released under GPL License
 
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
@@ -69,6 +69,7 @@ then
     echo " set_proxy    - generate run3556-proxy, extra_conf-proxy and new proxy_config_txt files for builtin web proxy"
     echo " unset_proxy  - remove run3556-proxy, extra_conf-proxy and proxy_config_txt files and change OpenLGTV BCM Internet Browser item in config_xml file"
     echo " enable_all   - enable all NetCast services which have their available swf icons in /home/netcast_icons"
+    echo " kill_browser - modify run3556 adding 'killall lb4wk' at the beginning to kill old web browser instances at each run"
     echo "Options:"
     echo " config_xml=/path/to/config.xml"
     echo "       - config.xml file used to modify NetCast menu (needed for all actions)"
@@ -245,7 +246,7 @@ then
 	    then
 	    echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"killall lb4wk\" at the beginning of existing run3556 script: $org_run3556"
 	    #cat $org_cfgxml | sed 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk:g' > $new_cfgxml
-	    sed -i -e 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk:g' $org_run3556
+	    sed -i -e 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk > /dev/null 2>\&1:g' $org_run3556
 	else
 	    echo "OpenLGTV BCM-INFO: NetCast config generator: \"killall lb4wk\" already exist in current run3556 script: $org_cfgxml"
 	fi
@@ -257,6 +258,13 @@ then
 	    if [ ! -f "$org_run3556" ];    then echo "OpenLGTV BCM-ERROR: NetCast config generator: $org_run3556 file not found!"; exit 1; fi
 	    if [ ! -f "$org_extra_conf" ]; then echo "OpenLGTV BCM-ERROR: NetCast config generator: $org_extra_conf file not found!"; exit 1; fi
 	    if [ -z "`grep id=.$wid_name.\  $org_cfgxml`" ]; then echo "OpenLGTV BCM-ERROR: NetCast config generator: id $wid_name not found in config.xml file, you should use add=$widname parameter first!"; exit 1; fi
+	    if [ "$kill_browser" = "1" -a -f "$run3556_proxy" ]
+	    then
+		if [ -z "`grep '^killall lb4wk' $run3556_proxy`" ]
+		then
+		    echo "OpenLGTV BCM-INFO: NetCast config generator: removing old web browser with proxy starting script ($run3556_proxy) to prepare new one"
+		fi
+	    fi
 	    if [ ! -f "$run3556_proxy" -o ! -f "$proxy_config_txt" -o ! -f "$extra_conf_proxy" ]
 	    then
 		echo "OpenLGTV BCM-INFO: NetCast config generator: setting \"$wid_name\" id: $wid_number link: $wid_link for proxy in $proxy_config_txt"

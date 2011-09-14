@@ -227,9 +227,10 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: netcast_config_regenerator.sh should use all country groups now for 'enable_all' option
     * FIX: support for Yahoo Widgets Engine running from other usb ports and other partitions
     * FIX: new Internet Browser page by nicola_12345 + his JavaScript code in proxy fixes for frames switching and other button bindings
-    * ADD: experimental support for SmartTV models
+    * FIX: two mouse pointers issue when switching between NetCast services and USB mouse was used
+    * ADD: experimental support for SmartTV models [DO NOT FLASH IT ON THOSE MODELS!!!]
     * ADD: build and installation scripts can now handle 2011 BCM model images
-    * ADD: support for KR 2010 BCM models
+    * ADD: support for Korean 2010 BCM models
     * ADD: /scripts/readspeedtest.sh script from mmm4m5m for read transfer rate measurement (thanks lprot for measurement hint)
     * ADD: storing rootfs and lginit backups at installation into /home/backup/{rootfs,lginit}.bck files
     * ADD: web proxy script for JavaScript code injection to improve Internet Browser - settings for start at boot (disabled by default)
@@ -246,6 +247,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: CGI web page for remote control by mihaifireball under http://ip_of_tv/remote/
     * ADD: possibility to remove all OpenLGTV BCM configs or just NetCast configs for recreating defaults at next boot using WebUI
     * ADD: bootlog is copied at each boot with usb stick/disk plugged in to OpenLGTV_BCM/OpenLGTV_BCM.log file or OpenLGTV_BCM/OpenLGTV_BCM-firstboot.log when it's first boot
+    * ADD: very early prototype of M3U IPTV lists parser (needs to bookmark 'http://127.0.0.1:88/vod/m3u.cgi?url=http://yours_url_to/file.m3u' in Internet Browser)
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
