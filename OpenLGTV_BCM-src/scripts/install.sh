@@ -346,14 +346,14 @@ then
     mkdir -p /home/backup 2>&1 | tee -a $log
 fi
 # Backup files to store check
-lginit_src="`echo ${dir}/*-${lginit_backup}.sqf 2> /dev/null`"
-rootfs_src="`echo ${dir}/*-${rootfs_backup}.sqf 2> /dev/null`"
+lginit_src="`ls ${dir}/*-${lginit_backup}.sqf 2> /dev/null`"
+rootfs_src="`ls ${dir}/*-${rootfs_backup}.sqf 2> /dev/null`"
 if [ -n "$lginit_src" -a -n "$rootfs_src" ]
 then
     backup_at_home_force=1
 else
-    lginit_src="`echo ${dir}/*4_lginit 2> /dev/null`"
-    rootfs_src="`echo ${dir}/*3_rootfs 2> /dev/null`"
+    lginit_src="`ls ${dir}/*4_lginit 2> /dev/null`"
+    rootfs_src="`ls ${dir}/*3_rootfs 2> /dev/null`"
     if [ -n "$lginit_src" -a -n "$rootfs_src" ]
     then
 	backup_at_home_force=1
