@@ -159,5 +159,23 @@ then
     fi
 fi
 
+if [ ! -d "/mnt/user/www" ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."
+    mkdir -p /mnt/user/www
+fi
+
+if [ ! -f "/mnt/user/www/bookmarks.inc" ]
+then
+    echo "OpenLGTV_BCM-INFO: web browser bookmarks file not found, creating default from template in: /mnt/user/www/bookmarks.inc..."
+    cp /var/www/browser/templates/bookmarks.inc /mnt/user/www/
+fi
+
+if [ -f "/mnt/user/www/links.html" ]
+then
+    echo "OpenLGTV_BCM-INFO: using customised /mnt/user/www/links.html as Internet Browser NetCast links page..."
+    mount --bind /mnt/user/www/links.html /var/www/browser/links.html
+fi
+
 echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 30s delay ..."
 (sleep 30; /scripts/links_icons_preload.sh) &

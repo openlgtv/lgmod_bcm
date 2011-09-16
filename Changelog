@@ -248,6 +248,8 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: possibility to remove all OpenLGTV BCM configs or just NetCast configs for recreating defaults at next boot using WebUI
     * ADD: bootlog is copied at each boot with usb stick/disk plugged in to OpenLGTV_BCM/OpenLGTV_BCM.log file or OpenLGTV_BCM/OpenLGTV_BCM-firstboot.log when it's first boot
     * ADD: very early prototype of M3U IPTV lists parser (needs to bookmark 'http://127.0.0.1:88/vod/m3u.cgi?url=http://yours_url_to/file.m3u' in Internet Browser)
+    * ADD: support for customised /mnt/user/www/links.html file with NetCast links
+    * ADD: some useful device files - input/event devices increased from 5 to 10, pts devices from 5 to 10, /dev/cdrom,dvd,sg..., /dev/uinput, /dev/rfcomm0-49, /dev/vhci
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
@@ -255,7 +257,7 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: partition mounting based on partition names instead of static mtd numbers - this should improve compatibility even with unknown models
     * CHANGE: settings separated from rcS into /etc/rc.d/rc.settings
     * CHANGE: Internet Browser can be separated from WebUI (and proxied) with it's own NetCast icon in WebUI settings
-    * CHANGE: increase Bluetooth transfer storage from 10MB to 20MB
+    * CHANGE: increase Bluetooth transfer storage from 10MB to 50MB
     * CHANGE: support for OpenLGTV_BCM dir on any partition number on any of two USB ports in TV
     * CHANGE: installation is now being done via single installation file - OpenLGTV_BCM-vX.Y.Z.tar.sh
     * CHANGE: for safety reasons installation is now being done in chrooted virtual environment to ensure rootfs stability while flashing procedure

@@ -10,4 +10,4 @@ mount -t sysfs sysfs /sys
 mount -t usbfs usbfs /proc/bus/usb
 mount -t devpts devpts /dev/pts
 mount -t tmpfs none /usr/etc
-mount -t tmpfs bt /mnt/lg/bt -o size=20M
+mount -t tmpfs bt /mnt/lg/bt -o size=50M

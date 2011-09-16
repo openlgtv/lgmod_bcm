@@ -273,18 +273,6 @@ fi
 
 /etc/rc.d/rc.fwinfo &
 
-if [ ! -d "/mnt/user/www" ]
-then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/www dir for builtin web server..."
-    mkdir -p /mnt/user/www
-fi
-
-if [ ! -f "/mnt/user/www/bookmarks.inc" ]
-then
-    echo "OpenLGTV_BCM-INFO: web browser bookmarks file not found, creating default from template in: /mnt/user/www/bookmarks.inc..."
-    cp /var/www/browser/templates/bookmarks.inc /mnt/user/www/
-fi
-
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 /etc/rc.d/rc.usb &
 
