@@ -6,6 +6,21 @@ content-type: text/html
 <html>
 <? include/keycontrol.cgi.inc ?>
 
+<script language="JavaScript" type="text/javascript">
+function GoToNetCastLinks()
+	{
+	<?
+		if [ -n "`pgrep run3556-proxy`" -a "$HTTP_HOST" != "127.0.0.1:88" ]
+		then
+		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
+		    #echo "window.location='http://127.0.0.1:88/home.cgi?qURL=%2Fmnt%2Fbrowser%2Frun3556+http%3A%2F%2F127.0.0.1%3A88%2Fbrowser%2Flinks.html&run=Run&qUser=&qPassw=';"
+		else
+		    echo "window.location='browser/links.html';"
+		fi
+	?>
+	}
+</script>
+
 	<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px;">
 		<form id="URL" name="URL">
 			<? export pagename="Home Page" ?>
@@ -106,10 +121,6 @@ content-type: text/html
 </div></div>
 <? if [ "$HTTP_HOST" = "127.0.0.1:88" ]; then echo "-->"; fi ?>
 
-
-
-	
-	
 	<div id="footer2" class="footer2">
 		<ul>
 			<a onClick="javascript:window.location='home.cgi?qURL=reboot&run=Run';" href="#" style="text-decoration:none; color:white"><li class=""><span><img src="Images/Keyboard/stop_button.png" border="0" /></span>Reboot TV</li></a>
@@ -118,7 +129,7 @@ content-type: text/html
 			<a onClick="javascript:window.location='remote';" href="#" style="text-decoration:none; color:white"><li class="">Remote control</li></a>
 		</ul>
 		<ul>
-			<li class=""></li>
+			<a onClick="javascript:GoToNetCastLinks();" href="#" style="text-decoration:none; color:white"><li class=""><span><img src="Images/Keyboard/info_button.png" border="0" /></span>NetCast</li></a>
 		</ul>
 		<ul>
 			<a onClick="javascript:window.location='home.cgi?qURL=/scripts/reset_configs_netcast.sh&run=Run';" href="#" style="text-decoration:none; color:red"><li class="">NetCast cfg rst</li></a>

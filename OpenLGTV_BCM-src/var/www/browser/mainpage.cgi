@@ -72,6 +72,18 @@ function CreateBookmark() {
 	OnLoadSetCurrent();
 }
 
+function GoToNetCastLinks()
+	{
+	<?
+		if [ -n "`pgrep run3556-proxy`" -a "$HTTP_HOST" != "127.0.0.1:88" ]
+		then
+		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
+		    #echo "window.location='http://127.0.0.1:88/home.cgi?qURL=%2Fmnt%2Fbrowser%2Frun3556+http%3A%2F%2F127.0.0.1%3A88%2Fbrowser%2Flinks.html&run=Run&qUser=&qPassw=';"
+		else
+		    echo "window.location='links.html';"
+		fi
+	?>
+	}
 
 function DeleteBookmark()
 	{
@@ -125,7 +137,8 @@ function check(e)
 		else if (key==403) 
 			{
 			//the red button on the remote control have been pressed
-			window.location='links.html';
+			//window.location='links.html';
+			GoToNetCastLinks();
 			}
 		else if (key==404) 
 			{
@@ -317,7 +330,7 @@ document.defaultAction = true;
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td colspan=2>
-					<a onClick="javascript:window.location='links.html';" href="#"><img src="Images/Keyboard/red_button.png" align="middle" Border="0" /></a>
+					<a onClick="javascript:GoToNetCastLinks();" href="#"><img src="Images/Keyboard/red_button.png" align="middle" Border="0" /></a>
 					<b>NetCast services</b>
 				</td>
 				<td colspan=2>
@@ -338,4 +351,3 @@ document.defaultAction = true;
 
 <body>
 <html>
-

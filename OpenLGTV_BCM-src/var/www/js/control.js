@@ -427,6 +427,12 @@ function check(e)
 			//Switch to the previous control
 			PrevControl();
 			}
+		else if (key==404) 
+			{
+			//the green button on the remote control have been pressed
+			//Switch to the next control
+			NextControl();
+			}
 		else if (key==405) 
 			{
 			//the yellow button on the remote control have been pressed
@@ -439,17 +445,20 @@ function check(e)
 			//I send a backspace on the currFocusedElement field
 			BackSpace();
 			}
-		else if (key==404) 
-			{
-			//the green button on the remote control have been pressed
-			//Switch to the next control
-			NextControl();
-			}
 		else if (key==413) 
 			{
 			//the stop button on the remote control have been pressed
 			//Reboot TV
 			window.location='home.cgi?qURL=reboot&run=Run';
+			}
+		else if (key==457) 
+			{
+			//the info button on the remote control have been pressed
+			//go to NetCast links
+			if(typeof GoToNetCastLinks == 'function') {
+			    GoToNetCastLinks();
+			} else {
+			    window.location='browser/links.html';
 			}
 		else if (key==461) 
 			{
