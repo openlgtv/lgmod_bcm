@@ -455,10 +455,14 @@ function check(e)
 			{
 			//the info button on the remote control have been pressed
 			//go to NetCast links
-			if(typeof GoToNetCastLinks == 'function') {
-			    GoToNetCastLinks();
-			} else {
-			    window.location='browser/links.html';
+			    if(typeof GoToNetCastLinks == 'function')
+			    {
+				GoToNetCastLinks();
+			    }
+			    else
+			    {
+				window.location='browser/links.html';
+			    }
 			}
 		else if (key==461) 
 			{
