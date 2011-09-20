@@ -9,27 +9,26 @@
 # 2 - logging whole request on stderr
 # 3 - logging request and answer to file
 
-[ -z "$proxy_connect_port" ]      && proxy_connect_port=80
-[ -z "$proxy_listen_port" ]       && proxy_listen_port=8888
-[ -z "$proxy_listen_port_hex" ]   && proxy_listen_port_hex=22B8
-[ -z "$proxy_usleep_time" ]       && proxy_usleep_time=80
-#[ -z "$proxy_wait_time" ]        && proxy_wait_time=4
-#[ -z "$proxy_wait_time" ]         && proxy_wait_time=8
-[ -z "$proxy_wait_time" ]         && proxy_wait_time=6
+[ -z "$proxy_connect_port" ]      && proxy_connect_port=80              # default port for making connections
+[ -z "$proxy_listen_port" ]       && proxy_listen_port=8888             # proxy listening port
+[ -z "$proxy_listen_port_hex" ]   && proxy_listen_port_hex=22B8         # proxy listening port written as hex
+[ -z "$proxy_localhost_only" ]    && proxy_localhost_only=1             # listen for connections on localhost (127.0.0.1) address only
+#[ -z "$proxy_wait_time" ]        && proxy_wait_time=8
+[ -z "$proxy_wait_time" ]         && proxy_wait_time=4                  # timeout on connections with modified code
+[ -z "$proxy_wait_moretime" ]     && proxy_wait_moretime=3              # additional time for timeout on detected binary/not modified content
 #[ -z "$proxy_log_debug" ]        && proxy_log_debug=3
-[ -z "$proxy_log_debug" ]         && proxy_log_debug=0
-[ -z "$proxy_log_file" ]          && proxy_log_file=/var/log/proxy.log
-[ -z "$proxy_sh" ]                && proxy_sh=/scripts/proxy.sh
-[ -z "$proxy_localhost_only" ]    && proxy_localhost_only=1
+[ -z "$proxy_log_debug" ]         && proxy_log_debug=0                  # debug logs verbosity (0 - do not log anything, 1 - log processes info, 2 - log requests, 3 - log all with downloaded content to log file)
+[ -z "$proxy_log_file" ]          && proxy_log_file=/var/log/proxy.log  # log file for debug logs verbosity set to 3
+[ -z "$proxy_sh" ]                && proxy_sh=/scripts/proxy.sh         # script that manages each proxy connection
 
-# for proxy testing on PC
-#[ -z "$awk" ]                    && awk="busybox awk"
-[ -z "$awk" ]                     && awk=awk
-[ -z "$sed" ]                     && sed=sed
+[ -z "$useragent" ]               && useragent="Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0" # user agent string used for connections
+
+#[ -z "$nc" ]                     && nc="busybox nc"                    # for proxy testing on PC
 [ -z "$nc" ]                      && nc=nc
+[ -z "$awk" ]                     && awk=awk
 [ -z "$tcpsvd" ]                  && tcpsvd=tcpsvd
 
-export proxy_listen_port proxy_usleep_time proxy_log_debug proxy_log_file proxy_wait_time proxy_connect_port proxy_log_file
+export proxy_listen_port proxy_log_debug proxy_log_file proxy_wait_time proxy_wait_moretime proxy_connect_port proxy_log_file useragent awk nc tcpsvd
 
 export id=1
 

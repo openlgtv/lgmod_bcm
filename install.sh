@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.82 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.83 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -345,6 +345,13 @@ if [ ! -d "/home/backup" ]
 then
     mkdir -p /home/backup 2>&1 | tee -a $log
 fi
+if [ ! -d "/home/backup" ]
+then
+    # workaround for US models
+    mount --bind /mnt/widget.data /home 2>&1 | tee -a $log
+    mkdir -p /home/backup 2>&1 | tee -a $log
+fi
+
 # Backup files to store check
 lginit_src="`ls ${dir}/*-${lginit_backup}.sqf 2> /dev/null`"
 rootfs_src="`ls ${dir}/*-${rootfs_backup}.sqf 2> /dev/null`"
@@ -661,7 +668,7 @@ then
     [ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
     [ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
     log=`echo $log | sed "s#$file#flashed/$file#"`
-    cat $tmpoutflashed | tee -a $log
+    cat $tmpoutflashed 2>/dev/null | tee -a $log
     date 2>&1 | tee -a $log
     echo "" | tee -a $log
     sync

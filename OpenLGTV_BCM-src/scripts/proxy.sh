@@ -5,17 +5,19 @@
 # Source code released under GPL License
 
 # those vars should be set by proxy-start.sh or via env var in cmdline for testing
-#[ -z "$proxy_wait_time" ]   && proxy_wait_time=4
 #[ -z "$proxy_wait_time" ]    && proxy_wait_time=8
-[ -z "$proxy_wait_time" ]    && proxy_wait_time=6
-[ -z "$proxy_connect_port" ] && proxy_connect_port=80
-[ -z "$proxy_log_file" ]     && proxy_log_file=/var/log/proxy.log
+[ -z "$proxy_wait_time" ]     && proxy_wait_time=4
+[ -z "$proxy_wait_moretime" ] && proxy_wait_moretime=3
+[ -z "$proxy_connect_port" ]  && proxy_connect_port=80
+[ -z "$proxy_log_file" ]      && proxy_log_file=/var/log/proxy.log
 
 # for proxy testing on PC
-#[ -z "$awk" ]               && awk="busybox awk"
-[ -z "$awk" ]                && awk=awk
-[ -z "$sed" ]                && sed=sed
-[ -z "$nc" ]                 && nc=nc
+#[ -z "$nc" ]                 && nc="busybox nc"
+[ -z "$nc" ]                  && nc=nc
+[ -z "$awk" ]                 && awk=awk
+
+# User-Agent: 
+[ -z "$useragent" ]           && useragent="Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0"
 
 read_lines="request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12 line13 line14 line15 line16 line17 line18 line19 line20"
 
@@ -28,15 +30,19 @@ do
     then
 	echo `echo $content` >&2
     fi
-    if [ "`echo $content | $awk '{print $1}'`" = "Content-Length:" ]
+    #if [ "`echo $content | $awk '{print $1}'`" = "Content-Length:" ]
+    #if [ "`echo $content | cut -d" " -f1`" = "Content-Length:" ]
+    if [ "${content%% *}" = "Content-Length:" ]
     then
-	content_length="`echo $content | $awk '{print $2}' | tr -d '\r'`"
+	#content_length="`echo $content | $awk '{print $2}' | tr -d '\r'`"
+	content_length="`echo $content | cut -d" " -f2 | tr -d '\r'`"
 	if [ "$proxy_log_debug" -ge "1" ]
 	then
 	    echo "ID $id CONTENT-LENGTH: $content_length" >&2
 	fi
     fi
-    if [ "`echo $content | wc -w`" = "0" ]
+    #if [ "`echo $content | wc -w`" = "0" ]
+    if [ "$content" = "" -o -z "$content" ]
     then
 	if [ "$content_length" != "" ]
 	then
@@ -46,9 +52,21 @@ do
     fi
 done
 
-connect_to=`/bin/echo -e "$host\n$line3\n$line4" | grep 'Host:' | $awk '{print $2}' | $sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' | tr -d '\r'`
+if [ -n "`echo $request | egrep -i 'doubleclick\.net|emediate\.eu|googleadservices\.com|/adserver\.|/googleads\.|://ads\.|/www/delivery/|media\.richrelevance.com/rrserver/js/|/advertising/|yieldmanager\.com|pagead2\.googlesyndication\.com|hit\.gemius\.pl'`" ]
+then
+    if [ "$proxy_log_debug" -ge "1" ]
+    then
+	echo "REJECT request: $request" >&2
+	exit 1
+    fi
+fi
+
+#connect_to=`echo -e "$host\n$line3\n$line4" | grep 'Host:' | $awk '{print $2}' | $sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' -e 's/\r//g'`
+connect_to=`echo -e "$host\n$line3\n$line4" | grep 'Host:' | cut -d" " -f2 | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' -e 's/\r//g'`
 connect_to_port_test=`echo $connect_to | $awk -F: '{print $2}'"`
-connect_to=`echo $connect_to | $awk -F: '{print $1}'"`
+#connect_to=`echo $connect_to | $awk -F: '{print $1}'"`
+#connect_to=`echo $connect_to | cut -d: -f1`
+connect_to=${connect_to%:*}
 
 if [ -n "$connect_to_port_test" ]
 then
@@ -63,41 +81,39 @@ then
 fi
 
 # Inject JavaScript code only to non-localhost connections excluding extenstions listed below
-if [ "$connect_to" != "127.0.0.1" -a -z "`echo $request | egrep -i '\.swf |\.jpg |\.png |\.ico |\.gif |\.js |\.css '`" ]
+#if [ "$connect_to" != "127.0.0.1" -a -z "`echo $request | egrep -i '\.swf |\.jpg |\.png |\.ico |\.gif |\.js |\.css |\.wmv |\.wma |\.mp3 |\.wav |\.ogg |\.mkv |\.avi |\.mpg |\.mp4 |\.xml'`" ]
+if [ "$connect_to" != "127.0.0.1" -a -z "`echo $request | egrep -i '\.swf[ ?]|\.jpg[ ?]|\.png[ ?]|\.ico[ ?]|\.gif[ ?]|\.js[ ?]|\.css[ ?]|\.xml[ ?]'`" ]
 then
     inject=1
 fi
 
-/bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi; /bin/echo -e "\r\n") | \
-    $sed 's/^ //g' | \
-    if [ "$proxy_log_debug" -ge "3" ]
-    then
-	tee -a $proxy_log_file
-    else
-	cat
-    fi | \
-    $sed  \
-	-e 's#^GET http://[A-Za-z0-9\.\-\:]*/\(.*\)#GET /\1#g' \
-	-e 's#^POST http://[A-Za-z0-9\.\-\:]*/\(.*\)#POST /\1#g' \
-	-e 's/\(Connection:\).*/\1 close/g' | \
+# it would be better to pass-through 'HTTP/1.1' requests if content is not going to be modified but 'Connection: Keep-Alive' makes a problem with delay then and servers do not listen for 'Connection: Close' in 'HTTP/1.1' requests
+
+#/bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi; /bin/echo -e "\r\n") | \
+echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then echo -e "$content_post"; fi; echo -e "\r\n") | \
+    sed \
+	-e 's/^ //g' \
+	-e 's#HTTP/1.1#HTTP/1.0#g' \
+	-e 's#^\([GP][EO][TS][T ]*\)http://[A-Za-z0-9\.\-\:]*/\(.*\)#\1/\2#g' \
+	-e 's/\(Connection:\).*/\1 close\r/g' | \
     if [ "$inject" = "1" ]
     then
-	$sed \
-	    -e 's#HTTP/1.1#HTTP/1.0#g' \
-	    -e 's/\(Accept-Encoding:\).*/\1 identity/g'
+	sed \
+	    -e 's/\(Accept-Encoding:\).*/\1 identity\r/g' \
+	    -e "s#\(User-Agent:\).*#\1 $useragent\r#g" | \
+	if [ "$proxy_log_debug" -ge "3" ]
+	then
+	    tee -a $proxy_log_file
+	else
+	    cat
+	fi
     else
 	cat
     fi | \
-    if [ "$proxy_log_debug" -ge "3" ]
-    then
-	tee -a $proxy_log_file
-    else
-	cat
-    fi | \
-    $nc -w$proxy_wait_time $connect_to $connect_to_port | \
     if [ "$inject" = "1" ]
     then
-      $sed \
+      $nc -w$proxy_wait_time $connect_to $connect_to_port | \
+      sed \
 	-e 's/\(Content-Length:\).*/\1/' \
 	-e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
 	-e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
@@ -360,13 +376,19 @@ document.onkeydown = check;\n\
 	\n\
 	document.defaultAction = true;\n\
 	</script>\n\
-      #"
-    else
+      #" | \
+      if [ "$proxy_log_debug" -ge "3" ]
+      then
+	tee -a $proxy_log_file
+      else
 	cat
-    fi | \
-if [ "$proxy_log_debug" -ge "3" ]
-then
-    tee -a $proxy_log_file
+      fi
 else
-    cat
+      $nc -w$(($proxy_wait_time+$proxy_wait_moretime)) $connect_to $connect_to_port | \
+      if [ "$proxy_log_debug" -ge "3" ]
+      then
+	tee -a $proxy_log_file
+      else
+	cat
+      fi
 fi
