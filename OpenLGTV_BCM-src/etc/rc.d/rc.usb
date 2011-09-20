@@ -8,6 +8,14 @@ USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
 k=0;
 echo "OpenLGTV_BCM-INFO: rc.usb starting..."
+
+if [ -f "/mnt/user/cfg/delay_usb1" ]
+then
+    delay1="`cat /mnt/user/cfg/delay_usb1`"
+    echo "OpenLGTV_BCM-INFO: rc.usb: found /mnt/user/cfg/delay_usb1, making $delay1 seconds delay before checking USB"
+    sleep $delay1
+fi
+
 while [ -z "`cat /proc/mounts | grep ^/dev/sd`" ]
 do
     sleep 1
@@ -25,6 +33,13 @@ do
 done
 export OpenLGTV_BCM_USB
 export USB_DIR=`echo $OpenLGTV_BCM_USB | sed 's#/OpenLGTV_BCM##g'`
+
+if [ -f "/mnt/user/cfg/delay_usb2" ]
+then
+    delay2="`cat /mnt/user/cfg/delay_usb2`"
+    echo "OpenLGTV_BCM-INFO: rc.usb: found /mnt/user/cfg/delay_usb2, making $delay2 seconds delay before remounting USB"
+    sleep $delay2
+fi
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 source /etc/rc.d/rc.usb-remount
