@@ -18,6 +18,7 @@ country_groups="KR US BR EU CN AU SG ZA VN TW XA XB IL ID MY IR ZZ"
 proxy_MAX_CONNECTION=6
 #proxy_MAX_CONNECTION_PER_HOST=1
 proxy_MAX_CONNECTION_PER_HOST=4
+[ -z "$config_ver" ] && config_ver=2
 
 # default configs paths - should get new values with command line arguments
 org_cfgxml=/mnt/user/netcast/config.xml
@@ -37,6 +38,7 @@ do
     [ "${argv#proxy_config_txt=}"        != "$argv" ] && proxy_config_txt="${argv#proxy_config_txt=}"
     [ "${argv#add=}"                     != "$argv" ] && add="${argv#add=}"
     [ "${argv#del=}"                     != "$argv" ] && del="${argv#del=}"
+    [ "${argv#config_ver=}"              != "$argv" ] && config_ver="${argv#config_ver=}"
     [ "$argv" = "enable_all" ]   && enable_all=1
     [ "$argv" = "set_proxy" ]    && set_proxy=1
     [ "$argv" = "unset_proxy" ]  && unset_proxy=1
@@ -66,6 +68,7 @@ then
     echo " add=yahoo    - add Yahoo Widgets item to config.xml"
     echo " add=www      - add OpenLGTV BCM Internet Browser item to config.xml and browser_application.txt"
     echo " del=...      - remove any item from config.xml file"
+    echo " config_ver=..- set config.xml file version: 1 - old 2010 model firmwares, 2 - new 2010 model firmwares, 3 - 2011 model firmwares"
     echo " set_proxy    - generate run3556-proxy, extra_conf-proxy and new proxy_config_txt files for builtin web proxy"
     echo " unset_proxy  - remove run3556-proxy, extra_conf-proxy and proxy_config_txt files and change OpenLGTV BCM Internet Browser item in config_xml file"
     echo " enable_all   - enable all NetCast services which have their available swf icons in /home/netcast_icons"

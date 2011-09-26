@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.82 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.84 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
@@ -38,7 +38,12 @@ rootfs=$(echo "$DIR/"OpenLGTV_BCM*.sqf)
 
 mkdir -p "$CHR" && mount -t squashfs "$rootfs" "$CHR" || { echo "Error: Mount root failed: $rootfs ($CHR)"; exit 1; }
 
-for i in `cat /proc/mounts | awk '{print $2}' | grep -v "^/$"`; do mount --bind $i ${CHR}${i}; done
+mount -t proc    installproc   ${CHR}/proc
+mount -t usbfs   installusbfs  ${CHR}/proc/bus/usb
+mount -t devpts  installdevpts ${CHR}/dev/pts
+mount -t sysfs   installsysfs  ${CHR}/sys
+
+for i in `cat /proc/mounts | awk '{print $2}' | grep -v "^/$" | grep -v "proc" | grep -v "sysfs" | grep -v "devpts"`; do mount --bind $i ${CHR}${i}; done
 
 #TODO: use /scripts/install.sh and remove install.sh from zip file - need to add path handling in install.sh
 #chroot "$CHR" "$CHR/scripts/install.sh" "$base/$file_sqf" "$@"

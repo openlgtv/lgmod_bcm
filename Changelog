@@ -250,6 +250,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: very early prototype of M3U IPTV lists parser (needs to bookmark 'http://127.0.0.1:88/vod/m3u.cgi?url=http://yours_url_to/file.m3u' in Internet Browser)
     * ADD: support for customised /mnt/user/www/links.html file with NetCast links
     * ADD: some useful device files - input/event devices increased from 5 to 10, pts devices from 5 to 10, /dev/cdrom,dvd,sg..., /dev/uinput, /dev/rfcomm0-49, /dev/vhci
+    * ADD: netcast_config_check.sh script to verify which NetCast config versions are used
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling

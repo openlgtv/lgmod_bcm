@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.83 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.84 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
