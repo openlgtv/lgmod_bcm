@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.84 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.85 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -81,7 +81,8 @@ lginit_size2011=524288
 platform=GP2B
 
 proxy_lock_file=/var/run/proxy.lock
-KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount'
+#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount'
+KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount RELEASE'
 	# LG: addon_mgr stagecraft konfabulator lb4wk
 	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd [djmount?]
 	# OpenLGTV BCM - processes which might be running at boot: ls wget

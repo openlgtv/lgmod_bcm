@@ -265,6 +265,7 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: use konfabulator-exec.sh even for US models to give ability to run custom ywe from USB storage device
     * CHANGE: squashfs image is now being build with 256KB block size for better compression of partition image
     * CHANGE: bootlogd is now used for boot logging instead of ugly 'tee' redirections and 'date' timestamps
+    * CHANGE: NetCast links are now organized in 6x6 grid instead of 4x6 as before and channel up/down arrows besides scrolling change focus now also
     * REMOVE: tcpdump binary for space reasons
     * REMOVE: top binary - use busybox applet instead
 
