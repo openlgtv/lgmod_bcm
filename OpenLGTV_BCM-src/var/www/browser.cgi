@@ -260,6 +260,12 @@ function check(e)
 			ChangeBgColor();
 			document.getElementById('MainPage').focus();
 			}
+		else if (key==457) 
+			{
+			//the info button on the remote control have been pressed
+			//window.location='links.html';
+			GoToNetCastLinks();
+			}
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed
@@ -289,6 +295,18 @@ function DirectWriteKey(key)
 	document.forms['URL'].elements[currElementName].value = URLText;
 	}	
 	
+function GoToNetCastLinks()
+	{
+	<?
+		if [ -n "`pgrep -f run3556-proxy`" -a "$HTTP_HOST" = "127.0.0.1:88" ]
+		then
+		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
+		    #echo "window.location='http://127.0.0.1:88/home.cgi?qURL=%2Fmnt%2Fbrowser%2Frun3556+http%3A%2F%2F127.0.0.1%3A88%2Fbrowser%2Flinks.html&run=Run&qUser=&qPassw=';"
+		else
+		    echo "window.location='browser/links.html';"
+		fi
+	?>
+	}
 function GoToURL()
 	{
 	//Load the page addressed by the currFocusedElement field

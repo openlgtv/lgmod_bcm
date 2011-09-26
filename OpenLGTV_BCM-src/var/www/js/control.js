@@ -240,7 +240,7 @@ PageElements[34].value = ['check16'];
 PageElements[34].type = ['checkbox'];
 
 PageElements[35] = new Object();
-PageElements[35].value = ['check16'];
+PageElements[35].value = ['check17'];
 PageElements[35].type = ['checkbox'];
 
 var currElementIndex;

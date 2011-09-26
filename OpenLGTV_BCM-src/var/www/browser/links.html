@@ -26,19 +26,21 @@ function check(e)
 		{
 			switch(key)
 			{
-			case 33: next = (1*current) - (6*col); break; //pgup
-			case 34: next = (1*current) + (6*col); break; //pgdown
+			case 33: next = (1*current) - (6*col); break; //ch up
+			case 34: next = (1*current) + (6*col); break; //ch down
 			case 37: next = current - 1; break; //left
 			case 38: next = current - col; break; //up
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		if (key=33|key=34|key==37|key==38|key==39|key==40)
+		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
 			//Move to the next key on the keyboard
 			var code=document.links['c' + next].name;
 			document.links['c' + next].focus();
 			current = next;
+			//Prevent scrolling
+			return false;
 			}
 		else if (key==404) 
 			{
@@ -266,14 +268,14 @@ document.defaultAction = true;
 <tr>
 	<td align="center"><a id="c121" onKeyPress="javascript:setCurrent(this);return false" href='http://dev.omlet.ru/lg2' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/omlet.png" border=2></a></td>
 	<td align="center"><a id="c122" onKeyPress="javascript:setCurrent(this);return false" href='http://broadcast.cariverplate.com/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/riverplate.png" border=2></a></td>
-	<td align="center"><a id="c125" onKeyPress="javascript:setCurrent(this);return false" href='http://netcast.mtv.com.br/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/mtvbr.png" border=2></a></td>
-	<td align="center"><a id="c126" onKeyPress="javascript:setCurrent(this);return false" href='http://lge.caras.com.br/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/caras.png" border=2></a></td>
-	<td align="center"><a id="c127" onKeyPress="javascript:setCurrent(this);return false" href='http://toptvz.com.br/tvlg' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/toptvz.png" border=2></a></td>
-	<td align="center"><a id="c128" onKeyPress="javascript:setCurrent(this);return false" href='http://apps.caracoltv.co/lg/qa/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/caracoltv.png" border=2></a></td>
-</tr>
-<tr>
 	<td align="center"><a id="c123" onKeyPress="javascript:setCurrent(this);return false" href='http://broadcast.bocajuniorsonline.com/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/bocajuniors.png" border=2></a></td>
 	<td align="center"><a id="c124" onKeyPress="javascript:setCurrent(this);return false" href='http://www.lgnetcast.com.ar/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/lgar.png" border=2></a></td>
+	<td align="center"><a id="c125" onKeyPress="javascript:setCurrent(this);return false" href='http://netcast.mtv.com.br/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/mtvbr.png" border=2></a></td>
+	<td align="center"><a id="c126" onKeyPress="javascript:setCurrent(this);return false" href='http://lge.caras.com.br/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/caras.png" border=2></a></td>
+</tr>
+<tr>
+	<td align="center"><a id="c127" onKeyPress="javascript:setCurrent(this);return false" href='http://toptvz.com.br/tvlg' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/toptvz.png" border=2></a></td>
+	<td align="center"><a id="c128" onKeyPress="javascript:setCurrent(this);return false" href='http://apps.caracoltv.co/lg/qa/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/caracoltv.png" border=2></a></td>
 	<td align="center"><a id="c129" onKeyPress="javascript:setCurrent(this);return false" href='http://lg.etisalat.reachott.com/user/login' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/etisalat.png" border=2></a></td>
 	<td align="center"><a id="c130" onKeyPress="javascript:setCurrent(this);return false" href='http://api-lg.kaskus.us/' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/kaskus.png" border=2></a></td>
 	<td align="center"><a id="c131" onKeyPress="javascript:setCurrent(this);return false" href='http://tv.liputan6.com/lg' target='_parent'><img src="http://www.nicolaottomano.it/public/lgtv/lg/Images/Logos/liputan6.png" border=2></a></td>

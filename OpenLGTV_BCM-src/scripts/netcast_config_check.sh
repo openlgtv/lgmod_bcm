@@ -2,6 +2,7 @@
 # OpenLGTV BCM NetCast config format check v.0.0.1 by xeros
 # Source code released under GPL License
 
+# busybox egrep applet works exactly the same as grep - need to fix that
 if [ ! -f "$1" ]
 then
     echo "Usage: $0 /path/to/config.xml"

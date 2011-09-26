@@ -158,6 +158,12 @@ function check(e)
 			//Delete the selected bookmark
 			DeleteBookmark();
 			}
+		else if (key==457) 
+			{
+			//the info button on the remote control have been pressed
+			//window.location='links.html';
+			GoToNetCastLinks();
+			}
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed
@@ -196,7 +202,7 @@ function OnLoadSetCurrent()
 	document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
 	
 	//set the focus on keyboard page
-	SwitchFocusedPage();
+	//SwitchFocusedPage();
 	}	
 	
 	//windows.PostMessage management
