@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.85 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.87 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -9,11 +9,6 @@
 # if 'make_backup' is set to '1' then installer makes full backup of firmware if OpenLGTV BCM haven't been installed yet
 
 # TODO - ensure that env is stable after erasing rootfs:
-# - make installation in chrooted env:
-# # mkdir /tmp/rootfs
-# # mount /tmp/OpenLGTV_BCM*sqf /tmp/rootfs
-# # for i in `cat /proc/mounts | awk '{print $2}' | grep -v "^/$"`; do mount --bind $i /tmp/rootfs$i; done
-# # chroot /tmp/rootfs /tmp/install.sh
 # - make erase lginit first, then rootfs (?)
 # or - copy /bin/busybox to /tmp/busybox and use it as prefix for commands after rootfs erase
 
@@ -34,24 +29,35 @@ fi
 # forced rebooting option disabled for manual upgrade/installations
 rebooting=0
 
-if [ "$2" = "autoupgrade" ]
-then
-    confirmations=0
-    rebooting=1
-    autoupgrade=1
-else
-    if [ "$2" = "no_backup" -o "$1" = "no_backup" ]
-    then
-	make_backup=0
-    fi
-fi
-
 ver=0.5.0-devel
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
 
 tmp=/tmp
+
+# command line
+argc=0
+for argv in "$@"
+do
+    [ "$argv" = "autoupgrade"     ] && confirmations=0 && rebooting=1 && autoupgrade=1
+    [ "$argv" = "no_backup"       ] && make_backup=0
+    [ "$argv" = "chrooted"        ] && chrooted=1
+    [ "${argv#image=}" != "$argv" ] && ver="`basename ${argv#image=} | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`" && dir="`dirname ${argv#image=}`"
+    argc=$(($argc+1))
+done
+
+#if [ "$2" = "autoupgrade" ]
+#then
+#    confirmations=0
+#    rebooting=1
+#    autoupgrade=1
+#else
+#    if [ "$2" = "no_backup" -o "$1" = "no_backup" ]
+#    then
+#	make_backup=0
+#    fi
+#fi
 
 if [ "$chrooted" != "1" ]
 then
@@ -62,11 +68,11 @@ else
     xdir="$base"
 fi
 
-if [ "$1" != "" -a "$1" != "no_backup" ]
-then
-    ver="`basename $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`"
-    dir="`dirname $1`"
-fi
+#if [ "$1" != "" -a "$1" != "no_backup" ]
+#then
+#    ver="`basename $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`"
+#    dir="`dirname $1`"
+#fi
 
 file=OpenLGTV_BCM-GP2B-v$ver
 file2011=OpenLGTV_BCM-GP3B-v$ver
@@ -151,12 +157,13 @@ echo "" | tee -a $log
 date 2>&1 | tee -a $log
 echo "OpenLGTV BCM 0.5.0-devel installation script for $platform platform by xeros" | tee -a $log
 
-if [ "$2" = "autoupgrade" ]
+#if [ "$2" = "autoupgrade" ]
+if [ "autoupgrade" = "1" ]
 then
     echo "Script is run as AUTOUPGRADE, forcing disable confirmations and reboot TV after successful flashing" | tee -a $log
     confirmations=0
     rebooting=1
-    autoupgrade=1
+    #autoupgrade=1
 fi
 
 backup_error=0

@@ -270,7 +270,5 @@ Answer for people asking if they can use it if they have already made modificati
     * REMOVE: top binary - use busybox applet instead
 
 Remaining issues with 0.5.0 developement branch:
-    * autoupgrades from USB stick with new method are not tested, tar.sh file should be supported but no content verification before executing it
-    * after manual install/upgrade rebooting is disabled for more testing installation procedure
     * no support for very old firmware versions NetCast configuration (for example in Argentina) - still leaving those untouched (issue with all OpenLGTV BCM versions)
-    * compatibility break with autoupgrade method from older versions - need to install via telnet/ssh/serial
+    * compatibility break with autoupgrade method from older versions - need to install 0.5.0 via telnet/ssh/serial again
