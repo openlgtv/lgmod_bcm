@@ -5,20 +5,57 @@
 
 # Check for proper NetCast configs structure (might need to be extended in future)
 export netcast_config_ok=1
-if [ ! -f "/mnt/user/netcast/config.xml" ]
+export addon_config_xml="/mnt/addon/contents/config.xml"
+export user_config_xml="/mnt/user/netcast/config.xml"
+
+if [ ! -f "$user_config_xml" ]
 then
     echo "OpenLGTV_BCM-INFO: first run NetCast configs preparation..."
-    if [ -f "/mnt/addon/contents/config.xml" ]
+    if [ -f "$addon_config_xml" ]
     then
-	echo "OpenLGTV_BCM-INFO: checking if /mnt/addon/contents/config.xml file has supported format..."
-	if [ -z "`grep '<exec_engine>' /mnt/addon/contents/config.xml`" -o -z "`grep '<exec_app>' /mnt/addon/contents/config.xml`" -o -z "`grep 'check_network' /mnt/addon/contents/config.xml`" -o -z "`grep 'native' /mnt/addon/contents/config.xml`" ]
+	echo "OpenLGTV_BCM-INFO: checking if $addon_config_xml file has supported format..."
+	if [ -z "`grep -m 1 '<exec_engine>' $addon_config_xml`" -o -z "`grep -m 1 '<exec_app>' $addon_config_xml`" -o -z "`grep -m 1 'check_network' $addon_config_xml`" -o -z "`grep -m 1 'native' $addon_config_xml`" ]
 	then
-	    echo "OpenLGTV_BCM-ERROR: /mnt/addon/contents/config.xml file has NOT SUPPORTED format, please upgrade yours firmware - stopping NetCast preparation..."
-	    export netcast_config_ok=0
+	    #echo "OpenLGTV_BCM-ERROR: $addon_config_xml file has NOT SUPPORTED format, please upgrade yours firmware - stopping NetCast preparation..."
+	    #export netcast_config_ok=0
+	    cfg_xml="$addon_config_xml"; source /scripts/netcast_config_check.sh
+	else
+	    #TODO: change default, add check and support for config_ver=3 (SmartTV)
+	    export config_ver=2
 	fi
     else
-	echo "OpenLGTV_BCM-ERROR: /mnt/addon/contents/config.xml file does not exist - stopping NetCast preparation..."
+	echo "OpenLGTV_BCM-ERROR: $addon_config_xml file does not exist - stopping NetCast preparation..."
+	export config_ver=0
 	export netcast_config_ok=0
+    fi
+else
+    #TODO: improve netcast_config_check.sh performance to make use of it for all checks instead of those simple greps
+    if [ "$config_ver" = "1" ]
+    then
+	if [ -z "`grep -m 1 '<url_exec>' $user_config_xml`" ]
+	then
+	    echo "OpenLGTV_BCM-WARN: possible LG firmware NetCast upgrade detected: $addon_config_xml file has DIFFERENT format than $user_config_xml, renaming /mnt/user/netcast dir to /mnt/user/netcast.pre${config_ver}..."
+	    mv /mnt/user/netcast /mnt/user/netcast.pre${config_ver}
+	    if [ -d "/home/netcast_icons" ]
+	    then
+		echo "OpenLGTV_BCM-WARN: removing /home/netcast_icons to prepare new icons..."
+		rm -rf /home/netcast_icons
+	    fi
+	fi
+    else
+	if [ "$config_ver" = "2" ]
+	then
+	    if [ -z "`grep -m 1 '<exec_engine>' $user_config_xml`" ]
+	    then
+		echo "OpenLGTV_BCM-WARN: possible LG firmware NetCast downgrade detected: $addon_config_xml file has DIFFERENT format than $user_config_xml, renaming /mnt/user/netcast dir to /mnt/user/netcast.pre${config_ver}..."
+		mv /mnt/user/netcast /mnt/user/netcast.pre${config_ver}
+		if [ -d "/home/netcast_icons" ]
+		then
+		    echo "OpenLGTV_BCM-WARN: removing /home/netcast_icons to prepare new icons..."
+		    rm -rf /home/netcast_icons
+		fi
+	    fi
+	fi
     fi
 fi
 
@@ -70,8 +107,8 @@ then
 	mount --bind /home/netcast_icons /mnt/addon/contents/netcast
     fi
 fi
-#if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "/mnt/addon/contents/config.xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
-if [ -f "/mnt/addon/browser/browser_application.txt" -a -f "/mnt/browser/browser_application.txt" -a -f "/mnt/addon/contents/config.xml" -a -f "/mnt/addon/bin/addon_mgr.bat" -a -f "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
+#if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "$addon_config_xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
+if [ -f "/mnt/addon/browser/browser_application.txt" -a -f "/mnt/browser/browser_application.txt" -a -f "$addon_config_xml" -a -f "/mnt/addon/bin/addon_mgr.bat" -a -f "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
 then
     if [ "$netcast_config_ok" = "1" ]
     then
@@ -111,14 +148,14 @@ then
 		chmod 775 /mnt/user/netcast/extra_conf
 	    fi
 	fi
-	if [ ! -f "/mnt/user/netcast/config.xml" ]
+	if [ ! -f "$user_config_xml" ]
 	then
-	    if [ -f "/mnt/addon/contents/config.xml" ]
+	    if [ -f "$addon_config_xml" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: making StageCraft config copy - /mnt/addon/contents/config.xml..."
-		#cp /mnt/addon/contents/config.xml /mnt/user/netcast/config.xml
-		cat /mnt/addon/contents/config.xml >> /mnt/user/netcast/config.xml
-		chmod 644 /mnt/user/netcast/config.xml
+		echo "OpenLGTV_BCM-INFO: making StageCraft config copy - $addon_config_xml..."
+		#cp $addon_config_xml $user_config_xml
+		cat $addon_config_xml >> $user_config_xml
+		chmod 644 $user_config_xml
 	    fi
 	fi
 	if [ ! -f "/mnt/user/netcast/addon_mgr.bat" ]
@@ -134,10 +171,10 @@ then
 	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	source /etc/rc.d/rc.netcast-modify
 	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-	if [ -f "/mnt/user/netcast/config.xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
+	if [ -f "$user_config_xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..."
-	    mount --bind /mnt/user/netcast/config.xml              /mnt/addon/contents/config.xml
+	    mount --bind $user_config_xml                          $addon_config_xml
 	    mount --bind /mnt/user/netcast/addon_mgr.bat           /mnt/addon/bin/addon_mgr.bat
 	fi
 	if [ -f "/mnt/user/netcast/browser_application.txt" ]

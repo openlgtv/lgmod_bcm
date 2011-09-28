@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.7.2 by xeros
+# OpenLGTV BCM NetCast config parser and regenerator v.0.8.0 by xeros
 # Source code released under GPL License
 
 echo "OpenLGTV BCM-INFO: NetCast config parser and regenerator script."
@@ -13,12 +13,13 @@ wid_name=www                                  #OpenLGTV BCM Internet Browser Net
 oid_link=http://127.0.0.1:88/                 #OpenLGTV BCM WebUI URL
 proxy_link=http://127.0.0.1:8888/             #Web proxy for remote navigation code injection URL
 wid_link=http://127.0.0.1:88/browser.cgi      #OpenLGTV BCM Internet Browser URL
+[ -z "$config_ver" ] && config_ver=2          #default config.xml format version
 country_groups="KR US BR EU CN AU SG ZA VN TW XA XB IL ID MY IR ZZ"
-#proxy_MAX_CONNECTION=1
-proxy_MAX_CONNECTION=6
-#proxy_MAX_CONNECTION_PER_HOST=1
-proxy_MAX_CONNECTION_PER_HOST=4
-[ -z "$config_ver" ] && config_ver=2
+proxy_MAX_CONNECTION=6                        #maximum number of simulatenous connections on proxy - looks like even web browser version 4.0.xx ignores that
+proxy_MAX_CONNECTION_PER_HOST=4               #maximum number of simulatenous connections per host on proxy - looks like even web browser version 4.0.xx ignores that
+
+#INFO:
+#proxy is not supported by web browser versions 3.0.xx
 
 # default configs paths - should get new values with command line arguments
 org_cfgxml=/mnt/user/netcast/config.xml
@@ -105,7 +106,7 @@ then
     fi
     if [ "$enable_all" = "1" ]
     then
-	echo "OpenLGTV BCM-INFO: NetCast config generator: \"enable_all\" argument passed, regenerating new config.xml: $org_cfgxml with all services"
+	echo "OpenLGTV BCM-INFO: NetCast config generator: \"enable_all\" argument passed, regenerating new config.xml: $org_cfgxml, config_ver: $config_ver with all services"
 	cat $org_cfgxml | tr -d '\r' | sed -e 's/<!--//g' -e 's/-->//g' | sed -e 's/^ *//g' -e 's/^\t*//g' | \
 	    grep -v "^$" | sed -e 's/^ *//g' | sed -e 's/>j$/>/g' | grep -v '<.*xml>' | grep -v '<.*country.*>' | \
 	    tr -d '\n' | sed -e 's#</item><item#</item>\n<item#g' | sed -e 's/\"\([a-zA-Z]*\)=/\" \1=/g' | sort | uniq > $tmp1_cfgxml
@@ -143,13 +144,24 @@ then
 		openlgtv | www)
 			if [ -z "`grep id=.$id_name.\  $org_cfgxml`" ]
 			then
-			    echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id to existing config.xml: $org_cfgxml"
-			    #cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\r\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\r\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\r\n\t\t\t\t\t</item>\r\n#g" > $new_cfgxml
-			    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+			    echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id to existing config.xml: $org_cfgxml, config_ver: $config_ver"
+			    if [ "$config_ver" = "2" ]
+			    then
+				#cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\r\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\r\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\r\n\t\t\t\t\t</item>\r\n#g" > $new_cfgxml
+				cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+			    else
+				if [ "$config_ver" = "1" ]
+				then
+				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"c\" use_portal=\"false\" >
+				    \n\t\t\t\t\t\t\t\t<title>$id_name</title>\n\t\t\t\t\t\t\t\t<url_exec>/mnt/browser/run3556</url_exec>\n\t\t\t\t\t\t\t\t<exec_id>$id_number</exec_id>\n\t\t\t\t\t\t\t\t<url_icon>netcast/${id_name}.swf</url_icon>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+				else
+				    echo "OpenLGTV BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
+				fi
+			    fi
 			    mv -f $org_cfgxml $bck_cfgxml
 			    mv -f $new_cfgxml $org_cfgxml
 			else
-			    echo "OpenLGTV BCM-INFO: NetCast config generator: \"$id_name\" id already exist in current config.xml"
+			    echo "OpenLGTV BCM-INFO: NetCast config generator: \"$id_name\" id already exist in current config.xml: $org_cfgxml config_ver: $config_ver"
 			fi
 			if [ "$org_brw_app_txt" != "" ]
 			then
@@ -160,19 +172,39 @@ then
 			    #if [ -z "$is_id_openlgtv_link" ]
 			    if [ -z "$is_id_openlgtv" ]
 			    then
-				echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id $id_number link: $id_link to existing browser_application.txt file: $org_brw_app_txt"
+				echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$id_name\" id $id_number link: $id_link config_ver: $config_ver to existing browser_application.txt file: $org_brw_app_txt"
 				cp -f $org_brw_app_txt $new_brw_app_txt
 				#echo '254\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n' >> $new_brw_app_txt
 				#echo "$id_number\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
-				echo -e "$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
+				if [ "$config_ver" = "2" ]
+				then
+				    echo -e "$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
+				else
+				    if [ "$config_ver" = "1" ]
+				    then
+					echo -e "$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\r\n" >> $new_brw_app_txt
+				    else
+					echo "OpenLGTV BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
+				    fi
+				fi
 				mv -f $org_brw_app_txt $bck_brw_app_txt
 				mv -f $new_brw_app_txt $org_brw_app_txt
 			    else
 				if [ -z "$is_id_openlgtv_link" ]
 				then
-				    echo "OpenLGTV BCM-WARN: NetCast config generator: found incorrect link to \"$id_name\" id: $id_number, changing to new link: $id_link in existing browser_application.txt file"
+				    echo "OpenLGTV BCM-WARN: NetCast config generator: found incorrect link to \"$id_name\" id: $id_number config_ver: $config_ver, changing to new link: $id_link in existing browser_application.txt file"
 				    cp -f $org_brw_app_txt $new_brw_app_txt
-				    sed -i -e "s#^$id_number.*#$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1#g" $new_brw_app_txt
+				    if [ "$config_ver" = "2" ]
+				    then
+					sed -i -e "s#^$id_number.*#$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1#g" $new_brw_app_txt
+				    else
+					if [ "$config_ver" = "1" ]
+					then
+					    sed -i -e "s#^$id_number.*#$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1#g" $new_brw_app_txt
+					else
+					    echo "OpenLGTV BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
+					fi
+				    fi
 				    mv -f $org_brw_app_txt $bck_brw_app_txt
 				    mv -f $new_brw_app_txt $org_brw_app_txt
 				else
@@ -187,7 +219,7 @@ then
 			#if [ ! -f "/mnt/user/lock/ywe_added_to_config_xml.lock" ]
 			if [ "`grep id=.$yid_name.\  $org_cfgxml | wc -l`" -le "1" ]
 			then
-			    echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$yid_name\" id to existing config.xml: $org_cfgxml"
+			    echo "OpenLGTV BCM-INFO: NetCast config generator: adding \"$yid_name\" id to existing config.xml: $org_cfgxml config_ver: $config_ver"
 			    if [ -d "/mnt/addon/ywe" ]
 			    then
 				echo "OpenLGTV BCM-INFO: NetCast config generator: found /mnt/addon/ywe, setting it as ywedir for \"$yid_name\" in existing config.xml: $org_cfgxml"
@@ -200,7 +232,17 @@ then
 				ywe_konfab_sh=/scripts/konfabulator-exec.sh
 			    fi
 			    if [ "$ywe_konfab_sh" = "" ]; then ywe_konfab_sh=$ywedir/bin/konfabulator.sh; fi
-			    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"native\" use_magic=\"true\" check_network=\"true\" resolution=\"960*540\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>$ywe_konfab_sh</exec_engine>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywe_konfab_sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+			    if [ "$config_ver" = "2" ]
+			    then
+				cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"native\" use_magic=\"true\" check_network=\"true\" resolution=\"960*540\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>$ywe_konfab_sh</exec_engine>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywe_konfab_sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+			    else
+				if [ "$config_ver" = "1" ]
+				then
+				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"c\" use_portal=\"true\" >\n\t\t\t\t\t\t\t\t<title>$yid_name</title>\n\t\t\t\t\t\t\t\t<url_exec>$ywe_konfab_sh</url_exec>\n\t\t\t\t\t\t\t\t<url_icon>netcast/${yid_name}.swf</url_icon>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywe_konfab_sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+				else
+				    echo "OpenLGTV BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
+				fi
+			    fi
 			    mv -f $org_cfgxml $bck_cfgxml
 			    mv -f $new_cfgxml $org_cfgxml
 			    #touch /mnt/user/lock/ywe_added_to_config_xml.lock
@@ -232,10 +274,15 @@ then
 	#if [ -n "`grep id=.$id_name $org_cfgxml`" ]
 	if [ -n "`grep id=.$del.\  $org_cfgxml`" ]
 	then
-	    echo "OpenLGTV BCM-INFO: NetCast config generator: removing \"$del\" id from existing config.xml: $org_cfgxml"
-	    cat $org_cfgxml | \
-		sed -n -e "1h;1!H;\${;g;s#<item id=\"$del\"[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*</item>[^<]*##g;p;}" \
-		    > $new_cfgxml
+	    echo "OpenLGTV BCM-INFO: NetCast config generator: removing \"$del\" id from existing config.xml: $org_cfgxml config_ver: $config_ver"
+	    if [ "$config_ver" = "2" -o "$config_ver" = "1" ]
+	    then
+		cat $org_cfgxml | \
+		    sed -n -e "1h;1!H;\${;g;s#<item id=\"$del\"[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*</item>[^<]*##g;p;}" \
+			> $new_cfgxml
+	    else
+		echo "OpenLGTV BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
+	    fi
 	    mv -f $new_cfgxml $org_cfgxml
 	else
 	    echo "OpenLGTV BCM-INFO: NetCast config generator: \"$del\" id does not exist in current config.xml"
