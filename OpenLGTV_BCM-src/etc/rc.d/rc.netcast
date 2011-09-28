@@ -14,15 +14,15 @@ then
     if [ -f "$addon_config_xml" ]
     then
 	echo "OpenLGTV_BCM-INFO: checking if $addon_config_xml file has supported format..."
-	if [ -z "`grep -m 1 '<exec_engine>' $addon_config_xml`" -o -z "`grep -m 1 '<exec_app>' $addon_config_xml`" -o -z "`grep -m 1 'check_network' $addon_config_xml`" -o -z "`grep -m 1 'native' $addon_config_xml`" ]
-	then
-	    #echo "OpenLGTV_BCM-ERROR: $addon_config_xml file has NOT SUPPORTED format, please upgrade yours firmware - stopping NetCast preparation..."
-	    #export netcast_config_ok=0
-	    cfg_xml="$addon_config_xml"; source /scripts/netcast_config_check.sh
-	else
-	    #TODO: change default, add check and support for config_ver=3 (SmartTV)
-	    export config_ver=2
-	fi
+	cfg_xml="$addon_config_xml"; source /scripts/netcast_config_check.sh
+	#if [ -z "`grep -m 1 '<exec_engine>' $addon_config_xml`" -o -z "`grep -m 1 '<exec_app>' $addon_config_xml`" -o -z "`grep -m 1 'check_network' $addon_config_xml`" -o -z "`grep -m 1 'native' $addon_config_xml`" ]
+	#then
+	#    #echo "OpenLGTV_BCM-ERROR: $addon_config_xml file has NOT SUPPORTED format, please upgrade yours firmware - stopping NetCast preparation..."
+	#    #export netcast_config_ok=0
+	#else
+	#    #TODO: change default, add check and support for config_ver=3 (SmartTV)
+	#    export config_ver=2
+	#fi
     else
 	echo "OpenLGTV_BCM-ERROR: $addon_config_xml file does not exist - stopping NetCast preparation..."
 	export config_ver=0
@@ -30,6 +30,7 @@ then
     fi
 else
     #TODO: improve netcast_config_check.sh performance to make use of it for all checks instead of those simple greps
+    cfg_xml="$addon_config_xml"; source /scripts/netcast_config_check.sh
     if [ "$config_ver" = "1" ]
     then
 	if [ -z "`grep -m 1 '<url_exec>' $user_config_xml`" ]
