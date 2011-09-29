@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.87 by xeros
+# OpenLGTV BCM 0.5.0-alpha4 installation script v.1.90 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -29,7 +29,7 @@ fi
 # forced rebooting option disabled for manual upgrade/installations
 rebooting=0
 
-ver=0.5.0-devel
+ver=0.5.0-alpha4
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
@@ -42,7 +42,9 @@ for argv in "$@"
 do
     [ "$argv" = "autoupgrade"     ] && confirmations=0 && rebooting=1 && autoupgrade=1
     [ "$argv" = "no_backup"       ] && make_backup=0
+    [ "$argv" = "no_install"      ] && no_install=1
     [ "$argv" = "chrooted"        ] && chrooted=1
+    [ "$argv" = "drop_caches"     ] && drop_caches=1
     [ "${argv#image=}" != "$argv" ] && ver="`basename ${argv#image=} | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`" && dir="`dirname ${argv#image=}`"
     argc=$(($argc+1))
 done
@@ -88,9 +90,9 @@ platform=GP2B
 
 proxy_lock_file=/var/run/proxy.lock
 #KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount'
-KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount RELEASE'
-	# LG: addon_mgr stagecraft konfabulator lb4wk
-	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd [djmount?]
+KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl RELEASE'
+	# LG: addon_mgr stagecraft konfabulator lb4wk msdl RELEASE
+	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd wget [djmount?]
 	# OpenLGTV BCM - processes which might be running at boot: ls wget
 pkill=pkill
 [ "`which pkill`" ] || pkill=killall
@@ -155,7 +157,7 @@ ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1
 
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
-echo "OpenLGTV BCM 0.5.0-devel installation script for $platform platform by xeros" | tee -a $log
+echo "OpenLGTV BCM 0.5.0-alpha4 installation script for $platform platform by xeros" | tee -a $log
 
 #if [ "$2" = "autoupgrade" ]
 if [ "autoupgrade" = "1" ]
@@ -461,10 +463,14 @@ then
     sync
 fi
 
-echo "Making cache cleanup..." | tee -a $log
-echo 3 > /proc/sys/vm/drop_caches
-sleep 1
-sync
+# real rootfs becomes unstable when caches are dropped
+if [ "$drop_caches" = "1" ]
+then
+    echo "Making cache cleanup..." | tee -a $log
+    echo 3 > /proc/sys/vm/drop_caches
+    sleep 1
+    sync
+fi
 
 echo "Making backup from /dev/mtd$mtd_rootfs to $dir/$file-$rootfs_backup.sqf" | tee -a $log
 #cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf 2>$tmpout
@@ -505,6 +511,8 @@ then
     mkdir -p /mnt/user/lock
     touch /mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock
 fi
+
+[ "$no_install" = "1" ] && exit 0
 
 echo 'NOTE: Freeing memory (killing daemons) ...'
 echo "Stopping proxy ..."
