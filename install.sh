@@ -89,8 +89,8 @@ lginit_size2011=524288
 platform=GP2B
 
 proxy_lock_file=/var/run/proxy.lock
-#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount'
-KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl RELEASE'
+KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl'
+#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl RELEASE'
 	# LG: addon_mgr stagecraft konfabulator lb4wk msdl RELEASE
 	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd wget [djmount?]
 	# OpenLGTV BCM - processes which might be running at boot: ls wget
