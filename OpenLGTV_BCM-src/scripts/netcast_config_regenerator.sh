@@ -152,8 +152,7 @@ then
 			    else
 				if [ "$config_ver" = "1" ]
 				then
-				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"c\" use_portal=\"false\" >
-				    \n\t\t\t\t\t\t\t\t<title>$id_name</title>\n\t\t\t\t\t\t\t\t<url_exec>/mnt/browser/run3556</url_exec>\n\t\t\t\t\t\t\t\t<exec_id>$id_number</exec_id>\n\t\t\t\t\t\t\t\t<url_icon>netcast/${id_name}.swf</url_icon>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"c\" use_portal=\"false\" >\n\t\t\t\t\t\t\t\t<title>$id_name</title>\n\t\t\t\t\t\t\t\t<url_exec>/mnt/browser/run3556</url_exec>\n\t\t\t\t\t\t\t\t<exec_id>$id_number</exec_id>\n\t\t\t\t\t\t\t\t<url_icon>netcast/${id_name}.swf</url_icon>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
 				else
 				    echo "OpenLGTV_BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
 				fi
