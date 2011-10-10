@@ -34,6 +34,68 @@ done
 export OpenLGTV_BCM_USB
 export USB_DIR=`echo $OpenLGTV_BCM_USB | sed 's#/OpenLGTV_BCM##g'`
 
+for jj in 1 2 3 4
+do
+    for ii in 1 2
+    do
+	LGDTV_USB="/mnt/usb$ii/Drive$jj/LG_DTV"
+	if [ -d "$LGDTV_USB" ]
+	then
+	    export LGDTV_USB
+	    epaks="`ls $LGDTV_USB/*.epk 2>/dev/null`"
+	    if [ -n "$epaks" ]
+	    then
+		LGDTV_upgrade=1
+		echo "OpenLGTV_BCM-WARN: rc.usb: Found LG firmware upgrade epaks: $epaks"
+		echo "OpenLGTV_BCM-WARN: rc.usb: Running in firmware upgrade mode - killing some services to free memory for upgrade"
+		
+		KILL='konfabulator lb4wk httpd nc udhcpc ntpd tcpsvd ls wget unzip zip djmount msdl'
+		#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl'
+		#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl RELEASE'
+			# LG: addon_mgr stagecraft konfabulator lb4wk msdl RELEASE
+			# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd wget [djmount?]
+			# OpenLGTV BCM - processes which might be running at boot: ls wget
+		
+		echo 'OpenLGTV_BCM-WARN: rc.usb: Freeing memory (killing daemons) ...'
+		for prc in $KILL; do pkill $prc && echo "OpenLGTV_BCM-WARN: rc.usb: Stopping $prc ..."; killall $prc 2> /dev/null; done
+		sleep 2
+		
+		# check free ram
+		addfreemem=20480
+		currfreemem=`free | grep Mem | awk '{print $4}'`
+		currbuffmem=`free | grep Mem | awk '{print $6}'`
+		curravailmem=$(($currfreemem + $currbuffmem))
+		# expect size needed for epk in MB
+		freemem_for_epak=$((($currfreemem - $addfreemem)/1024))
+		#reqavailmem=$((2*$reqfreemem))
+		
+		echo "OpenLGTV_BCM-WARN: rc.usb: Free memory: ${currfreemem}, buffers: ${currbuffmem}, total available: ${curravailmem}"
+		
+		for epak in $epaks
+		do
+		    epk_size="`ls -lh $epak | awk '{print $5}' | sed -e 's/M//g' -e 's/\..*//g'`"
+		    echo "OpenLGTV_BCM-WARN: rc.usb: epak: ${epak}, size: ${epk_size}M"
+		    if [ "$freemem_for_epak" -lt "$epk_size" ]
+		    then
+			echo "OpenLGTV_BCM-WARN: rc.usb: not enough free mem for epak: ${epak}, epak size: ${epk_size}MB, mem available (with 20MB space reserved): ${freemem_for_epak}MB, freeing more memory by dropping caches..."
+			echo 3 > /proc/sys/vm/drop_caches
+			sleep 1
+			echo "OpenLGTV_BCM-WARN: rc.usb: free memory after dropped caches: $((`free | grep Mem | awk '{print $4}'`/1024))"
+		    fi
+		done
+	    fi
+	    #break 2
+	fi
+    done
+done
+#export LGDTV_USB
+
+if [ "$LGDTV_upgrade" = "1" ]
+then
+    echo "OpenLGTV_BCM-WARN: rc.usb: Finish USB actions without later checks to prevent of possible problems with LG upgrade."
+    exit 0
+fi
+
 if [ -f "/mnt/user/cfg/delay_usb2" ]
 then
     delay2="`cat /mnt/user/cfg/delay_usb2`"

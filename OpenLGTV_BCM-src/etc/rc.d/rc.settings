@@ -47,6 +47,10 @@ if [ "$netcast_keyboard_mouse_support" = "" ]; then echo "netcast_keyboard_mouse
 if [ "$netcast_webproxy" = "" ];               then echo "netcast_webproxy=0#Web proxy for navigation controls on external sites"           | tee -a /mnt/user/cfg/settings.default | sed 's/#.*//g' >> /mnt/user/cfg/settings; fi
 # more to come...
 
+#for def_svar in `cat /etc/default/settings.default`
+#do
+#done
+
 settings_depreciated="confirmations rebooting netcast_kill_browser"
 
 #v- this could make inconsistency between default settings and current ones, so disabling it for now

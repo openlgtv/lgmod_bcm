@@ -14,7 +14,7 @@ ilink3="http://smarttv.awardspace.info/smarttv_logos.xxx"
 
 imd5="a3f458d48113421c5a3a131bc5b44864"
 
-useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0) Gecko/20100101 Firefox/7.0"
+useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
 
 ilinks_count=3
 
@@ -47,7 +47,7 @@ then
     #done
     wget -q -c -U "$useragent" "$ilink" -O /tmp/icons.zip
     md5s="`md5sum /tmp/icons.zip`"
-    if [ "${md5s:0:32}" -ne "$imd5" ]
+    if [ "${md5s:0:32}" != "$imd5" ]
     then
 	rm /tmp/icons.zip
 	exit 1

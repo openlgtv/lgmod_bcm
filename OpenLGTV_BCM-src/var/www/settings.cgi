@@ -21,9 +21,12 @@ content-type: text/html
 			do
 			    opt_name=`echo $i | awk -F= '{print $1}'`
 			    opt_val=`echo $i | awk -F= '{print $2}'`
-			    opt_def="`grep ^$opt_name /mnt/user/cfg/settings.default`"
+			    #opt_def="`grep ^$opt_name /mnt/user/cfg/settings.default`"
+			    opt_def="`grep ^$opt_name /etc/default/settings.default`"
 			    opt_desc="`echo $opt_def | awk -F# '{print $2}'`"
-			    opt_def_val="`echo $opt_def | awk -F# '{print $1}' | awk -F= '{print $2}'`"
+			    #opt_def_val="`echo $opt_def | awk -F# '{print $1}' | awk -F= '{print $2}'`"
+			    opt_def_valx="`echo $opt_def | awk -F# '{print $1}' | awk -F= '{print $2}'`"
+			    opt_def_val="${opt_def_valx:0:1}"
 			    if [ "$FORM_save" = "1" ]
 			    then
 				eval opt_val=\$FORM_check$id_nr
