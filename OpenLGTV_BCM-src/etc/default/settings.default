@@ -1,0 +1,12 @@
+samsung_ywe=1                         #Copy YWE configs to use Yahoo Widgets as Samsung
+use_samsung_ywe_instead_of_lg=1       #Replace LG YWE using Samsung YWE config
+RELEASE_in_tmux=1                     #Run RELEASE in tmux virtual terminal
+OPENRELEASE=0                         #Run OPENRELEASE instead of RELEASE
+force_copy_config_netcast=0           #Force making copy of NetCast configs
+force_copy_config_ywe=0               #Force making copy of YWE configs
+netcast_config_add_openlgtv=1         #Add OpenLGTV BCM icon to NetCast conf
+netcast_config_add_yahoo=0            #Add Yahoo Widgets icon to NetCast conf
+netcast_config_add_www=1              #Add WWW icon to NetCast conf
+netcast_config_enable_all=0           #Rewrite NetCast conf, enable all services (OBSOLETE)
+netcast_keyboard_mouse_support=0      #Support for USB keyboard and mouse in NetCast
+netcast_webproxy=1                    #Web proxy for navigation controls on external sites

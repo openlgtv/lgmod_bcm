@@ -215,5 +215,5 @@ then
     mount --bind /mnt/user/www/links.html /var/www/browser/links.html
 fi
 
-echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 30s delay ..."
-(sleep 30; /scripts/links_icons_preload.sh) &
+echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 10s delay ..."
+(sleep 10; /scripts/links_icons_preload.sh) &
