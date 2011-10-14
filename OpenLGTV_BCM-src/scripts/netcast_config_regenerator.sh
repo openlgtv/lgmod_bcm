@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.8.1 by xeros
+# OpenLGTV BCM NetCast config parser and regenerator v.0.8.2 by xeros
 # Source code released under GPL License
 
 echo "OpenLGTV_BCM-INFO: NetCast config parser and regenerator script."
@@ -152,7 +152,7 @@ then
 			    else
 				if [ "$config_ver" = "1" ]
 				then
-				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"c\" use_portal=\"false\" >\n\t\t\t\t\t\t\t\t<title>$id_name</title>\n\t\t\t\t\t\t\t\t<url_exec>/mnt/browser/run3556</url_exec>\n\t\t\t\t\t\t\t\t<exec_id>$id_number</exec_id>\n\t\t\t\t\t\t\t\t<url_icon>netcast/${id_name}.swf</url_icon>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"c\" use_portal=\"false\">\r\n\t\t\t\t\t\t\t\t<title>$id_name</title>\r\n\t\t\t\t\t\t\t\t<url_exec>/mnt/browser/run3556</url_exec>\r\n\t\t\t\t\t\t\t\t<exec_id>$id_number</exec_id>\r\n\t\t\t\t\t\t\t\t<url_icon>netcast/icon_${id_name}.swf</url_icon>\r\n\t\t\t\t\t</item>\r\n#g" > $new_cfgxml
 				else
 				    echo "OpenLGTV_BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
 				fi
@@ -216,7 +216,7 @@ then
 			# v- we will not check if it exists there as it exist there for sure somewhere, we need to use lock file
 			#if [ -z "`grep $yid_name $org_cfgxml`" ]
 			#if [ ! -f "/mnt/user/lock/ywe_added_to_config_xml.lock" ]
-			if [ "`grep -m 2 id=.$yid_name.\  $org_cfgxml | wc -l`" -le "1" ]
+			if [ "`grep -m 3 id=.$yid_name.\  $org_cfgxml | wc -l`" -le "2" ]
 			then
 			    echo "OpenLGTV_BCM-INFO: NetCast config generator: adding \"$yid_name\" id to existing config.xml: $org_cfgxml config_ver: $config_ver"
 			    if [ -d "/mnt/addon/ywe" ]
@@ -237,7 +237,7 @@ then
 			    else
 				if [ "$config_ver" = "1" ]
 				then
-				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"c\" use_portal=\"true\" >\n\t\t\t\t\t\t\t\t<title>$yid_name</title>\n\t\t\t\t\t\t\t\t<url_exec>$ywe_konfab_sh</url_exec>\n\t\t\t\t\t\t\t\t<url_icon>netcast/${yid_name}.swf</url_icon>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywe_konfab_sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
+				    cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"c\" use_portal=\"true\">\r\n\t\t\t\t\t\t\t\t<title>$yid_name</title>\r\n\t\t\t\t\t\t\t\t<url_exec>$ywe_konfab_sh</url_exec>\r\n\t\t\t\t\t\t\t\t<url_icon>netcast/icon_${yid_name}.swf</url_icon>\r\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywe_konfab_sh\"/>\r\n\t\t\t\t\t</item>\r\n#g" > $new_cfgxml
 				else
 				    echo "OpenLGTV_BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
 				fi
