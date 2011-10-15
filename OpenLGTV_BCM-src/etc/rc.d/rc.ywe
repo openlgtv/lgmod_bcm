@@ -66,7 +66,7 @@
 	    killall konfabulator
 	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Data dir in $OpenLGTV_BCM_USB/ywedata - trying to unmount /mnt/widget.data..."
 	    umount -f /mnt/widget.data
-	    if [ ! -f "$OpenLGTV_BCM_USB/ywedata.ext3.img" -a ! -f "$ywedatadir_usb/Preferences.db" -a "$USB_DIR_FS" != "ntfs" ]
+	    if [ ! -f "$OpenLGTV_BCM_USB/ywedata.ext3.img" -a ! -f "$ywedatadir_usb/Preferences.db" -a "$USB_DIR_FS" = "vfat" ]
 	    then
 		#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		echo "OpenLGTV_BCM-INFO: not found Yahoo Widgets Data image file - $OpenLGTV_BCM_USB/ywedata.ext3.img and ywedata dir is not populated yet, so creating 128MB image file on USB storage device..."
