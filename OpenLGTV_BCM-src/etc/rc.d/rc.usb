@@ -9,13 +9,6 @@ USB2_DIR=/mnt/usb2/Drive1
 k=0;
 echo "OpenLGTV_BCM-INFO: rc.usb starting..."
 
-if [ -f "/mnt/user/cfg/delay_usb1" ]
-then
-    delay1="`cat /mnt/user/cfg/delay_usb1`"
-    echo "OpenLGTV_BCM-INFO: rc.usb: found /mnt/user/cfg/delay_usb1, making $delay1 seconds delay before checking USB"
-    sleep $delay1
-fi
-
 while [ -z "`cat /proc/mounts | grep ^/dev/sd`" ]
 do
     sleep 1
@@ -94,13 +87,6 @@ if [ "$LGDTV_upgrade" = "1" ]
 then
     echo "OpenLGTV_BCM-WARN: rc.usb: Finish USB actions without later checks to prevent of possible problems with LG upgrade."
     exit 0
-fi
-
-if [ -f "/mnt/user/cfg/delay_usb2" ]
-then
-    delay2="`cat /mnt/user/cfg/delay_usb2`"
-    echo "OpenLGTV_BCM-INFO: rc.usb: found /mnt/user/cfg/delay_usb2, making $delay2 seconds delay before remounting USB"
-    sleep $delay2
 fi
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
@@ -218,3 +204,9 @@ else
     echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device"
 fi
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+
+if [ "$1" != "hotplug" ]
+then
+    echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
+    echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
+fi

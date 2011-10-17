@@ -2,6 +2,8 @@
 # konfabulator-exec.sh script by xeros
 # Source code released under GPL License
 
+# TODO: move USB storage device mounted check outside of this script
+
 [ -z "$ywedir" ] && ywedir=/mnt/addon/ywe
 
 #if [ ! -d "$ywedir" -a ! -h "$ywedir" ]
@@ -26,6 +28,20 @@ then
 	echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: running $ywedir/bin/konfabulator.sh..."
 	$ywedir/bin/konfabulator.sh $*
 	killall lb4wk > /dev/null 2>&1
+	while [ -e "$ywedir/bin/konfabulator.sh" ]
+	do
+	    sleep 2
+	done
+	echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: USB storage device unmounted/disconnected trying to stop Konfabulator and umount dirs..."
+	killall konfabulator
+	sleep 1
+	umount -f /mnt/widget.data
+	for ywd in /mnt/ywe_lg /mnt/ywe_s
+	do
+	    umount -f $ywd/config-oem.xml
+	    umount -f $ywd/bin/konfabulator.sh
+	    umount -f $ywd
+	done
 else
 	# if konfabulator.sh file does not exist, try to run web browser instead
 	echo "OpenLGTV_BCM-WARN: konfabulator-exec.sh: $ywedir/bin/konfabulator.sh file does not exist, trying to start web browser instead..."

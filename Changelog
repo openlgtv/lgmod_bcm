@@ -220,7 +220,6 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: new NetCast web browser based links (from SmartTV NetCast 2.0) in Internet Browser page - 132 links currently compared to 68 before (by nicola_12345)
 
 0.5.0:
-    * FIX: workaround for network shares invisible dirs (thanks xren)
     * FIX: ywe first time configuration
     * FIX: abc.net.au link fix
     * FIX: /home was not writable on US and KR 2010 BCM models
@@ -243,7 +242,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: libncurses.so.5.7 and recompiled top binary to use the lib
     * ADD: lua, luac, liblua.so.5.1.4
     * ADD: libSDL-1.2.so.0.11.3 with DirectFB access for additional SDL apps that can now use TV screen
-    * ADD: OPENRELEASE 2.1.0 by rtokarev
+    * ADD: OPENRELEASE 2.1.2 by rtokarev & jenya's uinput branch
     * ADD: CGI web page for remote control by mihaifireball under http://ip_of_tv/remote/
     * ADD: possibility to remove all OpenLGTV BCM configs or just NetCast configs for recreating defaults at next boot using WebUI
     * ADD: bootlog is copied at each boot with usb stick/disk plugged in to OpenLGTV_BCM/OpenLGTV_BCM.log file or OpenLGTV_BCM/OpenLGTV_BCM-firstboot.log when it's first boot
@@ -253,6 +252,9 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: netcast_config_check.sh script to verify which NetCast config versions are used
     * ADD: support for both old and new NetCast configs and NetCast upgrade/downgrade handling
     * ADD: uinput kernel driver
+    * ADD: hotplug wrapper to handle /lib/firmware/* loading when needed in future and USB storage handling so from now on USB stick/disk does not need to be connected at boot
+    * ADD: with new hotplug-capable scripts Yahoo Widgets Engine/Data from USB storage devices is hotpluggable also - on connect YWE gots prepared and on umount from remote it gets stopped
+    * ADD: 'upgrade mode' - when there are LG firmware upgrade EPK files on USB stick in LG_DTV dir then some services get stopped and caches cleaned when needed - depends on file size to ensure no out-of-mem LG upgrade fail
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
@@ -268,6 +270,8 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: squashfs image is now being build with 256KB block size for better compression of partition image
     * CHANGE: bootlogd is now used for boot logging instead of ugly 'tee' redirections and 'date' timestamps
     * CHANGE: NetCast links are now organized in 6x6 grid instead of 4x6 as before and channel up/down arrows besides scrolling change focus now also
+    * CHANGE: NetCast links icons are now being downloaded at upgrade
+    * CHANGE: NetCast configs detection now manages if configs should get cleaned on NetCast upgrade/downgrade (makes backup copy of netcast dir)
     * REMOVE: tcpdump binary for space reasons
     * REMOVE: top binary - use busybox applet instead
 
