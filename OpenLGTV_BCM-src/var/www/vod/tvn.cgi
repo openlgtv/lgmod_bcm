@@ -1,12 +1,12 @@
-#!/bin/sh
 #!/bin/haserl
+#!/bin/sh
 Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
 <HEAD>
 
-<!-- ipla.cgi by xeros -->
+<!-- tvn.cgi by xeros -->
 <!-- Source code released under GPL License -->
 
 <style type="text/css">
@@ -18,32 +18,34 @@ Content-type: text/html
 	text-decoration:bold;
     }
 </style>
-<title>Ipla.tv alternative by xeros</title>
+<title>TVNplayer alternative by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript">
 <!--
 
 <?
 
-useragent="tv_samsung/4"
-menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
+#useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
+useragent="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
+
+menuLoc="http://tvnplayer.pl"
 
 if [ "$FORM_url" != "" ]
 then
     url="$FORM_url"
     type="$FORM_type"
-    log_file=/tmp/log/vod/ipla/$type.log
+    log_file=/tmp/log/vod/tvn/$type.log
     echo "var col = 3; //number of 'cells' in a row"
 else
     url="$menuLoc"
     type=menu
-    log_file=/tmp/log/vod/ipla/$type.log
+    log_file=/tmp/log/vod/tvn/$type.log
     echo "var col = 1; //number of 'cells' in a row"
 fi
 
-if [ ! -d "/tmp/log/vod/ipla" ]
+if [ ! -d "/tmp/log/vod/tvn" ]
 then
-    mkdir -p /tmp/log/vod/ipla
+    mkdir -p /tmp/log/vod/tvn
 fi
 
 ?>
@@ -129,7 +131,49 @@ document.defaultAction = true;
 
 <?
 
-wget -q -U "$useragent" -O - "$url" > $log_file
+echo '<center><img src="http://tvnplayer.pl/img/logo_menu.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
+echo '<font size="+3">'
+echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+
+if [ "$type" = "menu" ]
+then
+    echo "<tr><td><center><font size='+3'><b><a id=\"link1\" href=\"tvn.cgi?type=category&url=$url/seriale.html\" target=\"_parent\">Seriale</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link2\" href=\"tvn.cgi?type=category&url=$url/programy.html\" target=\"_parent\">Programy</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link3\" href=\"tvn.cgi?type=category&url=$url/filmy.html\" target=\"_parent\">Filmy</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link4\" href=\"tvn.cgi?type=category&url=$url/dla-dzieci.html\" target=\"_parent\">Dla dzieci</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link5\" href=\"tvn.cgi?type=category&url=$url/ostatni-dzwonek.html\" target=\"_parent\">Ostatni dzwonek</a></b></font></center><br/></td></tr>"
+    exit 0
+fi
+
+if [ "$type" = "category" ]
+then
+    #wget -q -U "$useragent" -O - "$url" > $log_file
+    #wget -U "$useragent" "$url" -O $log_file
+    #echo "<tr>"
+    #grep -A3 '<div class="photoContainer">' $log_file | sed -e 's#<div class="photoContainer">#</td><td>#g' -e 's#href="/#href="tvn.cgi/#g' -e s'#alt="tvn Player -\(.*\)".*#alt="\1" /><br/>\1#g' | grep -v "^--$"
+    #grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n</td><td>#g' -e 's#href="/#href="tvn.cgi/#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1#g'
+    #grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n#g' -e 's#href="/#href="tvn.cgi/#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1</a>QQQXXQQQ#g' -e 's/^\t*//g' -e 's/^ *//g'
+    #echo "</tr>"
+    item_nr=1
+    #IFS=$(/bin/echo -e '\n')
+    IFS=QQQXXQQQ
+    echo "<tr>"
+    for content in `grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n#g' -e 's#href="/#href="tvn.cgi/#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1</td></a>QQQXXQQQ#g' -e 's/^\t*//g' -e 's/^ */<td><center>/g' | grep -v "^<td><center>$"`
+    do
+	if [ "$content" != "" ]
+	then
+	    echo "$content" | sed -e 's/class="ajaxify"/id=\"link$item_nr\"/g' -e 's/QQQXXQQQ//g'
+	    if [ "$(($item_nr % 3))" = "0" ]
+	    then
+		echo "</tr><tr>"
+	    fi
+	    item_nr=$(($item_nr+1))
+	fi
+    done
+    echo "</tr></table></body></html>"
+fi
+
+exit 0
 
 #echo "$url $log_file <br/>"
 
