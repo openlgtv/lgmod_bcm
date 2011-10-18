@@ -127,7 +127,7 @@ wget -q -U "$useragent" -O - "$url" > $log_file
 
 if [ "$type" = "video-tvp" ]
 then
-    cat $log_file | grep "video_url" | sed -e 's/.*video_url="/<meta HTTP-EQUIV="REFRESH" content="1; url=/g' -e 's/">.*/">/g'
+    grep "video_url" $log_file | sed -e 's/.*video_url="/<meta HTTP-EQUIV="REFRESH" content="1; url=/g' -e 's/">.*/">/g'
 fi
 
 echo '</HEAD><BODY bgcolor="lightblue">'
@@ -139,7 +139,7 @@ then
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
-    for content in `cat $log_file | grep -v "^$" | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
+    for content in `grep -v "^$" $log_file | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
     do
 	feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
 	feedTitle=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`

@@ -1,4 +1,3 @@
-#!/bin/sh
 #!/bin/haserl
 Content-type: text/html
 
@@ -158,7 +157,7 @@ else
     item_nr=1
     if [ "$type" = "category" ]
     then
-	for content in `cat $log_file | egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | grep -i "/category/" | sed -e 's/  */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://##g'`
+	for content in `egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | tr '\n' ' ' | tr '{}' '\n' | grep -i "/category/" | sed -e 's/  */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://##g'`
 	do
 	    feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | awk -F: '{print $2}' | tr -d '\"'`
 	    feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | tr -d '\"'`
@@ -172,7 +171,7 @@ else
 	done
     else
 	#if [ "$type" = "category2" ]
-	    for content in `cat $log_file | egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | grep -i "/movies/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
+	    for content in `egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | tr '\n' ' ' | tr '{}' '\n' | grep -i "/movies/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
 	    do
 		feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | awk -F: '{print $2}' | tr -d '\"'`
 		feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`

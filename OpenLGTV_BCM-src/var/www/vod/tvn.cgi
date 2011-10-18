@@ -1,5 +1,4 @@
 #!/bin/haserl
-#!/bin/sh
 Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -12,9 +11,10 @@ Content-type: text/html
 <style type="text/css">
     body {
 	font-family:"TiresiasScreenfont";
+	font-color:white
     }
     a:link {
-	color:black;
+	color:white;
 	text-decoration:bold;
     }
 </style>
@@ -80,6 +80,8 @@ function check(e)
 			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
 			//set current=next
 			current = next;
+			//Prevent scrolling
+			return false;
 			}
 		else if (key==404) 
 			{
@@ -126,14 +128,17 @@ document.defaultAction = true;
 </script>
 
 
-</HEAD>
-<BODY bgcolor="green">
 
 <?
 
-echo '<center><img src="http://tvnplayer.pl/img/logo_menu.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
-echo '<font size="+3">'
-echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+if [ "$type" != "playlist" ]
+then
+    echo "</HEAD>"
+    echo "<BODY bgcolor="black">"
+    echo '<center><img src="http://tvnplayer.pl/img/logo_menu.png"/><font color="white"><font size="+1"><br/>alternative</font><br/>by xeros</font><br/><br/>'
+    #echo '<font size="+3">'
+    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+fi
 
 if [ "$type" = "menu" ]
 then
@@ -142,13 +147,16 @@ then
     echo "<tr><td><center><font size='+3'><b><a id=\"link3\" href=\"tvn.cgi?type=category&url=$url/filmy.html\" target=\"_parent\">Filmy</a></b></font></center><br/></td></tr>"
     echo "<tr><td><center><font size='+3'><b><a id=\"link4\" href=\"tvn.cgi?type=category&url=$url/dla-dzieci.html\" target=\"_parent\">Dla dzieci</a></b></font></center><br/></td></tr>"
     echo "<tr><td><center><font size='+3'><b><a id=\"link5\" href=\"tvn.cgi?type=category&url=$url/ostatni-dzwonek.html\" target=\"_parent\">Ostatni dzwonek</a></b></font></center><br/></td></tr>"
+    echo "</table></body></html>"
     exit 0
 fi
 
-if [ "$type" = "category" ]
+if [ "$type" = "category" -o "$type" = "category2" ]
 then
+    new_type=category2
+    [ "$type" = "category2" ] && new_type=playlist
     #wget -q -U "$useragent" -O - "$url" > $log_file
-    #wget -U "$useragent" "$url" -O $log_file
+    wget -q -U "$useragent" "$url" -O $log_file
     #echo "<tr>"
     #grep -A3 '<div class="photoContainer">' $log_file | sed -e 's#<div class="photoContainer">#</td><td>#g' -e 's#href="/#href="tvn.cgi/#g' -e s'#alt="tvn Player -\(.*\)".*#alt="\1" /><br/>\1#g' | grep -v "^--$"
     #grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n</td><td>#g' -e 's#href="/#href="tvn.cgi/#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1#g'
@@ -158,11 +166,12 @@ then
     #IFS=$(/bin/echo -e '\n')
     IFS=QQQXXQQQ
     echo "<tr>"
-    for content in `grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n#g' -e 's#href="/#href="tvn.cgi/#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1</td></a>QQQXXQQQ#g' -e 's/^\t*//g' -e 's/^ */<td><center>/g' | grep -v "^<td><center>$"`
+    for content in `grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1</td></a>QQQXXQQQ#g' -e 's/^\t*//g' -e 's/^ */<td><center>/g' | grep -v "^<td><center>$"`
     do
 	if [ "$content" != "" ]
 	then
-	    echo "$content" | sed -e 's/class="ajaxify"/id=\"link$item_nr\"/g' -e 's/QQQXXQQQ//g'
+	    #echo "$content" | sed -e "s/class=\"ajaxify\"/id=\"link$item_nr\"/g" -e 's/QQQXXQQQ//g'
+	    echo "$content" | sed -e "s#<a href=\"/#<a id=\"link$item_nr\" href=\"tvn.cgi\?type=$new_type\&url=http://tvnplayer.pl/#g" -e 's/QQQXXQQQ//g'
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
 		echo "</tr><tr>"
@@ -171,70 +180,20 @@ then
 	fi
     done
     echo "</tr></table></body></html>"
+    exit 0
+fi
+
+if [ "$type" = "playlist" -o "$type" = "video" ]
+then
+    new_type=video
+    wget -q -U "$useragent" "$url" -O $log_file
+    if [ "$type" = "playlist"
+    then
+	echo "`grep -i playlist $log_file | sed -e 's#.*playlist=#<meta HTTP-EQUIV=\"REFRESH\" content=\"1; url=tvp.cgi\?type=video\&url=http://tvnplayer.pl#g' -e 's/\.xml.*/\.xml\">/g'`"
+    fi
 fi
 
 exit 0
-
-#echo "$url $log_file <br/>"
-
-if [ "$type" = "menu" ]
-then
-    echo '<center><img src="http://www.ipla.tv/images/logo.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
-    echo '<font size="+3">'
-    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
-    item_nr=1
-    for content in `cat $log_file | tr '\n' ' ' | tr '{}' '\n' | grep feed | sed -e 's/  */ /g' -e 's/ \"/\"/g' -e 's#http://##g' -e 's/ /\#\#/g'`
-    do
-	feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | awk -F: '{print $2}' | tr -d '\"'`
-	feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | awk -F: '{print $2}' | sed 's/\#\#/ /g' | tr -d '\"'`
-	if [ "`echo $content | grep '/category/'`" ]
-	then
-	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
-	else
-	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=related&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
-	fi
-	item_nr=$(($item_nr+1))
-    done
-else
-    echo '<font size="+1">'
-    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
-    echo '<tr>'
-    item_nr=1
-    if [ "$type" = "category" ]
-    then
-	for content in `cat $log_file | egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | grep -i "/category/" | sed -e 's/  */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://##g'`
-	do
-	    feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | awk -F: '{print $2}' | tr -d '\"'`
-	    feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | tr -d '\"'`
-	    feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=http://$feedUrl\" target=\"_parent\"><img src=\"http://$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>"
-	    if [ "$(($item_nr % 3))" = "0" ]
-	    then
-		echo "</tr><tr>"
-	    fi
-	    item_nr=$(($item_nr+1))
-	done
-    else
-	#if [ "$type" = "category2" ]
-	    for content in `cat $log_file | egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' | tr '\n' ' ' | tr '{}' '\n' | grep -i "/movies/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
-	    do
-		feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | awk -F: '{print $2}' | tr -d '\"'`
-		feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-		feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-		feedVideo=`echo $content | sed 's/!#!/\n/g' | grep -i "\"video\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-		echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate<br/>$feedTitle</b></a></center></td>"
-		if [ "$(($item_nr % 3))" = "0" ]
-		then
-		    echo "</tr><tr>"
-		fi
-		item_nr=$(($item_nr+1))
-	    done
-	#fi
-    fi
-    echo '</tr>'
-    echo '</table>'
-    #echo "item_nr: $item_nr"
-fi
 
 ?>
 </font></center>

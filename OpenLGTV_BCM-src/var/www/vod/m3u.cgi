@@ -127,7 +127,7 @@ cp -f $log_file $log_file.html
 
 item_nr=1
 
-for ulink in `cat $log_file | grep "://"`
+for ulink in `grep "://" $log_file`
 do
     sed -i -e "s#^\($ulink\)#<a id=\"link$item_nr\" href=\"\1\">\1</a>#g" $log_file.html
     item_nr=$(($item_nr+1))
