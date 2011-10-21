@@ -80,8 +80,17 @@ then
 	if [ -d "/home/netcast_icons" -a -d "/mnt/addon/contents/netcast" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making copy of NetCast icons from /mnt/addon/contents/netcast to /home/netcast_icons dir..."
-	    cp /mnt/addon/contents/netcast/* /home/netcast_icons/
+	    cp -f /mnt/addon/contents/netcast/* /home/netcast_icons/
 	fi
+    else
+	for icon in /mnt/addon/contents/netcast/*.swf
+	do 
+	    if [ ! -f "/home/netcast_icons/${icon:28}" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: making copy of new NetCast icon: $icon to /home/netcast_icons dir..."
+		cp -f $icon /home/netcast_icons/
+	    fi
+	done
     fi
     if [ ! -f "/home/netcast_icons/icon_openlgtv.swf" ]
     then
