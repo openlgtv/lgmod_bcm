@@ -11,13 +11,20 @@ Content-type: text/html
 <!-- warn: it is just a start of coding... -->
 
 <style type="text/css">
+    #fullheight{height:500px}
     body {
-	#font-family:"TiresiasScreenfont";
 	font-family:monospace;
+	height: 500px;
+	//font-family:"TiresiasScreenfont";
     }
     a:link {
 	color:black;
 	text-decoration:bold;
+    }
+    tbody {
+	height: 70%;
+	overflow:scroll;
+	//height:10em;
     }
 </style>
 <title>CGI FileManager by xeros</title>
@@ -52,10 +59,21 @@ then
     mkdir -p /tmp/log/fm
 fi
 
+if [ "$FORM_side" != "" ]
+then
+    echo "var side = '$FORM_side'"
+    export side="$FORM_side"
+else
+    echo "var side = 'l'"
+    export side="l"
+fi
+
 ?>
 
-var current;
-var next;
+var current = 1;
+var next = current;
+//var side = 'l';
+var nside = side;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
@@ -68,22 +86,46 @@ function check(e)
 		{
 		switch(key)
 			{
-			case 37: next = current - 1; break; //left
+			case 33: next = (1*current) - 20; break; //ch up
+			case 34: next = (1*current) + 20; break; //ch down
+			case 37: next = current; nside = 'l'; break; //left
 			case 38: next = current - col; break; //up
-			case 39: next = (1*current) + 1; break; //right
+			case 39: next = current; nside = 'r'; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
 		//alert('key: '+key+' current: '+current+' next: '+next);
-		if (key==37|key==38|key==39|key==40)
+		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
+			if (next==0)
+			    {
+				next = 1;
+			    }
+			//Check if new link exists, if not then go to previous one until finds the one that exists
+			if (!document.links['link_' + nside + next])
+			{
+			    //alert('link_' + side + current + ' link_' + nside + next);
+			    do {
+				next = next - 1;
+			    } while ((!document.links['link_' + nside + next])&&(next >= 1));
+			}
+			ChangeBgColor();
 			//Move to the next bookmark
-			var code=document.links['link' + next].name;
-			document.links['link' + next].focus();
+			var code=document.links['link_' + nside + next].name;
+			document.links['link_' + nside + next].focus();
 			//set TD background
 			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
 			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
 			//set current=next
 			current = next;
+			side = nside;
+			//Prevent scrolling
+			return false;
+			}
+		else if (key==32) 
+			{
+			    //alert('link_' + side + current + ' link_' + nside + next);
+			    alert(document.getElementById('link_' + side + current).href); // link destination
+			    alert(document.getElementById('link_' + side + current).text); // link name
 			}
 		else if (key==404) 
 			{
@@ -108,6 +150,15 @@ function check(e)
 		}catch(Exception){}
 	}
 
+function ChangeBgColor()
+	{
+	//Change the TD element BgColor.
+	//document.bgColor = '#D3D3D3';
+	document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
+	document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
+	}
+	
+
 function setCurrent(element)
 	{
 	var string = element.id;
@@ -120,7 +171,8 @@ function setCurrent(element)
 	{
 	current=1;
 	//top.frames["Keyboard"].focus();
-	document.links['link1'].focus();
+	document.links['link_' + side + current].focus();
+	ChangeBgColor();
 	}
 	
 document.defaultAction = true;
@@ -131,24 +183,70 @@ document.defaultAction = true;
 
 
 </HEAD>
-<BODY bgcolor="green">
+<BODY bgcolor="black">
 
 <?
 
-wget -q -U "$useragent" -O - "$url" > $log_file
+#wget -q -U "$useragent" -O - "$url" > $log_file
+
+if [ "$FORM_lpth" != "" ]
+then
+    lpth="$FORM_lpth"
+fi
+
+if [ "$FORM_rpth" != "" ]
+then
+    rpth="$FORM_rpth"
+fi
+
+#echo "side: $side"
 
 #echo "$url $log_file <br/>"
 
 #if [ "$type" = "menu" ]
 #then
-    echo '<center><font size="+3">CGI FileManager</font><br/>by xeros<br/><br/>'
+    echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
     echo '<font size="+3">'
-    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
-    item_nr=1
-    #for content in `cat $log_file | tr '\n' ' ' | tr '{}' '\n' | grep feed | sed -e 's/  */ /g' -e 's/ \"/\"/g' -e 's#http://##g' -e 's/ /\#\#/g'`
-    #for content in `ls -al /tmp/ | sed -e 's# #\&nbsp;#g' -e 's#$#<br/>#g'`
-    for content in `ls -al /tmp/ | awk '{print $9 " " $5 " " $8 " " $6 " " $7}' | sed -e 's# #\&nbsp;#g' -e 's#$#<br/>#g'`
+    echo "<table id='fullheight' width='100%' border='1' cellspacing='5' bgcolor='white' style='min-height:515px; height:515px' padding='0' cellpadding='0px'>"
+    echo "<thead><tr border='1'><td width='50%' valign='top' align='center' bgcolor='yellow'><b>$lpth/</b></td><td width='50%' valign='top' align='center' bgcolor='yellow'><b>$rpth/</b></td></tr></thead>"
+    echo "<tbody><tr><td width='50%' valign='top' style='min-height:515px; height:515px'>"
+    echo '<Table id="fullheight" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+    if [ "$lpth" != "" ]
+    then
+	lpth_up="${lpth%/*}"
+	echo "<tr id=\"tr_l1\"><td><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---</td></tr>"
+	litem_nr=2
+    else
+	litem_nr=1
+    fi
+    SIFS="$IFS"
+    IFS=$'\n'
+    #for lcontent in `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
+    for lcontent in `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep -v "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` 
     do
+	#echo "$i"
+	#echo "$lcontent"
+	#lcontent=`busybox stat -c "%n@%F@%z@%A@%s" "$i" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
+	#filename="${content:57}"
+	#filename="${content#*@}"
+	lfilename="${lcontent%%@*}"
+	lfilename_space="${lfilename//&nbsp;/ }"
+	if [ "${#lfilename_space}" -gt "50" ]
+	then
+	    lfilename="${lfilename:0:45}~.${lfilename_space##*.}"
+	fi
+	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
+	ltype="${lcontent_2x%%@*}"
+	lcontent_3x="${lcontent_2x#*@}" # from 3rd columnt up to end
+	#date="${content:44:13}"
+	ldate="${lcontent_3x%%@*}"
+	ldate_cut="${ldate%%.*}"
+	lcontent_4x="${lcontent_3x#*@}" # from 4th columnt up to end
+	lperm="${lcontent_4x%%@*}"
+	lcontent_5x="${lcontent_4x#*@}" # from 5th columnt up to end
+	#size="${content:34:13}"
+	lsize="${lcontent_5x%%@*}"
+	#filename="${content_3x}"
 	#feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | awk -F: '{print $2}' | tr -d '\"'`
 	#feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | awk -F: '{print $2}' | sed 's/\#\#/ /g' | tr -d '\"'`
 	#if [ "`echo $content | grep '/category/'`" ]
@@ -157,11 +255,79 @@ wget -q -U "$useragent" -O - "$url" > $log_file
 	#else
 	#    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=related&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
 	#fi
-	echo "<tr><td><font size='+1'><b><a id=\"link$item_nr\" href=\"fm.cgi?type=related&ls=/\" target=\"_parent\">$content</a></b></font><br/></td></tr>"
-	item_nr=$(($item_nr+1))
+	#echo "<tr><td><font size='+1'><b><a id=\"link$item_nr\" href=\"fm.cgi?type=related&pth=$pth\" target=\"_parent\">$content X $filename Y $date Z $size</a></b></font><br/></td></tr>"
+	if [ "$ltype" = "directory" ]
+	then
+	    limage="dir.gif"
+	else
+	    limage="generic.gif"
+	fi
+	echo "<tr id=\"tr_l${litem_nr}\"><td><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font><br/></a></td><td align=\"right\">$lsize&nbsp;&nbsp;</td><td>$ldate_cut</td></tr>"
+	#echo "<tr><td><font size='+1'><b><a id=\"link$item_nr\" href=\"fm.cgi?type=related&pth=$pth\" target=\"_parent\">$content</a></b></font><br/></td></tr>"
+	litem_nr=$(($litem_nr+1))
     done
+    IFS="$SIFS"
+    echo '</table></td><td width="50%" valign="top" style="min-height:515px; height:515px">'
+    echo '<Table id="fullheight" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+    if [ "$rpth" != "" ]
+    then
+	rpth_up="${rpth%/*}"
+	echo "<tr id=\"tr_r1\"><td><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---</td></tr>"
+	ritem_nr=2
+    else
+	ritem_nr=1
+    fi
+    SIFS="$IFS"
+    IFS=$'\n'
+    #for rcontent in `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'`
+    for rcontent in `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep -v "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` 
+    do
+	#echo "$i"
+	#echo "$lcontent"
+	#lcontent=`busybox stat -c "%n@%F@%z@%A@%s" "$i" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
+	#filename="${content:57}"
+	#filename="${content#*@}"
+	rfilename="${rcontent%%@*}"
+	rfilename_space="${rfilename//&nbsp;/ }"
+	if [ "${#rfilename_space}" -gt "50" ]
+	then
+	    rfilename="${rfilename:0:45}~.${rfilename_space##*.}"
+	fi
+	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
+	rtype="${rcontent_2x%%@*}"
+	rcontent_3x="${rcontent_2x#*@}" # from 3rd columnt up to end
+	#date="${content:44:13}"
+	rdate="${rcontent_3x%%@*}"
+	rdate_cut="${rdate%%.*}"
+	rcontent_4x="${rcontent_3x#*@}" # from 4th columnt up to end
+	rperm="${rcontent_4x%%@*}"
+	rcontent_5x="${rcontent_4x#*@}" # from 5th columnt up to end
+	#size="${content:34:13}"
+	rsize="${rcontent_5x%%@*}"
+	#filename="${content_3x}"
+	#feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | awk -F: '{print $2}' | tr -d '\"'`
+	#feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | awk -F: '{print $2}' | sed 's/\#\#/ /g' | tr -d '\"'`
+	#if [ "`echo $content | grep '/category/'`" ]
+	#then
+	#    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
+	#else
+	#    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=related&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
+	#fi
+	#echo "<tr><td><font size='+1'><b><a id=\"link$item_nr\" href=\"fm.cgi?type=related&pth=$pth\" target=\"_parent\">$content X $filename Y $date Z $size</a></b></font><br/></td></tr>"
+	if [ "$rtype" = "directory" ]
+	then
+	    rimage="dir.gif"
+	else
+	    rimage="generic.gif"
+	fi
+	echo "<tr id=\"tr_r${ritem_nr}\"><td><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font><br/></a></td><td align=\"right\">$rsize&nbsp;&nbsp;</td><td>$rdate_cut</td></tr>"
+	#echo "<tr><td><font size='+1'><b><a id=\"link$item_nr\" href=\"fm.cgi?type=related&pth=$pth\" target=\"_parent\">$content</a></b></font><br/></td></tr>"
+	ritem_nr=$(($ritem_nr+1))
+    done
+    IFS="$SIFS"
+    echo '</tbody></table></td></tr>'
+    echo '</table></font></center>'
 ?>
-</font></center>
 </BODY></HTML>
 
 <? exit 0 ?>
