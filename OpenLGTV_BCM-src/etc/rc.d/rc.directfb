@@ -21,6 +21,8 @@ touch "$LOCKFILE"
 
 cursorupdates="no-cursor-updates"
 
+[ "$netcast_keyboard_mouse_support" = "" -a -f "/mnt/user/cfg/settings" ] && source /mnt/user/cfg/settings
+
 if [ "$netcast_keyboard_mouse_support" = "1" ]
 then
     if [ "$1 $2" = "hotplug add" -o -f "$USBHID_CONNECTED_FILE" ]
