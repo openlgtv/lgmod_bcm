@@ -7,15 +7,17 @@
 				</div>
 			</div>
 			<center>
-			<div id="link1Parent" style="background-color:white;height:30px;display:inline-block;width:150px">
+			<div id="link1Parent" style="background-color:white;height:30px;display:inline-block;width:110px">
 				<input type="button" id="link1" onKeyPress="javascript:window.location='home.cgi';" onClick="javascript:window.location='home.cgi';" value="Home" style="width:100px" />
-			</div><div id="link2Parent" style="background-color:white;height:30px;display:inline-block;width:150px">
+			</div><div id="link2Parent" style="background-color:white;height:30px;display:inline-block;width:110px">
 				<input type="button" id="link2" onKeyPress="javascript:window.location='info.cgi';" onClick="javascript:window.location='info.cgi';" value="Info" style="width:100px" />
-			</div><div id="link3Parent" style="background-color:white;height:30px;display:inline-block;width:160px">
+			</div><div id="link3Parent" style="background-color:white;height:30px;display:inline-block;width:110px">
 				<input type="button" id="link3" onKeyPress="javascript:window.location='settings.cgi';" onClick="javascript:window.location='settings.cgi';" value="Settings" style="width:100px" />
 			</div><div id="link4Parent" style="background-color:white;height:30px;display:inline-block;width:230px">
 				<input type="button" id="link4" onKeyPress="javascript:window.location='mount.cgi';" onClick="javascript:window.location='mount.cgi';" value="Network Share Mounts" style="width:200px" width="100" />
-			</div><div id="link5Parent" style="background-color:white;height:30px;display:inline-block;width:170px">
+			</div><div id="link5Parent" style="background-color:white;height:30px;display:inline-block;width:160px">
 				<input type="button" id="link5" onKeyPress="javascript:window.location='browser.cgi';" onClick="javascript:window.location='browser.cgi';" value="Web Browser" style="width:150px" />
+			</div><div id="link6Parent" style="background-color:white;height:30px;display:inline-block;width:140px">
+				<input type="button" id="link6" onKeyPress="javascript:window.location='fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2';" onClick="javascript:window.location='fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2';" value="FileManager" style="width:130px" />
 			</div>
 			</center>

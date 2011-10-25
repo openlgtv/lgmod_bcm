@@ -641,7 +641,8 @@ function OnLoadSetCurrent()
 	
 	//Setting the current input control 
 	//currElementIndex=0;
-	currElementIndex=5;
+	//currElementIndex=5;
+	currElementIndex=6;
 	checkElementPlus(currElementIndex);
 	currElementName=PageElements[currElementIndex].value;
 	//Change the background color of selected control

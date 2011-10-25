@@ -8,8 +8,6 @@ Content-type: text/html
 <!-- OpenLGTV BCM FileManager by xeros -->
 <!-- Source code released under GPL License -->
 
-<!-- TODO: make link to fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2 in WebUI menu -->
-
 <style type="text/css">
     //#fullheight{height:500px}
     body {

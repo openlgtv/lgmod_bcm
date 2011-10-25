@@ -1,10 +1,11 @@
 #!/bin/sh
 # Hotplug wrapper for LGMOD
-# Created by djpety (c)2011
+# Originally created by djpety (c)2011
 # Modified/adapted for LGMOD S7 by mmm4m5m and for OpenLGTV BCM by xeros
-# v1.1
+# v1.2
 
 HOTPLUG_FW_DIRS='/mnt/user/firmware /lib/firmware'
+USBHID_CONNECTED_FILE="/var/run/usbhid.connected"
 
 echo "hotplug: ACTION=$ACTION SUBSYSTEM=$SUBSYSTEM FIRMWARE=$FIRMWARE DEVPATH=$DEVPATH PHYSDEVDRIVER=$PHYSDEVDRIVER ($@)" > /dev/kmsg
 
@@ -35,6 +36,19 @@ then
 	if [ "$PHYSDEVDRIVER" = "usb-storage" ]
 	then
 	    (/bin/sleep 1; date; /etc/rc.d/rc.usb hotplug) >> /var/log/OpenLGTV_BCM.log &
+	else
+	    if [ "$PHYSDEVDRIVER" = "usbhid" ]
+	    then
+		(date; touch "$USBHID_CONNECTED_FILE"; /etc/rc.d/rc.directfb hotplug add) >> /var/log/OpenLGTV_BCM.log &
+	    fi
+	fi
+    fi
+else
+    if [ "$ACTION" == "remove" ]
+    then
+	if [ "$PHYSDEVDRIVER" = "usbhid" ]
+	then
+	    (date; rm -f "$USBHID_CONNECTED_FILE"; /etc/rc.d/rc.directfb hotplug remove) >> /var/log/OpenLGTV_BCM.log &
 	fi
     fi
 fi
