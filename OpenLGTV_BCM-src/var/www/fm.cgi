@@ -8,11 +8,13 @@ Content-type: text/html
 <!-- OpenLGTV BCM FileManager by xeros -->
 <!-- Source code released under GPL License -->
 
+<!-- tested on builtin GTK Browser, Firefox 5-7, Chromium 14 and reKonq 0.7.90 (problems with F5 on reKonq) -->
+
 <style type="text/css">
     //#fullheight{height:500px}
     body {
 	font-family:monospace;
-	height: 720px;
+	height: 710px;
 	//font-family:"TiresiasScreenfont";
     }
     a:link {
@@ -27,7 +29,7 @@ Content-type: text/html
 	//display:inline-block;
 	overflow-y:auto;
 	overflow-x: hidden;
-	max-height:700px;
+	max-height:690px;
     }
     tbody.scrollable {
 	display: block;
@@ -117,9 +119,9 @@ function check(e)
 	{
 	if (!e) var e = window.event;
 	(e.keyCode) ? key = e.keyCode : key = e.which;
-	//workaround to check for 'enter' on WebKit which doesnt want to work in 'try' block
-	if (key==10|key==13) 
-		{   //enter
+	//workaround to check for 'enter' on WebKit/KHTML which doesnt want to work in 'try' block
+	if (key==10|key==13|key==32) 
+		{   //enter and space
 		    //alert(document.getElementById('link_' + side + current).href); // link destination
 		    //alert(document.getElementById('link_' + side + current).text); // link name
 		    document.getElementById('link_' + side + current).click();
@@ -129,6 +131,7 @@ function check(e)
 		{
 		switch(key)
 			{
+			case  9: next = current; if (side=='l') { nside = 'r' } else { nside = 'l' }; break; //fav/tab
 			case 33: next = (1*current) - 10; break; //ch up
 			case 34: next = (1*current) + 10; break; //ch down
 			case 37: next = current; nside = 'l'; break; //left
@@ -136,7 +139,7 @@ function check(e)
 			case 39: next = current; nside = 'r'; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		if (key==33|key==34|key==37|key==38|key==39|key==40)
+		if (key==9|key==33|key==34|key==37|key==38|key==39|key==40)
 			{
 			if (next<=0)
 			    {
@@ -155,7 +158,7 @@ function check(e)
 			document.links['link_' + nside + next].focus();
 			current = next;
 			side = nside;
-			//Prevent scrolling
+			//Prevent default action (ie. scrolling)
 			e.preventDefault();
 			return false;
 			}
@@ -169,13 +172,14 @@ function check(e)
 			//Prevent default action
 			return false;
 			}
-		else if (key==32|key==404|key==116) 
+		else if (key==404|key==116) 
 			{
 			//the green button on the remote control or F5 have been pressed
 			//Copy file or directory
 			var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
 			//Prevent default action
+			e.preventDefault();
 			return false;
 			}
 		else if (key==405|key==117) 
@@ -268,15 +272,14 @@ document.defaultAction = true;
 #if [ "$type" = "menu" ]
 #then
     #echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
-    echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5/SPC] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> <font color="ltblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
-    echo "<table id='fullheight' width='100%' border='1' cellspacing='5' bgcolor='white' style='min-height:700px; height:700px; max-height=700px;' padding='0' cellpadding='0px'>"
-    echo "<thead><tr border='1' height='20px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
+    echo "<table id='fullheight' width='100%' border='1' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
+    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
     echo '<Table id="fullheight" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable">'
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	echo "<tr id=\"tr_l1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---</td></tr>"
+	echo "<tr id=\"tr_l1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---- -- -- -- -- --</td></tr>"
 	litem_nr=2
     else
 	litem_nr=1
@@ -333,7 +336,7 @@ document.defaultAction = true;
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	echo "<tr id=\"tr_r1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---</td></tr>"
+	echo "<tr id=\"tr_r1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---- -- -- -- -- --</td></tr>"
 	ritem_nr=2
     else
 	ritem_nr=1
@@ -376,5 +379,6 @@ document.defaultAction = true;
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
+    echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
 ?>
 </BODY></HTML>

@@ -182,14 +182,23 @@ function setCurrent(element)
 	}
 	
 
-	function OnLoadSetCurrent(element)
+function OnLoadSetCurrent(element)
 	{
 	current=1;
 	//top.frames["Keyboard"].focus();
 	document.links['link_' + side + current].focus();
 	ChangeBgColor();
 	}
-	
+
+function sleep(milliseconds)
+	{
+	var start = new Date().getTime();
+	while ((new Date().getTime() - start) < milliseconds)
+	    {
+	    // Do nothing
+	    }
+	}
+
 document.defaultAction = true;
 
 
@@ -222,12 +231,14 @@ if [ "$action" = "play" ]
 then
     #echo '<script type="text/javascript" src="player/base64.js"></script>'
     echo "Starting playback of $spth ...<br/>"
-    sleep 1
+    #sleep 2
     echo "<script type='text/javascript'>"
     #echo "window.location='file:///mnt/browser/pages/player/index.html?lg_media_url=base64(http://127.0.0.1:88/root$spth)';"
-    echo "window.location=\"root$spth\";"
+    #echo "sleep(2000);"
+    #echo "window.location=\"root$spth\";"
+    echo "function playback() { window.location=\"root$spth\"; }"
+    echo "setTimeout(\"playback()\",2000);"
     echo "</script>"
-    echo "<br/>Done"
 fi
 
 if [ "$FORM_confirm" != "yes" ]
@@ -241,37 +252,59 @@ then
 	then
 	    echo "Are you sure you want to ${action}?<br/><font size='+2' color='black'><br/>$spth</font>"
 	else
-	    echo "UNRECOGNISED ACTION!"
-	    sleep 1
-	    echo '<script type="text/javascript">history.go(-1);</script>"'
+	    if [ "$action" != "play" ]
+	    then
+		echo "UNRECOGNISED ACTION!"
+		#sleep 2
+		echo '<script type="text/javascript">setTimeout(\"history.go(-1)\",2000);</script>"'
+	    fi
 	fi
     fi
     echo "</b><br/><br/></font>"
-    echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
+    [ "$action" != "play" ] && echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
 else
     if [ "$action" = "copy" ]
     then
-	echo "Copying $spth to $dpth/ ...<br/>"
+	echo "Copying $spth to $dpth/ ...<br/><br/>"
 	cp -r "$spth" "$dpth/" 2>&1
-	echo "<br/>Done"
+	if [ "$?" -ne "0" ]
+	then
+	    error=1
+	fi
     fi
     if [ "$action" = "move" ]
     then
-	echo "Moving $spth to $dpth/ ...<br/>"
+	echo "Moving $spth to $dpth/ ...<br/><br/>"
 	mv "$spth" "$dpth/" 2>&1
-	echo "<br/>Done"
+	cp -r "$spth" "$dpth/" 2>&1
+	if [ "$?" -ne "0" ]
+	then
+	    error=1
+	fi
     fi
     if [ "$action" = "delete" ]
     then
 	if [ "$spth" != "" -a "$spth" != "/" ]
 	then
-	    echo "Removing $spth ...<br/>"
+	    echo "Removing $spth ...<br/><br/>"
 	    rm -r "$spth" 2>&1
-	    echo "<br/>Done"
+	    if [ "$?" -ne "0" ]
+	    then
+		error=1
+	    fi
 	fi
     fi
-    sleep 1
-    echo '<script type="text/javascript">history.go(-2);</script>"'
+    if [ "$error" != "1" ]
+    then
+	echo "<br/><br/><font color='green' size='+2'><b>DONE</b></font><br/>"
+	timeout=2000
+    else
+	echo "<br/><br/><font color='red' size='+3'><b>ERROR</b></font><br/>"
+	timeout=5000
+    fi
+    #sleep 2
+    #echo '<script type="text/javascript">history.go(-2);</script>"'
+    echo "<script type=\"text/javascript\">setTimeout(\"history.go(-2)\",$timeout);</script>"
 fi
 echo '</div>'
 

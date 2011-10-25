@@ -7,17 +7,17 @@ LOCKFILE="/var/run/rc.directfb.lock"
 USBHID_CONNECTED_FILE="/var/run/usbhid.connected"
 DIRECTFBRC="/usr/local/etc/directfbrc"
 v_res=1280x720
-pid=`pgrep RELEASE | tail -n 1`
 
-echo "OpenLGTV_BCM-INFO: rc.directfb script starting..."
 if [ -f "$LOCKFILE" ]
 then
     echo "OpenLGTV_BCM-WARN: another rc.directfb script instance is already handling action, exiting..."
     exit 0
 fi
 
-echo "OpenLGTV_BCM-INFO: rc.directfb creating LOCKFILE: $LOCKFILE..."
+echo -e "OpenLGTV_BCM-INFO: rc.directfb script starting...\nOpenLGTV_BCM-INFO: rc.directfb creating LOCKFILE: $LOCKFILE..."
 touch "$LOCKFILE"
+
+pid=`pgrep RELEASE | tail -n 1`
 
 cursorupdates="no-cursor-updates"
 
@@ -36,7 +36,8 @@ v_start_hex=`grep "/dev/mem" /proc/${pid}/maps | awk -F- '{ if(NR==3) printf("%s
 #v_start_dec=`echo $((0x${v_start_hex}))`
 v_start_dec="$((0x${v_start_hex}))"
 #v_end_hex=`cat /proc/${pid}/maps | grep "/dev/mem" | awk '{ if(NR==3) printf("%s\n", $1) }'| awk -F- '{ printf("%s\n", $2) }'`
-v_end_hex=`echo $v_start_hex | awk -F- '{ printf("%s\n", $2) }'`
+v_end_hex=`grep "/dev/mem" /proc/${pid}/maps | awk '{ if(NR==3) printf("%s\n", $1) }'| awk -F- '{ printf("%s\n", $2) }'`
+#v_end_hex=`echo $v_start_hex | awk -F- '{ printf("%s\n", $2) }'`
 #v_end_dec=`echo $((0x${v_end_hex}))`
 v_end_dec="$((0x${v_end_hex}))"
 #p_start_hex=`cat /proc/${pid}/maps | grep "/dev/mem" | awk '{ if(NR==3) printf("%s\n", $3) }'`

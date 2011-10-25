@@ -6,8 +6,24 @@
 # Wait until connect usb drive
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
+LOCKFILE=/var/run/rc.usb.lock
 k=0;
+
+if [ "$1" != "hotplug" ]
+then
+    echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
+    echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
+fi
+
 echo "OpenLGTV_BCM-INFO: rc.usb starting..."
+if [ -f "$LOCKFILE" ]
+then
+    echo "OpenLGTV_BCM-WARN: another rc.usb script instance is already handling action, exiting..."
+    exit 0
+fi
+
+echo "OpenLGTV_BCM-INFO: rc.usb creating LOCKFILE: $LOCKFILE..."
+touch "$LOCKFILE"
 
 while [ -z "`cat /proc/mounts | grep ^/dev/sd`" ]
 do
@@ -205,8 +221,5 @@ else
 fi
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
-if [ "$1" != "hotplug" ]
-then
-    echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
-    echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
-fi
+echo "OpenLGTV_BCM-INFO: rc.usb removing LOCKFILE: $LOCKFILE..."
+rm -f "$LOCKFILE"
