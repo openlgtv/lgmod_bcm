@@ -274,8 +274,9 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: NetCast links are now organized in 6x6 grid instead of 4x6 as before and channel up/down arrows besides scrolling change focus now also
     * CHANGE: NetCast links icons are now being downloaded at upgrade
     * CHANGE: NetCast configs detection now manages if configs should get cleaned on NetCast upgrade/downgrade (makes backup copy of netcast dir)
-    * REMOVE: tcpdump binary for space reasons
-    * REMOVE: top binary - use busybox applet instead
+    * REMOVE: 'tcpdump' binary for space reasons
+    * REMOVE: 'top' binary - use busybox applet instead
+    * REMOVE: 'empty' binary - not used at all
 
 Remaining issues with 0.5.0 development branch:
     * compatibility break with autoupgrade method from older versions - need to install 0.5.0 via telnet/ssh/serial again

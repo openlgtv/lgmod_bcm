@@ -169,7 +169,7 @@ function check(e)
 			//Prevent default action
 			return false;
 			}
-		else if (key==404|key==116) 
+		else if (key==32|key==404|key==116) 
 			{
 			//the green button on the remote control or F5 have been pressed
 			//Copy file or directory
@@ -267,8 +267,8 @@ document.defaultAction = true;
 
 #if [ "$type" = "menu" ]
 #then
-    echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
-    echo '<font size="+3">'
+    #echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
+    echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5/SPC] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> <font color="ltblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
     echo "<table id='fullheight' width='100%' border='1' cellspacing='5' bgcolor='white' style='min-height:700px; height:700px; max-height=700px;' padding='0' cellpadding='0px'>"
     echo "<thead><tr border='1' height='20px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
@@ -375,6 +375,6 @@ document.defaultAction = true;
     done
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
-    echo '</table></font></center>'
+    echo '</table>'
 ?>
 </BODY></HTML>

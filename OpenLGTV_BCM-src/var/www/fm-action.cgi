@@ -89,6 +89,7 @@ var col = 1; //number of 'cells' in a row
 var current = 1;
 var next = current;
 //var side = 'l';
+var side = 'r';
 var nside = side;
 
 document.onkeydown = check;
@@ -102,12 +103,12 @@ function check(e)
 		{
 		switch(key)
 			{
-			case 33: next = (1*current) - 30; break; //ch up
-			case 34: next = (1*current) + 30; break; //ch down
+			//case 33: next = (1*current) - 30; break; //ch up
+			//case 34: next = (1*current) + 30; break; //ch down
 			case 37: next = current; nside = 'l'; break; //left
-			case 38: next = current - col; break; //up
+			//case 38: next = current - col; break; //up
 			case 39: next = current; nside = 'r'; break; //right
-			case 40: next = (1*current) + col; break; //down
+			//case 40: next = (1*current) + col; break; //down
 			}
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
@@ -133,18 +134,20 @@ function check(e)
 			}
 		else if (key==32) 
 			{
-			    //alert(document.getElementById('link_' + side + current).href); // link destination
-			    //alert(document.getElementById('link_' + side + current).text); // link name
-			    var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
-			    alert(dest);
-			    window.location=dest;
+			    document.getElementById('link_' + side + current).click();
+		//	    //alert(document.getElementById('link_' + side + current).href); // link destination
+		//	    //alert(document.getElementById('link_' + side + current).text); // link name
+		//	    var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
+		//	    alert(dest);
+		//	    window.location=dest;
+			    return false;
 			}
-		else if (key==404) 
-			{
-			//the green button on the remote control have been pressed
-			//Switch to the Keyboard
-			top.frames["Keyboard"].focus();
-			}
+		//else if (key==404) 
+		//	{
+		//	//the green button on the remote control have been pressed
+		//	//Switch to the Keyboard
+		//	top.frames["Keyboard"].focus();
+		//	}
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed
@@ -195,7 +198,7 @@ document.defaultAction = true;
 
 
 </HEAD>
-<BODY bgcolor="white">
+<BODY bgcolor="black">
 
 <?
 
@@ -210,6 +213,11 @@ fi
 
 #echo "spth: $spth dpth: $dpth lpth: $lpth rpth: $rpth"
 
+echo '<center><font size="+3" color="yellow"><br/><br/><b>OpenLGTV BCM FileManager</b> by xeros<br/><br/><br/></font>'
+
+#echo '<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px; background-color:white;">'
+echo '<div style="width:80%; margin:auto; font-size:16px; background-color:white;">'
+
 if [ "$action" = "play" ]
 then
     #echo '<script type="text/javascript" src="player/base64.js"></script>'
@@ -222,32 +230,50 @@ then
     echo "<br/>Done"
 fi
 
-if [ "$action" = "copy" ]
+if [ "$FORM_confirm" != "yes" ]
 then
-    echo "Copying $spth to $dpth/ ...<br/>"
-    cp -r "$spth" "$dpth/" 2>&1
-    echo "<br/>Done"
-fi
-
-if [ "$action" = "move" ]
-then
-    echo "Moving $spth to $dpth/ ...<br/>"
-    mv "$spth" "$dpth/" 2>&1
-    echo "<br/>Done"
-fi
-
-if [ "$action" = "delete" ]
-then
-    if [ "$spth" != "" -a "$spth" != "/" ]
+    echo "<center><font size='+4' color='brown'><br/><b>"
+    if [ "$action" = "copy" -o "$action" = "move" ]
     then
-	echo "Removing $spth ...<br/>"
-	rm -r "$spth" 2>&1
+	echo "Are you sure you want to ${action}?<br/><font size='+1' color='black'><br/>$spth to $dpth/</font>"
+    else
+	if [ "$action" = "delete" ]
+	then
+	    echo "Are you sure you want to ${action}?<br/><font size='+2' color='black'><br/>$spth</font>"
+	else
+	    echo "UNRECOGNISED ACTION!"
+	    sleep 1
+	    echo '<script type="text/javascript">history.go(-1);</script>"'
+	fi
+    fi
+    echo "</b><br/><br/></font>"
+    echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
+else
+    if [ "$action" = "copy" ]
+    then
+	echo "Copying $spth to $dpth/ ...<br/>"
+	cp -r "$spth" "$dpth/" 2>&1
 	echo "<br/>Done"
     fi
+    if [ "$action" = "move" ]
+    then
+	echo "Moving $spth to $dpth/ ...<br/>"
+	mv "$spth" "$dpth/" 2>&1
+	echo "<br/>Done"
+    fi
+    if [ "$action" = "delete" ]
+    then
+	if [ "$spth" != "" -a "$spth" != "/" ]
+	then
+	    echo "Removing $spth ...<br/>"
+	    rm -r "$spth" 2>&1
+	    echo "<br/>Done"
+	fi
+    fi
+    sleep 1
+    echo '<script type="text/javascript">history.go(-2);</script>"'
 fi
-
-sleep 1
-echo '<script type="text/javascript">history.go(-1);</script>"'
+echo '</div>'
 
 ?>
 </BODY></HTML>
