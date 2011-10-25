@@ -280,3 +280,4 @@ Answer for people asking if they can use it if they have already made modificati
 
 Remaining issues with 0.5.0 development branch:
     * compatibility break with autoupgrade method from older versions - need to install 0.5.0 via telnet/ssh/serial again
+
