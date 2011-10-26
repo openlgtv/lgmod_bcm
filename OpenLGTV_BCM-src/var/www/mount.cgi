@@ -6,10 +6,12 @@ content-type: text/html
 <html>
 <? include/keycontrol.cgi.inc ?>
 
-	<div style="position: absolute; left: 10px; top: 10px; width:860px">
+	<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px;">
 		<form id="URL" name="URL" action="mount.cgi" method="GET">
-			<? export pagename="Network Share Mounts" ?>
-			<? include/header_links.cgi.inc ?>
+			<? 
+			    export pagename="Network Share Mounts"
+			    include/header_links.cgi.inc
+			?>
 			<div id="textOnly" style="background-color:white;height:50px;">
 				<div style="position: relative; left: 5px; top: 0px;">
 					<br />

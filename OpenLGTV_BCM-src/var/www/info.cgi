@@ -6,15 +6,15 @@ content-type: text/html
 <html>
 <? include/keycontrol.cgi.inc ?>
 
-	<div style="position: absolute; left: 10px; top: 10px; width:860px">
+	<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px;">
 		<form id="URL" name="URL">
-			<? export pagename="Info Page" ?>
-			<? include/header_links.cgi.inc ?>
+			<? 
+			    export pagename="Info Page"
+			    include/header_links.cgi.inc
+			?>
 			
-			<div id="textOnly" style="background-color:white;height:480px;">
+			<div id="textOnly" style="background-color:white; height:480px;">
 				<div style="position: relative; left: 5px; top: 5px;">
-					<!-- /proc/cpuinfo:<br />
-					<pre><? cat /proc/cpuinfo ?></pre> -->
 					Last 30 running processes:<br />
 					<font size="-3"><pre><? ps w | tail -n 30 ?></pre></font>
 				</div>

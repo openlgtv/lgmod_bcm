@@ -20,6 +20,8 @@
 [ -z "$proxy_log_debug" ]         && proxy_log_debug=0                  # debug logs verbosity (0 - do not log anything, 1 - log processes info, 2 - log requests, 3 - log all with downloaded content to log file)
 [ -z "$proxy_log_file" ]          && proxy_log_file=/var/log/proxy.log  # log file for debug logs verbosity set to 3
 [ -z "$proxy_sh" ]                && proxy_sh=/scripts/proxy.sh         # script that manages each proxy connection
+[ -z "$proxy_inject_file" ]       && proxy_inject_file=/mnt/user/www/inject.js              # custom JavaScript file for existence check to inject
+[ -z "$proxy_inject_url" ]        && proxy_inject_url="http://127.0.0.1:88/user/inject.js"  # as above, just network link - code from that file is used instead of the builtin one in proxy script
 
 [ -z "$useragent" ]               && useragent="Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0" # user agent string used for connections
 
@@ -28,7 +30,7 @@
 [ -z "$awk" ]                     && awk=awk
 [ -z "$tcpsvd" ]                  && tcpsvd=tcpsvd
 
-export proxy_listen_port proxy_log_debug proxy_log_file proxy_wait_time proxy_wait_moretime proxy_connect_port proxy_log_file useragent awk nc tcpsvd
+export proxy_listen_port proxy_log_debug proxy_log_file proxy_wait_time proxy_wait_moretime proxy_connect_port proxy_log_file proxy_inject_file proxy_inject_url useragent awk nc tcpsvd
 
 export id=1
 

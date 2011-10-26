@@ -7,7 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
-<!-- link rel="stylesheet" type="text/css" href="player/styles.css"/ -->
 <link rel="stylesheet" type="text/css" href="css/styles.css"/>
 <link rel="stylesheet" type="text/css" href="css/keyboard.css"/>
 
@@ -15,8 +14,7 @@
 </head>
 <body>
 <IMG align="right" SRC="Images/openlgtvbcm_logo.png" ALT="OpenLGTV BCM" style="position: relative; right: 110px; top: 30px;"/>
-	<!-- div style="position: absolute; right: 10px; bottom: 300px;" --> <!-- old, wider keypad -->
-	<div style="position: absolute; right: 60px; bottom: 300px;">        <!-- new, tapkey size adjusted keypad -->
+	<div style="position: absolute; right: 60px; bottom: 300px;">
 		<? cat include/keypad_table.html.inc ?>
 	</div>
 	<div style="position: absolute; right: 60px; bottom: 100px;">
@@ -28,7 +26,6 @@
 	</div>
 	<div id="footer" class="footer">
 		<ul>
-			<!-- li class="blank"><span></span></li -->
 			<a onClick="javascript:PrevControl();" href="#" style="text-decoration:none; color:white"><li class="red"><span><img src="Images/Keyboard/red_button.png" border="0" /></span>Prev Ctrl</li></a>
 			<a onClick="javascript:NextControl();" href="#" style="text-decoration:none; color:white"><li class="green"><span><img src="Images/Keyboard/green_button.png" border="0" /></span>Next Ctrl</li></a>
 			<a onClick="javascript:SaveForm();" href="#" style="text-decoration:none; color:white"><li class="yellow"><span><img src="Images/Keyboard/yellow_button.png" border="0" /></span>Save</li></a>

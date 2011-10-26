@@ -4,14 +4,16 @@
 # Proxy script for JavaScript code injection
 # Source code released under GPL License
 
-# those vars should be set by proxy-start.sh or via env var in cmdline for testing
+# Those vars should be set by proxy-start.sh or via env var in cmdline for testing
 #[ -z "$proxy_wait_time" ]    && proxy_wait_time=8
 [ -z "$proxy_wait_time" ]     && proxy_wait_time=4
 [ -z "$proxy_wait_moretime" ] && proxy_wait_moretime=3
 [ -z "$proxy_connect_port" ]  && proxy_connect_port=80
 [ -z "$proxy_log_file" ]      && proxy_log_file=/var/log/proxy.log
+[ -z "$proxy_inject_file" ]   && proxy_inject_file=/mnt/user/www/inject.js
+[ -z "$proxy_inject_url" ]    && proxy_inject_url="http://127.0.0.1:88/user/inject.js"
 
-# for proxy testing on PC
+# For proxy testing on PC
 #[ -z "$nc" ]                 && nc="busybox nc"
 [ -z "$nc" ]                  && nc=nc
 [ -z "$awk" ]                 && awk=awk
@@ -21,29 +23,51 @@
 
 read_lines="request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12 line13 line14 line15 line16 line17 line18 line19 line20"
 
+# 'for' loop on each variable from read_lines
 #for linex in request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12
-for linex in `eval echo $read_lines`
+#for linex in `eval echo $read_lines`
+for linex in $read_lines
 do
+    # Read full request header - one by line
     read -t 1 $linex
-    content=$(eval echo "$`eval echo $linex`")
+    if [ "$linex" = "request" ]
+    then
+	# Adblock for common ads
+	if [ -n "`echo $request | egrep -i 'doubleclick\.net|emediate\.eu|googleadservices\.com|/adserver\.|/googleads\.|://ads\.|/www/delivery/|media\.richrelevance.com/rrserver/js/|/advertising/|yieldmanager\.com|pagead2\.googlesyndication\.com|hit\.gemius\.pl'`" ]
+	then
+	    # Log reject if debug >= 1
+	    if [ "$proxy_log_debug" -ge "1" ]
+	    then
+		echo "REJECT request: $request" >&2
+	    fi
+	    exit 1
+	fi
+    fi
+    #content=$(eval echo "$`eval echo $linex`")
+    content=$(eval echo $"$linex")
+    # Log content if debug >= 2
     if [ "$proxy_log_debug" -ge "2" ]
     then
 	echo `echo $content` >&2
     fi
+    # Check original Content-Length
     #if [ "`echo $content | $awk '{print $1}'`" = "Content-Length:" ]
     #if [ "`echo $content | cut -d" " -f1`" = "Content-Length:" ]
     if [ "${content%% *}" = "Content-Length:" ]
     then
 	#content_length="`echo $content | $awk '{print $2}' | tr -d '\r'`"
 	content_length="`echo $content | cut -d" " -f2 | tr -d '\r'`"
+	# Log Content-Length info if debug >= 1
 	if [ "$proxy_log_debug" -ge "1" ]
 	then
 	    echo "ID $id CONTENT-LENGTH: $content_length" >&2
 	fi
     fi
+    # Check if content is empty
     #if [ "`echo $content | wc -w`" = "0" ]
     if [ "$content" = "" -o -z "$content" ]
     then
+	# After previous content (line) was empty, read number of bytes set of next content in Content-Length
 	if [ "$content_length" != "" ]
 	then
 	    read -n $content_length content_post
@@ -52,15 +76,8 @@ do
     fi
 done
 
-if [ -n "`echo $request | egrep -i 'doubleclick\.net|emediate\.eu|googleadservices\.com|/adserver\.|/googleads\.|://ads\.|/www/delivery/|media\.richrelevance.com/rrserver/js/|/advertising/|yieldmanager\.com|pagead2\.googlesyndication\.com|hit\.gemius\.pl'`" ]
-then
-    if [ "$proxy_log_debug" -ge "1" ]
-    then
-	echo "REJECT request: $request" >&2
-	exit 1
-    fi
-fi
 
+# Check IP addres/DNS name and port number of host to connect to
 #connect_to=`echo -e "$host\n$line3\n$line4" | grep 'Host:' | $awk '{print $2}' | $sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' -e 's/\r//g'`
 connect_to=`echo -e "$host\n$line3\n$line4" | grep 'Host:' | cut -d" " -f2 | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' -e 's/\r//g'`
 connect_to_port_test=`echo $connect_to | $awk -F: '{print $2}'"`
@@ -75,6 +92,7 @@ else
     connect_to_port="$proxy_connect_port"
 fi
 
+# Log connection host and port if debug >= 1
 if [ "$proxy_log_debug" -ge "1" ]
 then
     echo "ID $id CONNECT $connect_to $connect_to_port" >&2
@@ -87,10 +105,24 @@ then
     inject=1
 fi
 
-# it would be better to pass-through 'HTTP/1.1' requests if content is not going to be modified but 'Connection: Keep-Alive' makes a problem with delay then and servers do not listen for 'Connection: Close' in 'HTTP/1.1' requests
+# It would be better to pass-through 'HTTP/1.1' requests if content is not going to be modified but 'Connection: Keep-Alive' makes a problem with delay then and servers do not listen for 'Connection: Close' in 'HTTP/1.1' requests
 
+# Substring of gathered full request header (up to 'nc') and of gathered output (after 'nc')
 #/bin/echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then /bin/echo -e "$content_post"; fi; /bin/echo -e "\r\n") | \
-echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then echo -e "$content_post"; fi; echo -e "\r\n") | \
+#echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval echo $linex`"); if [ -n "$content" ]; then echo "$content\n"; fi; done; if [ -n "$content_post" ]; then echo -e "$content_post"; fi; echo -e "\r\n") | \
+echo -e $(for linex in $read_lines
+	do
+	    content=$(eval echo $"$linex")
+	    if [ -n "$content" ]
+	    then
+		echo "$content\n"
+	    fi
+	done
+	if [ -n "$content_post" ]
+	then
+	    echo -e "$content_post"
+	fi
+	echo -e "\r\n") | \
     sed \
 	-e 's/^ //g' \
 	-e 's#HTTP/1.1#HTTP/1.0#g' \
@@ -113,10 +145,23 @@ echo -e $(for linex in `eval echo $read_lines`; do content=$(eval echo "$`eval e
     if [ "$inject" = "1" ]
     then
       $nc -w$proxy_wait_time $connect_to $connect_to_port | \
-      sed \
-	-e 's/\(Content-Length:\).*/\1/' \
-	-e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
-	-e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
+      if [ -f "$proxy_inject_file" ]
+      then
+        sed \
+	    -e 's/\(Content-Length:\).*/\1/' \
+	    -e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
+	    -e "s#<[Hh][Ee][Aa][Dd]>#<HEAD><script type='text/javascript' language='JavaScript' src='$proxy_inject_url'></script>#" | \
+        if [ "$proxy_log_debug" -ge "3" ]
+        then
+	    tee -a $proxy_log_file
+        else
+	    cat
+	fi
+      else
+        sed \
+	    -e 's/\(Content-Length:\).*/\1/' \
+	    -e 's#<[Ii][Nn][Pp][Uu][Tt]#<INPUT onKeyPress="return false;"#g' \
+	    -e "s#<[Hh][Ee][Aa][Dd]>#<HEAD>\n\
 	<script type='text/javascript'>\n\
 	//******** MOBILE PHONE-STYLE KEYPAD *********\n\
 	var keys = new Array();\n\
@@ -376,12 +421,13 @@ document.onkeydown = check;\n\
 	\n\
 	document.defaultAction = true;\n\
 	</script>\n\
-      #" | \
-      if [ "$proxy_log_debug" -ge "3" ]
-      then
-	tee -a $proxy_log_file
-      else
-	cat
+        #" | \
+        if [ "$proxy_log_debug" -ge "3" ]
+        then
+	    tee -a $proxy_log_file
+        else
+	    cat
+	fi
       fi
 else
       $nc -w$(($proxy_wait_time+$proxy_wait_moretime)) $connect_to $connect_to_port | \

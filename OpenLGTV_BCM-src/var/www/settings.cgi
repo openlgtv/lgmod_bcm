@@ -10,11 +10,13 @@ content-type: text/html
 <!-- ? for i in `cat /mnt/user/cfg/settings`; do echo "$i<br/>"; done ? -->
 </font>
 
-	<div style="position: absolute; left: 10px; top: 10px; width:860px">
+	<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px;">
 		<form id="URL" name="URL">
-			<? export pagename="Settings List" ?>
-			<? include/header_links.cgi.inc ?>
 			<? 
+			
+			export pagename="Settings List"
+			include/header_links.cgi.inc
+			
 			id_nr=1
 			rm -f /tmp/settings.save
 			for i in `cat /mnt/user/cfg/settings | awk -F# '{print $1}'`

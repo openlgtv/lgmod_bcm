@@ -272,10 +272,10 @@ document.defaultAction = true;
 #if [ "$type" = "menu" ]
 #then
     #echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
-    echo "<table id='fullheight' width='100%' border='1' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
+    echo "<table id='fullheight' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
     echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
-    echo '<Table id="fullheight" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable">'
+    echo '<Table id="fullheight" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable">'
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
