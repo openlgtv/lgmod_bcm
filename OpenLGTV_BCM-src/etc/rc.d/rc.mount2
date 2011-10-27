@@ -270,6 +270,13 @@ then
     mount -t squashfs /dev/mtdblock$mtd_story /mnt/preloaded/kids/story
 fi
 
+if [ ! -f "/mnt/user/etc/vars" ]
+then
+    echo "OpenLGTV_BCM-INFO: setting detected platform variables in /mnt/user/etc/vars"
+    echo "country_model=${country_model}"     > /mnt/user/etc/vars
+    echo "platform=${platform}"              >> /mnt/user/etc/vars
+fi
+
 appxip_addr=`cat /proc/cmdline | sed 's/ /\n/g' | grep appxip_addr | cut -d= -f 2`
 if [ -n "`grep appxip_addr /proc/cmdline`" -a "${appxip_addr}" != "0x0" -a "`devmem ${appxip_addr} 32`" = "0x28CD3D45" -a "`devmem $((${appxip_addr}+0x10)) 64`" = "0x73736572706D6F43" ]
 then

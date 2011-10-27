@@ -24,15 +24,19 @@ content-type: text/html
 
 	    USB1_DIR=/mnt/usb1/Drive1
 	    USB2_DIR=/mnt/usb2/Drive1
-
-	    if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
+	    
+	    if [ -f "/tmp/usbdir" ]
 	    then
-		export USB_DIR=$USB2_DIR
-		export OpenLGTV_BCM_USB=$USB2_DIR/OpenLGTV_BCM
+		USB_DIR="`cat /tmp/usbdir`"
 	    else
-		export USB_DIR=$USB1_DIR
-		export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
+		if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
+		then
+		    export USB_DIR=$USB2_DIR
+		else
+		    export USB_DIR=$USB1_DIR
+		fi
 	    fi
+	    export OpenLGTV_BCM_USB=$USB_DIR/OpenLGTV_BCM
 
 	    export file_ext=`basename $FORM_uploadfile_name | sed 's/.*\.//g' | tr [:upper:] [:lower:]`
 	    export file_name=`basename $FORM_uploadfile_name | sed 's/\.*//g' | tr [:upper:] [:lower:]`

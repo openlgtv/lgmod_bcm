@@ -5,14 +5,6 @@
 # TODO: try with bigger block size - multiple of 128KB (131072)
 # for 2010 models best results with 512KB block size (256KB not a much bigger than with 512KB)
 # for 2011 models best results with 1MB block size
-#-rwx------ 1 root root 3125248 2011-08-07 21:50 OpenLGTV_BCM-GP2B-v0.5.0-devel1mb.sqf
-#-rwx------ 1 root root 3129344 2011-08-07 21:51 OpenLGTV_BCM-GP2B-v0.5.0-devel256kb.sqf
-#-rwx------ 1 root root 3125248 2011-08-07 21:50 OpenLGTV_BCM-GP2B-v0.5.0-devel512kb.sqf
-#-rwx------ 1 root root 3145728 2011-08-07 21:36 OpenLGTV_BCM-GP2B-v0.5.0-devel.sqf
-#-rwx------ 1 root root 4190208 2011-08-07 21:52 OpenLGTV_BCM-GP3B-v0.5.0-devel1mb.sqf
-#-rwx------ 1 root root 4198400 2011-08-07 21:53 OpenLGTV_BCM-GP3B-v0.5.0-devel256kb.sqf
-#-rwx------ 1 root root 4194304 2011-08-07 21:52 OpenLGTV_BCM-GP3B-v0.5.0-devel512kb.sqf
-#-rwx------ 1 root root 4222976 2011-08-07 21:36 OpenLGTV_BCM-GP3B-v0.5.0-devel.sqf
 
 size=3145728
 size2011=4194304
