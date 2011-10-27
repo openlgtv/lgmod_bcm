@@ -6,6 +6,7 @@ Content-type: text/html
 <HEAD>
 
 <!-- OpenLGTV BCM FileManager by xeros -->
+<!-- fm.cgi script for directory tree navigation and invoking operations on fm-action.cgi -->
 <!-- Source code released under GPL License -->
 
 <!-- tested on builtin GTK Browser, Firefox 5-7, Chromium 14 and reKonq 0.7.90 (problems with F5 on reKonq) -->
