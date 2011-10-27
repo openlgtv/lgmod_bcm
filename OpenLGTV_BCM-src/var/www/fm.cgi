@@ -44,6 +44,9 @@ Content-type: text/html
     td.filename {
 	min-width: 400px;
     }
+    td.size {
+	min-width: 70px;
+    }
 </style>
 <title>CGI FileManager by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -191,9 +194,9 @@ function check(e)
 			//Prevent default action
 			return false;
 			}
-		else if (key==406) 
+		else if (key==406|key==415) 
 			{
-			//the blue button on the remote control have been pressed
+			//the blue or play button on the remote control have been pressed
 			//Play the media file
 			var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
@@ -279,7 +282,7 @@ document.defaultAction = true;
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	echo "<tr id=\"tr_l1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---- -- -- -- -- --</td></tr>"
+	echo "<tr id=\"tr_l1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\">---- -- -- ------</td></tr>"
 	litem_nr=2
     else
 	litem_nr=1
@@ -327,7 +330,7 @@ document.defaultAction = true;
 		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	    #fi
 	fi
-	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td align=\"right\">$lsize&nbsp;&nbsp;</td><td>$ldate_cut</td></tr>"
+	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -336,7 +339,7 @@ document.defaultAction = true;
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	echo "<tr id=\"tr_r1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td align=\"right\">---&nbsp;&nbsp;</td><td>---- -- -- -- -- --</td></tr>"
+	echo "<tr id=\"tr_r1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\">---- -- -- ------</td></tr>"
 	ritem_nr=2
     else
 	ritem_nr=1
@@ -373,7 +376,7 @@ document.defaultAction = true;
 	else
 	    rimage="generic.gif"
 	fi
-	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td align=\"right\">$rsize&nbsp;&nbsp;</td><td>$rdate_cut</td></tr>"
+	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"

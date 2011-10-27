@@ -266,17 +266,74 @@ else
     if [ "$action" = "copy" ]
     then
 	echo "Copying $spth to $dpth/ ...<br/><br/>"
-	cp -r "$spth" "$dpth/" 2>&1
-	if [ "$?" -ne "0" ]
+	if [ "$FORM_onlystatus" != "1" ]
 	then
-	    error=1
+	    cp -r "$spth" "$dpth/" > /var/log/cp.log 2>&1 &
+	    pid="$!"
+	    date +"%s" > /var/log/cp.date.${pid}.log
+	else
+	    [ "$FORM_pid" != "" ] && pid="$FORM_pid"
 	fi
+	time_start="`cat /var/log/cp.date.${pid}.log`"
+	echo "<div id='status' style='font-size: 30px;'></div>"
+	dfile="`basename "$spth"`"
+	# TODO: make dialog with buttons for operations - 'copy in background' and 'cancel'
+	echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-2);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
+	counter=0
+	#sleep 1
+	SIFS="$IFS" IFS=$'\n'
+	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
+	IFS="$SIFS"
+	[ "$ssize" = "" ] && ssize=1
+	for i in `seq 2000`
+	do
+	    #ssize=$(busybox stat -c "%s " "$spth")        # only files
+	    #dsize=$(busybox stat -c "%s" "$dpth/$dfile")
+	    #ssize=$(du -s "$spth" | cut -f1)              # in KB, dirs and files but on one filesystem - different values on different fs
+	    #dsize=$(du -s "$dpth/$dfile" | cut -f1)
+	    SIFS="$IFS" IFS=$'\n'
+	    dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') 
+	    IFS="$SIFS"
+	    #echo "ssize $ssize dsize $dsize"
+	    [ "$dsize" = "" ] && dsize=0
+	    percent="$(($dsize * 100 / $ssize))"
+	    time_now="`date +'%s'`"
+	    elapsed=$((${time_now}-${time_start}))
+	    #echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent%<br/><br/>Elapsed time: $counter seconds<br/><br/>';</script>"
+	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent%<br/><br/>Elapsed time: $elapsed seconds<br/><br/>';</script>"
+	    #echo "Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent%<br/><br/>"
+	    if [ -z "`ps | grep \"^ *$pid \"`" ]
+	    then
+		if [ "$ssize" -eq "$dsize" ]
+		then
+		    echo "Finished"
+		    break
+		else
+		    echo "<font color='red' size='+3'><b>ERROR copying file!</b><br/><br/>"
+		    [ -f "/var/log/cp.log" ] && cat /var/log/cp.log
+		    echo "</font>"
+		    error=1
+		    break
+		fi
+	    fi
+	    if [ "$counter" -gt "120" ]
+	    then
+		if [ "$pid" != "" ]
+		then
+		    echo "<script type='text/javascript'>window.location='${REQUEST_URI}&onlystatus=1&pid=${pid}';</script>"
+		else
+		    echo "<script type='text/javascript'>window.location='${REQUEST_URI}';</script>"
+		fi
+	    fi
+	    sleep 3
+	    counter=$(($counter+3))
+	done
     fi
     if [ "$action" = "move" ]
     then
 	echo "Moving $spth to $dpth/ ...<br/><br/>"
 	mv "$spth" "$dpth/" 2>&1
-	cp -r "$spth" "$dpth/" 2>&1
+	#cp -r "$spth" "$dpth/" 2>&1
 	if [ "$?" -ne "0" ]
 	then
 	    error=1
@@ -300,7 +357,7 @@ else
 	timeout=2000
     else
 	echo "<br/><br/><font color='red' size='+3'><b>ERROR</b></font><br/>"
-	timeout=5000
+	timeout=10000
     fi
     #sleep 2
     #echo '<script type="text/javascript">history.go(-2);</script>"'

@@ -288,6 +288,17 @@ function check(e)
 				document.images['i' + current].src = 'Images/Keyboard/bt_nofocus.png';
 				current = next;
 				}
+			else
+				{
+				if (key==37|key==38)
+					{
+					    PrevControl();
+					}
+				if (key==39|key==40)
+					{
+					    NextControl();
+					}
+				}
 			/* TODO? - actions for left and right remote buttons on 'button' page elements
 			if (PageElements[currElementIndex].type == 'buttons')
 				{
