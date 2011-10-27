@@ -15,4 +15,4 @@ nvram-edit | egrep "Model name|Platform|Debug status|Baudrate"
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
-cat /mnt/lg/model/RELEASE.cfg | grep szOtaid | awk -F, '{print "Model code:       " $2}'
+grep -m 1 szOtaid /mnt/lg/model/RELEASE.cfg | awk -F, '{print "Model code:       " $2}'

@@ -25,7 +25,7 @@ fi
 echo "OpenLGTV_BCM-INFO: rc.usb creating LOCKFILE: $LOCKFILE..."
 touch "$LOCKFILE"
 
-while [ -z "`cat /proc/mounts | grep ^/dev/sd`" ]
+while [ -z "`grep -m 1 ^/dev/sd /proc/mounts`" ]
 do
     sleep 1
     k=$(($k+1))
@@ -71,8 +71,8 @@ do
 		
 		# check free ram
 		addfreemem=20480
-		currfreemem=`free | grep Mem | awk '{print $4}'`
-		currbuffmem=`free | grep Mem | awk '{print $6}'`
+		currfreemem=`free | grep -m 1 Mem | awk '{print $4}'`
+		currbuffmem=`free | grep -m 1 Mem | awk '{print $6}'`
 		curravailmem=$(($currfreemem + $currbuffmem))
 		# expect size needed for epk in MB
 		freemem_for_epak=$((($currfreemem - $addfreemem)/1024))
@@ -89,7 +89,7 @@ do
 			echo "OpenLGTV_BCM-WARN: rc.usb: not enough free mem for epak: ${epak}, epak size: ${epk_size}MB, mem available (with 20MB space reserved): ${freemem_for_epak}MB, freeing more memory by dropping caches..."
 			echo 3 > /proc/sys/vm/drop_caches
 			sleep 1
-			echo "OpenLGTV_BCM-WARN: rc.usb: free memory after dropped caches: $((`free | grep Mem | awk '{print $4}'`/1024))"
+			echo "OpenLGTV_BCM-WARN: rc.usb: free memory after dropped caches: $((`free | grep -m 1 Mem | awk '{print $4}'`/1024))"
 		    fi
 		done
 	    fi

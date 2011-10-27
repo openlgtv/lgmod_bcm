@@ -122,14 +122,14 @@
 		chmod 755 /mnt/user/ywe/konfabulator.sh
 	    fi
 	fi
-	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -n "`grep '^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH' /mnt/user/ywe/konfabulator.sh`" ]
+	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -n "`grep -m 1 '^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH' /mnt/user/ywe/konfabulator.sh`" ]
 	then
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    echo "OpenLGTV_BCM-INFO: setting browser partition library path in Yahoo Widgets Engine startup script - $ywedir/bin/konfabulator.sh..."
 	    sed -i -e 's#^export LD_LIBRARY_PATH=$KF_APP_PATH/lib:$LD_LIBRARY_PATH#export BROWSER=/mnt/browser\n\nexport LD_LIBRARY_PATH=$KF_APP_PATH/lib:$BROWSER/lib:$LD_LIBRARY_PATH#g' /mnt/user/ywe/konfabulator.sh
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	fi
-	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -z "`grep \"^export KF_APP_PATH\" /mnt/user/ywe/konfabulator.sh | grep \"$ywedir\"`" ]
+	if [ -f "/mnt/user/ywe/konfabulator.sh" -a -z "`grep -m 1 \"^export KF_APP_PATH\" /mnt/user/ywe/konfabulator.sh | grep -m 1 \"$ywedir\"`" ]
 	then
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for proper engine path ( $ywedir ) - /mnt/user/ywe/konfabulator.sh..."
@@ -167,7 +167,7 @@
 		    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		fi
 	    else
-		if [ -z "grep 'http://127.0.0.1:88/ywe/update.sh' /mnt/user/ywe/samsung/config-oem.xml" ]
+		if [ -z "grep -m 1 'http://127.0.0.1:88/ywe/update.sh' /mnt/user/ywe/samsung/config-oem.xml" ]
 		then
 		    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		    sed -i -e 's#\(<value key=\"gallery.gallery-url\">\).*\(</value>\)#\1http://127.0.0.1:88/ywe/update.sh?yaction=\2#g' \
@@ -192,13 +192,13 @@
 	    fi
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    # its not needed to change paths if we use only one widget engine ------------------------------------v
-	    if [ -z '`grep "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep "\/mnt\/ywe_s"`' -a "$use_samsung_ywe_instead_of_lg" != "1" ]
+	    if [ -z '`grep -m 1 "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep -m 1 "\/mnt\/ywe_s"`' -a "$use_samsung_ywe_instead_of_lg" != "1" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..."
 		sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh
 		sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
 	    else
-		if [ -z "`grep \"^export KF_APP_PATH\" /mnt/user/ywe/samsung/konfabulator.sh | grep \"$ywedir\"`" -a "$use_samsung_ywe_instead_of_lg" = "1" ]
+		if [ -z "`grep -m 1 \"^export KF_APP_PATH\" /mnt/user/ywe/samsung/konfabulator.sh | grep -m 1 \"$ywedir\"`" -a "$use_samsung_ywe_instead_of_lg" = "1" ]
 		then
 		    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets ONLY engine path - /mnt/user/ywe/samsung/konfabulator.sh..."
 		    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/samsung/konfabulator.sh
@@ -256,12 +256,12 @@
 		    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		fi
 	    fi
-	    if [ -e "$ywedir/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir/bin/konfabulator.sh 2>/dev/null`" ]
+	    if [ -e "$ywedir/bin/konfabulator.sh" -a -z "`grep -m 1 '^killall lb4wk' $ywedir/bin/konfabulator.sh 2>/dev/null`" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config ($ywedir/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..."
 		echo -e "\nkillall lb4wk\n" >> "$ywedir/bin/konfabulator.sh"
 	    fi
-	    if [ -e "$ywedir_usb/bin/konfabulator.sh" -a -z "`grep '^killall lb4wk' $ywedir_usb/bin/konfabulator.sh 2>/dev/null`" ]
+	    if [ -e "$ywedir_usb/bin/konfabulator.sh" -a -z "`grep -m 1 '^killall lb4wk' $ywedir_usb/bin/konfabulator.sh 2>/dev/null`" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config on USB storage device ($ywedir_usb/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..."
 		echo -e "\nkillall lb4wk\n" >> "$ywedir_usb/bin/konfabulator.sh"

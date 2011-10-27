@@ -5,7 +5,7 @@
 
 echo "OpenLGTV_BCM-INFO: starting network setup..."
 network_set=0
-if [ -n "`cat /proc/cmdline | grep ip=`" ]
+if [ -n "`grep ip= /proc/cmdline`" ]
 then
     echo "OpenLGTV_BCM-INFO: using static network setup from kernel cmdline set from CFE"
     TARGET_IP=$(cat /proc/cmdline | awk 'BEGIN { RS="[ :]"; FS="="; } /ip=/ { print $2 } END {}')
@@ -14,16 +14,16 @@ then
     NETMASK=$(cat /proc/cmdline | awk 'BEGIN { RS="[ ]"; FS=":"; } /ip=/ { print $4 } END {}')
     network_set=1
 else
-    if [ -n "`grep USE_ETH=YES /mnt/flash/data/nm.rc`" ]
+    if [ -n "`grep -m 1 USE_ETH=YES /mnt/flash/data/nm.rc`" ]
     then
-	if [ "`cat /mnt/flash/data/nm.rc | grep DHCP | awk -F= '{print $2}'`" -eq "0" ]
+	if [ "`grep -m 1 DHCP /mnt/flash/data/nm.rc | awk -F= '{print $2}'`" -eq "0" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using static network setup from NetworkManager config"
-	    TARGET_IP=`cat /mnt/flash/data/nm.rc | grep IP_Address | awk '{FS="="; print $2}'`
-	    SERVER_IP=`cat /mnt/flash/data/nm.rc | grep IP_Gateway | awk '{FS="="; print $2}'` 
+	    TARGET_IP=`grep -m 1 IP_Address /mnt/flash/data/nm.rc | awk '{FS="="; print $2}'`
+	    GATEWAY=`grep -m 1 IP_Gateway /mnt/flash/data/nm.rc | awk '{FS="="; print $2}'` 
 	    # we wont get server ip from NetworkManager config, so lets get gateway address instead
-	    GATEWAY=`cat /mnt/flash/data/nm.rc | grep IP_Gateway | awk '{FS="="; print $2}'`
-	    NETMASK=`cat /mnt/flash/data/nm.rc | grep IP_Netmask | awk '{FS="="; print $2}'`
+	    SERVER_IP="$GATEWAY"
+	    NETMASK=`grep -m 1 IP_Netmask /mnt/flash/data/nm.rc | awk '{FS="="; print $2}'`
 	    network_set=1
 	else
 	    network_set=0
@@ -47,7 +47,7 @@ if [ "$network_set" -eq "1" ]
 then
     echo "OpenLGTV_BCM-INFO: TARGET_IP: $TARGET_IP SERVER_IP: $SERVER_IP GATEWAY: $GATEWAY NETMASK: $NETMASK"
     ifconfig eth0 $TARGET_IP netmask $NETMASK up
-    if [ -n "`grep USE_ETH=NO /mnt/flash/data/nm.rc`" ]
+    if [ -n "`grep -m 1 USE_ETH=NO /mnt/flash/data/nm.rc`" ]
     then
 	echo "OpenLGTV_BCM-INFO: dropping default gateway as WLAN network is going to be configured later..."
     else

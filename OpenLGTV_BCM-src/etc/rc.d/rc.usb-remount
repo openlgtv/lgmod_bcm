@@ -4,7 +4,7 @@
 # Source code released under GPL License
 
 echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
-for mnt in `cat /proc/mounts | grep ^/dev/sd | awk '{print $1 "#" $2 "#" $3}'`
+for mnt in `grep ^/dev/sd /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
 do
     mnt_src=`echo $mnt | awk -F# '{print $1}'`
     mnt_dst=`echo $mnt | awk -F# '{print $2}'`

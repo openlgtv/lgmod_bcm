@@ -68,7 +68,7 @@ then
     for svarx in `cat /etc/default/settings.default | awk -F= '{print $1 "="}'`
     do
 	svar=`echo $svarx | awk -F= '{print $1 "="}'`
-	if [ -z "`grep $svar /mnt/user/cfg/settings`" ]
+	if [ -z "`grep -m 1 $svar /mnt/user/cfg/settings`" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: adding $svarx to /mnt/user/cfg/settings"
 	    echo "$svarx" >> /mnt/user/cfg/settings
@@ -81,7 +81,7 @@ then
     #sed -i $settings_sed /mnt/user/cfg/settings.default
     settings_egrep="^NONEXISTENT"
     for svar in $settings_depreciated; do settings_egrep="^$svar=|$settings_egrep"; done
-    cat /mnt/user/cfg/settings | egrep -v "$settings_egrep" > /tmp/settings.tmp
+    egrep -v "$settings_egrep" /mnt/user/cfg/settings > /tmp/settings.tmp
     cat /tmp/settings.tmp > /mnt/user/cfg/settings
     rm /tmp/settings.tmp
 fi

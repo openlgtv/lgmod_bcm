@@ -53,31 +53,29 @@ Content-type: text/html
 
 log_file=/tmp/log/fm.log
 
-if [ "$FORM_side" != "" ]
+if [ -n "$FORM_side" ]
 then
     export side="$FORM_side"
 else
     export side="l"
 fi
 
-if [ "$FORM_lpth" != "" ]
-then
-    export lpth="$FORM_lpth"
-fi
+[ -n "$FORM_lpth" ]   && export lpth="$FORM_lpth"
+[ -n "$FORM_rpth" ]   && export rpth="$FORM_rpth"
+[ -n "$FORM_action" ] && export action="$FORM_action"
+[ -n "$FORM_link" ]   && export link="$FORM_link"
 
-if [ "$FORM_rpth" != "" ]
+if [ "$side" = "l" ]
 then
-    export rpth="$FORM_rpth"
-fi
-
-if [ "$FORM_action" != "" ]
-then
-    export action="$FORM_action"
-fi
-
-if [ "$FORM_link" != "" ]
-then
-    export link="$FORM_link"
+    export spth="$lpth"
+    export dpth="$rpth"
+    export lpthx="`dirname $lpth`"
+    export rpthx="$rpth"
+else
+    export spth="$rpth"
+    export dpth="$lpth"
+    export lpthx="$lpth"
+    export rpthx="`dirname $rpth`"
 fi
 
 echo "var side = '$side';"
@@ -212,19 +210,6 @@ document.defaultAction = true;
 
 <?
 
-if [ "$side" = "l" ]
-then
-    export spth="$lpth"
-    export dpth="$rpth"
-    export lpthx="`dirname $lpth`"
-    export rpthx="$rpth"
-else
-    export spth="$rpth"
-    export dpth="$lpth"
-    export lpthx="$lpth"
-    export rpthx="`dirname $rpth`"
-fi
-
 #echo "spth: $spth dpth: $dpth lpth: $lpth rpth: $rpth"
 
 echo '<center><font size="+3" color="yellow"><br/><br/><b>OpenLGTV BCM FileManager</b> by xeros<br/><br/><br/></font>'
@@ -250,7 +235,7 @@ then
     fi
     #echo "side: $side lpthx: $lpthx rpthx: $rpthx"
     #sleep 5
-    echo "<script type='text/javascript'>window.location='fm.cgi?type=related&side=$side&lpth=$lpthx&rpth=$rpthx';</script>"
+    echo "<script type='text/javascript'>window.location='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}';</script>"
     echo "</font></div></center></body></head></html>"
 fi
 
@@ -314,7 +299,7 @@ else
 	echo "<div id='status' style='font-size: 30px;'></div>"
 	dfile="`basename "$spth"`"
 	#echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='javascript:history.go(-2);'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
-	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=$side&lpth=$lpthx&rpth=$rpthx'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/><br/>"
+	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/><br/>"
 	counter=0
 	[ -z "$ssize" ] && ssize=1
 	sleep 1

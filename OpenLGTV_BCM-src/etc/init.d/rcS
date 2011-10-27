@@ -32,7 +32,7 @@ mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/va
 echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."               | tee -a $bootlogf
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf
 
-AUTORUN=`cat /proc/cmdline | grep autorun`
+AUTORUN=`grep autorun /proc/cmdline`
 
 if [ "$AUTORUN" != "" ]
 then
@@ -47,6 +47,11 @@ source /etc/rc.d/rc.mount1                                                      
 # '| tee -a $bootlogf' is not needed from this place - bootlogd should log boot messages
 
 source /etc/rc.d/rc.mount2
+
+echo "OpenLGTV_BCM-INFO: enabling possibility to break init script with CTRL+C now"
+stty brkint
+
+source /etc/rc.d/rc.mount3
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
@@ -276,13 +281,13 @@ fi
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 /etc/rc.d/rc.usb &
 
-md5password="`grep ^root: /etc/shadow | awk -F: '{print $2}'`"
+md5password="`grep -m 1 ^root: /etc/shadow | awk -F: '{print $2}'`"
 
 if [ ! -f "/mnt/user/etc/httpd.conf" ]
 then
     echo "OpenLGTV_BCM-INFO: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..."
     cat /etc/httpd.conf | sed 's/D:*/A:*/g' > /mnt/user/etc/httpd.conf
-    if [ "`grep ^root:x /etc/passwd`" = "" ]
+    if [ "`grep -m 1 ^root:x /etc/passwd`" = "" ]
     then
 	echo "OpenLGTV_BCM-WARN: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it"
 	#echo '/:openlgtv:openlgtv' >> /mnt/user/etc/httpd.conf
@@ -293,7 +298,7 @@ then
     fi
 fi
 
-md5password_httpd="`grep ^/:openlgtv: /mnt/user/etc/httpd.conf | awk -F: '{print $3}'`"
+md5password_httpd="`grep -m 1 ^/:openlgtv: /mnt/user/etc/httpd.conf | awk -F: '{print $3}'`"
 
 if [ "$md5password_httpd" != "$md5password" ]
 then
@@ -371,7 +376,7 @@ export OSAMEM_SIZE=0x200000
 PART_LGAPP_IDX=6
 
 # Check lgapplication auto-run
-AUTORUN=`cat /proc/cmdline | grep autorun`
+AUTORUN=`grep autorun /proc/cmdline`
 
 if [ "$AUTORUN" != "" ]; then
 

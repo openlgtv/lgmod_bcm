@@ -127,14 +127,19 @@ rootfs_bck=/home/backup/rootfs.bck
 # variable should be initiated by extract.sh before chrooting
 [ "$chrooted" != "1" ] && ver_installed=`cat /etc/ver2 2>/dev/null`
 
-mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
-mkdir -p /mnt/usb2/Drive1/OpenLGTV_BCM > /dev/null 2>&1
-
-if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+if [ -f "/tmp/usbdir" ]
 then
-    export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+    export USB_DIR=`cat /tmp/usbdir`
+    export OpenLGTV_BCM_USB=$USB_DIR/OpenLGTV_BCM
 else
-    export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+    mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
+    mkdir -p /mnt/usb2/Drive1/OpenLGTV_BCM > /dev/null 2>&1
+    if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+    then
+	export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+    else
+	export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+    fi
 fi
 
 touch $log

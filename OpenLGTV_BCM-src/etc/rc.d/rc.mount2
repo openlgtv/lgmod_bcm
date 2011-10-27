@@ -6,7 +6,7 @@
 echo "OpenLGTV_BCM-INFO: mtd mounts..."
 
 # partitions names to mtd numbers assignment
-cat /proc/mtd | sed -e 's/://g' -e 's/\"//g' -e 's/^mtd//g' | grep -v erasesize | awk '{print "mtd_" $4 "=" $1}' | tac > /tmp/partitions.list
+grep -v erasesize /proc/mtd | sed -e 's/://g' -e 's/\"//g' -e 's/^mtd//g' | awk '{print "mtd_" $4 "=" $1}' | tac > /tmp/partitions.list
 source /tmp/partitions.list
 # output example for EU 2010 BCM models:
 #mtd_total=40
@@ -52,9 +52,10 @@ source /tmp/partitions.list
 #mtd_boot=0
 
 # quite ugly model checks, needs rewrite
-if [ "`cat /proc/mtd | wc -l`" -lt "41" ]
+mtd_count="`grep -v erasesize /proc/mtd | wc -l`"
+if [ "$mtd_count" -lt "40" ]
 then
-    if [ "`grep mtd19 /proc/mtd | grep '\"ywedata\"' | wc -l`" = "1" ]
+    if [ -n "`grep -m 1 \"^mtd19.*ywedata\" /proc/mtd`" ]
     then
 	echo "OpenLGTV_BCM-INFO: setting country_model to US - recognised North American 2010 BCM3549 (GP2B) model"
 	export country_model=US
@@ -65,7 +66,7 @@ then
 	export platform=GP2B
     fi
 else
-    if [ "`cat /proc/mtd | wc -l`" -gt "50" ]
+    if [ "$mtd_count" -gt "49" ]
     then
 	echo "OpenLGTV_BCM-INFO: setting country_model to SM - recognised 2011 BCM3520 (GP3B) SmartTV model"
 	export country_model=SM
@@ -83,7 +84,7 @@ mount -t squashfs /dev/mtdblock$mtd_model /mnt/lg/model
 echo "OpenLGTV_BCM-INFO: lgres      - mtdblock$mtd_lgres in /mnt/lg/res/lgres"
 mount -t squashfs /dev/mtdblock$mtd_lgres /mnt/lg/res/lgres
 
-if [ "$mtd_estreamer" != "" ]
+if [ -n "$mtd_estreamer" ]
 then
     echo "OpenLGTV_BCM-INFO: estreamer  - mtdblock$mtd_estreamer in /mnt/lg/res/estreamer"
     mount -t squashfs /dev/mtdblock$mtd_estreamer /mnt/lg/res/estreamer
@@ -97,7 +98,7 @@ mount -t squashfs /dev/mtdblock$mtd_opensrc /usr/local
 echo "OpenLGTV_BCM-INFO: tmpfs      - /usr/local/etc"
 mount -t tmpfs tmpfs /usr/local/etc -o size=1M
 
-if [ "$mtd_base" != "" -a "$mtd_patch" != "" ]
+if [ -n "$mtd_base" -a -n "$mtd_patch" ]
 then
     echo "OpenLGTV_BCM-INFO: base       - mtdblock$mtd_base in /mnt/nsu/base"
     mount -t squashfs /dev/mtdblock$mtd_base /mnt/nsu/base
@@ -120,18 +121,18 @@ else
     mount -t squashfs /dev/mtdblock$mtd_ezcal /mnt/lg/res/ezcal
 fi
 
-if [ "$mtd_cert" != "" ]
+if [ -n "$mtd_cert" ]
 then
     echo "OpenLGTV_BCM-INFO: cert       - mtdblock$mtd_cert in /mnt/lg/ciplus/cert (ignore error)"
     mount -t squashfs /dev/mtdblock$mtd_cert /mnt/lg/ciplus/cert
 fi
-if [ "$mtd_authcxt" != "" ]
+if [ -n "$mtd_authcxt" ]
 then
     echo "OpenLGTV_BCM-INFO: authcxt    - mtdblock$mtd_authcxt in /mnt/lg/ciplus/authcxt"
     mount -t yaffs2 /dev/mtdblock$mtd_authcxt /mnt/lg/ciplus/authcxt
 fi
 
-if [ "$mtd_data" != "" ]
+if [ -n "$mtd_data" ]
 then
     echo "OpenLGTV_BCM-INFO: data       - mtdblock$mtd_data in /mnt/lg/cmn_data"
     mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime
@@ -148,7 +149,7 @@ fi
 echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/lg/cmn_data /mnt/flash/data"
 mount --bind /mnt/lg/cmn_data /mnt/flash/data
 
-if [ "$mtd_user" != "" ]
+if [ -n "$mtd_user" ]
 then
     echo "OpenLGTV_BCM-INFO: user       - mtdblock$mtd_user in /mnt/user"
     mount -t jffs2 /dev/mtdblock$mtd_user /mnt/user
@@ -157,31 +158,31 @@ else
     mount --bind /mnt/lg/cmn_data /mnt/user
 fi
 
-if [ "$mtd_widevine" != "" ]
+if [ -n "$mtd_widevine" ]
 then
     echo "OpenLGTV_BCM-INFO: widevine   - mtdblock$mtd_widevine in /mnt/lg/widevine"
     mount -t squashfs /dev/mtdblock$mtd_widevine /mnt/lg/widevine
 fi
 
-if [ "$mtd_pqldb" != "" ]
+if [ -n "$mtd_pqldb" ]
 then
     echo "OpenLGTV_BCM-INFO: pqldb      - mtdblock$mtd_pqldb in /mnt/pqldb"
     mount -t squashfs /dev/mtdblock$mtd_pqldb /mnt/pqldb
 fi
 
-if [ "$mtd_idfile" != "" ]
+if [ -n "$mtd_idfile" ]
 then
     echo "OpenLGTV_BCM-INFO: idfile     - mtdblock$mtd_idfile in /mnt/idfile (ignore error)"
     mount -t squashfs /dev/mtdblock$mtd_idfile /mnt/idfile  # empty on EU fw, but lginit still tries to mount it
 fi
 
-if [ "$mtd_game" != "" ]
+if [ -n "$mtd_game" ]
 then
     echo "OpenLGTV_BCM-INFO: game       - mtdblock$mtd_game in /mnt/game"
     mount -t squashfs /dev/mtdblock$mtd_game /mnt/game
 fi
 
-if [ "$mtd_fladata" != "" ]
+if [ -n "$mtd_fladata" ]
 then
     echo "OpenLGTV_BCM-INFO: fladata    - mtdblock$mtd_fladata in /mnt/cache/flash"
     mount -t yaffs2 /dev/mtdblock$mtd_fladata /mnt/cache/flash -o noatime
@@ -194,7 +195,7 @@ then
     fi
 fi
 
-if [ "$mtd_sdpdata" != "" ]
+if [ -n "$mtd_sdpdata" ]
 then
     echo "OpenLGTV_BCM-INFO: sdpdata    - mtdblock$mtd_sdpdata in /mnt/cache/sdp"
     mount -t yaffs2 /dev/mtdblock$mtd_sdpdata /mnt/cache/sdp -o noatime
@@ -205,7 +206,7 @@ then
     fi
 fi
 
-if [ "$mtd_browser" != "" ]
+if [ -n "$mtd_browser" ]
 then
     echo "OpenLGTV_BCM-INFO: browser    - mtdblock$mtd_browser in /mnt/browser"
     mount -t squashfs /dev/mtdblock$mtd_browser /mnt/browser
@@ -219,7 +220,7 @@ then
     mount --bind /mnt/addon/krbrowser /mnt/browser
 fi
 
-if [ "$mtd_brodata" != "" ]
+if [ -n "$mtd_brodata" ]
 then
     echo "OpenLGTV_BCM-INFO: brodata    - mtdblock$mtd_brodata in /mnt/cache/browser"
     mount -t yaffs2 /dev/mtdblock$mtd_brodata /mnt/cache/browser
@@ -244,13 +245,13 @@ then
     fi
 fi
 
-if [ "$mtd_netflix" != "" ]
+if [ -n "$mtd_netflix" ]
 then
     echo "OpenLGTV_BCM-INFO: netflix    - mtdblock$mtd_netflix in /mnt/addon/netflix"
     mount -t squashfs /dev/mtdblock$mtd_netflix /mnt/addon/netflix
 fi
 
-if [ "$mtd_ywedata" != "" ]
+if [ -n "$mtd_ywedata" ]
 then
     echo "OpenLGTV_BCM-INFO: ywedata    - mtdblock$mtd_ywedata in /mnt/widget.data"
     mount -t yaffs2 /dev/mtdblock$mtd_ywedata /mnt/widget.data # US fw lginit does not handle erasing ywedata if it's not mountable
@@ -260,7 +261,7 @@ then
     mount --bind /mnt/widget.data /mnt/cache/browser # US models do not have /mnt/cache/browser mounted, lets use ywedata as /mnt/cache/browser instead
 fi
 
-if [ "$mtd_preloaded" != "" -a "$mtd_kids" != "" -a "$mtd_story" != "" ]
+if [ -n "$mtd_preloaded" -a -n "$mtd_kids" -a -n "$mtd_story" ]
 then
     echo "OpenLGTV_BCM-INFO: preloaded  - mtdblock$mtd_preloaded in /mnt/preloaded"
     mount -t squashfs /dev/mtdblock$mtd_preloaded /mnt/preloaded
@@ -275,25 +276,4 @@ then
     echo "OpenLGTV_BCM-INFO: setting detected platform variables in /mnt/user/etc/vars"
     echo "country_model=${country_model}"     > /mnt/user/etc/vars
     echo "platform=${platform}"              >> /mnt/user/etc/vars
-fi
-
-appxip_addr=`cat /proc/cmdline | sed 's/ /\n/g' | grep appxip_addr | cut -d= -f 2`
-if [ -n "`grep appxip_addr /proc/cmdline`" -a "${appxip_addr}" != "0x0" -a "`devmem ${appxip_addr} 32`" = "0x28CD3D45" -a "`devmem $((${appxip_addr}+0x10)) 64`" = "0x73736572706D6F43" ]
-then
-    echo "OpenLGTV_BCM-INFO: lgapp      - XIP CRAMFS, memory address: $appxip_addr"
-    #mount -t cramfs lgapp_xip /mnt/lg/lgapp -o physaddr=0x2600000
-    mount -t cramfs lgapp_xip /mnt/lg/lgapp -o physaddr=$appxip_addr
-else
-    echo "OpenLGTV_BCM-INFO: lgapp      - mtdblock$mtd_lgapp /mnt/lg/lgapp"
-    mount -t squashfs /dev/mtdblock$mtd_lgapp /mnt/lg/lgapp
-fi
-
-fontxip_addr=`cat /proc/cmdline | sed 's/ /\n/g' | grep fontxip_addr | cut -d= -f 2`
-if [ -n "`grep fontxip_addr /proc/cmdline`" -a "${fontxip_addr}" != "0x0" -a "`devmem ${fontxip_addr} 32`" = "0x28CD3D45" -a "`devmem $((${fontxip_addr}+0x10)) 64`" = "0x73736572706D6F43" ]
-then
-    echo "OpenLGTV_BCM-INFO: lgfont     - XIP CRAMFS, memory address: $fontxip_addr"
-    mount -t cramfs lgfont_xip /mnt/lg/res/lgfont -o physaddr=$fontxip_addr
-else
-    echo "OpenLGTV_BCM-INFO: lgfont     - mtdblock$mtd_lgfont - /mnt/lg/res/lgfont"
-    mount -t squashfs /dev/mtdblock$mtd_lgfont /mnt/lg/res/lgfont
 fi

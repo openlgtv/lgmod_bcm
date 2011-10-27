@@ -58,7 +58,7 @@ then
 	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	if [ "$fs_type" = "cifs" ]
 	then
-	    if [ "`grep ^cifs /proc/modules`" = "" ]
+	    if [ "`grep -m 1 ^cifs /proc/modules`" = "" ]
 	    then
 		if [ -f "/mnt/user/modules/cifs.ko" ]
 		then
