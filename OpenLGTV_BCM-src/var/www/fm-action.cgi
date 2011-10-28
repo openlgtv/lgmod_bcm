@@ -69,13 +69,13 @@ if [ "$side" = "l" ]
 then
     export spth="$lpth"
     export dpth="$rpth"
-    export lpthx="`dirname $lpth`"
+    export lpthx="`dirname \"$lpth\"`"
     export rpthx="$rpth"
 else
     export spth="$rpth"
     export dpth="$lpth"
     export lpthx="$lpth"
-    export rpthx="`dirname $rpth`"
+    export rpthx="`dirname \"$rpth\"`"
 fi
 
 echo "var side = '$side';"
@@ -212,21 +212,23 @@ document.defaultAction = true;
 
 #echo "spth: $spth dpth: $dpth lpth: $lpth rpth: $rpth"
 
-echo '<center><font size="+3" color="yellow"><br/><br/><b>OpenLGTV BCM FileManager</b> by xeros<br/><br/><br/></font>'
+echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
 
 #echo '<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px; background-color:white;">'
-echo '<div style="width:80%; margin:auto; font-size:16px; background-color:white;">'
+echo '<div style="width:85%; margin:auto; font-size:16px; background-color:white;">'
 
 [ "$FORM_pid" != "" ] && pid="$FORM_pid"
+
+#echo "spth $spth dpth $dpth lpth $lpth rpth $rpth lpthx $lpthx rpthx $rpthx side $side pid $pid<br/><br/>" | tee -a /tmp/log.log
 
 if [ -n "$FORM_cancel" -a -n "$pid" ]
 then
     process="`ps | grep \"^ *$pid \"`"
     if [ -n "$process" ]
     then
-	echo "<font size='+3' color='black'><br/><b>Cancelling process:</b><br/><br/>$process<br/><br/>"
+	echo "<font size='+3' color='red'><br/><b>Cancelling process:</b></font><font size='+3' color='black'><br/><br/>$process<br/><br/>"
 	kill "$pid" 2>&1
-	sleep 3
+	sleep 1
 	process="`ps | grep \"^ *$pid \"`"
 	if [ -n "$process" ]
 	then
@@ -234,22 +236,31 @@ then
 	fi
     fi
     #echo "side: $side lpthx: $lpthx rpthx: $rpthx"
-    #sleep 5
-    echo "<script type='text/javascript'>window.location='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}';</script>"
+    timeout=1000
+    if [ "$FORM_onlystatus" != "1" ]
+    then
+	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-3)\",$timeout);</script>"
+    else
+	echo "<script type=\"text/javascript\">"
+	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}\"; }"
+	echo "setTimeout(\"backToFM()\",$timeout);"
+	echo "</script>"
+    fi
     echo "</font></div></center></body></head></html>"
+    exit 0
 fi
 
 if [ "$action" = "play" ]
 then
     #echo '<script type="text/javascript" src="player/base64.js"></script>'
-    echo "Starting playback of $spth ...<br/>"
+    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
     #sleep 2
     echo "<script type='text/javascript'>"
     #echo "window.location='file:///mnt/browser/pages/player/index.html?lg_media_url=base64(http://127.0.0.1:88/root$spth)';"
     #echo "sleep(2000);"
     #echo "window.location=\"root$spth\";"
     echo "function playback() { window.location=\"root$spth\"; }"
-    echo "setTimeout(\"playback()\",2000);"
+    echo "setTimeout(\"playback()\",2700);"
     echo "</script>"
 fi
 
@@ -258,7 +269,7 @@ then
     echo "<center><font size='+4' color='brown'><br/><b>"
     if [ "$action" = "copy" -o "$action" = "move" ]
     then
-	echo "Are you sure you want to ${action}?<br/><font size='+1' color='black'><br/>$spth to $dpth/</font>"
+	echo "Are you sure you want to ${action}?<br/><font size='+3' color='blue'><br/>$spth<br/><br/><font color='black' size='+3'>to</font><font size='+3' color='blue'><br/><br/>$dpth/</font>"
     else
 	if [ "$action" = "delete" ]
 	then
@@ -277,8 +288,13 @@ then
 else
     if [ "$action" = "copy" -o "$action" = "move" ]
     then
-	echo "$action $spth to $dpth/ ..." | tee -a /var/log/${action}.log
-	echo "<br/><br/>"
+	echo "<font size='+5' color='brown' style='text-transform: uppercase;'><b>$action in progress</b></font><br/><br/>"
+	echo "<table>"
+	echo "<tr><td><font size='+3' color='green'>Source: </font></td><td><font size='+3' color='black'>$spth</font><td></tr>"
+	echo "<tr><td><font size='+3' color='green'>Target: </font></td><td><font size='+3' color='black'>$dpth</font><td></tr>"
+	echo "</table><br/>"
+	echo "${action}#${spth}#$dpth" >> /var/log/${action}.log
+	echo "<br/>"
 	SIFS="$IFS" IFS=$'\n'
 	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
 	IFS="$SIFS"
@@ -299,7 +315,7 @@ else
 	echo "<div id='status' style='font-size: 30px;'></div>"
 	dfile="`basename "$spth"`"
 	#echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='javascript:history.go(-2);'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
-	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/><br/>"
+	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
 	counter=0
 	[ -z "$ssize" ] && ssize=1
 	sleep 1
@@ -323,10 +339,14 @@ else
 	    average_bps=$((${dsize}/${elapsed}))
 	    average_kbps=$((${average_bps}/1024))
 	    #echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent%<br/><br/>Elapsed time: $counter seconds<br/><br/>';</script>"
-	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent% &nbsp; Average speed: $average_kbps kbps<br/><br/>Elapsed time: $elapsed seconds<br/><br/>';</script>"
+	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize / $ssize bytes<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
 	    #echo "Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent%<br/><br/>"
+	    sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
+		SIFS="$IFS" IFS=$'\n'
+		dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') 
+		IFS="$SIFS"
 		if [ "$ssize" -eq "$dsize" ]
 		then
 		    echo "Finished"
@@ -352,7 +372,7 @@ else
 		    echo "<script type='text/javascript'>window.location='${REQUEST_URI}';</script>"
 		fi
 	    fi
-	    sleep 3
+	    sleep 2
 	    counter=$(($counter+1))
 	done
     fi
@@ -364,6 +384,7 @@ else
 	    rm -r "$spth" 2>&1
 	    if [ "$?" -ne "0" ]
 	    then
+		echo "<br/><br/><font color='red' size='+4'><b>ERROR</b></font><br/>"
 		error=1
 	    fi
 	fi
@@ -373,12 +394,17 @@ else
 	echo "<br/><br/><font color='green' size='+3'<b>DONE</b></font><br/>"
 	timeout=2000
     else
-	echo "<br/><br/><font color='red' size='+4'><b>ERROR</b></font><br/>"
 	timeout=10000
     fi
-    #sleep 2
-    #echo '<script type="text/javascript">history.go(-2);</script>"'
-    echo "<script type=\"text/javascript\">setTimeout(\"history.go(-2)\",$timeout);</script>"
+    if [ "$FORM_onlystatus" != "1" ]
+    then
+	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-2)\",$timeout);</script>"
+    else
+	echo "<script type=\"text/javascript\">"
+	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}\"; }"
+	echo "setTimeout(\"backToFM()\",$timeout);"
+	echo "</script>"
+    fi
 fi
 echo '</div>'
 
