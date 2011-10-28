@@ -3,6 +3,9 @@
 # lginit partition cleaning script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+# TODO: use partitions numbers from check function, not static numbers
+# TODO: finish US and KR second rootfs handling
+
 magic=hsqs
 magic_clean=377377377377
 
@@ -37,7 +40,18 @@ then
 #else
 #    if [ -n "`grep -m 1 '^mtd26:.*rootfs' /proc/mtd`" ]
 #    then
-#	TODO: make something to check for OpenLGTV BCM in second rootfs and erase/flash (copy) it from running rootfs if LG fw is there
+#	echo "OpenLGTV_BCM-INFO: found second rootfs partition (mtd26), checking if there is OpenLGTV BCM also..."
+#	mount -t squashfs /dev/mtdblock26 /mnt/backup/rootfs
+#	if [ ! -f "/mnt/backup/rootfs/etc/ver2" ]
+#	then
+#	    echo "OpenLGTV_BCM-WARN: there is no OpenLGTV BCM on second rootfs partition (mtd26), making copy of OpenLGTV BCM rootfs to backup partition..."
+#	    umount -f /mnt/backup/rootfs
+#	    flash_eraseall /dev/mtd26
+#	    sync
+#	    cat /dev/mtd3 > /dev/mtd26
+#	    sync
+#	    # TODO: check for errors
+#	fi
 #    fi
 #    if [ -n "`grep -m 1 '^mtd25:.*lginit' /proc/mtd`" ]
 #    then

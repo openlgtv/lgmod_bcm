@@ -16,8 +16,8 @@
 #define NVRAM_FULL_SIZE_BCM 1048576
 #define NVRAM_FULL_SIZE_S7 524288
 
-//#define NVRAM_DEBUG_STATUS ( ANA_DB_BASE - 7 ) // 0x1D8
-#define NVRAM_DEBUG_STATUS 397 // 0x1D8
+//#define NVRAM_DEBUG_STATUS ( ANA_DB_BASE - 7 ) // 0x18D
+#define NVRAM_DEBUG_STATUS 397 // 0x18D
 
 typedef unsigned char * string;
 
