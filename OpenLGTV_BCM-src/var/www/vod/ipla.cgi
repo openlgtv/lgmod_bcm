@@ -12,9 +12,16 @@ Content-type: text/html
     body {
 	font-family:"TiresiasScreenfont";
     }
-    a:link {
-	color:black;
-	text-decoration:bold;
+    a:link,
+    a:visited {
+	color: #000000;
+	background-color: green;
+    }
+    a:hover,
+    a:focus,
+    a:active {
+	color: red;
+	background-color: green;
     }
 </style>
 <title>Ipla.tv alternative by xeros</title>

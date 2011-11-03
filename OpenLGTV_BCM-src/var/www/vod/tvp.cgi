@@ -12,9 +12,23 @@ Content-type: text/html
     body {
 	font-family:"TiresiasScreenfont";
     }
-    a:link {
-	color:black;
-	text-decoration:bold;
+    //a:focus {
+    //	outline-size: 2px;
+    //	outline-style: solid;
+    //	outline-color: red;
+    //    }
+    a:link,
+    a:visited {
+	color: black;
+	background-color: lightblue;
+	text-decoration: bold;
+    }
+    a:hover,
+    a:focus,
+    a:active {
+	color: red;
+	background-color: lightblue;
+	text-decoration: bold;
     }
 </style>
 <title>tvp.pl alternative by xeros</title>
