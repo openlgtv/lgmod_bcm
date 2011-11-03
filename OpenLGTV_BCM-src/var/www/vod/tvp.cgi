@@ -37,13 +37,15 @@ function check(e)
 		{
 		switch(key)
 			{
+			case 33: next = (1*current) - (5*col); break; //ch up
+			case 34: next = (1*current) + (5*col); break; //ch down
 			case 37: next = current - 1; break; //left
 			case 38: next = current - col; break; //up
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
 		//alert('key: '+key+' current: '+current+' next: '+next);
-		if (key==37|key==38|key==39|key==40)
+		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
@@ -53,6 +55,8 @@ function check(e)
 			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
 			//set current=next
 			current = next;
+			//Prevent scrolling
+			return false;
 			}
 		else if (key==404) 
 			{
@@ -134,16 +138,20 @@ echo '</HEAD><BODY bgcolor="lightblue">'
 
 if [ "$type" = "menu-tvp" ]
 then
-    echo '<center><img src="http://s.v3.tvp.pl/files/portal/gfx/top_nav/tvp_pl.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/></center><br/>'
-    echo '<font size="+2">'
+    echo '<center><img src="http://s.v3.tvp.pl/files/portal/gfx/top_nav/tvp_pl.png"/><font size="+2"><br/>alternative</font><br/>by xeros<br/></center>'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
-    for content in `grep -v "^$" $log_file | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
+    #for content in `grep -v "^$" $log_file | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' -e 's/\&amp;/\&/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
+    for content in `grep -v "^$" $log_file | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' -e 's/\&amp;/\$/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
     do
-	feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
-	feedTitle=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
-	feedThumb=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
+	#feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
+	#feedTitle=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
+	#feedThumb=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
+	#feedUrl=`echo $content | cut -d\; -f1 | tr '\?\&' '\@\$'`
+	feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
+	feedTitle=`echo $content | cut -d\; -f2 | tr '|' ' '`
+	feedThumb=`echo $content | cut -d\; -f3 | tr '|' ' '`
 	#echo "$feedUrl"
 	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>"
 	if [ "$(($item_nr % 3))" = "0" ]
@@ -162,11 +170,16 @@ else
     item_nr=1
     if [ "$type" = "category-tvp" ]
     then
-	for content in `cat $log_file | sed 's/<object/\n<object/g' | grep "VideoView" | sed -e 's#"/><img.*"/>#"/>#g' -e 's/></>|</g' -e 's/.*url="//g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g' -e 's/">;<img/;<img/g'`
+	#for content in `cat $log_file | sed 's/<object/\n<object/g' | grep "VideoView" | sed -e 's#"/><img.*"/>#"/>#g' -e 's/></>|</g' -e 's/.*url="//g' -e 's/\&amp;/\&/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g' -e 's/">;<img/;<img/g'`
+	for content in `cat $log_file | sed 's/<object/\n<object/g' | grep "VideoView" | sed -e 's#"/><img.*"/>#"/>#g' -e 's/></>|</g' -e 's/.*url="//g' -e 's/\&amp;/\$/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g' -e 's/">;<img/;<img/g'`
 	do
-	    feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
-	    feedThumb=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
-	    feedTitle=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
+	    #feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
+	    #feedThumb=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
+	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
+	    #feedUrl=`echo $content | cut -d\; -f1 | tr '\?\&' '\@\$'`
+	    feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
+	    feedThumb=`echo $content | cut -d\; -f2 | tr '|' ' '`
+	    feedTitle=`echo $content | cut -d\; -f3 | tr '|' ' '`
 	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
@@ -181,5 +194,4 @@ else
 fi
 
 ?>
-</font>
 </BODY></HTML>

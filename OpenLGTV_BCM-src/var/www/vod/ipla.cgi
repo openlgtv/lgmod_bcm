@@ -61,13 +61,15 @@ function check(e)
 		{
 		switch(key)
 			{
+			case 33: next = (1*current) - (5*col); break; //ch up
+			case 34: next = (1*current) + (5*col); break; //ch down
 			case 37: next = current - 1; break; //left
 			case 38: next = current - col; break; //up
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
 		//alert('key: '+key+' current: '+current+' next: '+next);
-		if (key==37|key==38|key==39|key==40)
+		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
@@ -77,6 +79,8 @@ function check(e)
 			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
 			//set current=next
 			current = next;
+			//Prevent scrolling
+			return false;
 			}
 		else if (key==404) 
 			{
@@ -135,13 +139,15 @@ wget -q -U "$useragent" -O - "$url" > $log_file
 if [ "$type" = "menu" ]
 then
     echo '<center><img src="http://www.ipla.tv/images/logo.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
-    echo '<font size="+3">'
+    echo '<font size="+3"><br/>'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     item_nr=1
     for content in `cat $log_file | tr '\n' ' ' | tr '{}' '\n' | grep feed | sed -e 's/  */ /g' -e 's/ \"/\"/g' -e 's#http://##g' -e 's/ /\#\#/g'`
     do
-	feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | awk -F: '{print $2}' | tr -d '\"'`
-	feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | awk -F: '{print $2}' | sed 's/\#\#/ /g' | tr -d '\"'`
+	#feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | awk -F: '{print $2}' | tr -d '\"'`
+	#feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | awk -F: '{print $2}' | sed 's/\#\#/ /g' | tr -d '\"'`
+	feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | cut -d: -f2 | tr -d '\"'`
+	feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | cut -d: -f2 | sed 's/\#\#/ /g' | tr -d '\"'`
 	if [ "`echo $content | grep '/category/'`" ]
 	then
 	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
@@ -159,9 +165,12 @@ else
     then
 	for content in `egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | tr '\n' ' ' | tr '{}' '\n' | grep -i "/category/" | sed -e 's/  */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://##g'`
 	do
-	    feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | awk -F: '{print $2}' | tr -d '\"'`
-	    feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | tr -d '\"'`
-	    feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
+	    #feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | awk -F: '{print $2}' | tr -d '\"'`
+	    #feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | tr -d '\"'`
+	    #feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
+	    feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | cut -d: -f2 | tr -d '\"'`
+	    feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | cut -d: -f2 | tr -d '\"'`
+	    feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | cut -d: -f2 | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=http://$feedUrl\" target=\"_parent\"><img src=\"http://$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>"
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
@@ -173,10 +182,14 @@ else
 	#if [ "$type" = "category2" ]
 	    for content in `egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | tr '\n' ' ' | tr '{}' '\n' | grep -i "/movies/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
 	    do
-		feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | awk -F: '{print $2}' | tr -d '\"'`
-		feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-		feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-		feedVideo=`echo $content | sed 's/!#!/\n/g' | grep -i "\"video\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
+		#feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | awk -F: '{print $2}' | tr -d '\"'`
+		#feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
+		#feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
+		#feedVideo=`echo $content | sed 's/!#!/\n/g' | grep -i "\"video\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
+		feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | cut -d: -f2 | tr -d '\"'`
+		feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | cut -d: -f2 | sed 's#http//#http://#g' | tr -d '\"'`
+		feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | cut -d: -f2 | sed 's#http//#http://#g' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
+		feedVideo=`echo $content | sed 's/!#!/\n/g' | grep -i "\"video\":" | cut -d: -f2 | sed 's#http//#http://#g' | tr -d '\"'`
 		echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate<br/>$feedTitle</b></a></center></td>"
 		if [ "$(($item_nr % 3))" = "0" ]
 		then
