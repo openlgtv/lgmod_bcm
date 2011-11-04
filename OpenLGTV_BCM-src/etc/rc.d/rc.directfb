@@ -4,7 +4,7 @@
 # Source code released under GPL License
 
 LOCKFILE="/var/run/rc.directfb.lock"
-USBHID_CONNECTED_FILE="/var/run/usbhid.connected"
+USBHID_CONNECTED_DIR="/var/run/usbhid.connected"
 DIRECTFBRC="/usr/local/etc/directfbrc"
 v_res=1280x720
 
@@ -25,7 +25,7 @@ cursorupdates="no-cursor-updates"
 
 if [ "$netcast_keyboard_mouse_support" = "1" ]
 then
-    if [ "$1 $2" = "hotplug add" -o -f "$USBHID_CONNECTED_FILE" ]
+    if [ "$1 $2" = "hotplug add" -o -d "$USBHID_CONNECTED_DIR" ]
     then
 	cursorupdates="cursor-updates"
     fi
@@ -73,8 +73,8 @@ then
     fi
 fi
 
-echo "OpenLGTV_BCM-INFO: terminating web browser process - lb4wk (you may ignore error if its not running)..."
-killall lb4wk
+echo "OpenLGTV_BCM-INFO: terminating web browser process - lb4wk/GtkLauncher (you may ignore error if its not running)..."
+killall lb4wk GtkLauncher 2>/dev/null
 
 echo "OpenLGTV_BCM-INFO: rc.directfb removing LOCKFILE: $LOCKFILE..."
 rm -f "$LOCKFILE"

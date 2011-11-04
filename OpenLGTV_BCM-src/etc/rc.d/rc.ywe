@@ -256,15 +256,15 @@
 		    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		fi
 	    fi
-	    if [ -e "$ywedir/bin/konfabulator.sh" -a -z "`grep -m 1 '^killall lb4wk' $ywedir/bin/konfabulator.sh 2>/dev/null`" ]
+	    if [ -e "$ywedir/bin/konfabulator.sh" -a -z "`grep -m 1 '^killall lb4wk GtkLauncher' $ywedir/bin/konfabulator.sh 2>/dev/null`" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config ($ywedir/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..."
-		echo -e "\nkillall lb4wk\n" >> "$ywedir/bin/konfabulator.sh"
+		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk GtkLauncher' to Yahoo Widgets Engine config ($ywedir/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..."
+		echo -e "\nkillall lb4wk GtkLauncher\n" >> "$ywedir/bin/konfabulator.sh"
 	    fi
-	    if [ -e "$ywedir_usb/bin/konfabulator.sh" -a -z "`grep -m 1 '^killall lb4wk' $ywedir_usb/bin/konfabulator.sh 2>/dev/null`" ]
+	    if [ -e "$ywedir_usb/bin/konfabulator.sh" -a -z "`grep -m 1 '^killall lb4wk GtkLauncher' $ywedir_usb/bin/konfabulator.sh 2>/dev/null`" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk' to Yahoo Widgets Engine config on USB storage device ($ywedir_usb/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..."
-		echo -e "\nkillall lb4wk\n" >> "$ywedir_usb/bin/konfabulator.sh"
+		echo "OpenLGTV_BCM-INFO: adding 'killall lb4wk GtkLauncher' to Yahoo Widgets Engine config on USB storage device ($ywedir_usb/bin/konfabulator.sh) to fix YWE vs Web Browser incompatibility..."
+		echo -e "\nkillall lb4wk GtkLauncher\n" >> "$ywedir_usb/bin/konfabulator.sh"
 	    fi
 	else
 	    echo "OpenLGTV_BCM-INFO: preparing Yahoo Widgets Engine configs for Samsung Widgets is disabled by samsung_ywe setting variable..."

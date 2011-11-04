@@ -58,7 +58,7 @@ do
 		echo "OpenLGTV_BCM-WARN: rc.usb: Found LG firmware upgrade epaks: $epaks"
 		echo "OpenLGTV_BCM-WARN: rc.usb: Running in firmware upgrade mode - killing some services to free memory for upgrade"
 		
-		KILL='konfabulator lb4wk httpd nc udhcpc ntpd tcpsvd ls wget unzip zip djmount msdl'
+		KILL='konfabulator lb4wk GtkLauncher httpd nc udhcpc ntpd tcpsvd ls wget unzip zip djmount msdl'
 		#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl'
 		#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl RELEASE'
 			# LG: addon_mgr stagecraft konfabulator lb4wk msdl RELEASE
