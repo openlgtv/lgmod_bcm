@@ -252,6 +252,15 @@ function check(e)
 			return false;
 			}
 		    }
+		else if (key==19|key==220) 
+			{
+			//the PAUSE button on the remote control have been pressed or '\' on keyboard
+			//Set the same panel location path as current on other panel
+			var dest='fm.cgi?type=related&side=' + side + '&lpth=' + cpth + '&rpth=' + cpth;
+			window.location=dest;
+			//Prevent default action
+			return false;
+			}
 		else if (key==48) 
 			{
 			//the 0 on the remote control have been pressed
@@ -386,7 +395,24 @@ function check(e)
 			{
 			//the BLUE button on the remote control or F7 have been pressed
 			//Open directory creation dialog
-			mkdirDialog();
+			if (dialog_displayed==0)
+			    {
+			    mkdirDialog();
+			    }
+			else
+			    {
+			    BackSpace();
+			    }
+			return false;
+			}
+		else if (key==413|key==120)
+			{
+			//the STOP button on the remote control or F9 have been pressed
+			//Open rename dialog
+			if (dialog_displayed==0)
+			    {
+			    renameDialog();
+			    }
 			return false;
 			}
 		else if (key==415) 
@@ -414,7 +440,7 @@ function check(e)
 			    }
 			else
 			    {
-			    mkdirDialogRemove();
+			    dialogRemove();
 			    }
 			//Prevent default action
 			return false;
@@ -424,15 +450,6 @@ function check(e)
 			//the EXIT button on the remote control have been pressed
 			//NetCastExit API
 			window.NetCastExit();
-			//Prevent default action
-			return false;
-			}
-		else if (key==1006|key==220) 
-			{
-			//the LIST button on the remote control have been pressed or '\' on keyboard
-			//Set the same panel location path as current on other panel
-			var dest='fm.cgi?type=related&side=' + side + '&lpth=' + cpth + '&rpth=' + cpth;
-			window.location=dest;
 			//Prevent default action
 			return false;
 			}
@@ -455,7 +472,13 @@ function ChangeBgColor()
 	document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
 	document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
 	}
-	
+
+function BackSpace()
+	{
+	//Send a backspace on the currFocusedElement field
+	var Text = document.forms['text'].elements[currElementName].value;
+	document.forms['text'].elements[currElementName].value = Text.slice(0,Text.length-1);
+	}
 
 function setCurrent(element)
 	{
@@ -494,7 +517,29 @@ function mkdirDialog()
 	dialog_displayed = 1;
 	}
 
-function mkdirDialogRemove()
+function renameDialog()
+	{
+	var newdiv = document.createElement("div");
+	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:300px; left:300px; width:716px; height:106px; border:1;');
+	newdiv.id = "dialogWin";
+	document.body.appendChild(newdiv);
+	var kb = '<FONT color="black" size="+3"> \
+	    <center><b>Type new name for renamed file or directory:</b></center><br/> \
+	    <form id="text" name="text" action="fm.cgi" method="GET"> \
+	    <input id="txtName" name="txtName" type="textarea" style="width:710px" value="' + document.getElementById('link_' + side + current).name + '"> \
+	    <input id="txtOldName" name="txtOldName" type="hidden" value="' + document.getElementById('link_' + side + current).name + '"> \
+	    <input type="hidden" name="side" value="' + side + '"> \
+	    <input type="hidden" name="lpth" value="' + lpth + '"> \
+	    <input type="hidden" name="rpth" value="' + rpth + '"> \
+	    <input type="hidden" name="action" value="rename"> \
+	    </form></font>';
+	newdiv.innerHTML = kb;
+	document.getElementById('txtName').focus();
+	dialog_displayed = 1;
+	}
+
+function dialogRemove()
 	{
         document.body.removeChild(document.getElementById("dialogWin"));
 	dialog_displayed = 0;
@@ -517,6 +562,10 @@ document.defaultAction = true;
 if [ "$FORM_action" = "mkdir" -a "$cpth" != "" -a "$FORM_txtName" != "" ]
 then
     mkdir -p "$cpth/$FORM_txtName"
+fi
+if [ "$FORM_action" = "rename" -a "$cpth" != "" -a "$FORM_txtOldName" != "" -a "$FORM_txtName" != "" ]
+then
+    mv "$cpth/$FORM_txtOldName" "$cpth/$FORM_txtName"
 fi
 
 #if [ "$type" = "menu" ]
@@ -577,7 +626,7 @@ fi
 		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	    #fi
 	fi
-	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\">$ldate_cut</td></tr>"
+	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -623,14 +672,14 @@ fi
 	else
 	    rimage="generic.gif"
 	fi
-	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\">$rdate_cut</td></tr>"
+	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
     #echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
-    echo '<center><font size="+1" color="yellow"><font color="white">[PLAY/OK]</font> PLAY &nbsp; &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [LIST/"\"]</font> SAME PATH</font><br/></center>'
+    echo '<center><font size="+1" color="yellow"><font color="white">[PLAY/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [PAUSE/"\"]</font> SAME PATH</font><br/></center>'
     #echo "<script type='text/javascript'></script>"
 ?>
 </BODY></HTML>

@@ -374,7 +374,7 @@ else
     then
 	if [ "$spth" != "" -a "$spth" != "/" ]
 	then
-	    echo "Removing $spth ...<br/><br/>"
+	    echo "<center><font size='+4' color='brown'><br/><b>Removing: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
 	    rm -r "$spth" 2>&1
 	    if [ "$?" -ne "0" ]
 	    then
