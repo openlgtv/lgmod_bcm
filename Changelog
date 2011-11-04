@@ -256,7 +256,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: with new hotplug-capable scripts Yahoo Widgets Engine/Data from USB storage devices is hotpluggable also - on connect YWE gots prepared and on umount from remote it gets stopped
     * ADD: 'upgrade mode' - when there are LG firmware upgrade EPK files on USB stick in LG_DTV dir then some services get stopped and caches cleaned when needed - depends on file size to ensure no out-of-mem LG upgrade fail
     * ADD: hotplugging of USB HID devices (shows/hides mouse pointer also)
-    * ADD: two-panel onscreen web-based FileManager with recursive copy, move, delete, playback/view support via remote control
+    * ADD: two-panel onscreen web-based FileManager with recursive copy, move, mkdir, delete, playback/view support via remote control
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
@@ -277,6 +277,7 @@ Answer for people asking if they can use it if they have already made modificati
     * REMOVE: 'tcpdump' binary for space reasons
     * REMOVE: 'top' binary - use busybox applet instead
     * REMOVE: 'empty' binary - not used at all
+    * REMOVE: 'file' binary - useless without magic info
 
 Remaining issues with 0.5.0 development branch:
     * compatibility break with autoupgrade method from older versions - need to install 0.5.0 via telnet/ssh/serial again

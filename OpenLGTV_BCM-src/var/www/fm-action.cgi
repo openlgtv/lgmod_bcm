@@ -141,15 +141,9 @@ function check(e)
 		//	    window.location=dest;
 			    return false;
 			}
-		//else if (key==404) 
-		//	{
-		//	//the green button on the remote control have been pressed
-		//	//Switch to the Keyboard
-		//	top.frames["Keyboard"].focus();
-		//	}
-		else if (key==461) 
+		else if (key==461|key==27) 
 			{
-			//the back button on the remote control have been pressed
+			//the back button on the remote control or ESC have been pressed
 			//NetCastBack API
 			//window.NetCastBack();
 			//lets get back to WebUI instead of closing NetCast service

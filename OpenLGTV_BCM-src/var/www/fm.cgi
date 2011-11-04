@@ -78,10 +78,6 @@ then
     export rpth="$FORM_rpth"
 fi
 
-echo "var side = '$side';"
-echo "var lpth = '$lpth';"
-echo "var rpth = '$rpth';"
-
 #echo "<script type='text/javascript'>"
 if [ "$side" = "l" -a "$lpth" != "" ]
 then
@@ -92,6 +88,11 @@ else
 	cpth="$rpth"
     fi
 fi
+
+echo "var side = '$side';"
+echo "var lpth = '$lpth';"
+echo "var rpth = '$rpth';"
+echo "var cpth = '$cpth';"
 
 if [ -f "$cpth" ]
 then
@@ -111,6 +112,85 @@ var current = 1;
 var next = current;
 //var side = 'l';
 var nside = side;
+var dialog_displayed = 0;
+
+//******** MOBILE PHONE-STYLE KEYPAD *********
+var keys = new Array();
+
+keys['0'] = new Object();
+keys['0'].ctr = 0;
+keys['0'].char = [' ','0','+','*','-','\\','=','<','>'];
+
+keys['1'] = new Object();
+keys['1'].ctr = 0;
+keys['1'].char = ['.',':',',','/','1','@','(',')','[',']','$','%','#','&'];
+
+keys['2'] = new Object();
+keys['2'].ctr = 0;
+keys['2'].char = ['a','b','c','2','à'];
+
+keys['3'] = new Object();
+keys['3'].ctr = 0;
+keys['3'].char = ['d','e','f','3','è','é'];
+
+keys['4'] = new Object();
+keys['4'].ctr = 0;
+keys['4'].char = ['g','h','i','4','ì'];
+
+keys['5'] = new Object();
+keys['5'].ctr = 0;
+keys['5'].char = ['j','k','l','5'];
+
+keys['6'] = new Object();
+keys['6'].ctr = 0;
+keys['6'].char = ['m','n','o','6','ò','ó'];
+
+keys['7'] = new Object();
+keys['7'].ctr = 0;
+keys['7'].char = ['p','q','r','s','7'];
+
+keys['8'] = new Object();
+keys['8'].ctr = 0;
+keys['8'].char = ['t','u','v','8','ù'];
+
+keys['9'] = new Object();
+keys['9'].ctr = 0;
+keys['9'].char = ['w','x','y','z','9'];
+
+var append=false;
+var str='';
+var timer;
+var prevNum=null;
+var currElementName='txtName';
+
+function keypad(num)
+{
+  var currFocusedElement = document.forms['text'].elements[currElementName];
+  if (prevNum!=null && prevNum!=num) 
+	{
+     append=true;
+	}
+  if (keys[num].ctr>keys[num].char.length-1) keys[num].ctr=0; //go back to first item in keypad
+  if (append) 
+	{
+	keys[num].ctr=0; //go back to first item in keypad
+     str=currFocusedElement.value+keys[num].char[keys[num].ctr]; 
+	 
+	}
+  else 
+	{
+     str=(currFocusedElement.value.length==0) ? currFocusedElement.value=keys[num].char[keys[num].ctr]:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+keys[num].char[keys[num].ctr];
+	}
+  currFocusedElement.value=str;
+  keys[num].ctr++;
+  prevNum=num;
+  //reset
+  append=false;
+  clearTimeout(timer);
+  timer=setTimeout(function(){append=true;}, 2000);
+}
+
+//******** END OF MOBILE PHONE-STYLE KEYPAD *********
 
 //Attach the function with the event
 if(document.addEventListener) document.addEventListener('keydown', check, false);
@@ -125,25 +205,30 @@ function check(e)
 	(e.keyCode) ? key = e.keyCode : key = e.which;
 	//workaround to check for 'enter' on WebKit/KHTML which doesnt want to work in 'try' block
 	if (key==10|key==13|key==32) 
-		{   //enter and space
+		{   //ENTER/OK and SPACE
 		    //alert(document.getElementById('link_' + side + current).href); // link destination
 		    //alert(document.getElementById('link_' + side + current).text); // link name
-		    document.getElementById('link_' + side + current).click();
+		    if (dialog_displayed==0)
+			{
+			document.getElementById('link_' + side + current).click();
+			}
 		    return false;
 		}
 	try
 		{
 		switch(key)
 			{
-			case  9: next = current; if (side=='l') { nside = 'r' } else { nside = 'l' }; break; //fav/tab
-			case 33: next = (1*current) - 10; break; //ch up
-			case 34: next = (1*current) + 10; break; //ch down
-			case 37: next = current; nside = 'l'; break; //left
-			case 38: next = current - col; break; //up
-			case 39: next = current; nside = 'r'; break; //right
-			case 40: next = (1*current) + col; break; //down
+			case  9: next = current; if (side=='l') { nside = 'r' } else { nside = 'l' }; break; //FAV/TAB
+			case 33: next = (1*current) - 10; break; //CH UP
+			case 34: next = (1*current) + 10; break; //CH DOWN
+			case 37: next = current; nside = 'l'; break; //LEFT
+			case 38: next = current - col; break; //UP
+			case 39: next = current; nside = 'r'; break; //RIGHT
+			case 40: next = (1*current) + col; break; //DOWN
 			}
 		if (key==9|key==33|key==34|key==37|key==38|key==39|key==40)
+		    {
+		    if (dialog_displayed==0)
 			{
 			if (next<=0)
 			    {
@@ -166,9 +251,110 @@ function check(e)
 			e.preventDefault();
 			return false;
 			}
+		    }
+		else if (key==48) 
+			{
+			//the 0 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('0');
+			    //return false;
+			    }
+			} 
+		else if (key==49) 
+			{
+			//the 1 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('1');
+			    //return false;
+			    }
+			}
+		else if (key==50) 
+			{
+			//the 2 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('2');
+			    //return false;
+			    }
+			}
+		else if (key==51) 
+			{
+			//the 3 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('3');
+			    //return false;
+			    }
+			}
+		else if (key==52) 
+			{
+			//the 4 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('4');
+			    //return false;
+			    }
+			}
+		else if (key==53) 
+			{
+			//the 5 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('5');
+			    //return false;
+			    }
+			}
+		else if (key==54) 
+			{
+			//the 6 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('6');
+			    //return false;
+			    }
+			}
+		else if (key==55) 
+			{
+			//the 7 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('7');
+			    //return false;
+			    }
+			}
+		else if (key==56) 
+			{
+			//the 8 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('8');
+			    //return false;
+			    }
+			}
+		else if (key==57) 
+			{
+			//the 9 on the remote control have been pressed
+			//use the keypad function
+			if (dialog_displayed==1)
+			    {
+			    keypad('9');
+			    //return false;
+			    }
+			}
 		else if (key==403|key==119) 
 			{
-			//the red button on the remote control or F8 have been pressed
+			//the RED button on the remote control or F8 have been pressed
 			//Delete file or directory
 			// lpath and rpath variables are wrong - but the right ones lpth and rpth are gathered from link
 			var dest='fm-action.cgi?action=delete' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
@@ -178,7 +364,7 @@ function check(e)
 			}
 		else if (key==404|key==116) 
 			{
-			//the green button on the remote control or F5 have been pressed
+			//the GREEN button on the remote control or F5 have been pressed
 			//Copy file or directory
 			var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
@@ -188,49 +374,77 @@ function check(e)
 			}
 		else if (key==405|key==117) 
 			{
-			//the yellow button on the remote control or F6 have been pressed
+			//the YELLOW button on the remote control or F6 have been pressed
 			//Move file or directory
 			var dest='fm-action.cgi?action=move' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
 			//Prevent default action
 			return false;
 			}
-		else if (key==406|key==415) 
+		//else if (key==406|key==415) 
+		else if (key==406|key==118)
 			{
-			//the blue or play button on the remote control have been pressed
+			//the BLUE button on the remote control or F7 have been pressed
+			//Open directory creation dialog
+			mkdirDialog();
+			return false;
+			}
+		else if (key==415) 
+			{
+			//the PLAY button on the remote control have been pressed
 			//Play the media file
 			var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
 			}
 		//else if (key==404) 
 		//	{
-			//the green button on the remote control have been pressed
+			//the GREEN button on the remote control have been pressed
 			//Switch to the Keyboard
 		//	top.frames["Keyboard"].focus();
 		//	}
-		else if (key==461) 
+		else if (key==461|key==27) 
 			{
-			//the back button on the remote control have been pressed
-			//NetCastBack API
-			//window.NetCastBack();
-			//lets get back to WebUI instead of closing NetCast service
-			history.go(-1);
+			//the BACK button on the remote control or ESC have been pressed
+			if (dialog_displayed==0)
+			    {
+			    //NetCastBack API
+			    //window.NetCastBack();
+			    //lets get back to WebUI instead of closing NetCast service
+			    history.go(-1);
+			    }
+			else
+			    {
+			    mkdirDialogRemove();
+			    }
 			//Prevent default action
 			return false;
 			}
 		else if (key==1001) 
 			{
-			//the exit button on the remote control have been pressed
+			//the EXIT button on the remote control have been pressed
 			//NetCastExit API
 			window.NetCastExit();
 			//Prevent default action
 			return false;
 			}
+		else if (key==1006|key==220) 
+			{
+			//the LIST button on the remote control have been pressed or '\' on keyboard
+			//Set the same panel location path as current on other panel
+			var dest='fm.cgi?type=related&side=' + side + '&lpth=' + cpth + '&rpth=' + cpth;
+			window.location=dest;
+			//Prevent default action
+			return false;
+			}
 		}catch(Exception){}
-	if (e.stopPropagation)
+	//if (dialog_displayed==0)
+	if (dialog_displayed==0|(key>=48&key<=57))
 	    {
-	    e.stopPropagation();
-	    e.preventDefault();
+	    if (e.stopPropagation)
+		{
+		e.stopPropagation();
+		e.preventDefault();
+		}
 	    }
 	}
 
@@ -251,14 +465,42 @@ function setCurrent(element)
 	}
 	
 
-	function OnLoadSetCurrent(element)
+function OnLoadSetCurrent(element)
 	{
-	current=1;
+	//current=1;
 	//top.frames["Keyboard"].focus();
 	document.links['link_' + side + current].focus();
 	ChangeBgColor();
 	}
 	
+function mkdirDialog()
+	{
+	var newdiv = document.createElement("div");
+	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:300px; left:300px; width:716px; height:106px; border:1;');
+	newdiv.id = "dialogWin";
+	document.body.appendChild(newdiv);
+	var kb = '<FONT color="black" size="+3"> \
+	    <center><b>Type name for directory to be created:</b></center><br/> \
+	    <form id="text" name="text" action="fm.cgi" method="GET"> \
+	    <input id="txtName" name="txtName" type="textarea" style="width:710px"> \
+	    <input type="hidden" name="side" value="' + side + '"> \
+	    <input type="hidden" name="lpth" value="' + lpth + '"> \
+	    <input type="hidden" name="rpth" value="' + rpth + '"> \
+	    <input type="hidden" name="action" value="mkdir"> \
+	    </form></font>';
+	newdiv.innerHTML = kb;
+	document.getElementById('txtName').focus();
+	dialog_displayed = 1;
+	}
+
+function mkdirDialogRemove()
+	{
+        document.body.removeChild(document.getElementById("dialogWin"));
+	dialog_displayed = 0;
+	OnLoadSetCurrent();
+        }
+
 document.defaultAction = true;
 
 
@@ -271,7 +513,11 @@ document.defaultAction = true;
 
 <?
 
-
+# TODO: make error handling with error message
+if [ "$FORM_action" = "mkdir" -a "$cpth" != "" -a "$FORM_txtName" != "" ]
+then
+    mkdir -p "$cpth/$FORM_txtName"
+fi
 
 #if [ "$type" = "menu" ]
 #then
@@ -383,6 +629,8 @@ document.defaultAction = true;
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
-    echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
+    #echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
+    echo '<center><font size="+1" color="yellow"><font color="white">[PLAY/OK]</font> PLAY &nbsp; &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [LIST/"\"]</font> SAME PATH</font><br/></center>'
+    #echo "<script type='text/javascript'></script>"
 ?>
 </BODY></HTML>
