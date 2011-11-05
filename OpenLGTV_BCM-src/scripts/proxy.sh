@@ -364,6 +364,12 @@ echo -e $(for linex in $read_lines
 				//I send a backspace on the currFocusedElement field\n\
 				BackSpace();\n\
 				}\n\
+			else if (key==415)\n\
+				{\n\
+				//PLAY button to show/hide keyboardtab and resize iframe\n\
+				parent.postMessage('ShowHideKeyboardTab', '*');\n\
+				//return false;\n\
+				}\n\
 			else if (key==461)\n\
 				{\n\
 				//the back button on the remote control have been pressed\n\

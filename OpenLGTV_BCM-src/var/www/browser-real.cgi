@@ -99,8 +99,10 @@ function keypad(num)
 var col = 8; //number of 'cells' in a row
 var current;
 var next;
+var iframe_shown=0;
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
+
      
 function check(e)
 	{
@@ -260,6 +262,12 @@ function check(e)
 			ChangeBgColor();
 			document.getElementById('MainPage').focus();
 			}
+		else if (key==415)
+			{
+			//PLAY button to show/hide keyboardtab and resize iframe
+			ShowHideKeyboardTab();
+			return false;
+			}
 		else if (key==457) 
 			{
 			//the info button on the remote control have been pressed
@@ -271,7 +279,7 @@ function check(e)
 			//the back button on the remote control have been pressed
 			//NetCastBack API (exits from NetCast portal menu)
 			//window.NetCastBack();
-			//let's get back to WebUI instead of closing NetCast service
+			//lets get back to WebUI instead of closing NetCast service
 			history.go(-1);
 			}
 		else if (key==1001) 
@@ -344,9 +352,11 @@ function BackSpace()
 function SearchOnGoogle()
 	{
 	//Search on google the content of currFocusedElement field
-	var URLText = 'http://www.google.com/search?q=' + document.forms['URL'].elements[currElementName].value;
+	//Google makes problems with automated search now - redirects to https to prove that the page is browsed by human
+	//var URLText = 'http://www.google.com/search?q=' + document.forms['URL'].elements[currElementName].value;
+	var URLText = 'http://www.bing.com/search?q=' + document.forms['URL'].elements[currElementName].value;
 	document.getElementById('MainPage').src = URLText;
-	}	
+	}
 	
 function setCurrent(element)
 	{
@@ -381,18 +391,41 @@ function OnLoadSetCurrent()
 	    };
 	}
 
-	function ResizeIFrame()
-		{
-		 //change the height of the iframe
-		 document.getElementById('MainPage').width = window.innerWidth - 270;
-		 document.getElementById('MainPage').height = window.innerHeight - 20;
-		}
-	
-	//windows.PostMessage management
-	//it is necessary to bypass browsers block on cross-domain frames communication.
-	window.addEventListener("message", receiveMessage, false);
+function ResizeIFrame()
+	{
+	//change the height of the iframe
+	document.getElementById('MainPage').width = window.innerWidth - 270;
+	document.getElementById('MainPage').height = window.innerHeight - 20;
+	iframe_shown=1;
+	document.getElementById('keyboardtab').setAttribute('style', '');
+	}
 
-	function receiveMessage(event)
+function FullIFrame()
+	{
+	//change the height of the iframe
+	document.getElementById('MainPage').width = window.innerWidth;
+	document.getElementById('MainPage').height = window.innerHeight;
+	iframe_shown=0;
+	document.getElementById('keyboardtab').setAttribute('style', 'visibility:hidden;');
+	}
+
+function ShowHideKeyboardTab()
+	{
+	if (iframe_shown==1)
+	    {
+	    FullIFrame();
+	    }
+	else
+	    {
+	    ResizeIFrame();
+	    }
+	}
+
+//windows.PostMessage management
+//it is necessary to bypass browsers block on cross-domain frames communication.
+window.addEventListener("message", receiveMessage, false);
+
+function receiveMessage(event)
 		{
 		if (event.data == 'FocusToYou')
 			{
@@ -401,35 +434,41 @@ function OnLoadSetCurrent()
 			//Change the page's BgColor.
 			document.bgColor = '#FFFFFF';
 			}
+		else if (event.data == 'ShowHideKeyboardTab')
+			{
+			//show or hide iframe with KeyboardTab
+			if (iframe_shown==1)
+			    {
+			    FullIFrame();
+			    }
+			else
+			    {
+			    ResizeIFrame();
+			    }
+			}
 		return;
 		}
 		
-	function SwitchFocusedPage()
-		{
-		//Change the page's BgColor.
-		ChangeBgColor();
-		
-		//windows.PostMessage
-		//it is necessary to bypass browsers block on cross-domain frames communication.
-		document.getElementById('MainPage').contentWindow.postMessage('FocusToYou', '*');
-		
-		}
-		
+function SwitchFocusedPage()
+	{
+	//Change the pages BgColor.
+	ChangeBgColor();
+	//windows.PostMessage
+	//it is necessary to bypass browsers block on cross-domain frames communication.
+	document.getElementById('MainPage').contentWindow.postMessage('FocusToYou', '*');
+	}
+
 document.defaultAction = true;
 
-
 </script>
-
-
-
-
 </head>
 <body bgcolor="#D3D3D3">
 
-	<iframe id="MainPage" src="browser/mainpage.cgi" width="50%" height="100%" valign = "top" align="right" frameborder="0">
+	<!-- iframe id="MainPage" src="browser/mainpage.cgi" width="50%" height="100%" valign = "top" align="right" frameborder="0" -->
+	<iframe id="MainPage" src="browser/mainpage.cgi" width="80%" height="97%" valign = "top" align="right" frameborder="0">
 		<p>Your browser does not support iframes.</p>
 	</iframe>
-
+<div id="keyboardtab" style="">
 	<div style="position: absolute; left: 0px; top: 5px;">
 		<form id="URL" name="URL">
 			<font size="+2"><center><b>OpenLGTV BCM<br/>
@@ -456,7 +495,7 @@ document.defaultAction = true;
 			<tr>
 				<td colspan=2>
 					<a onClick="javascript:SearchOnGoogle();" href="#"><img src="Images/Keyboard/red_button.png" align="middle" Border="0" /></a>
-					<b>Search on Google</b>
+					<b>Search on Bing</b>
 				</td>
 			</tr>
 			<tr>
@@ -479,7 +518,22 @@ document.defaultAction = true;
 				</td>
 				<td><img src="Images/Keyboard/exit_button.png" align="middle" Border="0" /><b>Exit</b></td>
 			</tr>
+			<tr><td><br/></td><td></td><br/></td>
+			<tr>
+				<td>
+					<b><a onClick="javascript:ShowHideKeyboardTab();" href="#">[PLAY]</a>
+					Show/Hide</b>
+				</td>
+				<td><b>Keyboard</b></td>
+			</tr>
+			<tr>
+				<td>
+					<b>[FAV] &nbsp; Tab</b>
+				</td>
+				<td></td>
+			</tr>
 		</Table>
 	</div>
+</div>
 </body>
 </html>
