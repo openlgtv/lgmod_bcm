@@ -446,6 +446,11 @@ function receiveMessage(event)
 			    ResizeIFrame();
 			    }
 			}
+		else if (event.data == 'SearchOnGoogle')
+			{
+			//Search on google the content of currFocusedElement field
+			SearchOnGoogle();
+			}
 		return;
 		}
 		
@@ -490,7 +495,7 @@ document.defaultAction = true;
 		</Table>
 	</div>
 	
-	<div style="position: absolute; left: 5px; top: 550px;">
+	<div style="position: absolute; left: 5px; top: 540px;">
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td colspan=2>
@@ -499,10 +504,11 @@ document.defaultAction = true;
 				</td>
 			</tr>
 			<tr>
-				<td colspan=2>
+				<td>
 					<a onClick='javascript:SwitchFocusedPage(); return false;' href="#"><img src="Images/Keyboard/green_button.png" align="middle" Border="0" /></a>
 					<b>Switch Page</b>
 				</td>
+				<td><img src="Images/Keyboard/fav_button.png" align="middle" Border="0" /><b>Tab</b></td>
 			</tr>
 			<tr>
 				<td>
@@ -518,19 +524,11 @@ document.defaultAction = true;
 				</td>
 				<td><img src="Images/Keyboard/exit_button.png" align="middle" Border="0" /><b>Exit</b></td>
 			</tr>
-			<tr><td><br/></td><td></td><br/></td>
 			<tr>
-				<td>
-					<b><a onClick="javascript:ShowHideKeyboardTab();" href="#">[PLAY]</a>
-					Show/Hide</b>
+				<td colspan=2>
+					<a onClick="javascript:ShowHideKeyboardTab();" href="#"><img src="Images/Keyboard/play_button.png" align="middle" Border="0" /></a>
+					<b>Show/Hide Keyboard</b>
 				</td>
-				<td><b>Keyboard</b></td>
-			</tr>
-			<tr>
-				<td>
-					<b>[FAV] &nbsp; Tab</b>
-				</td>
-				<td></td>
 			</tr>
 		</Table>
 	</div>

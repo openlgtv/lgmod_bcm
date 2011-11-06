@@ -42,7 +42,7 @@ function CreateBookmark() {
 		if (txtFile.readyState == 4) 
 			{  // Makes sure the document is ready to parse.
 			if (txtFile.status == 200 || txtFile.status == 0) 
-				{  // Makes sure it's found the file.
+				{  // Makes sure its found the file.
 				allText = txtFile.responseText;
 				//alert(allText);
 				// Split each line into an array
@@ -78,7 +78,6 @@ function GoToNetCastLinks()
 		if [ -n "`pgrep -f run3556-proxy`" -a "$HTTP_HOST" = "127.0.0.1:88" ]
 		then
 		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
-		    #echo "window.location='http://127.0.0.1:88/home.cgi?qURL=%2Fmnt%2Fbrowser%2Frun3556+http%3A%2F%2F127.0.0.1%3A88%2Fbrowser%2Flinks.html&run=Run&qUser=&qPassw=';"
 		else
 		    echo "window.location='links.html';"
 		fi
@@ -137,8 +136,7 @@ function check(e)
 		else if (key==403) 
 			{
 			//the red button on the remote control have been pressed
-			//window.location='links.html';
-			GoToNetCastLinks();
+			parent.postMessage('SearchOnGoogle', '*');
 			}
 		else if (key==404) 
 			{
@@ -169,7 +167,7 @@ function check(e)
 			//the back button on the remote control have been pressed
 			//NetCastBack API
 			//window.NetCastBack();
-			//let's get back to WebUI instead of closing NetCast service
+			//lets get back to WebUI instead of closing NetCast service
 			history.go(-1);
 			}
 		else if (key==1001) 
@@ -183,7 +181,7 @@ function check(e)
 		
 function ChangeBgColor()
 	{
-	//Change the page's BgColor.
+	//Change the pages BgColor.
 	document.bgColor = '#D3D3D3';
 	}
 	
@@ -223,7 +221,7 @@ function OnLoadSetCurrent()
 	
 	function SwitchFocusedPage()
 	{
-	//Change the page's BgColor.
+	//Change the pages BgColor.
 	ChangeBgColor();
 	
 	//windows.PostMessage
@@ -336,7 +334,7 @@ document.defaultAction = true;
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td colspan=2>
-					<a onClick="javascript:GoToNetCastLinks();" href="#"><img src="Images/Keyboard/red_button.png" align="middle" Border="0" /></a>
+					<a onClick="javascript:GoToNetCastLinks();" href="#"><img src="Images/Keyboard/info_button.png" align="middle" Border="0" /></a>
 					<b>NetCast services</b>
 				</td>
 				<td colspan=2>
