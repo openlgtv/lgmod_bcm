@@ -48,8 +48,13 @@ then
     else
 	qPath="NetShare"
     fi
-    #echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw" > /mnt/user/cfg/ndrvtab
-    sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw?" /mnt/user/cfg/ndrvtab
+    
+    if [ "`cat /mnt/user/cfg/ndrvtab | wc -l`" -lt "$id" ]
+    then
+	echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw" >> /mnt/user/cfg/ndrvtab
+    else
+	sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw?" /mnt/user/cfg/ndrvtab
+    fi
     #echo '</div>'
 fi
 
