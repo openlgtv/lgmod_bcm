@@ -158,21 +158,6 @@ then
     fi
 fi
 
-# v- SHOULDN'T be needed now
-# check if all users have their passwords enabled if they have set any already
-#if [ -n "`grep '::' /mnt/user/etc/passwd 2> /dev/null`" ]
-#then
-#    for i in `grep '\\$' /mnt/user/etc/shadow | awk -F: '{print $1}'`
-#    do
-#	user_fix=`grep "^$i::" /mnt/user/etc/passwd | awk -F: '{print $1}'`
-#	if [ "$user_fix" != "" ]
-#	then
-#	    echo "OpenLGTV_BCM-WARN: enable password for user $user_fix in passwd file..."
-#	    sed -i -e "s/^$user_fix::/$user_fix:x:/g" /mnt/user/etc/passwd
-#	fi
-#    done
-#fi
-
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 if [ ! -d "/usr/etc/dropbear" ]
 then
@@ -190,38 +175,6 @@ then
 	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
     fi
 fi
-# v- not much useful, lets set static motd instead of such scripted modification
-#if [ ! -f "/usr/etc/motd" ]
-#then
-#    if [ -f "/mnt/user/etc/motd" ]
-#    then
-#        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/motd file"
-#	#cp /mnt/user/etc/shadow /usr/etc/shadow
-#	ln -sf /mnt/user/etc/motd /usr/etc/motd
-#    else
-#        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/motd file based on default one"
-#	#cp /etc/motd.org /usr/etc/motd
-#	cp /etc/motd.org /mnt/user/etc/motd
-#	ln -sf /mnt/user/etc/motd /usr/etc/motd
-#    fi
-#fi
-#if [ -f "/mnt/user/etc/motd" ]
-#then
-#    ver_old=`cat /mnt/user/etc/motd | grep "Welcome to OpenLGTV BCM ver." | awk -F"ver. " '{print $2}' | sed 's/!//g'`
-#    if [ -n "$ver_old" ]
-#    then
-#        echo "OpenLGTV_BCM-INFO: setting correct OpenLGTV BCM version ($ver) in /tmp/motd file"
-#	if [ "$ver_old" != "$ver" ]
-#	then
-#	    cat /mnt/user/etc/motd | sed "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver. $ver/g" > /tmp/motd
-#	else
-#	    cp /mnt/user/etc/motd /tmp/motd
-#	fi
-#    else
-#        echo "OpenLGTV_BCM-WARN: OpenLGTV BCM welcome string not found in /tmp/motd file"
-#	cat /mnt/user/etc/motd > /tmp/motd
-#    fi
-#fi
 if [ ! -d "/mnt/user/.ssh" ]
 then
     echo "OpenLGTV_BCM-INFO: creating /mnt/user/.ssh dir for storage of user SSH configs and keys"

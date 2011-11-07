@@ -56,3 +56,40 @@ body{
 	input.menubutton {
 	height:25px;
 }
+.mountsrc{
+	width:300px;
+	max-width:300px;
+	overflow:hidden;
+	white-space:nowrap;
+}
+.mountdst{
+	width:190px;
+	max-width:190px;
+	overflow:hidden;
+	white-space:nowrap;
+}
+.mountfstype{
+	width:50px;
+	max-width:50px;
+	overflow:hidden;
+	text-align:center;
+}
+.mountuname{
+	width:100px;
+	max-width:100px;
+	overflow:hidden;
+	text-align:center;
+	white-space:nowrap;
+}
+.mountauto{
+	width:80px;
+	max-width:80px;
+	overflow:hidden;
+	text-align:center;
+}
+.mountedit{
+	width:80px;
+	max-width:80px;
+	overflow:hidden;
+	text-align:center;
+}

@@ -65,6 +65,7 @@ settings_depreciated="confirmations rebooting netcast_kill_browser"
 if [ "$uver" != "$ver" -o ! -f "/mnt/user/cfg/settings" ]
 then
     echo "OpenLGTV_BCM-INFO: last booted version ($uver) is different than current one ($ver) or settings file is missing - checking if all current settings are set"
+    [ ! -d "/mnt/user/cfg" ] && mkdir -p /mnt/user/cfg
     for svarx in `cat /etc/default/settings.default | awk -F= '{print $1 "="}'`
     do
 	svar=`echo $svarx | awk -F= '{print $1 "="}'`

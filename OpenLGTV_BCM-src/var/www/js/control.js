@@ -172,76 +172,81 @@ PageElements[17].type = ['txt'];
 PageElements[17].focused=false;
 
 PageElements[18] = new Object();
-PageElements[18].value = ['radio1'];
-PageElements[18].type = ['radio'];
+PageElements[18].value = ['txtPath'];
+PageElements[18].type = ['txt'];
+PageElements[18].focused=false;
 
 PageElements[19] = new Object();
-PageElements[19].value = ['check1'];
-PageElements[19].type = ['checkbox'];
+PageElements[19].value = ['radio1'];
+PageElements[19].type = ['radio'];
 
 PageElements[20] = new Object();
-PageElements[20].value = ['check2'];
+PageElements[20].value = ['check1'];
 PageElements[20].type = ['checkbox'];
 
 PageElements[21] = new Object();
-PageElements[21].value = ['check3'];
+PageElements[21].value = ['check2'];
 PageElements[21].type = ['checkbox'];
 
 PageElements[22] = new Object();
-PageElements[22].value = ['check4'];
+PageElements[22].value = ['check3'];
 PageElements[22].type = ['checkbox'];
 
 PageElements[23] = new Object();
-PageElements[23].value = ['check5'];
+PageElements[23].value = ['check4'];
 PageElements[23].type = ['checkbox'];
 
 PageElements[24] = new Object();
-PageElements[24].value = ['check6'];
+PageElements[24].value = ['check5'];
 PageElements[24].type = ['checkbox'];
 
 PageElements[25] = new Object();
-PageElements[25].value = ['check7'];
+PageElements[25].value = ['check6'];
 PageElements[25].type = ['checkbox'];
 
 PageElements[26] = new Object();
-PageElements[26].value = ['check8'];
+PageElements[26].value = ['check7'];
 PageElements[26].type = ['checkbox'];
 
 PageElements[27] = new Object();
-PageElements[27].value = ['check9'];
+PageElements[27].value = ['check8'];
 PageElements[27].type = ['checkbox'];
 
 PageElements[28] = new Object();
-PageElements[28].value = ['check10'];
+PageElements[28].value = ['check9'];
 PageElements[28].type = ['checkbox'];
 
 PageElements[29] = new Object();
-PageElements[29].value = ['check11'];
+PageElements[29].value = ['check10'];
 PageElements[29].type = ['checkbox'];
 
 PageElements[30] = new Object();
-PageElements[30].value = ['check12'];
+PageElements[30].value = ['check11'];
 PageElements[30].type = ['checkbox'];
 
 PageElements[31] = new Object();
-PageElements[31].value = ['check13'];
+PageElements[31].value = ['check12'];
 PageElements[31].type = ['checkbox'];
 
 PageElements[32] = new Object();
-PageElements[32].value = ['check14'];
+PageElements[32].value = ['check13'];
 PageElements[32].type = ['checkbox'];
 
 PageElements[33] = new Object();
-PageElements[33].value = ['check15'];
+PageElements[33].value = ['check14'];
 PageElements[33].type = ['checkbox'];
 
 PageElements[34] = new Object();
-PageElements[34].value = ['check16'];
+PageElements[34].value = ['check15'];
 PageElements[34].type = ['checkbox'];
 
 PageElements[35] = new Object();
-PageElements[35].value = ['check17'];
+PageElements[35].value = ['check16'];
 PageElements[35].type = ['checkbox'];
+
+PageElements[36] = new Object();
+PageElements[36].value = ['check17'];
+PageElements[36].type = ['checkbox'];
 
 var currElementIndex;
 var currElementName;
