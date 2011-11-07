@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.8.2 by xeros
+# OpenLGTV BCM NetCast config parser and regenerator v.0.8.3 by xeros
 # Source code released under GPL License
 
 echo "OpenLGTV_BCM-INFO: NetCast config parser and regenerator script."
@@ -73,7 +73,7 @@ then
     echo " set_proxy    - generate run3556-proxy, extra_conf-proxy and new proxy_config_txt files for builtin web proxy"
     echo " unset_proxy  - remove run3556-proxy, extra_conf-proxy and proxy_config_txt files and change OpenLGTV_BCM Internet Browser item in config_xml file"
     echo " enable_all   - enable all NetCast services which have their available swf icons in /home/netcast_icons"
-    echo " kill_browser - modify run3556 adding 'killall lb4wk' at the beginning to kill old web browser instances at each run"
+    echo " kill_browser - modify run3556 adding 'killall lb4wk GtkLauncher' at the beginning to kill old web browser instances at each run"
     echo "Options:"
     echo " config_xml=/path/to/config.xml"
     echo "       - config.xml file used to modify NetCast menu (needed for all actions)"
@@ -294,13 +294,13 @@ then
     then
 	echo "OpenLGTV_BCM-INFO: NetCast config generator: \"kill_browser\" argument passed..."
 	if [ ! -f "$org_run3556" ]; then echo "OpenLGTV_BCM-ERROR: NetCast config generator: $org_run3556 file not found!"; exit 1; fi
-	if [ -z "`grep -m 1 '^killall lb4wk' $org_run3556`" ]
+	if [ -z "`grep -m 1 '^killall lb4wk GtkLauncher' $org_run3556`" ]
 	    then
-	    echo "OpenLGTV_BCM-INFO: NetCast config generator: adding \"killall lb4wk\" at the beginning of existing run3556 script: $org_run3556"
+	    echo "OpenLGTV_BCM-INFO: NetCast config generator: adding \"killall lb4wk GtkLauncher\" at the beginning of existing run3556 script: $org_run3556"
 	    #cat $org_cfgxml | sed 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk:g' > $new_cfgxml
-	    sed -i -e 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk > /dev/null 2>\&1:g' $org_run3556
+	    sed -i -e 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk GtkLauncher > /dev/null 2>\&1:g' $org_run3556
 	else
-	    echo "OpenLGTV_BCM-INFO: NetCast config generator: \"killall lb4wk\" already exist in current run3556 script: $org_cfgxml"
+	    echo "OpenLGTV_BCM-INFO: NetCast config generator: \"killall lb4wk GtkLauncher\" already exist in current run3556 script: $org_cfgxml"
 	fi
     fi
     if [ "$org_run3556" != "" ]
@@ -312,7 +312,7 @@ then
 	    if [ -z "`grep -m 1 id=.$wid_name.\  $org_cfgxml`" ]; then echo "OpenLGTV_BCM-ERROR: NetCast config generator: id $wid_name not found in config.xml file, you should use add=$widname parameter first!"; exit 1; fi
 	    if [ "$kill_browser" = "1" -a -f "$run3556_proxy" ]
 	    then
-		if [ -z "`grep -m 1 '^killall lb4wk' $run3556_proxy`" ]
+		if [ -z "`grep -m 1 '^killall lb4wk GtkLauncher' $run3556_proxy`" ]
 		then
 		    echo "OpenLGTV_BCM-INFO: NetCast config generator: removing old web browser with proxy starting script ($run3556_proxy) to prepare new one"
 		fi
