@@ -537,7 +537,11 @@ function PrevControl()
 		//Change the background color of current control
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentUnfocusColor;
-		document.getElementById(currElementName).name='';
+		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
+		if (window.location.pathname=='mount.cgi')
+		    {
+		    document.getElementById(currElementName).name='';
+		    }
 		
 		//move to previous control
 		currElementIndex-=1;
@@ -558,7 +562,11 @@ function PrevControl()
 		//Change the background color of selected control
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
-		document.getElementById(currElementName).name='focused';
+		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
+		if (window.location.pathname=='mount.cgi')
+		    {
+		    document.getElementById(currElementName).name='focused';
+		    }
 		}
 	}
 
@@ -573,8 +581,11 @@ function NextControl()
 		//Change the background color of current control
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentUnfocusColor;
-		document.getElementById(currElementName).name='';
-		
+		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
+		if (window.location.pathname=='mount.cgi')
+		    {
+		    document.getElementById(currElementName).name='';
+		    }
 		//move to next control
 		currElementIndex+=1;
 		currElementName=PageElements[currElementIndex].value;
@@ -594,7 +605,11 @@ function NextControl()
 		//Change the background color of selected control
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
-		document.getElementById(currElementName).name='focused';
+		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
+		if (window.location.pathname=='mount.cgi')
+		    {
+		    document.getElementById(currElementName).name='focused';
+		    }
 		}
 	}
 
@@ -668,6 +683,11 @@ function OnLoadSetCurrent()
 	//Change the background color of selected control
 	d = document.getElementById(currElementName + 'Parent');
 	d.style.backgroundColor=ParentFocusColor;
+	// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
+	if (window.location.pathname=='mount.cgi')
+	    {
+	    document.getElementById(currElementName).name='focused';
+	    }
 	if (document.getElementById('spanSAVED')) {
 	    document.getElementById('spanSAVED').innerHTML='SETTINGS SAVED !!!';
 	    //sleep(300);
