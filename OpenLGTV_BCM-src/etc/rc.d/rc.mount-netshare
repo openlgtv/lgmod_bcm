@@ -6,6 +6,7 @@
 # USB testing code for WebUI executed script
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
+ndrvtab=/mnt/user/cfg/ndrvtab
 #if [ "$USB_DIR" = "" -o "$OpenLGTV_BCM_USB" = "" ]
 #then
 #    if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
@@ -24,19 +25,30 @@ then
     export OpenLGTV_BCM_USB="$USB_DIR/OpenLGTV_BCM"
 fi
 
-if [ "$1" = "WebUI_MOUNT" ]
+if [ -f "$ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
 then
-    WebUI_MOUNT=1
-fi
-
-if [ -f "/mnt/user/cfg/ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
-then
-    echo "OpenLGTV_BCM-INFO: found Network Share configuration file /mnt/user/cfg/ndrvtab and mounted USB stick - parsing config content..."
-    #cat /mnt/user/cfg/ndrvtab | while read ndrv < /mnt/user/cfg/ndrvtab
-    #while read ndrv < /mnt/user/cfg/ndrvtab
-    #cat /mnt/user/cfg/ndrvtab | read ndrv
-    ndrv="`cat /mnt/user/cfg/ndrvtab`"
+    echo "OpenLGTV_BCM-INFO: found Network Share configuration file $ndrvtab and mounted USB stick - parsing config content..."
+    if [ "$1" = "WebUI_MOUNT" ]
+    then
+	WebUI_MOUNT=1
+	if [ "$2" != "" ]
+	then
+	    id="$2"
+	    read_ndrvtab="head -n \"$id\" $ndrvtab | tail -n 1"
+	else
+	    echo "OpenLGTV_BCM-ERROR: found Network Share configuration file $ndrvtab but mounting from WebUI needs Share ID number as argument..."
+	    exit 0
+	fi
+    else
+        read_ndrvtab="cat $ndrvtab"
+    fi
+    #cat $ndrvtab | while read ndrv < $ndrvtab
+    #while read ndrv < $ndrvtab
+    #cat $ndrvtab | read ndrv
+    ####ndrv="`cat $ndrvtab`"
     #do
+    $read_ndrvtab | while read ndrv
+    do
 	automount=`echo $ndrv | awk -F# '{print $1}'`
 	fs_type=`echo $ndrv | awk -F# '{print $2}'`
 	src=`echo $ndrv | awk -F# '{print $3}'`
@@ -46,62 +58,59 @@ then
 	pass=`echo $ndrv | awk -F# '{print $7}'`
 	passHidden="*password*"
 	#mntstat=`mount | grep "$src.*$dst"`
-    ##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
-    #done
-    echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..."
-    if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
-    then
-	if [ ! -d "$USB_DIR/NetShare" ]
+	##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
+	#done
+	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..."
+	if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
 	then
-	    mkdir -p "$USB_DIR/NetShare"
-	fi
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-	if [ "$fs_type" = "cifs" ]
-	then
-	    if [ "`grep -m 1 ^cifs /proc/modules`" = "" ]
+	    if [ "${dst:0:1}" = "/" ]
 	    then
-		if [ -f "/mnt/user/modules/cifs.ko" ]
+		full_dst="$dst"
+	    else
+		full_dst="$USB_DIR/$dst"
+	    fi
+	    if [ ! -d "$full_dst" ]
+	    then
+	        mkdir -p "$full_dst"
+	    fi
+	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+	    if [ "$fs_type" = "cifs" ]
+	    then
+		if [ "$WebUI_MOUNT" = "1" ]
 		then
-		    echo "OpenLGTV_BCM-INFO: loading CIFS kernel module: /mnt/user/modules/cifs.ko..."
-		    insmod /mnt/user/modules/cifs.ko
+		    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."
+		    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino
+		    export mount_err_code="$?"
 		else
-		    echo "OpenLGTV_BCM-WARN: CIFS kernel module NOT FOUND in location: /mnt/user/modules/cifs.ko and module is not loaded... trying to mount CIFS without it"
+		    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."
+		    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino &
+		fi
+	    else
+		if [ "$WebUI_MOUNT" = "1" ]
+		then
+		    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."
+		    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp
+		    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
+		    export mount_err_code="$?"
+		else
+		    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."
+		    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp &
+		    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
 		fi
 	    fi
-	    if [ "$WebUI_MOUNT" = "1" ]
+	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+	    if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."
-		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino
-		export mount_err_code="$?"
-	    else
-		echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."
-		mount -t cifs $src "$USB_DIR/NetShare" -o username=$uname,password=$pass,nounix,noserverino &
-	    fi
-	else
-	    if [ "$WebUI_MOUNT" = "1" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."
-		#mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp
-		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
-		export mount_err_code="$?"
-	    else
-		echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."
-		#mount -t nfs $src "$USB_DIR/NetShare" -o nolock,rsize=32768,wsize=32768,tcp &
-		mount -t nfs $src "$USB_DIR/NetShare" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
+		echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..."
+		exit $mount_err_code
+	    ####else
+		#####echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
+		#$(sleep 10; echo nice -n 20 ls -alR "$full_dst") > /dev/null 2>&1 &
+		#$(sleep 10; echo nice -n 20 ls -aR "$full_dst") > /dev/null 2>&1 &
+		#####(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
 	    fi
 	fi
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-	if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
-	then
-	    echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..."
-	    exit $mount_err_code
-	####else
-	    #####echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
-	    #$(sleep 10; echo nice -n 20 ls -alR "$USB_DIR/NetShare") > /dev/null 2>&1 &
-	    #$(sleep 10; echo nice -n 20 ls -aR "$USB_DIR/NetShare") > /dev/null 2>&1 &
-	    #####(sleep 10; nice -n 20 find "$USB_DIR/NetShare" -type d) > /dev/null 2>&1 &
-	fi
-    fi
+    done
 else
-    echo "OpenLGTV_BCM-INFO: NOT found Network Share configuration file /mnt/user/cfg/ndrvtab or mounted USB stick with OpenLGTV_BCM dir - skipping network share configuration..."
+    echo "OpenLGTV_BCM-INFO: NOT found Network Share configuration file $ndrvtab or mounted USB stick with OpenLGTV_BCM dir - skipping network share configuration..."
 fi

@@ -82,7 +82,7 @@ fi
 if [ "$FORM_mount" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to mount NetShare id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
-    /etc/rc.d/rc.mount-netshare WebUI_MOUNT id="$id" > /dev/null 2>&1
+    /etc/rc.d/rc.mount-netshare WebUI_MOUNT "$id" > /dev/null 2>&1
     export mount_err_code="$?"
     if [ "$mount_err_code" -ne "0" ]
     then
@@ -97,7 +97,7 @@ fi
 
 if [ "$FORM_umount" = "1" ]
 then
-    share_path="`grep "$dst" /proc/mounts | awk '{print $2}'`"
+    share_path="`grep -m 1 "$dst" /proc/mounts | awk '{print $2}'`"
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to unmount NetShare: $share_path id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
     umount "$share_path" >> /var/log/OpenLGTV_BCM.log 2>&1
 fi
