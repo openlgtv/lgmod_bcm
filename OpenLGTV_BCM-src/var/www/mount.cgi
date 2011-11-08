@@ -93,6 +93,7 @@ function BackSpace()
 <?
 
 echo "yellowbtn.href = 'mount-edit.cgi?id=' + share_id;"
+#echo "bluebtn.href ='mount.cgi?action=remove&id=' + currentId;"
 echo "function SaveForm() { window.location='mount-edit.cgi?id=' + share_id; }"
 
 ?>

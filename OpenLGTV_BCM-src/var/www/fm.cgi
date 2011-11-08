@@ -573,7 +573,9 @@ fi
     #echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
     echo "<table id='fullheight' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
     #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
-    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \" / \" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \" / \" \$2}'`</b></td></tr></thead>"
+    #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:43%;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:7%;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
+    #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:7%;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
+    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;min-width:43%;width:43%;max-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
     #echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
     echo '<Table id="fullheight" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable">'
@@ -628,7 +630,7 @@ fi
 		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	    #fi
 	fi
-	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\">$ldate_cut</td></tr>"
+	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" style='overflow:hidden;white-space:nowrap;'>$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -675,7 +677,7 @@ fi
 	else
 	    rimage="generic.gif"
 	fi
-	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\">$rdate_cut</td></tr>"
+	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" style='overflow:hidden;white-space:nowrap;'>$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"
