@@ -572,8 +572,10 @@ fi
 #then
     #echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
     echo "<table id='fullheight' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
-    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
-    echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
+    #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
+    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \" / \" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \" / \" \$2}'`</b></td></tr></thead>"
+    #echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
+    echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
     echo '<Table id="fullheight" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable">'
     if [ "$lpth" != "" ]
     then
@@ -630,7 +632,8 @@ fi
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
-    echo '</tbody></table></td><td valign="top" width="50%" class="panel">'
+    #echo '</tbody></table></td><td valign="top" width="50%" class="panel">'
+    echo '</tbody></table></td><td valign="top" width="50%" class="panel" colspan="2">'
     echo '<Table id="fullheight" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable">'
     if [ "$rpth" != "" ]
     then
@@ -679,7 +682,7 @@ fi
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
     #echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
-    echo '<center><font size="+1" color="yellow"><font color="white">[PLAY/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [PAUSE/"\"]</font> SAME PATH</font><br/></center>'
+    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [PAUSE/"\"]</font> SAME PATH</font><br/></center>'
     #echo "<script type='text/javascript'></script>"
 ?>
 </BODY></HTML>
