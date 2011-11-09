@@ -52,7 +52,7 @@ then
 	uname=`echo $ndrv | awk -F# '{print $6}'`
 	pass=`echo $ndrv | awk -F# '{print $7}'`
 	#mntstat=`mount | grep "$src.*$dst"`
-	echo "<div id='link${link_id}Parent' style='background-color:white;height:30px;'>"
+	echo "<div id='link${link_id}Parent' style='background-color:white;height:40px;'>"
 	echo "<table width='100%' border='1'><tr><td class='mountsrc'>$src</td><td class='mountdst'>$dst</td><td class='mountfstype'>$fs_type</td><td class='mountuname'>$uname</td><td class='mountauto'>$automount</td>"
 	echo -n "<td class='mountedit'><input type=\"button\" name=\"\" id=\"link${link_id}\" onKeyPress=\"javascript:window.location='mount-edit.cgi?id=${share_id}';\" onClick=\"javascript:window.location='mount-edit.cgi?id=${share_id}';\" value=\"Edit\"/></td>"
 	echo "</tr></table>"
@@ -74,7 +74,8 @@ yellowbtn.innerHTML = '<li class="yellow"><span><img src="Images/Keyboard/yellow
 bluebtn.innerHTML = '<li class="blue"><span><img src="Images/Keyboard/blue_button.png" border=\"0\" /></span>Del Share</li>';
 var currentId;
 
-function BackSpace() 
+// ugly workaround: the real BackSpace() function code has been changed to match '/mount.cgi' only
+/* function BackSpace() 
 {
     for (currentId=11;currentId<32;currentId++)
     {
@@ -88,12 +89,15 @@ function BackSpace()
 	    }
 	}
     }
-}
+} */
 
 <?
 
 echo "yellowbtn.href = 'mount-edit.cgi?id=' + share_id;"
+# currentId is uninitialized at this stage
 #echo "bluebtn.href ='mount.cgi?action=remove&id=' + currentId;"
+# still old JS BackSpace() function is running
+#echo "bluebtn.href ='javascript:BackSpace();';"
 echo "function SaveForm() { window.location='mount-edit.cgi?id=' + share_id; }"
 
 ?>

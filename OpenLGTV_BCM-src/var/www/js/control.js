@@ -516,15 +516,27 @@ function SaveForm()
 	//Save the settings in current page
 	document.forms['URL'].submit();
 	//alert("Save stub.");
-	}	
+	}
 
 function BackSpace()
 	{
+	//alert(currElementIndex);
 	if (PageElements[currElementIndex].type != 'button')
 		{
 		//I send a backspace on the currFocusedElement field
 		var URLText = document.forms['URL'].elements[currElementName].value;
 		document.forms['URL'].elements[currElementName].value = URLText.slice(0,URLText.length-1);
+		}
+	else
+		{
+		if (window.location.pathname=='/mount.cgi')
+			{
+			var currentId=currElementIndex-9;
+			if (currentId>0)
+				{
+				window.location='mount.cgi?action=remove&id=' + currentId;
+				}
+			}
 		}
 	}
 
@@ -538,11 +550,10 @@ function PrevControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentUnfocusColor;
 		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
-		if (window.location.pathname=='mount.cgi')
+		/* if (window.location.pathname=='mount.cgi')
 		    {
 		    document.getElementById(currElementName).name='';
-		    }
-		
+		    } */
 		//move to previous control
 		currElementIndex-=1;
 		currElementName=PageElements[currElementIndex].value;
@@ -563,10 +574,10 @@ function PrevControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
 		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
-		if (window.location.pathname=='mount.cgi')
+		/* if (window.location.pathname=='mount.cgi')
 		    {
 		    document.getElementById(currElementName).name='focused';
-		    }
+		    } */
 		}
 	}
 
@@ -582,10 +593,10 @@ function NextControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentUnfocusColor;
 		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
-		if (window.location.pathname=='mount.cgi')
+		/* if (window.location.pathname=='mount.cgi')
 		    {
 		    document.getElementById(currElementName).name='';
-		    }
+		    } */
 		//move to next control
 		currElementIndex+=1;
 		currElementName=PageElements[currElementIndex].value;
@@ -606,10 +617,10 @@ function NextControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
 		// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
-		if (window.location.pathname=='mount.cgi')
+		/* if (window.location.pathname=='mount.cgi')
 		    {
 		    document.getElementById(currElementName).name='focused';
-		    }
+		    } */
 		}
 	}
 
@@ -684,10 +695,10 @@ function OnLoadSetCurrent()
 	d = document.getElementById(currElementName + 'Parent');
 	d.style.backgroundColor=ParentFocusColor;
 	// TODO: Ugly hack! Does anyone have better idea how to 'mark' HTML elements to be able easly search for instead of using 'id' or 'name' for that?
-	if (window.location.pathname=='mount.cgi')
+	/* if (window.location.pathname=='mount.cgi')
 	    {
 	    document.getElementById(currElementName).name='focused';
-	    }
+	    } */
 	if (document.getElementById('spanSAVED')) {
 	    document.getElementById('spanSAVED').innerHTML='SETTINGS SAVED !!!';
 	    //sleep(300);
