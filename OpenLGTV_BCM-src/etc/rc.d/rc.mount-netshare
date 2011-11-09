@@ -20,7 +20,8 @@ then
 	if [ "$2" != "" ]
 	then
 	    id="$2"
-	    read_ndrvtab="head -n \"$id\" $ndrvtab | tail -n 1"
+	    #read_ndrvtab="head -n $id $ndrvtab | tail -n 1"
+	    read_ndrvtab="head -n $id $ndrvtab"
 	else
 	    echo "OpenLGTV_BCM-ERROR: found Network Share configuration file $ndrvtab but mounting from WebUI needs Share ID number as argument..."
 	    exit 0
@@ -28,20 +29,20 @@ then
     else
         read_ndrvtab="cat $ndrvtab"
     fi
-    $read_ndrvtab | sort -k4 -t# | while read ndrv
+    $read_ndrvtab | if [ "$WebUI_MOUNT" = "1" ]; then tail -n 1; else cat; fi | sort -k4 -t# | while read ndrv
     do
-	automount=`echo $ndrv | awk -F# '{print $1}'`
-	fs_type=`echo $ndrv | awk -F# '{print $2}'`
-	src=`echo $ndrv | awk -F# '{print $3}'`
-	dst=`echo $ndrv | awk -F# '{print $4}'`
-	opt=`echo $ndrv | awk -F# '{print $5}'`
-	uname=`echo $ndrv | awk -F# '{print $6}'`
-	pass=`echo $ndrv | awk -F# '{print $7}'`
+	automount="`echo $ndrv | cut -d# -f1`"
+	fs_type="`echo $ndrv | cut -d# -f2`"
+	src="`echo $ndrv | cut -d# -f3`"
+	dst="`echo $ndrv | cut -d# -f4`"
+	opt="`echo $ndrv | cut -d# -f5`"
+	uname="`echo $ndrv | cut -d# -f6`"
+	pass="`echo $ndrv | cut -d# -f7`"
 	passHidden="*password*"
 	#mntstat=`mount | grep "$src.*$dst"`
 	##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
 	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..."
-	if [ -z "`grep -m 1 \"^$src \" /proc/mounts" ]
+	if [ -z "`grep -m 1 \"^$src \" /proc/mounts`" ]
 	then
 	    if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
 	    then
@@ -49,42 +50,55 @@ then
 		then
 		    full_dst="$dst"
 		else
-		    if [ "$USB_DIR" != "" ]
+		    USB_MOUNT_TRY=1
+		    if [ "$USB_DIR" != "" -a -d "$USB_DIR/$dst" ]
 		    then
 			full_dst="$USB_DIR/$dst"
 		    else
-			full_dst="/mnt/nonexistent"
+			for jj in 1 2 3 4
+			do
+			    for ii in 1 2
+			    do
+				full_dst="/mnt/usb$ii/Drive$jj/$dst"
+				[ -d "$full_dst" ] && break 2
+			    done
+			    full_dst="/mnt/nonexistent"
+			done
 		    fi
 		fi
 		if [ ! -d "$full_dst" ]
 		then
-		    mkdir -p "$full_dst"
+		    if [ "$USB_MOUNT_TRY" != "1" -o "$WebUI_MOUNT" = "1" ]
+		    then
+			mkdir -p "$full_dst"
+		    fi
 		fi
 		#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		if [ -d "$full_dst" ]
 		then
+		    echo "OpenLGTV_BCM-DEBUG: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden ..."
 		    if [ "$fs_type" = "cifs" ]
 		    then
 			if [ "$WebUI_MOUNT" = "1" ]
 			then
 			    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."
-			    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino
+			    mount -t cifs "$src" "$full_dst" -o username=$uname,password=$pass,nounix,noserverino
 			    export mount_err_code="$?"
 			else
 			    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."
-			    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino &
+			    mount -t cifs "$src" "$full_dst" -o username=$uname,password=$pass,nounix,noserverino &
 			fi
 		    else
 			if [ "$WebUI_MOUNT" = "1" ]
 			then
 			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."
 			    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp
-			    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
+			    mount -t nfs "$src" "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
 			    export mount_err_code="$?"
 			else
 			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."
 			    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp &
-			    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
+			    mount -t nfs "$src" "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
 			fi
 		    fi
 		    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
@@ -99,7 +113,7 @@ then
 			#####(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
 		    fi
 		else
-		    echo echo "OpenLGTV_BCM-WARNING: creating $full_dst dir failed, share $src not mounted"
+		    echo echo "OpenLGTV_BCM-WARNING: dir $full_dst does not exist, share $src with set mount point $dst not mounted"
 		fi
 	    fi
 	else

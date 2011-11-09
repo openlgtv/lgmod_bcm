@@ -211,8 +211,11 @@ then
 	fi
 	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     fi
-    /etc/rc.d/rc.mount-netshare
-    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+fi
+/etc/rc.d/rc.mount-netshare
+#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+if [ -d "$OpenLGTV_BCM_USB" ]
+then
     if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log" ]
     then
         echo "OpenLGTV_BCM-INFO: making copy of firstboot $bootlogf log file to $OpenLGTV_BCM_USB/"

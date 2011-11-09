@@ -299,6 +299,8 @@ then
     fi
 fi
 
+(sleep 10; /etc/rc.d/rc.mount-netshare)&
+
 echo ""
 
 source /etc/rc.d/rc.release

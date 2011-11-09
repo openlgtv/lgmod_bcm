@@ -6,9 +6,10 @@
 echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
 for mnt in `grep ^/dev/sd /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
 do
-    mnt_src=`echo $mnt | awk -F# '{print $1}'`
-    mnt_dst=`echo $mnt | awk -F# '{print $2}'`
-    mnt_fs=`echo $mnt | awk -F# '{print $3}'`
+    #mnt_src=`echo $mnt | awk -F# '{print $1}'`
+    mnt_src=`echo $mnt | cut -d# -f1`
+    mnt_dst=`echo $mnt | cut -d# -f2`
+    mnt_fs=`echo $mnt | cut -d# -f3`
     echo "OpenLGTV_BCM-DEBUG: mnt_src: $mnt_src mnt_dst: $mnt_dst mnt_fs: $mnt_fs"
     if [ "$mnt_fs" = "ntfs" ]
     then
@@ -23,5 +24,10 @@ do
 	echo "OpenLGTV_BCM-INFO: setting USB_DIR_FS on $mnt_src to $mnt_fs"
 	export USB_DIR_FS=$mnt_fs
     fi
+    #I am not sure if should we list dirs of all mounted drives or not - need to think about it
+    #if [ -z "`grep \"$mnt_dst\" /tmp/usbdirs`" ]
+    #then
+    #	echo "$mnt_dst" >> /tmp/usbdirs
+    #fi
 done
 echo "OpenLGTV_BCM-INFO: rc.usb-remount end"
