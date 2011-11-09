@@ -75,29 +75,10 @@ bluebtn.innerHTML = '<li class="blue"><span><img src="Images/Keyboard/blue_butto
 var currentId;
 
 // ugly workaround: the real BackSpace() function code has been changed to match '/mount.cgi' only
-/* function BackSpace() 
-{
-    for (currentId=11;currentId<32;currentId++)
-    {
-	if (document.getElementById('link' + currentId).name=='focused')
-	{
-	    currentId=currentId-10;
-	    //alert(currentId);
-	    if (currentId>0)
-	    {
-		window.location='mount.cgi?action=remove&id=' + currentId;
-	    }
-	}
-    }
-} */
 
 <?
 
 echo "yellowbtn.href = 'mount-edit.cgi?id=' + share_id;"
-# currentId is uninitialized at this stage
-#echo "bluebtn.href ='mount.cgi?action=remove&id=' + currentId;"
-# still old JS BackSpace() function is running
-#echo "bluebtn.href ='javascript:BackSpace();';"
 echo "function SaveForm() { window.location='mount-edit.cgi?id=' + share_id; }"
 
 ?>

@@ -3,21 +3,7 @@
 # Network Share Mounting Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-# USB testing code for WebUI executed script
-USB1_DIR=/mnt/usb1/Drive1
-USB2_DIR=/mnt/usb2/Drive1
 ndrvtab=/mnt/user/cfg/ndrvtab
-#if [ "$USB_DIR" = "" -o "$OpenLGTV_BCM_USB" = "" ]
-#then
-#    if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
-#    then
-#	export USB_DIR=$USB2_DIR
-#	export OpenLGTV_BCM_USB=$USB2_DIR/OpenLGTV_BCM
-#    else
-#	export USB_DIR=$USB1_DIR
-#	export OpenLGTV_BCM_USB=$USB1_DIR/OpenLGTV_BCM
-#    fi
-#fi
 
 if [ -f "/tmp/usbdir" ]
 then
@@ -25,7 +11,7 @@ then
     export OpenLGTV_BCM_USB="$USB_DIR/OpenLGTV_BCM"
 fi
 
-if [ -f "$ndrvtab" -a -d "$OpenLGTV_BCM_USB" ]
+if [ -f "$ndrvtab" ]
 then
     echo "OpenLGTV_BCM-INFO: found Network Share configuration file $ndrvtab and mounted USB stick - parsing config content..."
     if [ "$1" = "WebUI_MOUNT" ]
@@ -42,12 +28,7 @@ then
     else
         read_ndrvtab="cat $ndrvtab"
     fi
-    #cat $ndrvtab | while read ndrv < $ndrvtab
-    #while read ndrv < $ndrvtab
-    #cat $ndrvtab | read ndrv
-    ####ndrv="`cat $ndrvtab`"
-    #do
-    $read_ndrvtab | while read ndrv
+    $read_ndrvtab | sort -k4 -t# | while read ndrv
     do
 	automount=`echo $ndrv | awk -F# '{print $1}'`
 	fs_type=`echo $ndrv | awk -F# '{print $2}'`
@@ -59,56 +40,70 @@ then
 	passHidden="*password*"
 	#mntstat=`mount | grep "$src.*$dst"`
 	##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
-	#done
 	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..."
-	if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
+	if [ -z "`grep -m 1 \"^$src \" /proc/mounts" ]
 	then
-	    if [ "${dst:0:1}" = "/" ]
+	    if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
 	    then
-		full_dst="$dst"
-	    else
-		full_dst="$USB_DIR/$dst"
-	    fi
-	    if [ ! -d "$full_dst" ]
-	    then
-	        mkdir -p "$full_dst"
-	    fi
-	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-	    if [ "$fs_type" = "cifs" ]
-	    then
-		if [ "$WebUI_MOUNT" = "1" ]
+		if [ "${dst:0:1}" = "/" ]
 		then
-		    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."
-		    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino
-		    export mount_err_code="$?"
+		    full_dst="$dst"
 		else
-		    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."
-		    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino &
+		    if [ "$USB_DIR" != "" ]
+		    then
+			full_dst="$USB_DIR/$dst"
+		    else
+			full_dst="/mnt/nonexistent"
+		    fi
 		fi
-	    else
-		if [ "$WebUI_MOUNT" = "1" ]
+		if [ ! -d "$full_dst" ]
 		then
-		    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."
-		    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp
-		    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
-		    export mount_err_code="$?"
+		    mkdir -p "$full_dst"
+		fi
+		#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+		if [ -d "$full_dst" ]
+		then
+		    if [ "$fs_type" = "cifs" ]
+		    then
+			if [ "$WebUI_MOUNT" = "1" ]
+			then
+			    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."
+			    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino
+			    export mount_err_code="$?"
+			else
+			    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."
+			    mount -t cifs $src "$full_dst" -o username=$uname,password=$pass,nounix,noserverino &
+			fi
+		    else
+			if [ "$WebUI_MOUNT" = "1" ]
+			then
+			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."
+			    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp
+			    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
+			    export mount_err_code="$?"
+			else
+			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."
+			    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp &
+			    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
+			fi
+		    fi
+		    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+		    if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
+		    then
+			echo "OpenLGTV_BCM-ERROR: mounting network share has not succeeded - check yours share configuration"
+			exit $mount_err_code
+		    ####else
+			#####echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
+			#$(sleep 10; echo nice -n 20 ls -alR "$full_dst") > /dev/null 2>&1 &
+			#$(sleep 10; echo nice -n 20 ls -aR "$full_dst") > /dev/null 2>&1 &
+			#####(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
+		    fi
 		else
-		    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."
-		    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp &
-		    mount -t nfs $src "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
+		    echo echo "OpenLGTV_BCM-WARNING: creating $full_dst dir failed, share $src not mounted"
 		fi
 	    fi
-	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-	    if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
-	    then
-		echo "OpenLGTV_BCM-ERROR: mounting network share have not succeeded - check yours share configuration..."
-		exit $mount_err_code
-	    ####else
-		#####echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
-		#$(sleep 10; echo nice -n 20 ls -alR "$full_dst") > /dev/null 2>&1 &
-		#$(sleep 10; echo nice -n 20 ls -aR "$full_dst") > /dev/null 2>&1 &
-		#####(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
-	    fi
+	else
+	    echo echo "OpenLGTV_BCM-WARNING: network share $src is already mounted"
 	fi
     done
 else
