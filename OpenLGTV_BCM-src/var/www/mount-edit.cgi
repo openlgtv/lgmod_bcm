@@ -60,29 +60,20 @@ fi
 
 if [ -f "/mnt/user/cfg/ndrvtab" -a "$id" != "" ]
 then
-    #cat /mnt/user/cfg/ndrvtab | while read ndrv < /mnt/user/cfg/ndrvtab
-    #while read ndrv < /mnt/user/cfg/ndrvtab
-    #cat /mnt/user/cfg/ndrvtab | read ndrv
-    ndrv=`cat /mnt/user/cfg/ndrvtab | head -n $FORM_id | tail -n 1`
-    #do
-	automount=`echo $ndrv | awk -F# '{print $1}'`
-	fs_type=`echo $ndrv | awk -F# '{print $2}'`
-	src=`echo $ndrv | awk -F# '{print $3}'`
-	dst=`echo $ndrv | awk -F# '{print $4}'`
-	opt=`echo $ndrv | awk -F# '{print $5}'`
-	uname=`echo $ndrv | awk -F# '{print $6}'`
-	pass=`echo $ndrv | awk -F# '{print $7}'`
-	#mntstat=`mount | grep "$src.*$dst"`
-    ##echo '<div style="position: absolute; left: 650px; top: 10px; width:300px; background-color:white;height:50px;">'
-    ##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
-    ##echo '</div>'
-    #done
+    ndrv="`head -n $FORM_id /mnt/user/cfg/ndrvtab | tail -n 1`"
+    automount=`echo $ndrv | cut -d# -f1}'`
+    fs_type=`echo $ndrv | cut -d# -f2}'`
+    src=`echo $ndrv | cut -d# -f3}'`
+    dst=`echo $ndrv | cut -d# -f4}'`
+    opt=`echo $ndrv | cut -d# -f5}'`
+    uname=`echo $ndrv | cut -d# -f6}'`
+    pass=`echo $ndrv | cut -d# -f7}'`
+    #mntstat=`mount | grep "$src.*$dst"`
 fi
 
 if [ "$FORM_mount" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to mount NetShare id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
-    #/etc/rc.d/rc.mount-netshare WebUI_MOUNT "$id" > /dev/null 2>&1
     /etc/rc.d/rc.mount-netshare WebUI_MOUNT "$id" >> /var/log/OpenLGTV_BCM.log 2>&1
     export mount_err_code="$?"
     if [ "$mount_err_code" -ne "0" ]
@@ -98,7 +89,7 @@ fi
 
 if [ "$FORM_umount" = "1" ]
 then
-    share_path="`grep -m 1 "$dst" /proc/mounts | awk '{print $2}'`"
+    share_path="`grep -m 1 "$dst " /proc/mounts | awk '{print $2}'`"
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to unmount NetShare: $share_path id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
     umount "$share_path" >> /var/log/OpenLGTV_BCM.log 2>&1
 fi
@@ -108,17 +99,17 @@ fi
 			<center>
 			    <div id="link11Parent" style="background-color:white;height:30px;">
 				<?
-				    if [ -z "`grep "$dst" /proc/mounts`" ]
+				    if [ -z "`grep "$dst " /proc/mounts`" ]
 				    then
 					if [ -f "/mnt/user/cfg/ndrvtab" ]
 					then
 					    # TODO: replace this ugly check
-					    if [ ! -d "/mnt/usb1/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive4/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive4/OpenLGTV_BCM" ]
-					    then
-						echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount button: You need to plug USB stick with OpenLGTV_BCM dir first\" style=\"width:600px\" disabled />"
-					    else
+					    #if [ ! -d "/mnt/usb1/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive4/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive4/OpenLGTV_BCM" ]
+					    #then
+						#echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount button: You need to plug USB stick with OpenLGTV_BCM dir first\" style=\"width:600px\" disabled />"
+					    #else
 						echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount\" style=\"width:100px\" />"
-					    fi
+					    #fi
 					else
 					    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount button: You need to save first to be able to mount\" style=\"width:600px\" disabled />"
 					fi
