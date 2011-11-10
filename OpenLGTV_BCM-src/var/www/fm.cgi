@@ -504,7 +504,7 @@ function mkdirDialog()
 	{
 	var newdiv = document.createElement("div");
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:156px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:176px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
@@ -525,7 +525,7 @@ function renameDialog()
 	{
 	var newdiv = document.createElement("div");
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:156px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:176px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
