@@ -232,7 +232,9 @@ fi
 /etc/rc.d/rc.fwinfo &
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-/etc/rc.d/rc.usb &
+echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
+echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
+#############/etc/rc.d/rc.usb &
 
 md5password="`grep -m 1 ^root: /etc/shadow | awk -F: '{print $2}'`"
 

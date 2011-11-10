@@ -46,7 +46,7 @@ keys['5'].char = ['j','k','l','5'];
 
 keys['6'] = new Object();
 keys['6'].ctr = 0;
-keys['6'].char = ['m','n','o','6','ò','ó'];
+keys['6'].char = ['m','n','o','6','ñ','ò','ó'];
 
 keys['7'] = new Object();
 keys['7'].ctr = 0;
