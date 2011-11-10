@@ -61,13 +61,13 @@ fi
 if [ -f "/mnt/user/cfg/ndrvtab" -a "$id" != "" ]
 then
     ndrv="`head -n $FORM_id /mnt/user/cfg/ndrvtab | tail -n 1`"
-    automount=`echo $ndrv | cut -d# -f1}'`
-    fs_type=`echo $ndrv | cut -d# -f2}'`
-    src=`echo $ndrv | cut -d# -f3}'`
-    dst=`echo $ndrv | cut -d# -f4}'`
-    opt=`echo $ndrv | cut -d# -f5}'`
-    uname=`echo $ndrv | cut -d# -f6}'`
-    pass=`echo $ndrv | cut -d# -f7}'`
+    automount="`echo $ndrv | cut -d# -f1`"
+    fs_type="`echo $ndrv | cut -d# -f2`"
+    src="`echo $ndrv | cut -d# -f3`"
+    dst="`echo $ndrv | cut -d# -f4`"
+    opt="`echo $ndrv | cut -d# -f5`"
+    uname="`echo $ndrv | cut -d# -f6`"
+    pass="`echo $ndrv | cut -d# -f7`"
     #mntstat=`mount | grep "$src.*$dst"`
 fi
 

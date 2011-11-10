@@ -35,9 +35,9 @@ then
     else
 	if [ "$PHYSDEVDRIVER" = "usb-storage" ]
 	then
-	    (/bin/sleep 1; date; /etc/rc.d/rc.usb hotplug) >> /var/log/OpenLGTV_BCM.log &
+	    /etc/rc.d/rc.usb hotplug >> /var/log/OpenLGTV_BCM.log &
 	else
-	    if [ "$PHYSDEVDRIVER" = "usbhid" ]
+	    if [ "$PHYSDEVDRIVER" = "usbhid" -a "${DEVPATH:20:5}" = "event" ]
 	    then
 		(if mkdir "$USBHID_CONNECTED_DIR" 2>/dev/null; then /etc/rc.d/rc.directfb hotplug add; fi) >> /var/log/OpenLGTV_BCM.log &
 	    fi
@@ -46,7 +46,7 @@ then
 else
     if [ "$ACTION" == "remove" ]
     then
-	if [ "$PHYSDEVDRIVER" = "usbhid" ]
+	if [ "$PHYSDEVDRIVER" = "usbhid" -a "${DEVPATH:20:5}" = "event" ]
 	then
 	    (date; rmdir "$USBHID_CONNECTED_DIR"; /etc/rc.d/rc.directfb hotplug remove) >> /var/log/OpenLGTV_BCM.log &
 	fi
