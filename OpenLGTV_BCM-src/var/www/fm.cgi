@@ -504,7 +504,7 @@ function mkdirDialog()
 	{
 	var newdiv = document.createElement("div");
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:300px; left:300px; width:716px; height:106px; border:1;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:156px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
@@ -515,7 +515,7 @@ function mkdirDialog()
 	    <input type="hidden" name="lpth" value="' + lpth + '"> \
 	    <input type="hidden" name="rpth" value="' + rpth + '"> \
 	    <input type="hidden" name="action" value="mkdir"> \
-	    </form></font>';
+	    </form></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
 	dialog_displayed = 1;
@@ -525,7 +525,7 @@ function renameDialog()
 	{
 	var newdiv = document.createElement("div");
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:300px; left:300px; width:716px; height:106px; border:1;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:156px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
@@ -537,7 +537,7 @@ function renameDialog()
 	    <input type="hidden" name="lpth" value="' + lpth + '"> \
 	    <input type="hidden" name="rpth" value="' + rpth + '"> \
 	    <input type="hidden" name="action" value="rename"> \
-	    </form></font>';
+	    </form></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
 	dialog_displayed = 1;
