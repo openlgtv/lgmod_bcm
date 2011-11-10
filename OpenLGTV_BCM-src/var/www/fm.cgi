@@ -48,6 +48,10 @@ Content-type: text/html
     td.size {
 	min-width: 70px;
     }
+    td.date {
+	overflow:hidden;
+	white-space:nowrap;
+    }
 </style>
 <title>CGI FileManager by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -582,16 +586,19 @@ fi
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	echo "<tr id=\"tr_l1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_l1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	litem_nr=2
     else
 	litem_nr=1
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for lcontent in `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep -v "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` 
+    #for lcontent in `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep -v "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` 
+    for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" $lpth/* | sort | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
     do
-	lfilename="${lcontent%%@*}"
+	ltype="${lcontent%%@*}"
+	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
+	lfilename="${lcontent_2x%%@*}"
 	lfilename_space="${lfilename//&nbsp;/ }"
 	lfilename_ext="${lfilename_space##*.}"
 	if [ "${#lfilename_space}" -gt "53" ]
@@ -605,8 +612,6 @@ fi
 		lfilename="${lfilename// /&nbsp;}"
 	    fi
 	fi
-	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
-	ltype="${lcontent_2x%%@*}"
 	lcontent_3x="${lcontent_2x#*@}" # from 3rd columnt up to end
 	ldate="${lcontent_3x%%@*}"
 	ldate_cut="${ldate%%.*}"
@@ -619,7 +624,13 @@ fi
 	    limage="dir.gif"
 	    dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	else
-	    limage="generic.gif"
+	    #if [ "$ltype" = "symbolic link" ]
+	    if [ "$ltype" = "symbolic&nbsp;link" ]
+	    then
+		limage="link.png"
+	    else
+		limage="generic.gif"
+	    fi
 	    #if [ "${lfilename_ext}" != "" ]
 	    #then
 		#case "${lfilename_ext}" in
@@ -630,7 +641,7 @@ fi
 		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	    #fi
 	fi
-	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" style='overflow:hidden;white-space:nowrap;'>$ldate_cut</td></tr>"
+	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -640,16 +651,19 @@ fi
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	echo "<tr id=\"tr_r1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_r1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	ritem_nr=2
     else
 	ritem_nr=1
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for rcontent in `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep -v "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` 
+    #for rcontent in `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep -v "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` 
+    for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" $rpth/* | sort | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'`
     do
-	rfilename="${rcontent%%@*}"
+	rtype="${rcontent%%@*}"
+	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
+	rfilename="${rcontent_2x%%@*}"
 	rfilename_space="${rfilename//&nbsp;/ }"
 	if [ "${#rfilename_space}" -gt "53" ]
 	then
@@ -662,8 +676,6 @@ fi
 		rfilename="${rfilename// /&nbsp;}"
 	    fi
 	fi
-	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
-	rtype="${rcontent_2x%%@*}"
 	rcontent_3x="${rcontent_2x#*@}" # from 3rd columnt up to end
 	rdate="${rcontent_3x%%@*}"
 	rdate_cut="${rdate%%.*}"
@@ -675,16 +687,22 @@ fi
 	then
 	    rimage="dir.gif"
 	else
-	    rimage="generic.gif"
+	    #rimage="generic.gif"
+	    if [ "$rtype" = "symbolic&nbsp;link" ]
+	    then
+		rimage="link.png"
+	    else
+		rimage="generic.gif"
+	    fi
 	fi
-	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" style='overflow:hidden;white-space:nowrap;'>$rdate_cut</td></tr>"
+	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
     #echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
-    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [PAUSE/"\"]</font> SAME PATH</font><br/></center>'
+    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
     #echo "<script type='text/javascript'></script>"
 ?>
 </BODY></HTML>
