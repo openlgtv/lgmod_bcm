@@ -141,6 +141,8 @@
 	    if [ "$use_samsung_ywe_instead_of_lg" != "1" ]
 	    then
 	        echo "OpenLGTV_BCM-INFO: using links to Yahoo Widgets Engine configs on addon partition..."
+	        umount -f $ywedir/config-oem.xml 2>/dev/null
+	        umount -f $ywedir/bin/konfabulator.sh 2>/dev/null
 	        mount --bind /mnt/user/ywe/config-oem.xml              $ywedir/config-oem.xml
 	        mount --bind /mnt/user/ywe/konfabulator.sh             $ywedir/bin/konfabulator.sh
 	    fi
@@ -215,12 +217,17 @@
 		    #umount $ywedir/config-oem.xml
 		    #umount $ywedir/bin/konfabulator.sh
 		    #mount --bind $ywedir                                   /mnt/ywe_s
+		    umount -f $ywedir/config-oem.xml 2>/dev/null
+		    umount -f $ywedir/bin/konfabulator.sh 2>/dev/null
 		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      $ywedir/config-oem.xml
 		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     $ywedir/bin/konfabulator.sh
 		    #mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
 		    #mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
 		else
 		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets (from /mnt/user/ywe/samsung) into separate path: /mnt/ywe_s..."
+		    umount -f /mnt/ywe_s/bin/konfabulator.sh 2>/dev/null
+		    umount -f /mnt/ywe_s/config-oem.xml 2>/dev/null
+		    umount -f /mnt/ywe_s 2>/dev/null
 		    mount --bind $ywedir                                   /mnt/ywe_s
 		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
 		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh

@@ -51,6 +51,7 @@ var append=false;
 var str='';
 var timer;
 var prevNum=null;
+var txt_edit=0;
 
 function keypad(num)
 {
@@ -148,18 +149,6 @@ PageElements[15] = new Object();
 PageElements[15].value = ['txtURL'];
 PageElements[15].type = ['txt'];
 PageElements[15].focused=false;
-// v- none of these are working, so I have moved the code for setting PageElements[*].focused variables to html code in onFocus and onBlur settings in input fields
-//document.forms['URL'].elements[PageElements[15].value].onfocus=function()
-//document.forms['URL'].elements['txtURL'].onfocus=function()
-/*document.forms['URL'].elements[15].onfocus=function()
-{
-         this.focused=true;
-};*/
-//PageElements[15].onblur=function()
-/*document.forms['URL'].elements[PageElements[15].value].onblur=function()
-{
-         this.focused=false;
-};*/
 
 PageElements[16] = new Object();
 PageElements[16].value = ['txtUser'];
@@ -256,6 +245,7 @@ var currElementName;
 //var ParentFocusColor = 'green';
 var ParentFocusColor = '#00FF00';
 var ParentUnfocusColor = 'white';
+var ParentEditColor = 'lightblue';
 
 var col = 8; //number of 'cells' in a row
 var current;
@@ -282,7 +272,7 @@ function check(e)
 		if (key==37|key==38|key==39|key==40)
 			{
 			
-			if (PageElements[currElementIndex].type == 'txt')
+			if (PageElements[currElementIndex].type == 'txt' & txt_edit == '1')
 				{
 				//Move to the next key on the keyboard
 				var code=document.links['c' + next].name;
@@ -304,18 +294,6 @@ function check(e)
 					    NextControl();
 					}
 				}
-			/* TODO? - actions for left and right remote buttons on 'button' page elements
-			if (PageElements[currElementIndex].type == 'buttons')
-				{
-				//Move to the next key on the keyboard
-				var code=document.links['c' + next].name;
-				document.links['c' + next].focus();
-				//document.images['i' + next].src = 'Images/Keyboard/' + next + 'b.png';
-				document.images['i' + next].src = 'Images/Keyboard/bt_focus.png';
-				//document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
-				document.images['i' + current].src = 'Images/Keyboard/bt_nofocus.png';
-				current = next;
-				} */
 			} 
 		else if (key==13) 
 			{
@@ -323,12 +301,13 @@ function check(e)
 			if (PageElements[currElementIndex].type == 'button')
 				{
 				    document.forms['URL'].elements[currElementName].click();
-				} //else { // v- makes problems with TV remote buttons ('OK' button makes both keyboard '13' code and click() at the same time, so the character is type twice)
-				    //Write the letter on the currFocusedElement field
-				    //var URLText = document.forms['URL'].elements[currElementName].value;
-				    //URLText = URLText + document.links['c' + next].name;
-				    //document.forms['URL'].elements[currElementName].value = URLText;
-				//}
+				}
+			else if (PageElements[currElementIndex].type == 'txt' & txt_edit == '0')
+				{
+				    d = document.getElementById(currElementName + 'Parent');
+				    d.style.backgroundColor=ParentEditColor;
+				    txt_edit=1;
+				}
 			}
 		else if (key==32) 
 			{
@@ -483,9 +462,18 @@ function check(e)
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed
-			//NetCastBack API (exits from NetCast portal menu)
-			window.NetCastBack();
-			//history.go(-1);
+			if (PageElements[currElementIndex].type == 'txt' & txt_edit == '1')
+				{
+				    d = document.getElementById(currElementName + 'Parent');
+				    d.style.backgroundColor=ParentFocusColor;
+				    txt_edit=0;
+				}
+			else
+				{
+				//NetCastBack API (exits from NetCast portal menu)
+				//window.NetCastBack();
+				history.go(-1);
+				}
 			}
 		else if (key==1001) 
 			{
@@ -543,6 +531,14 @@ function BackSpace()
 function PrevControl()
 	{
 	//Function that move to previous control
+	if (currElementIndex == 0)
+		{
+		//Change the background color of current control
+		d = document.getElementById(currElementName + 'Parent');
+		d.style.backgroundColor=ParentUnfocusColor;
+		//move to last control index
+		currElementIndex=37;
+		}
 	if (currElementIndex > 0)
 		{
 		
@@ -569,6 +565,7 @@ function PrevControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
 		}
+	txt_edit=0;
 	}
 
 function NextControl()
@@ -602,6 +599,7 @@ function NextControl()
 		d = document.getElementById(currElementName + 'Parent');
 		d.style.backgroundColor=ParentFocusColor;
 		}
+	txt_edit=0;
 	}
 
 function setCurrent(element)
@@ -679,7 +677,7 @@ function OnLoadSetCurrent()
 	    //sleep(300);
 	    //document.getElementById('spanSAVED').innerHTML='-';
 	}
-}	
+}
 
 function hasFocus(elementIndex)
 {

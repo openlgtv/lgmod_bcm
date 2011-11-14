@@ -36,11 +36,13 @@ do
     for ii in 1 2
     do
 	OpenLGTV_BCM_USB="/mnt/usb$ii/Drive$jj/OpenLGTV_BCM"
+	USB_DIR="/mnt/usb$ii/Drive$jj"
 	[ -d "$OpenLGTV_BCM_USB" ] && break 2
     done
 done
-export OpenLGTV_BCM_USB
-export USB_DIR=`echo $OpenLGTV_BCM_USB | sed 's#/OpenLGTV_BCM##g'`
+export OpenLGTV_BCM_USB USB_DIR                                    # /mnt/usb1/Drive1/OpenLGTV_BCM /mnt/usb1/Drive1
+export USB_FULLDEV="`grep -m 1 \" $USB_DIR \" | cut -d\" \" -f 1`" # /dev/sda1
+export USB_DEV="${USB_FULLDEV:5:3}"                                # sda
 
 for jj in 1 2 3 4
 do
@@ -107,7 +109,9 @@ fi
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 source /etc/rc.d/rc.usb-remount
 
-if [ -d "$OpenLGTV_BCM_USB" ]
+# Do OpenLGTV_BCM dir based actions only when the OpenLGTV_BCM dir is on the drive which was just connected
+#if [ -d "$OpenLGTV_BCM_USB" -a ! -f "/tmp/usbdir" ]
+if [ -d "$OpenLGTV_BCM_USB" -a "$2" != "" -a "$USB_DEV" = "$2" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."
     echo "$USB_DIR" > /tmp/usbdir
