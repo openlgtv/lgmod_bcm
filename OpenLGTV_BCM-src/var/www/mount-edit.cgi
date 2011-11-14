@@ -97,7 +97,7 @@ fi
 ?>
 
 			<center>
-			    <div id="link11Parent" style="background-color:white;height:30px;">
+			    <div id="link11Parent" style="background-color:white;height:40px;">
 				<?
 				    if [ -z "`grep "$dst " /proc/mounts`" ]
 				    then
@@ -119,7 +119,7 @@ fi
 				?>
 			    </div>
 			</center>
-			<div id="txtURLParent" style="background-color:white;height:30px; font-size:16px;">
+			<div id="txtURLParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					URL: 
 				</div>
@@ -127,7 +127,7 @@ fi
 				    <input id="txtURL" name="qURL" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $src ?>"/>
 				</div>
 			</div>
-			<div id="txtUserParent" style="background-color:white;height:30px; font-size:16px;">
+			<div id="txtUserParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					Username: 
 				</div>
@@ -135,7 +135,7 @@ fi
 					<input id="txtUser" name="qUser" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $uname ?>"/>
 				</div>
 			</div>
-			<div id="txtPasswParent" style="background-color:white;height:30px; font-size:16px;">
+			<div id="txtPasswParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					Password: 
 				</div>
@@ -143,7 +143,7 @@ fi
 					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pass ?>"/>
 				</div>
 			</div>
-			<div id="txtPathParent" style="background-color:white;height:30px; font-size:16px;">
+			<div id="txtPathParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
 					Mount path: 
 				</div>
@@ -151,7 +151,7 @@ fi
 					<input id="txtPath" name="qPath" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $dst ?>"/>
 				</div>
 			</div>
-			<div id="radio1Parent" style="background-color:white;height:30px; font-size:16px;">
+			<div id="radio1Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					Network Protocol: 
 					<? if [ "$fs_type" = "cifs" ]
@@ -164,7 +164,7 @@ fi
 					   fi ?>
 				</div>
 			</div>
-			<div id="check1Parent" style="background-color:white;height:30px; font-size:16px;">
+			<div id="check1Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 				<? if [ "$automount" = "1" ]
 				   then

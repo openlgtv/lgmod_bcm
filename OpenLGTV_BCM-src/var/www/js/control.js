@@ -87,27 +87,28 @@ var PageElements = new Array();
 
 PageElements[0] = new Object();
 PageElements[0].value = ['link1'];
-PageElements[0].type = ['button'];
+//PageElements[0].type = ['button'];
+PageElements[0].type = ['anchor'];
 
 PageElements[1] = new Object();
 PageElements[1].value = ['link2'];
-PageElements[1].type = ['button'];
+PageElements[1].type = ['anchor'];
 
 PageElements[2] = new Object();
 PageElements[2].value = ['link3'];
-PageElements[2].type = ['button'];
+PageElements[2].type = ['anchor'];
 
 PageElements[3] = new Object();
 PageElements[3].value = ['link4'];
-PageElements[3].type = ['button'];
+PageElements[3].type = ['anchor'];
 
 PageElements[4] = new Object();
 PageElements[4].value = ['link5'];
-PageElements[4].type = ['button'];
+PageElements[4].type = ['anchor'];
 
 PageElements[5] = new Object();
 PageElements[5].value = ['link6'];
-PageElements[5].type = ['button'];
+PageElements[5].type = ['anchor'];
 
 PageElements[6] = new Object();
 PageElements[6].value = ['link7'];
@@ -296,9 +297,10 @@ function check(e)
 					}
 				}
 			} 
-		else if (key==13) 
+		else if (key==13|key==10) 
 			{
 			//Simulate click on button elements for OK remote button
+			currElementName=PageElements[currElementIndex].value;
 			if (PageElements[currElementIndex].type == 'button')
 				{
 				    //document.forms['URL'].elements[currElementName].click();
@@ -309,6 +311,14 @@ function check(e)
 				    d = document.getElementById(currElementName + 'Parent');
 				    d.style.backgroundColor=ParentEditColor;
 				    txt_edit=1;
+				}
+			else if (PageElements[currElementIndex].type == 'anchor')
+				{
+				    window.location=document.getElementById(currElementName).href;
+				}
+			else if (PageElements[currElementIndex].type == 'checkbox')
+				{
+				    document.forms['URL'].elements[currElementName].click();
 				}
 			}
 		else if (key==32) 
@@ -493,7 +503,7 @@ function check(e)
 function DirectWriteKey(key)
 	{
 	//Write the letter on the currFocusedElement field
-	if (PageElements[currElementIndex].type != 'button')
+	if (PageElements[currElementIndex].type == 'txt')
 		{
 		var URLText = document.forms['URL'].elements[currElementName].value;
 		URLText = URLText + key;
@@ -511,7 +521,7 @@ function SaveForm()
 function BackSpace()
 	{
 	//alert(currElementIndex);
-	if (PageElements[currElementIndex].type != 'button')
+	if (PageElements[currElementIndex].type == 'txt')
 		{
 		//I send a backspace on the currFocusedElement field
 		var URLText = document.forms['URL'].elements[currElementName].value;
