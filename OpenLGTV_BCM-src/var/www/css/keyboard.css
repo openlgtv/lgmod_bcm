@@ -6,4 +6,9 @@
 }
 .Keyboard a:hover, a:focus{
 	background: transparent url(../Images/Keyboard/bt_focus.png) -50px -50px no-repeat;
+	text-decoration:none;
+	color:white
+	border:0px;
+	height:31px;
+	width:31px;
 }

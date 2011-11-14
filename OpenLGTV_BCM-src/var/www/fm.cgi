@@ -86,10 +86,12 @@ fi
 if [ "$side" = "l" -a "$lpth" != "" ]
 then
     cpth="$lpth"
+    opth="$rpth"
 else
     if [ "$side" = "r" -a "$rpth" != "" ]
     then
 	cpth="$rpth"
+	opth="$lpth"
     fi
 fi
 
@@ -97,6 +99,7 @@ echo "var side = '$side';"
 echo "var lpth = '$lpth';"
 echo "var rpth = '$rpth';"
 echo "var cpth = '$cpth';"
+echo "var opth = '$opth';"
 
 if [ -f "$cpth" ]
 then
@@ -166,6 +169,7 @@ var str='';
 var timer;
 var prevNum=null;
 var currElementName='txtName';
+var dialog_win;
 
 function keypad(num)
 {
@@ -216,18 +220,25 @@ function check(e)
 			{
 			document.getElementById('link_' + side + current).click();
 			}
+		    else if (dialog_win=='copy')
+			{
+			document.forms["copy"].submit();
+			//TODO: fix that!
+			//document.write(' ');
+			alert('aaaa');
+			}
 		    return false;
 		}
 	try
 		{
 		switch(key)
 			{
-			case  9: next = current; if (side=='l') { nside = 'r' } else { nside = 'l' }; break; //FAV/TAB
+			case  9: next = current; if (side=='l') { nside = 'r'; cpth=rpth; opth=lpth; } else { nside = 'l'; cpth=lpth; opth=rpth; }; break; //FAV/TAB
 			case 33: next = (1*current) - 10; break; //CH UP
 			case 34: next = (1*current) + 10; break; //CH DOWN
-			case 37: next = current; nside = 'l'; break; //LEFT
+			case 37: next = current; nside = 'l'; cpth=lpth; opth=rpth; break; //LEFT
 			case 38: next = current - col; break; //UP
-			case 39: next = current; nside = 'r'; break; //RIGHT
+			case 39: next = current; nside = 'r'; cpth=rpth; opth=lpth; break; //RIGHT
 			case 40: next = (1*current) + col; break; //DOWN
 			}
 		if (key==9|key==33|key==34|key==37|key==38|key==39|key==40)
@@ -370,7 +381,7 @@ function check(e)
 			//the RED button on the remote control or F8 have been pressed
 			//Delete file or directory
 			// lpath and rpath variables are wrong - but the right ones lpth and rpth are gathered from link
-			var dest='fm-action.cgi?action=delete' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
+			var dest='fm-action.cgi?action=delete' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
 			//Prevent default action
 			return false;
@@ -379,8 +390,10 @@ function check(e)
 			{
 			//the GREEN button on the remote control or F5 have been pressed
 			//Copy file or directory
-			var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
+			//TODO: disable window.location and use copyDialog() function instead
+			var dest='fm-action.cgi?action=copy' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
+			//copyDialog();
 			//Prevent default action
 			e.preventDefault();
 			return false;
@@ -389,7 +402,7 @@ function check(e)
 			{
 			//the YELLOW button on the remote control or F6 have been pressed
 			//Move file or directory
-			var dest='fm-action.cgi?action=move' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
+			var dest='fm-action.cgi?action=move' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
 			//Prevent default action
 			return false;
@@ -459,7 +472,7 @@ function check(e)
 			}
 		}catch(Exception){}
 	//if (dialog_displayed==0)
-	if (dialog_displayed==0|(key>=48&key<=57))
+	if ((dialog_displayed==0)|(dialog_win=='copy')|((key>=48)&&(key<=57)))
 	    {
 	    if (e.stopPropagation)
 		{
@@ -521,6 +534,39 @@ function mkdirDialog()
 	dialog_displayed = 1;
 	}
 
+function copyDialog()
+	{
+	dialog_win='copy';
+	var newdiv = document.createElement("div");
+	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:200px; width:916px; height:276px; border:2px solid black;');
+	newdiv.id = "dialogWin";
+	document.body.appendChild(newdiv);
+	//var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&name=' + cpth + '/' + document.getElementById('link_' + side + current).name;
+	src=cpth + '/' + document.getElementById('link_' + side + current).name;
+	if (side=='l')
+	    {
+		var lpth_fix=src;
+		var rpth_fix=rpth;
+	    }
+	else
+	    {
+		var lpth_fix=rpth;
+		var rpth_fix=src;
+	    }
+	var kb = '<FONT color="black" size="+3"> \
+	    <center><b>Are you sure you want to copy:</b><br/><br/> \
+	    <font size="+2">' + src + '<br/><br/>to:<br/><br/>' + opth + '/<br/></font> \
+	    <form id="copy" name="copy" action="fm-action.cgi" method="GET"> \
+	    <input type="hidden" name="side" value="' + side + '"> \
+	    <input type="hidden" name="lpth" value="' + lpth_fix + '"> \
+	    <input type="hidden" name="rpth" value="' + rpth_fix + '"> \
+	    <input type="hidden" name="action" value="copy"> \
+	    </form></center></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	newdiv.innerHTML = kb;
+	dialog_displayed = 1;
+	}
+
 function renameDialog()
 	{
 	var newdiv = document.createElement("div");
@@ -547,6 +593,7 @@ function dialogRemove()
 	{
         document.body.removeChild(document.getElementById("dialogWin"));
 	dialog_displayed = 0;
+	dialog_win = '';
 	OnLoadSetCurrent();
         }
 

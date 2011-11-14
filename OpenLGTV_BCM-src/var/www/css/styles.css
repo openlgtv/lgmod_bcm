@@ -24,16 +24,19 @@ body{
 	overflow:hidden;
 	width:100%;
 }
+
 .footer2{
 	bottom:50px;
 	width:66%;
 }
+
 .footer li span, .footer2 li span{
 	width:46px;
 	height:30px;
 	margin:8px;
 	float:left;
 }
+
 .footer li, .footer2 li{
 	width:208px;
 	height:45px;
@@ -46,34 +49,71 @@ body{
 	overflow:hidden;
 	float:left;
 }
+
 .footer li:hover, .footer2 li:hover{
 	background:#2B3856;
 }
+
 .footer ul, .footer2 ul{
 	margin:0;
 	padding:0;
 }
-	input.menubutton {
+
+div.menuitem {
+	background-color:orange;
+	height:32px;
+	display:inline-block;
+	text-align:center;
+	margin-left:auto;
+	margin-right:auto;
+	valign:middle;
+	vertical-align:middle;
+	border: 1px solid #D3D3D3;
+}
+
+div.menuitem:hover {
+	background-color:#00FF00;
+}
+
+input.menubutton {
 	height:25px;
 }
+
+a.menubutton {
+	position: relative;
+	top: 20%;
+	color:black;
+	text-decoration:none;
+	font-weight:bold;
+	valign:middle;
+	vertical-align:middle;
+}
+
+a.menubutton:hover {
+	color:red;
+}
+
 .mountsrc{
 	width:300px;
 	max-width:300px;
 	overflow:hidden;
 	white-space:nowrap;
 }
+
 .mountdst{
 	width:190px;
 	max-width:190px;
 	overflow:hidden;
 	white-space:nowrap;
 }
+
 .mountfstype{
 	width:50px;
 	max-width:50px;
 	overflow:hidden;
 	text-align:center;
 }
+
 .mountuname{
 	width:100px;
 	max-width:100px;
@@ -81,12 +121,14 @@ body{
 	text-align:center;
 	white-space:nowrap;
 }
+
 .mountauto{
 	width:80px;
 	max-width:80px;
 	overflow:hidden;
 	text-align:center;
 }
+
 .mountedit{
 	width:80px;
 	max-width:80px;

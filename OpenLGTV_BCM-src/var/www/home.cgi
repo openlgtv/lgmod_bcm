@@ -112,7 +112,7 @@ function GoToNetCastLinks()
 
 
 <? if [ "$HTTP_HOST" = "127.0.0.1:88" ]; then echo "<!-- "; fi ?>
-<div style="position: absolute; left: 5px; bottom: 110px; height:85; background-color:red;">
+<div style="position: absolute; left: 5px; bottom: 110px; height:85; background-color:red; border: 1px solid #D3D3D3;">
 <div class="posthead"><center>Upload the firmware file (*.epk) to first partition of USB drive connected to USB1 port (FAT32 or NTFS)&nbsp;<br/>
 		              into LG_DTV dir if it's LG upgrade or (*.tar.sh) into OpenLGTV_BCM/upgrade if it's OpenLGTV BCM upgrade.</center></div><div class="posttext">
 <form action="cgi-bin/firmware-upgrade.cgix" method="post" enctype="multipart/form-data" >

@@ -245,7 +245,8 @@ var currElementName;
 //var ParentFocusColor = 'green';
 var ParentFocusColor = '#00FF00';
 var ParentUnfocusColor = 'white';
-var ParentEditColor = 'lightblue';
+var ParentEditColor = 'cyan';
+var ParentColor;
 
 var col = 8; //number of 'cells' in a row
 var current;
@@ -300,7 +301,8 @@ function check(e)
 			//Simulate click on button elements for OK remote button
 			if (PageElements[currElementIndex].type == 'button')
 				{
-				    document.forms['URL'].elements[currElementName].click();
+				    //document.forms['URL'].elements[currElementName].click();
+				    document.getElementById(currElementName).click();
 				}
 			else if (PageElements[currElementIndex].type == 'txt' & txt_edit == '0')
 				{
@@ -459,9 +461,9 @@ function check(e)
 				window.location='browser/links.html';
 			    }
 			}
-		else if (key==461) 
+		else if (key==461|key==27) 
 			{
-			//the back button on the remote control have been pressed
+			//the back button on the remote control or ESC have been pressed
 			if (PageElements[currElementIndex].type == 'txt' & txt_edit == '1')
 				{
 				    d = document.getElementById(currElementName + 'Parent');
@@ -497,7 +499,7 @@ function DirectWriteKey(key)
 		URLText = URLText + key;
 		document.forms['URL'].elements[currElementName].value = URLText;
 		}
-	}	
+	}
 
 function SaveForm()
 	{
@@ -531,20 +533,15 @@ function BackSpace()
 function PrevControl()
 	{
 	//Function that move to previous control
+	//move to last control index when current one is first
 	if (currElementIndex == 0)
-		{
-		//Change the background color of current control
-		d = document.getElementById(currElementName + 'Parent');
-		d.style.backgroundColor=ParentUnfocusColor;
-		//move to last control index
 		currElementIndex=37;
-		}
 	if (currElementIndex > 0)
 		{
-		
 		//Change the background color of current control
 		d = document.getElementById(currElementName + 'Parent');
-		d.style.backgroundColor=ParentUnfocusColor;
+		//d.style.backgroundColor=ParentUnfocusColor;
+		d.style.backgroundColor=ParentColor;
 		//move to previous control
 		currElementIndex-=1;
 		currElementName=PageElements[currElementIndex].value;
@@ -563,6 +560,7 @@ function PrevControl()
 			
 		//Change the background color of selected control
 		d = document.getElementById(currElementName + 'Parent');
+		ParentColor=d.style.backgroundColor;
 		d.style.backgroundColor=ParentFocusColor;
 		}
 	txt_edit=0;
@@ -578,7 +576,8 @@ function NextControl()
 		
 		//Change the background color of current control
 		d = document.getElementById(currElementName + 'Parent');
-		d.style.backgroundColor=ParentUnfocusColor;
+		//d.style.backgroundColor=ParentUnfocusColor;
+		d.style.backgroundColor=ParentColor;
 		//move to next control
 		currElementIndex+=1;
 		currElementName=PageElements[currElementIndex].value;
@@ -597,6 +596,7 @@ function NextControl()
 			
 		//Change the background color of selected control
 		d = document.getElementById(currElementName + 'Parent');
+		ParentColor=d.style.backgroundColor;
 		d.style.backgroundColor=ParentFocusColor;
 		}
 	txt_edit=0;
@@ -614,17 +614,15 @@ function checkElementPlus(elementIndex)
 	prevElementIndex=elementIndex-1;
 	currElementName=PageElements[currElementIndex].value;
 	//Check if currElement exists, if not then go to next one until finds the one that exists
-	if (!document.forms['URL'].elements[currElementName]) {
+	//document.getElementById(currElementName) works for elements which are not part of HTML form also
+	//document.forms['URL'].elements[currElementName]) is needed for checkboxes and radio buttons as these do not have their own link* IDs
+	if ((!document.getElementById(currElementName))&&(!document.forms['URL'].elements[currElementName])) {
 		do {
 		    currElementIndex+=1;
 		    currElementName=PageElements[currElementIndex].value;
-		} while ((!document.forms['URL'].elements[currElementName])&&(currElementIndex < PageElements.length-1));
+		} while ((!document.getElementById(currElementName))&&(!document.forms['URL'].elements[currElementName])&&(currElementIndex < PageElements.length-1));
 	}
-	if (!document.forms['URL'].elements[currElementName]) {
-	    //Disabled so it goes to beginning if there are no more elements
-	    //Disabled// currElementIndex=prevElementIndex;
-	    //Disabled// currElementName=PageElements[currElementIndex].value;
-	    //Disabled// checkElementMinus(currElementIndex);
+	if ((!document.getElementById(currElementName))&&(!document.forms['URL'].elements[currElementName])) {
 	    currElementIndex=0;
 	}
 	currElementName=PageElements[currElementIndex].value;
@@ -634,14 +632,14 @@ function checkElementMinus(elementIndex)
 	currElementIndex=elementIndex;
 	currElementName=PageElements[currElementIndex].value;
 	//Check if currElement exists, if not then go to previous one until finds the one that exists
-	if ((!document.forms['URL'].elements[currElementName])&&(currElementIndex > 0)) {
+	if ((!document.getElementById(currElementName))&&(!document.forms['URL'].elements[currElementName])&&(currElementIndex > 0)) {
 		do {
 		    currElementIndex-=1;
 		    currElementName=PageElements[currElementIndex].value;
-		} while ((!document.forms['URL'].elements[currElementName]) && (currElementIndex > 0));
+		} while ((!document.getElementById(currElementName))&&(!document.forms['URL'].elements[currElementName])&&(currElementIndex > 0));
 	}
 	//Check if currElement exists already, if not then go to 
-	if (!document.forms['URL'].elements[currElementName]) {
+	if ((!document.getElementById(currElementName))&&(!document.forms['URL'].elements[currElementName])) {
 	    currElementIndex=0;
 	    currElementName=PageElements[currElementIndex].value;
 	    checkElementPlus(currElementIndex);
@@ -665,12 +663,12 @@ function OnLoadSetCurrent()
 	
 	//Setting the current input control 
 	//currElementIndex=0;
-	//currElementIndex=5;
 	currElementIndex=6;
 	checkElementPlus(currElementIndex);
 	currElementName=PageElements[currElementIndex].value;
 	//Change the background color of selected control
 	d = document.getElementById(currElementName + 'Parent');
+	ParentColor=d.style.backgroundColor;
 	d.style.backgroundColor=ParentFocusColor;
 	if (document.getElementById('spanSAVED')) {
 	    document.getElementById('spanSAVED').innerHTML='SETTINGS SAVED !!!';
