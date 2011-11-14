@@ -18,6 +18,7 @@ fi
 if ! mkdir "$LOCKDIR" 2>/dev/null
 then
     echo "OpenLGTV_BCM-WARN: another rc.usb script instance is already handling action, exiting..."
+    exit 0
 fi
 
 echo "OpenLGTV_BCM-INFO: rc.usb: LOCKDIR: $LOCKDIR created"
@@ -40,9 +41,9 @@ do
 	[ -d "$OpenLGTV_BCM_USB" ] && break 2
     done
 done
-export OpenLGTV_BCM_USB USB_DIR                                    # /mnt/usb1/Drive1/OpenLGTV_BCM /mnt/usb1/Drive1
-export USB_FULLDEV="`grep -m 1 \" $USB_DIR \" | cut -d\" \" -f 1`" # /dev/sda1
-export USB_DEV="${USB_FULLDEV:5:3}"                                # sda
+export OpenLGTV_BCM_USB USB_DIR                                                 # /mnt/usb1/Drive1/OpenLGTV_BCM /mnt/usb1/Drive1
+export USB_FULLDEV="`grep -m 1 \" $USB_DIR \" /proc/mounts | cut -d\" \" -f 1`" # /dev/sda1
+export USB_DEV="${USB_FULLDEV:5:3}"                                             # sda
 
 for jj in 1 2 3 4
 do
