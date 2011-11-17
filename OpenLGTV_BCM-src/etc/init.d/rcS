@@ -55,12 +55,6 @@ source /etc/rc.d/rc.mount3
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
-if [ -e "/mnt/lg/res/lglib/bcmdriver.ko" ]
-then
-    echo "OpenLGTV_BCM-INFO: loading /mnt/lg/res/lglib/bcmdriver.ko kernel module..."
-    insmod /mnt/lg/res/lglib/bcmdriver.ko
-fi
-
 # mount partitons (/etc/fstab)
 #mount -a			# rcS default
 #mount --bind /mnt/flash/data	/mnt/lg/recdb
@@ -185,35 +179,33 @@ then
     echo "OpenLGTV_BCM-INFO: linking /tmp/.ssh to /mnt/user/.ssh dir for storage of user SSH configs and keys"
     ln -sf /mnt/user/.ssh /tmp/.ssh
 fi
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-echo "OpenLGTV_BCM-INFO: starting portmapper..."
-portmap &
-echo "OpenLGTV_BCM-INFO: starting telnet server..."
-telnetd &
-echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."
-# v- output redirection makes dropbear stay in foreground, so need to add '&' after tee command
-dropbear &
-echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."
-hostname OpenLGTV_BCM
 
 source /etc/rc.d/rc.settings
 
+#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+echo "OpenLGTV_BCM-INFO: starting portmapper..."
+portmap &
+
+if [ "$disable_telnet" != "1" ]
+then
+    echo "OpenLGTV_BCM-INFO: starting telnet server..."
+    telnetd &
+fi
+
+if [ "$alternative_port_for_ssh" != "1" ]
+then
+    echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."
+    dropbear &
+else
+    echo "OpenLGTV_BCM-INFO: starting dropbear SSH server on alternative port (2222)..."
+    dropbear -p 2222 &
+fi
+
+echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."
+hostname OpenLGTV_BCM
+
 # Lets load modules in background to shorten boot time
 /etc/rc.d/rc.modules &
-
-# Mount-binding btusb.ko from /mnt/user/modules/
-if [ -f "/mnt/user/modules/btusb.ko" ]
-then
-    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/btusb.ko to /mnt/lg/res/lgres/btusb.ko..."
-    mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko
-fi
-
-# Mount-binding wl.ko from /mnt/user/modules/
-if [ -f "/mnt/user/modules/wl.ko" ]
-then
-    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko..."
-    mount --bind /mnt/user/modules/wl.ko /mnt/lg/res/lgres/wl.ko
-fi
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 source /etc/rc.d/rc.netcast
@@ -229,49 +221,14 @@ then
     /etc/rc.d/rc.nvram &
 fi
 
-/etc/rc.d/rc.fwinfo &
+nice -n 20 /etc/rc.d/rc.fwinfo &
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
 echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
 #############/etc/rc.d/rc.usb &
 
-md5password="`grep -m 1 ^root: /etc/shadow | awk -F: '{print $2}'`"
-
-if [ ! -f "/mnt/user/etc/httpd.conf" ]
-then
-    echo "OpenLGTV_BCM-INFO: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..."
-    cat /etc/httpd.conf | sed 's/D:*/A:*/g' > /mnt/user/etc/httpd.conf
-    if [ "`grep -m 1 ^root:x /etc/passwd`" = "" ]
-    then
-	echo "OpenLGTV_BCM-WARN: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it"
-	#echo '/:openlgtv:openlgtv' >> /mnt/user/etc/httpd.conf
-	echo '/:openlgtv:$1$3X/HLa0A$UNzgE.VueZjnJG1wCNIgB0' >> /mnt/user/etc/httpd.conf
-    else
-	echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf"
-	echo "/:openlgtv:$md5password" >> /mnt/user/etc/httpd.conf
-    fi
-fi
-
-md5password_httpd="`grep -m 1 ^/:openlgtv: /mnt/user/etc/httpd.conf | awk -F: '{print $3}'`"
-
-if [ "$md5password_httpd" != "$md5password" ]
-then
-    echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf config change"
-    sed -i -e "s:^/\:openlgtv\:.*:/\:openlgtv\:$md5password:g" /mnt/user/etc/httpd.conf
-fi
-
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"
-#httpd -h /var/www
-httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www
-if [ -f "/mnt/user/etc/httpd.conf" ]
-then
-    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication"
-    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" 2>&1
-else
-    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC"
-fi
+/etc/rc.d/rc.httpd
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 (sleep 10; /etc/rc.d/rc.directfb)&
@@ -290,10 +247,14 @@ fi
 
 if [ -d "/mnt/user/init.d" ]
 then
-    if [ "`ls /mnt/user/init.d/ | wc -l`" -gt "0" ]
+    scr_files="`find /mnt/user/init.d/* -perm -u=x 2>/dev/null`"
+    #if [ "`ls /mnt/user/init.d/ | wc -l`" -gt "0" ]
+    #if [ "`echo $scr_files | wc -w`" -gt "0" ]
+    if [ -n "$scr_files" ]
     then
 	echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"
-	for scr_file in /mnt/user/init.d/*
+	#for scr_file in /mnt/user/init.d/*
+	for scr_file in $scr_files
 	do
 	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
 	    $scr_file

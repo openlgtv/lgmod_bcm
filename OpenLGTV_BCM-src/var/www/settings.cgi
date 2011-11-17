@@ -25,6 +25,7 @@ content-type: text/html
 			    opt_def="`grep -m 1 ^$opt_name /etc/default/settings.default`"
 			    #opt_desc="`echo $opt_def | awk -F# '{print $2}'`"
 			    opt_desc="${opt_def#*\#}"
+			    [ -z "$opt_desc" ] && opt_desc="DEPRECIATED, WILL BE REMOVED SOON"
 			    #opt_def_val="`echo $opt_def | awk -F# '{print $1}' | awk -F= '{print $2}'`"
 			    #opt_def_valx="`echo $opt_def | awk -F# '{print $1}' | awk -F= '{print $2}'`"
 			    opt_def_valx1="${opt_def%\#*}"

@@ -3,11 +3,20 @@
 # NetCast setup script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-# Check for proper NetCast configs structure (might need to be extended in future)
-export netcast_config_ok=1
 export addon_config_xml="/mnt/addon/contents/config.xml"
 export user_config_xml="/mnt/user/netcast/config.xml"
+export addon_browser_application_txt="/mnt/addon/browser/browser_application.txt"
+export browser_browser_application_txt="/mnt/browser/browser_application.txt"
+export user_browser_application_txt="/mnt/user/netcast/browser_application_txt"
+export user_run3556="/mnt/user/netcast/run3556"
+export browser_run3556="/mnt/browser/run3556"
+export addon_addon_mgr_bat="/mnt/addon/bin/addon_mgr.bat"
+export user_addon_mgr_bat="/mnt/user/netcast/addon_mgr.bat"
+export addon_extra_conf="/mnt/addon/browser/extra_conf"
+export user_extra_conf="/mnt/user/netcast/extra_conf"
+export netcast_config_ok=1
 
+# Check for proper NetCast configs structure (might need to be extended in future)
 if [ ! -f "$user_config_xml" ]
 then
     echo "OpenLGTV_BCM-INFO: first run NetCast configs preparation..."
@@ -15,14 +24,7 @@ then
     then
 	echo "OpenLGTV_BCM-INFO: checking if $addon_config_xml file has supported format..."
 	cfg_xml="$addon_config_xml"; source /scripts/netcast_config_check.sh
-	#if [ -z "`grep -m 1 '<exec_engine>' $addon_config_xml`" -o -z "`grep -m 1 '<exec_app>' $addon_config_xml`" -o -z "`grep -m 1 'check_network' $addon_config_xml`" -o -z "`grep -m 1 'native' $addon_config_xml`" ]
-	#then
-	#    #echo "OpenLGTV_BCM-ERROR: $addon_config_xml file has NOT SUPPORTED format, please upgrade yours firmware - stopping NetCast preparation..."
-	#    #export netcast_config_ok=0
-	#else
-	#    #TODO: change default, add check and support for config_ver=3 (SmartTV)
-	#    export config_ver=2
-	#fi
+	#TODO: change default, add check and support for config_ver=3 (SmartTV)
     else
 	echo "OpenLGTV_BCM-ERROR: $addon_config_xml file does not exist - stopping NetCast preparation..."
 	export config_ver=0
@@ -33,7 +35,7 @@ else
     cfg_xml="$addon_config_xml"; source /scripts/netcast_config_check.sh
     if [ "$config_ver" = "1" ]
     then
-	if [ -z "`grep -m 1 '<url_exec>' $user_config_xml`" ]
+	if [ -z "`grep -m 1 '<url_exec>' \"$user_config_xml\"`" ]
 	then
 	    echo "OpenLGTV_BCM-WARN: possible LG firmware NetCast upgrade detected: $addon_config_xml file has DIFFERENT format than $user_config_xml, renaming /mnt/user/netcast dir to /mnt/user/netcast.pre${config_ver}..."
 	    mv /mnt/user/netcast /mnt/user/netcast.pre${config_ver}
@@ -46,7 +48,7 @@ else
     else
 	if [ "$config_ver" = "2" ]
 	then
-	    if [ -z "`grep -m 1 '<exec_engine>' $user_config_xml`" ]
+	    if [ -z "`grep -m 1 '<exec_engine>' \"$user_config_xml\"`" ]
 	    then
 		echo "OpenLGTV_BCM-WARN: possible LG firmware NetCast downgrade detected: $addon_config_xml file has DIFFERENT format than $user_config_xml, renaming /mnt/user/netcast dir to /mnt/user/netcast.pre${config_ver}..."
 		mv /mnt/user/netcast /mnt/user/netcast.pre${config_ver}
@@ -88,7 +90,7 @@ then
 	    if [ ! -f "/home/netcast_icons/${icon:28}" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making copy of new NetCast icon: $icon to /home/netcast_icons dir..."
-		cp -f $icon /home/netcast_icons/
+		cp -f "$icon" /home/netcast_icons/
 	    fi
 	done
     fi
@@ -117,91 +119,76 @@ then
 	mount --bind /home/netcast_icons /mnt/addon/contents/netcast
     fi
 fi
-#if [ ! -h "/mnt/addon/browser/browser_application.txt" -a ! -h "/mnt/browser/browser_application.txt" -a ! -h "$addon_config_xml" -a ! -h "/mnt/addon/bin/addon_mgr.bat" -a ! -h "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
-if [ -f "/mnt/addon/browser/browser_application.txt" -a -f "/mnt/browser/browser_application.txt" -a -f "$addon_config_xml" -a -f "/mnt/addon/bin/addon_mgr.bat" -a -f "/mnt/browser/run3556" -o "$force_copy_config_netcast" = "1" ]
+### DEPRECIATED settings - force_copy_config_netcast
+### if [ -f "$addon_browser_application_txt" -a -f "$browser_browser_application_txt" -a -f "$addon_config_xml" -a -f "$addon_addon_mgr_bat" -a -f "$browser_run3556" -o "$force_copy_config_netcast" = "1" ]
+if [ -f "$addon_browser_application_txt" -a -f "$browser_browser_application_txt" -a -f "$addon_config_xml" -a -f "$addon_addon_mgr_bat" -a -f "$browser_run3556" ]
 then
     if [ "$netcast_config_ok" = "1" ]
     then
-	if [ "$force_copy_config_netcast" = "1" ]
+	### DEPRECIATED settings - force_copy_config_netcast
+	### if [ "$force_copy_config_netcast" = "1" ]
+	### then
+	###     echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..."
+	### fi
+	if [ ! -f "$user_browser_application_txt" -a -f "$addon_browser_application_txt" ]
 	then
-	    echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..."
+	    echo "OpenLGTV_BCM-INFO: making browser config copy - $addon_browser_application_txt..."
+	    #cp $browser_browser_application_txt $user_browser_application_txt
+	    cat "$addon_browser_application_txt" > "$user_browser_application_txt"
+	    chmod 644 "$user_browser_application_txt"
 	fi
-	# TODO: rewrite those almost duplicate checks and copies for one loop on variable with all files list
-	if [ ! -f "/mnt/user/netcast/browser_application.txt" ]
+	if [ ! -f "$user_run3556" -a -f "$browser_run3556" ]
 	then
-	    #if [ -f "/mnt/browser/browser_application.txt" ]
-	    if [ -f "/mnt/addon/browser/browser_application.txt" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: making browser config copy - /mnt/addon/browser/browser_application.txt..."
-		#cp /mnt/browser/browser_application.txt /mnt/user/netcast/browser_application.txt
-		cat /mnt/addon/browser/browser_application.txt > /mnt/user/netcast/browser_application.txt
-		chmod 644 /mnt/user/netcast/browser_application.txt
-	    fi
+	    echo "OpenLGTV_BCM-INFO: making browser startup script copy - $browser_run3556..."
+	    #cp $browser_run3556 $user_run3556
+	    cat "$browser_run3556" > "$user_run3556"
+	    chmod 775 "$user_run3556"
 	fi
-	if [ ! -f "/mnt/user/netcast/run3556" ]
+	if [ ! -f "$user_extra_conf" -a -f "$addon_extra_conf" ]
 	then
-	    if [ -f "/mnt/browser/run3556" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: making browser startup script copy - /mnt/browser/run3556..."
-		#cp /mnt/browser/run3556 /mnt/user/netcast/run3556
-		cat /mnt/browser/run3556 > /mnt/user/netcast/run3556
-		chmod 775 /mnt/user/netcast/run3556
-	    fi
+	    echo "OpenLGTV_BCM-INFO: making additional settings file for browser copy - $addon_extra_conf..."
+	    #cp $addon_extra_conf $user_extra_conf
+	    cat "$addon_extra_conf" > "$user_extra_conf"
+	    chmod 775 "$user_extra_conf"
 	fi
-	if [ ! -f "/mnt/user/netcast/extra_conf" ]
+	if [ ! -f "$user_config_xml" -a -f "$addon_config_xml" ]
 	then
-	    if [ -f "/mnt/addon/browser/extra_conf" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: making additional settings file for browser copy - /mnt/addon/browser/extra_conf..."
-		#cp /mnt/addon/browser/extra_conf /mnt/user/netcast/extra_conf
-		cat /mnt/addon/browser/extra_conf > /mnt/user/netcast/extra_conf
-		chmod 775 /mnt/user/netcast/extra_conf
-	    fi
+	    echo "OpenLGTV_BCM-INFO: making StageCraft config copy - $addon_config_xml..."
+	    #cp $addon_config_xml $user_config_xml
+	    cat "$addon_config_xml" >> "$user_config_xml"
+	    chmod 644 "$user_config_xml"
 	fi
-	if [ ! -f "$user_config_xml" ]
+	if [ ! -f "$user_addon_mgr_bat" -a -f "$addon_addon_mgr_bat" ]
 	then
-	    if [ -f "$addon_config_xml" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: making StageCraft config copy - $addon_config_xml..."
-		#cp $addon_config_xml $user_config_xml
-		cat $addon_config_xml >> $user_config_xml
-		chmod 644 $user_config_xml
-	    fi
-	fi
-	if [ ! -f "/mnt/user/netcast/addon_mgr.bat" ]
-	then
-	    if [ -f "/mnt/addon/bin/addon_mgr.bat" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - /mnt/addon/bin/addon_mgr.bat..."
-		#cp /mnt/addon/bin/addon_mgr.bat /mnt/user/netcast/addon_mgr.bat
-		cat /mnt/addon/bin/addon_mgr.bat >> /mnt/user/netcast/addon_mgr.bat
-		chmod 644 /mnt/user/netcast/addon_mgr.bat
-	    fi
+	    echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - $addon_addon_mgr_bat..."
+	    #cp $addon_addon_mgr_bat $user_addon_mgr_bat
+	    cat "$addon_addon_mgr_bat" >> "$user_addon_mgr_bat"
+	    chmod 644 "$user_addon_mgr_bat"
 	fi
 	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	source /etc/rc.d/rc.netcast-modify
 	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-	if [ -f "$user_config_xml" -a -f "/mnt/user/netcast/addon_mgr.bat" ]
+	if [ -f "$user_config_xml" -a -f "$user_addon_mgr_bat" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..."
-	    mount --bind $user_config_xml                          $addon_config_xml
-	    mount --bind /mnt/user/netcast/addon_mgr.bat           /mnt/addon/bin/addon_mgr.bat
+	    mount --bind "$user_config_xml"    "$addon_config_xml"
+	    mount --bind "$user_addon_mgr_bat" "$addon_addon_mgr_bat"
 	fi
-	if [ -f "/mnt/user/netcast/browser_application.txt" ]
+	if [ -f "$user_browser_application_txt" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using links to NetCast browser configs on browser and addon partitions..."
-	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/addon/browser/browser_application.txt
-	    mount --bind /mnt/user/netcast/browser_application.txt /mnt/browser/browser_application.txt
+	    mount --bind "$user_browser_application_txt" "$addon_browser_application_txt"
+	    mount --bind "$user_browser_application_txt" "$browser_browser_application_txt"
 	fi
-	if [ -f "/mnt/user/netcast/extra_conf" ]
+	if [ -f "$user_extra_conf" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using link to NetCast browser additional settings config on addon partition..."
-	    mount --bind /mnt/user/netcast/extra_conf /mnt/addon/browser/extra_conf
+	    mount --bind "$user_extra_conf" "$addon_extra_conf"
 	fi
-	if [ -f "/mnt/user/netcast/run3556" ]
+	if [ -f "$user_run3556" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using links to NetCast browser startup script on browser partition..."
-	    mount --bind /mnt/user/netcast/run3556 /mnt/browser/run3556
+	    mount --bind "$user_run3556"    "$browser_run3556"
 	fi
     fi
 fi

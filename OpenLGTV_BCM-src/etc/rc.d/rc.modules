@@ -3,6 +3,12 @@
 # Kernel modules loading script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+if [ -e "/mnt/lg/res/lglib/bcmdriver.ko" ]
+then
+    echo "OpenLGTV_BCM-INFO: loading /mnt/lg/res/lglib/bcmdriver.ko kernel module..."
+    insmod /mnt/lg/res/lglib/bcmdriver.ko
+fi
+
 MODULES_ROOTFS_LIST="input-core hid usbhid evdev uinput cifs fuse"
 if [ "$MODULES_CUSTOM_LIST" = "" ]
 then
@@ -45,3 +51,17 @@ do
 done
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+
+# Mount-binding btusb.ko from /mnt/user/modules/
+if [ -f "/mnt/user/modules/btusb.ko" ]
+then
+    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/btusb.ko to /mnt/lg/res/lgres/btusb.ko..."
+    mount --bind /mnt/user/modules/btusb.ko /mnt/lg/res/lgres/btusb.ko
+fi
+
+# Mount-binding wl.ko from /mnt/user/modules/
+if [ -f "/mnt/user/modules/wl.ko" ]
+then
+    echo "OpenLGTV_BCM-INFO: binding /mnt/user/modules/wl.ko to /mnt/lg/res/lgres/wl.ko..."
+    mount --bind /mnt/user/modules/wl.ko /mnt/lg/res/lgres/wl.ko
+fi

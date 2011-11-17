@@ -21,9 +21,9 @@ pid=`pgrep RELEASE | tail -n 1`
 
 cursorupdates="no-cursor-updates"
 
-[ "$netcast_keyboard_mouse_support" = "" -a -f "/mnt/user/cfg/settings" ] && source /mnt/user/cfg/settings
+[ "$netcast_mouse_support" = "" -a -f "/mnt/user/cfg/settings" ] && source /mnt/user/cfg/settings
 
-if [ "$netcast_keyboard_mouse_support" = "1" ]
+if [ "$netcast_mouse_support" = "1" ]
 then
     if [ "$1 $2" = "hotplug add" -o -d "$USBHID_CONNECTED_DIR" ]
     then
@@ -31,18 +31,13 @@ then
     fi
 fi
 
-#v_start_hex=`cat /proc/${pid}/maps | grep "/dev/mem" | awk -F- '{ if(NR==3) printf("%s\n", $1) }'`
 v_start_hex=`grep "/dev/mem" /proc/${pid}/maps | awk -F- '{ if(NR==3) printf("%s\n", $1) }'`
-#v_start_dec=`echo $((0x${v_start_hex}))`
 v_start_dec="$((0x${v_start_hex}))"
-#v_end_hex=`cat /proc/${pid}/maps | grep "/dev/mem" | awk '{ if(NR==3) printf("%s\n", $1) }'| awk -F- '{ printf("%s\n", $2) }'`
 v_end_hex=`grep "/dev/mem" /proc/${pid}/maps | awk '{ if(NR==3) printf("%s\n", $1) }'| awk -F- '{ printf("%s\n", $2) }'`
-#v_end_hex=`echo $v_start_hex | awk -F- '{ printf("%s\n", $2) }'`
-#v_end_dec=`echo $((0x${v_end_hex}))`
 v_end_dec="$((0x${v_end_hex}))"
-#p_start_hex=`cat /proc/${pid}/maps | grep "/dev/mem" | awk '{ if(NR==3) printf("%s\n", $3) }'`
 p_start_hex=`grep "/dev/mem" /proc/${pid}/maps | awk '{ if(NR==3) printf("%s\n", $3) }'`
-p_size_dec=`echo "${v_start_dec} ${v_end_dec}" | awk '{ printf("%d\n", $2-$1) }'`
+#p_size_dec=`echo "${v_start_dec} ${v_end_dec}" | awk '{ printf("%d\n", $2-$1) }'`
+p_size_dec="$((${v_end_dec}-${v_start_dec}))"
 
 echo "OpenLGTV_BCM-INFO: generating $DIRECTFBRC file..."
 
@@ -54,7 +49,7 @@ echo -e "desktop-buffer-mode=backvideo\n#desktop-buffer-mode=auto\n#window-surfa
 echo -e "log-file=/var/log/directfb.log\n#bg-none\nbg-color=0x00000000\n${cursorupdates}\ntmpfs=/dev/shm" >> $DIRECTFBRC
 echo -e "no-sighandler\n#no-init-layer\n#disable-module=keyboard\nvsync-none\nno-linux-input-grab" >> $DIRECTFBRC
 
-if [ "$netcast_keyboard_mouse_support" = "1" -a "$1" != "hotplug" ]
+if [ "$netcast_mouse_support" = "1" -a "$1" != "hotplug" ]
 then
     if [ -d "/mnt/browser/lib/directfb-1.2-0/inputdrivers" ]
     then

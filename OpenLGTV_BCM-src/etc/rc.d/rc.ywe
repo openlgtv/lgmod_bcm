@@ -8,10 +8,11 @@
 # this script might need cleanup after we will finally drop all support for lg yahoo widgets, even drop the variable
 #if [ ! -h "/mnt/addon/ywe/config-oem.xml" -a ! -h "/mnt/addon/ywe/bin/konfabulator.sh" -o "$force_copy_config_ywe" = "1" ]
 #then
-    if [ "$force_copy_config_ywe" = "1" ]
-    then
-	echo "OpenLGTV_BCM-WARN: forced Yahoo Widgets Engine configs copy..."
-    fi
+    ### DEPRECIATED settings - force_copy_config_ywe
+    ### if [ "$force_copy_config_ywe" = "1" ]
+    ### then
+    ### 	echo "OpenLGTV_BCM-WARN: forced Yahoo Widgets Engine configs copy..."
+    ### fi
     export ywedir=/mnt/addon/ywe
     if [ "$OpenLGTV_BCM_USB" = "" ]
     then
@@ -97,11 +98,12 @@
 		mount -t tmpfs ywedata /mnt/widget.data -o size=80M
 	    fi
 	fi
-	if [ ! -d "/mnt/widget.data/samsung" -a "$use_samsung_ywe_instead_of_lg" != "1" -a "$samsung_ywe" != "0" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..."
-	    mkdir -p /mnt/widget.data/samsung
-	fi
+	### DEPRECIATED settings - use_samsung_ywe_instead_of_lg
+	### if [ ! -d "/mnt/widget.data/samsung" -a "$use_samsung_ywe_instead_of_lg" != "1" -a "$samsung_ywe" != "0" ]
+	### then
+	###     echo "OpenLGTV_BCM-INFO: creating /mnt/widget.data/samsung dir for Yahoo Widgets Engine data dir prepared for Samsung Widgets..."
+	###     mkdir -p /mnt/widget.data/samsung
+	### fi
 	if [ ! -f "/mnt/user/ywe/config-oem.xml" ]
 	then
 	    if [ -f "$ywedir/config-oem.xml" ]
@@ -138,14 +140,15 @@
 	fi
 	if [ -f "/mnt/user/ywe/config-oem.xml" -a -f "/mnt/user/ywe/konfabulator.sh" ]
 	then
-	    if [ "$use_samsung_ywe_instead_of_lg" != "1" ]
-	    then
+	    ### DEPRECIATED settings - use_samsung_ywe_instead_of_lg
+	    ### if [ "$use_samsung_ywe_instead_of_lg" != "1" ]
+	    ### then
 	        echo "OpenLGTV_BCM-INFO: using links to Yahoo Widgets Engine configs on addon partition..."
 	        umount -f $ywedir/config-oem.xml 2>/dev/null
 	        umount -f $ywedir/bin/konfabulator.sh 2>/dev/null
 	        mount --bind /mnt/user/ywe/config-oem.xml              $ywedir/config-oem.xml
 	        mount --bind /mnt/user/ywe/konfabulator.sh             $ywedir/bin/konfabulator.sh
-	    fi
+	    ### fi
 	fi
 	if [ "$samsung_ywe" != "0" ]
 	then
@@ -180,38 +183,42 @@
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    if [ -f "/mnt/user/ywe/konfabulator.sh" -a ! -f "/mnt/user/ywe/samsung/konfabulator.sh" ]
 	    then
-		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
-		then
+		### DEPRECIATED settings - force_copy_config_netcast
+		### if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
+		### then
 		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script with proper path for Samsung Widgets ONLY - /mnt/user/ywe/samsung/konfabulator.sh..."
 		    #cp /mnt/user/ywe/konfabulator.sh /mnt/user/ywe/samsung/konfabulator.sh
 		    cat /mnt/user/ywe/konfabulator.sh | sed "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" > /mnt/user/ywe/samsung/konfabulator.sh
 		    chmod 755 /mnt/user/ywe/samsung/konfabulator.sh
-		else
-		    echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets with proper engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..."
-		    cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
-		    chmod 755 /mnt/user/ywe/samsung/konfabulator.sh
-		fi
+		### else
+		###     echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script for Samsung Widgets with proper engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..."
+		###     cat /mnt/user/ywe/konfabulator.sh | sed 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' | sed 's#^export KF_DATA_PATH.*#export KF_DATA_PATH=/mnt/widget.data/samsung#g' > /mnt/user/ywe/samsung/konfabulator.sh
+		###     chmod 755 /mnt/user/ywe/samsung/konfabulator.sh
+		### fi
 	    fi
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    # its not needed to change paths if we use only one widget engine ------------------------------------v
-	    if [ -z '`grep -m 1 "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep -m 1 "\/mnt\/ywe_s"`' -a "$use_samsung_ywe_instead_of_lg" != "1" ]
-	    then
-		echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..."
-		sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh
-		sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
-	    else
-		if [ -z "`grep -m 1 \"^export KF_APP_PATH\" /mnt/user/ywe/samsung/konfabulator.sh | grep -m 1 \"$ywedir\"`" -a "$use_samsung_ywe_instead_of_lg" = "1" ]
+	    ### DEPRECIATED settings - force_copy_config_netcast
+	    ### if [ -z '`grep -m 1 "^export KF_APP_PATH" /mnt/user/ywe/samsung/konfabulator.sh | grep -m 1 "\/mnt\/ywe_s"`' -a "$use_samsung_ywe_instead_of_lg" != "1" ]
+	    ### then
+	    ### 	echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets engine and data paths - /mnt/user/ywe/samsung/konfabulator.sh..."
+	    ### 	sed -i -e 's#^export KF_APP_PATH.*#export KF_APP_PATH=/mnt/ywe_s#g' /mnt/user/ywe/samsung/konfabulator.sh
+	    ### 	sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
+	    ### else
+		# if [ -z "`grep -m 1 \"^export KF_APP_PATH\" /mnt/user/ywe/samsung/konfabulator.sh | grep -m 1 \"$ywedir\"`" -a "$use_samsung_ywe_instead_of_lg" = "1" ]
+		if [ -z "`grep -m 1 \"^export KF_APP_PATH\" /mnt/user/ywe/samsung/konfabulator.sh | grep -m 1 \"$ywedir\"`" ]
 		then
 		    echo "OpenLGTV_BCM-INFO: setting Yahoo Widgets Engine startup script for Samsung Widgets ONLY engine path - /mnt/user/ywe/samsung/konfabulator.sh..."
 		    sed -i -e "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" /mnt/user/ywe/samsung/konfabulator.sh
 		    #sed -i -e 's#^export KF_DATA_DIR.*#export KF_DATA_DIR=/mnt/widget.data/samsung#g' /mnt/user/ywe/samsung/konfabulator.sh
 		fi
-	    fi
+	    ### fi
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    if [ -f "/mnt/user/ywe/samsung/config-oem.xml" -a -f "/mnt/user/ywe/samsung/konfabulator.sh" -a -d "$ywedir" ]
 	    then
-		if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
-		then
+		### DEPRECIATED settings - force_copy_config_netcast
+		### if [ "$use_samsung_ywe_instead_of_lg" = "1" ]
+		### then
 		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets (from /mnt/user/ywe/samsung) replacing LG Widgets in path: $ywedir ..."
 		    # v- these (commented out) should not be mounted
 		    #umount $ywedir/config-oem.xml
@@ -223,15 +230,15 @@
 		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     $ywedir/bin/konfabulator.sh
 		    #mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
 		    #mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
-		else
-		    echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets (from /mnt/user/ywe/samsung) into separate path: /mnt/ywe_s..."
-		    umount -f /mnt/ywe_s/bin/konfabulator.sh 2>/dev/null
-		    umount -f /mnt/ywe_s/config-oem.xml 2>/dev/null
-		    umount -f /mnt/ywe_s 2>/dev/null
-		    mount --bind $ywedir                                   /mnt/ywe_s
-		    mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
-		    mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
-		fi
+		### else
+		###     echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets (from /mnt/user/ywe/samsung) into separate path: /mnt/ywe_s..."
+		###     umount -f /mnt/ywe_s/bin/konfabulator.sh 2>/dev/null
+		###     umount -f /mnt/ywe_s/config-oem.xml 2>/dev/null
+		###     umount -f /mnt/ywe_s 2>/dev/null
+		###     mount --bind $ywedir                                   /mnt/ywe_s
+		###     mount --bind /mnt/user/ywe/samsung/config-oem.xml      /mnt/ywe_s/config-oem.xml
+		###     mount --bind /mnt/user/ywe/samsung/konfabulator.sh     /mnt/ywe_s/bin/konfabulator.sh
+		### fi
 	    fi
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    if [ "$ywedir_on_usb" = "1" -a ! -h "$ywedir_usb/lib/libKonfabulator.so.0" ]

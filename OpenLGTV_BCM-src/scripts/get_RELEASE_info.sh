@@ -80,7 +80,7 @@ then
     rel_info="`strings $RELEASE | grep -m1 -B1 -A4 swfarm | grep -v '^0.\..*\..*' | head -n 5 | sed \"s/^'//g\"`"
     read="cat $RELEASE"
 fi
-rel_rev="`echo $rel_info | awk '{print $7}'`"
+rel_rev="`echo $rel_info | cut -d\" \" -f7`"
 rel_rev_hex=$(for i in `echo -n $rel_rev | hexdump -v -e '/1 "%02X "'`; do echo -n "x$i"; done)
 rel_ver=$($read 2>/dev/null | bbe -s -b /\\x00$rel_rev\\x00\\x00/:30 -e "p H" | sed -e 's/ //g' -e "s/x00${rel_rev_hex}\(x00\)*//gI" | awk -Fx '{print $5 $4 $3 $2}' | sed -e 's/\(..\)/\1./g' -e 's/.$//g' -e 's/^\(00\.\)*//g')
 echo "LG firmware version information:"
