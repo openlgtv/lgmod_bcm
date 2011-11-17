@@ -11,7 +11,7 @@
 
 echo "NVRAM information:"
 
-nvram-edit | egrep "Model name|Platform|Debug status|Baudrate"
+nvram-edit | egrep "Model name|Platform|Debug status|Baudrate|Lang"
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 

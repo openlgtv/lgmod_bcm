@@ -96,6 +96,12 @@ unsigned char num2a[1];
 unsigned char num3a[1];
 unsigned char num4a[1];
 //unsigned char str[];
+unsigned char lang1a;
+unsigned char lang1b;
+unsigned char lang1c;
+unsigned char lang2a;
+unsigned char lang2b;
+unsigned char lang2c;
 FILE *finput;
 FILE *foutput;
 int ninput;
@@ -281,11 +287,23 @@ int main(int argc, char *argv[])
     }
 
     printf("Input file:       %s\n\n", file);
+
     debug_status=str[NVRAM_DEBUG_STATUS];
+
     baudrate=str[NVRAM_BAUDRATE];
-    
+
+    lang1a=str[NVRAM_LANG1+2];
+    lang1b=str[NVRAM_LANG1+1];
+    lang1c=str[NVRAM_LANG1];
+
+    lang2a=str[NVRAM_LANG2+2];
+    lang2b=str[NVRAM_LANG2+1];
+    lang2c=str[NVRAM_LANG2];
+
     char model[NVRAM_MODEL_LEN];
+
     char serial[NVRAM_SERIAL_LEN];
+
 
     int nr;
     for (nr = 0; nr <= NVRAM_MODEL_LEN; nr++)
@@ -300,6 +318,8 @@ int main(int argc, char *argv[])
     }
     printf("Serial number:    %s\n", serial);
     
+    printf("Lang1:            %c%c%c\n", (char) lang1a, (char) lang1b, (char) lang1c);
+    printf("Lang2:            %c%c%c\n", (char) lang2a, (char) lang2b, (char) lang2c);
     
     /*
     printf("Debug status offset: %x\n", NVRAM_DEBUG_STATUS-((NVRAM_DEBUG_STATUS/NVRAM_BLOCK_DATA_SIZE)*NVRAM_BLOCK_HEADER_SIZE));
