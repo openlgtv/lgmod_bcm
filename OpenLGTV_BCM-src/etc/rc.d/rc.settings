@@ -11,7 +11,7 @@ then
     ###touch /mnt/user/cfg/settings
 fi
 
-settings_depreciated="confirmations rebooting netcast_kill_browser netcast_keyboard_mouse_support use_samsung_ywe_instead_of_lg"
+settings_depreciated="confirmations rebooting netcast_kill_browser netcast_keyboard_mouse_support use_samsung_ywe_instead_of_lg force_copy_config_netcast force_copy_config_ywe"
 
 if [ "$uver" != "$ver" -o ! -f "/mnt/user/cfg/settings" ]
 then
