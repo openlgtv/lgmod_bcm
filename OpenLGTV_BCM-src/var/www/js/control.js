@@ -287,13 +287,15 @@ function check(e)
 				}
 			else
 				{
-				if (key==37|key==38)
+				if (((key==37)&(PageElements[currElementIndex].type != 'radio'))|key==38)
 					{
 					    PrevControl();
+					    return false;
 					}
-				if (key==39|key==40)
+				if (((key==39)&(PageElements[currElementIndex].type != 'radio'))|key==40)
 					{
 					    NextControl();
+					    return false;
 					}
 				}
 			} 

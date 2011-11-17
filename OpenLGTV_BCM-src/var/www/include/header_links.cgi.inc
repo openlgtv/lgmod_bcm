@@ -7,16 +7,15 @@
 			<!-- div id="link1Parent" class="menuitem" style="background-color:white;height:32px;display:inline-block;width:110px" -->
 			<div id="link1Parent" class="menuitem" style="width:110px">
 				<!-- center><input type="button" id="link1" class="menubutton" onKeyPress="javascript:window.location='home.cgi';" onClick="javascript:window.location='home.cgi';" value="Home" style="width:100px" /></center -->
-				<a id="link1" class="menubutton" onKeyPress="javascript:window.location='home.cgi';" onClick="javascript:window.location='home.cgi';" value="Home" href="home.cgi">Home</a>
+				<a id="link1" class="menubutton" href="home.cgi">Home</a>
 			</div><div id="link2Parent" class="menuitem" style="width:110px">
-				<!-- center><input type="button" id="link2" class="menubutton" onKeyPress="javascript:window.location='info.cgi';" onClick="javascript:window.location='info.cgi';" value="Info" style="width:100px" /></center -->
-				<a id="link2" class="menubutton" onKeyPress="javascript:window.location='info.cgi';" onClick="javascript:window.location='info.cgi';" value="Info" href="info.cgi">Info</a>
+				<a id="link2" class="menubutton" href="info.cgi">Info</a>
 			</div><div id="link3Parent" class="menuitem" style="width:110px">
-				<a id="link3" class="menubutton" onKeyPress="javascript:window.location='settings.cgi';" onClick="javascript:window.location='settings.cgi';" value="Settings" href="settings.cgi">Settings</a>
+				<a id="link3" class="menubutton" href="settings.cgi">Settings</a>
 			</div><div id="link4Parent" class="menuitem" style="width:230px">
-				<a id="link4" class="menubutton" onKeyPress="javascript:window.location='mount.cgi';" onClick="javascript:window.location='mount.cgi';" value="Network Share Mounts" href="mount.cgi">Network Share Mounts</a>
+				<a id="link4" class="menubutton" href="mount.cgi">Network Share Mounts</a>
 			</div><div id="link5Parent" class="menuitem" style="width:160px">
-				<a id="link5" class="menubutton" onKeyPress="javascript:window.location='browser.cgi';" onClick="javascript:window.location='browser.cgi';" value="Internet Browser" href="browser.cgi">Internet Browser</a>
+				<a id="link5" class="menubutton" href="browser.cgi">Internet Browser</a>
 			</div><div id="link6Parent" class="menuitem" style="width:128px">
-				<a id="link6" class="menubutton" onKeyPress="javascript:window.location='fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2';" onClick="javascript:window.location='fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2';" value="FileManager" href="fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2">FileManager</a>
+				<a id="link6" class="menubutton" href="fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2">FileManager</a>
 			</div>
