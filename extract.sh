@@ -1,9 +1,9 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-pre-beta installation script v.1.90 by xeros
+# OpenLGTV BCM 0.5.0-pre-beta installation script v.1.91 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
-SKIP_LINES=95
+SKIP_LINES=96
 
 echo "OpenLGTV BCM installator"
 
@@ -14,6 +14,7 @@ then
     echo " extract     - just extracts image to /tmp"
     echo " chroot      - extracts, mounts, chroots into new rootfs with /bin/sh only, no installation"
     echo " no_install  - as above but checks for prerequestities and makes backup if running on LG firmware then exits just before flashing"
+    echo " install     - makes real installation"
     echo " no_backup   - skip doing backup before installation"
     echo " drop_caches - drop caches during installation to free more memory (unstable)"
     echo " help        - this usage information"

@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-pre-beta installation script v.1.90 by xeros
+# OpenLGTV BCM 0.5.0-pre-beta installation script v.1.91 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -19,6 +19,7 @@ confirmations=0
 rebooting=1
 make_backup=1
 backup_at_home_force=0
+no_install=1
 
 # enforce variables from settings file
 if [ -f "/mnt/user/cfg/settings" ]
@@ -40,9 +41,10 @@ tmp=/tmp
 argc=0
 for argv in "$@"
 do
-    [ "$argv" = "autoupgrade"     ] && confirmations=0 && rebooting=1 && autoupgrade=1
+    [ "$argv" = "autoupgrade"     ] && confirmations=0 && rebooting=1 && no_install=0 && autoupgrade=1
     [ "$argv" = "no_backup"       ] && make_backup=0
     [ "$argv" = "no_install"      ] && no_install=1
+    [ "$argv" = "install"         ] && no_install=0
     [ "$argv" = "chrooted"        ] && chrooted=1
     [ "$argv" = "drop_caches"     ] && drop_caches=1
     [ "${argv#image=}" != "$argv" ] && ver="`basename ${argv#image=} | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`" && dir="`dirname ${argv#image=}`"
@@ -132,14 +134,29 @@ then
     export USB_DIR=`cat /tmp/usbdir`
     export OpenLGTV_BCM_USB=$USB_DIR/OpenLGTV_BCM
 else
-    mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
-    mkdir -p /mnt/usb2/Drive1/OpenLGTV_BCM > /dev/null 2>&1
-    if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+    for jj in 1 2 3 4
+    do
+	for ii in 1 2
+	do
+	    OpenLGTV_BCM_USB="/mnt/usb$ii/Drive$jj/OpenLGTV_BCM"
+	    USB_DIR="/mnt/usb$ii/Drive$jj"
+	    [ -d "$OpenLGTV_BCM_USB" ] && break 2
+	done
+    done
+    if [ ! -d "$OpenLGTV_BCM_USB" ]
     then
-	export OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
-    else
-	export OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+	mkdir -p /mnt/usb1/Drive1/OpenLGTV_BCM > /dev/null 2>&1
+	mkdir -p /mnt/usb2/Drive1/OpenLGTV_BCM > /dev/null 2>&1
+	if [ -d "/mnt/usb2/Drive1/OpenLGTV_BCM" ]
+	then
+	    OpenLGTV_BCM_USB=/mnt/usb2/Drive1/OpenLGTV_BCM
+	    USB_DIR=/mnt/usb2/Drive1
+	else
+	    OpenLGTV_BCM_USB=/mnt/usb1/Drive1/OpenLGTV_BCM
+	    USB_DIR=/mnt/usb1/Drive1
+	fi
     fi
+    export OpenLGTV_BCM_USB USB_DIR # /mnt/usb1/Drive1/OpenLGTV_BCM /mnt/usb1/Drive1
 fi
 
 touch $log
@@ -158,7 +175,8 @@ then
     fi
 fi
 
-ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1
+ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
+sleep 1
 
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
@@ -170,6 +188,7 @@ then
     echo "Script is run as AUTOUPGRADE, forcing disable confirmations and reboot TV after successful flashing" | tee -a $log
     confirmations=0
     rebooting=1
+    no_install=0
     #autoupgrade=1
 fi
 
