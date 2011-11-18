@@ -17,14 +17,18 @@ wget="$busybox"wget
 grep="$busybox"grep
 
 #g_yaction=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])yaction=[^&]+" | sed "s/%20/ /g" | cut -f 2 -d "=" | sed 's/format//g'`
-g_yaction=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])yaction=[^&]+" | cut -f 2 -d "=" | sed 's/format//g'`
+#####g_yaction=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])yaction=[^&]+" | cut -f 2 -d "=" | sed 's/format//g'`
+g_yaction_x="${QUERY_STRING#*\&yaction=}"
+g_yaction_y="${g_yaction_x#*\?yaction=}"
+g_yaction_z="${g_yaction_y%%\&*}"
+[ "$g_yaction_z" != "$QUERY_STRING" ] && g_yaction="`echo $g_yaction_z | sed 's/format//g'`"
 
 useragent="Mozilla/5.0 (Samsung; U; Linux; en) Konfabulator/5.5.5"
 
 widgetsPhpLoc="http://127.0.0.1:88/ywe/widgets.sh"
 url="http://gallery.tv.widgets.yahoo.com/api/v1/gallery/samsung$g_yaction"
 secret="R8P6PtAlwn2bQobnedI2g7TxgqL4n091Fcq44nRh6CY-"
-	
+
 fwversion="1.3.12.C"
 dockversion="1.2.68.C"
 
@@ -40,7 +44,10 @@ swversion="T-ML09_2000.0"
 
 region="US"
 #lang="en"
-lang=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])lang=[^&]+" | cut -f 2 -d "="`
+#####lang=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])lang=[^&]+" | cut -f 2 -d "="`
+lang_x="${QUERY_STRING#*\&lang=}"
+lang_y="${lang_x#*\?lang=}"
+[ "$g_lang_y" != "$QUERY_STRING" ] && lang="${g_lang_y%%\&*}"
 
 yweversion="5.5.5"
 
@@ -58,19 +65,35 @@ yweres="960x540"
 #g_devcode=""
 #g_appid=""
 
-#export g_ts=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])ts=[^&]+" | sed "s/%20/ /g" | cut -f 2 -d "="`
-#export g_installed=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])installed=[^&]+" | sed "s/%20/ /g" | cut -f 2 -d "="`
-#export g_last=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])last=[^&]+" | sed "s/%20/ /g" | cut -f 2 -d "="`
-#export g_bootstrap=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])bootstrap=[^&]+" | sed "s/%20/ /g" | cut -f 2 -d "="`
-#export g_devcode=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])devcode=[^&]+" | sed "s/%20/ /g" | cut -f 2 -d "="`
-#export g_appid=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])appid=[^&]+" | sed "s/%20/ /g" | cut -f 2 -d "="`
+#####g_ts=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])ts=[^&]+" | cut -f 2 -d "="`
+g_ts_x="${QUERY_STRING#*\&ts=}"
+g_ts_y="${g_ts_x#*\?ts=}"
+[ "$g_ts_y" != "$QUERY_STRING" ] && g_ts="${g_ts_y%%\&*}"
 
-g_ts=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])ts=[^&]+" | cut -f 2 -d "="`
-g_installed=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])installed=[^&]+" | cut -f 2 -d "="`
-g_last=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])last=[^&]+" | cut -f 2 -d "="`
-g_bootstrap=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])bootstrap=[^&]+" | cut -f 2 -d "="`
-g_devcode=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])devcode=[^&]+" | cut -f 2 -d "="`
-g_appid=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])appid=[^&]+" | cut -f 2 -d "="`
+#####g_installed=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])installed=[^&]+" | cut -f 2 -d "="`
+g_installed_x="${QUERY_STRING#*\&installed=}"
+g_installed_y="${g_installed_x#*\?installed=}"
+[ "$g_installed_y" != "$QUERY_STRING" ] && g_installed="${g_installed_y%%\&*}"
+
+#####g_last=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])last=[^&]+" | cut -f 2 -d "="`
+g_last_x="${QUERY_STRING#*\&last=}"
+g_last_y="${g_last_x#*\?last=}"
+[ "$g_last_y" != "$QUERY_STRING" ] && g_last="${g_last_y%%\&*}"
+
+#####g_bootstrap=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])bootstrap=[^&]+" | cut -f 2 -d "="`
+g_bootstrap_x="${QUERY_STRING#*\&bootstrap=}"
+g_bootstrap_y="${g_bootstrap_x#*\?bootstrap=}"
+[ "$g_bootstrap_y" != "$QUERY_STRING" ] && g_bootstrap="${g_bootstrap_y%%\&*}"
+
+#####g_devcode=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])devcode=[^&]+" | cut -f 2 -d "="`
+g_devcode_x="${QUERY_STRING#*\&devcode=}"
+g_devcode_y="${g_devcode_x#*\?devcode=}"
+[ "$g_devcode_y" != "$QUERY_STRING" ] && g_devcode="${g_devcode_y%%\&*}"
+
+#####g_appid=`echo "$QUERY_STRING" | $grep -oE "(^|[?&])appid=[^&]+" | cut -f 2 -d "="`
+g_appid_x="${QUERY_STRING#*\&appid=}"
+g_appid_y="${g_appid_x#*\?appid=}"
+[ "$g_appid_y" != "$QUERY_STRING" ] && g_appid="${g_appid_y%%\&*}"
 
 export g_ts g_installed g_last g_bootstrap g_devcode g_appid
 
@@ -86,7 +109,8 @@ separator="&"
 for i in g_ts g_installed g_last g_bootstrap g_devcode g_appid
 do
     #if [ "${!i}" != "" ] # too bad, this variable indirection works only in bash
-    export ij=`echo $i | sed 's/^g_//g'` 
+    #####export ij=`echo $i | sed 's/^g_//g'`
+    export ij="${i#g_}"
     eval export ii=\$$i
     if [ "$ii" != "" ]
     then                             
@@ -119,7 +143,8 @@ url="$url&hwversion=$hwversion&swversion=$swversion&region=$region&lang=$lang&yw
 export url secret
 
 #	$url=$url."&sig=".urlencode(md5($url.$secret));
-url="$url&sig=`echo -n $url$secret | $md5sum | $awk '{print $1}'`"
+#url="$url&sig=`echo -n $url$secret | $md5sum | $awk '{print $1}'`"
+url="$url&sig=`echo -n $url$secret | $md5sum | cut -d " " -f 1`"
 
 #echo url=$url
 
