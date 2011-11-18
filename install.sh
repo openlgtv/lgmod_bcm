@@ -702,11 +702,14 @@ sync
 if [ "`head -c4 $dir/$file-$lginit_backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" = "$magic_clean" ]
 then
     echo "Gathered dump header from /dev/mtd$mtd_rootfs partition shows that the lginit partition is already erased - good." | tee -a $log
-    echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
+    echo "Moving all files to $dir/flashed dir to prevent autoupgrade on next boot..."
     mkdir -p $dir/flashed $tmp/flashed
-    [ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
-    [ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
-    [ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    #[ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    #[ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    #[ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    [ -n "`ls $dir/*.sqf 2>/dev/null`" ]    && mv -f $dir/*.sqf    $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    [ -n "`ls $dir/*.sh.zip 2>/dev/null`" ] && mv -f $dir/*.sh.zip $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+    [ -n "`ls $dir/*.tar.sh 2>/dev/null`" ] && mv -f $dir/*.tar.sh $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
     log=`echo $log | sed "s#$file#flashed/$file#"`
     cat $tmpoutflashed 2>/dev/null | tee -a $log
     date 2>&1 | tee -a $log
@@ -784,9 +787,12 @@ sleep 5
 sync
 echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
 mkdir -p $dir/flashed $tmp/flashed
-[ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
-[ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
-[ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
+#[ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+#[ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
+#[ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
+[ -n "`ls $dir/*.sqf 2>/dev/null`" ]    && mv -f $dir/*.sqf    $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+[ -n "`ls $dir/*.sh.zip 2>/dev/null`" ] && mv -f $dir/*.sh.zip $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
+[ -n "`ls $dir/*.tar.sh 2>/dev/null`" ] && mv -f $dir/*.tar.sh $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
 #cat $tmpoutflashed | tee -a $log
 #cat $tmpout | tee -a $log
