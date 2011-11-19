@@ -231,15 +231,15 @@ then
     fi
     #echo "side: $side lpthx: $lpthx rpthx: $rpthx"
     timeout=1000
-    if [ "$FORM_onlystatus" != "1" ]
-    then
-	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-3)\",$timeout);</script>"
-    else
+    #if [ "$FORM_onlystatus" != "1" ]
+    #then
+    #	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-3)\",$timeout);</script>"
+    #else
 	echo "<script type=\"text/javascript\">"
 	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}\"; }"
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
-    fi
+    #fi
     echo "</font></div></center></body></head></html>"
     exit 0
 fi
@@ -388,17 +388,18 @@ else
 	echo "<br/><br/><font color='green' size='+3'<b>DONE</b></font><br/>"
 	timeout=2000
     else
-	timeout=10000
+	timeout=8000
     fi
-    if [ "$FORM_onlystatus" != "1" ]
-    then
-	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-2)\",$timeout);</script>"
-    else
+    #if [ "$FORM_onlystatus" != "1" ]
+    #then
+	##echo "<script type=\"text/javascript\">setTimeout(\"history.go(-2)\",$timeout);</script>"
+	#echo "<script type=\"text/javascript\">setTimeout(\"history.go(-1)\",$timeout);</script>"
+    #else
 	echo "<script type=\"text/javascript\">"
 	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}\"; }"
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
-    fi
+    #fi
 fi
 echo '</div>'
 

@@ -220,12 +220,10 @@ function check(e)
 			{
 			document.getElementById('link_' + side + current).click();
 			}
-		    else if (dialog_win=='copy')
+		    else if (dialog_win=='copy'|dialog_win=='move'|dialog_win=='delete')
 			{
-			document.forms["copy"].submit();
-			//TODO: fix that!
-			//document.write(' ');
-			alert('aaaa');
+			document.forms["action"].submit();
+			e.preventDefault();
 			}
 		    return false;
 		}
@@ -382,18 +380,19 @@ function check(e)
 			//Delete file or directory
 			// lpath and rpath variables are wrong - but the right ones lpth and rpth are gathered from link
 			var dest='fm-action.cgi?action=delete' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
-			window.location=dest;
+			//window.location=dest;
+			deleteDialog();
 			//Prevent default action
+			e.preventDefault();
 			return false;
 			}
 		else if (key==404|key==116) 
 			{
 			//the GREEN button on the remote control or F5 have been pressed
 			//Copy file or directory
-			//TODO: disable window.location and use copyDialog() function instead
 			var dest='fm-action.cgi?action=copy' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
-			window.location=dest;
-			//copyDialog();
+			//window.location=dest;
+			copyDialog();
 			//Prevent default action
 			e.preventDefault();
 			return false;
@@ -403,8 +402,10 @@ function check(e)
 			//the YELLOW button on the remote control or F6 have been pressed
 			//Move file or directory
 			var dest='fm-action.cgi?action=move' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
-			window.location=dest;
+			//window.location=dest;
+			moveDialog();
 			//Prevent default action
+			e.preventDefault();
 			return false;
 			}
 		//else if (key==406|key==415) 
@@ -415,6 +416,7 @@ function check(e)
 			if (dialog_displayed==0)
 			    {
 			    mkdirDialog();
+			    e.preventDefault();
 			    }
 			else
 			    {
@@ -429,6 +431,7 @@ function check(e)
 			if (dialog_displayed==0)
 			    {
 			    renameDialog();
+			    e.preventDefault();
 			    }
 			return false;
 			}
@@ -472,7 +475,7 @@ function check(e)
 			}
 		}catch(Exception){}
 	//if (dialog_displayed==0)
-	if ((dialog_displayed==0)|(dialog_win=='copy')|((key>=48)&&(key<=57)))
+	if ((dialog_displayed==0)|(dialog_win=='move')|(dialog_win=='copy')|(dialog_win=='delete')|((key>=48)&&(key<=57)))
 	    {
 	    if (e.stopPropagation)
 		{
@@ -517,7 +520,7 @@ function mkdirDialog()
 	{
 	var newdiv = document.createElement("div");
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:176px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
@@ -538,8 +541,7 @@ function copyDialog()
 	{
 	dialog_win='copy';
 	var newdiv = document.createElement("div");
-	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:200px; width:916px; height:276px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	//var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&name=' + cpth + '/' + document.getElementById('link_' + side + current).name;
@@ -551,17 +553,50 @@ function copyDialog()
 	    }
 	else
 	    {
-		var lpth_fix=rpth;
+		var lpth_fix=lpth;
 		var rpth_fix=src;
 	    }
-	var kb = '<FONT color="black" size="+3"> \
-	    <center><b>Are you sure you want to copy:</b><br/><br/> \
-	    <font size="+2">' + src + '<br/><br/>to:<br/><br/>' + opth + '/<br/></font> \
-	    <form id="copy" name="copy" action="fm-action.cgi" method="GET"> \
+	var kb = '<FONT color="brown" size="+3"> \
+	    <center><b>Are you sure you want to copy?</b><br/><br/> \
+	    <font size="+2" color="black">' + src + '<br/><br/><b>to:</b><br/><br/>' + opth + '/<br/></font> \
+	    <form id="action" name="action" action="fm-action.cgi" method="GET"> \
 	    <input type="hidden" name="side" value="' + side + '"> \
 	    <input type="hidden" name="lpth" value="' + lpth_fix + '"> \
 	    <input type="hidden" name="rpth" value="' + rpth_fix + '"> \
 	    <input type="hidden" name="action" value="copy"> \
+	    <input type="hidden" name="confirm" value="yes"> \
+	    </form></center></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	newdiv.innerHTML = kb;
+	dialog_displayed = 1;
+	}
+
+function moveDialog()
+	{
+	dialog_win='move';
+	var newdiv = document.createElement("div");
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
+	newdiv.id = "dialogWin";
+	document.body.appendChild(newdiv);
+	src=cpth + '/' + document.getElementById('link_' + side + current).name;
+	if (side=='l')
+	    {
+		var lpth_fix=src;
+		var rpth_fix=rpth;
+	    }
+	else
+	    {
+		var lpth_fix=lpth;
+		var rpth_fix=src;
+	    }
+	var kb = '<FONT color="brown" size="+3"> \
+	    <center><b>Are you sure you want to move?</b><br/><br/> \
+	    <font size="+2" color="black">' + src + '<br/><br/><b>to:</b><br/><br/>' + opth + '/<br/></font> \
+	    <form id="action" name="action" action="fm-action.cgi" method="GET"> \
+	    <input type="hidden" name="side" value="' + side + '"> \
+	    <input type="hidden" name="lpth" value="' + lpth_fix + '"> \
+	    <input type="hidden" name="rpth" value="' + rpth_fix + '"> \
+	    <input type="hidden" name="action" value="move"> \
+	    <input type="hidden" name="confirm" value="yes"> \
 	    </form></center></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
 	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
@@ -571,7 +606,7 @@ function renameDialog()
 	{
 	var newdiv = document.createElement("div");
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:300px; width:716px; height:176px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
@@ -586,6 +621,39 @@ function renameDialog()
 	    </form></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
+	dialog_displayed = 1;
+	}
+
+function deleteDialog()
+	{
+	dialog_win='delete';
+	var newdiv = document.createElement("div");
+	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
+	newdiv.id = "dialogWin";
+	document.body.appendChild(newdiv);
+	src=cpth + '/' + document.getElementById('link_' + side + current).name;
+	if (side=='l')
+	    {
+		var lpth_fix=src;
+		var rpth_fix=rpth;
+	    }
+	else
+	    {
+		var lpth_fix=lpth;
+		var rpth_fix=src;
+	    }
+	var kb = '<FONT color="brown" size="+3"> \
+	    <center><b>Are you sure you want to delete?</b><br/><br/> \
+	    <font size="+2" color="black">' + src + '<br/></font> \
+	    <form id="action" name="action" action="fm-action.cgi" method="GET"> \
+	    <input type="hidden" name="side" value="' + side + '"> \
+	    <input type="hidden" name="lpth" value="' + lpth_fix + '"> \
+	    <input type="hidden" name="rpth" value="' + rpth_fix + '"> \
+	    <input type="hidden" name="action" value="delete"> \
+	    <input type="hidden" name="confirm" value="yes"> \
+	    </form></center></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
 	}
 
