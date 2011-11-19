@@ -116,6 +116,7 @@ fi
 
 var col = 1; //number of 'cells' in a row
 var current = 1;
+var currentLink;
 var next = current;
 //var side = 'l';
 var nside = side;
@@ -248,16 +249,17 @@ function check(e)
 				next = 1;
 			    }
 			//Check if new link exists, if not then go to previous one until finds the one that exists
-			if (!document.links['link_' + nside + next])
+			currentLink=document.links['link_' + nside + next];
+			if (!currentLink)
 			{
 			    do {
 				next = next - 1;
-			    } while ((!document.links['link_' + nside + next])&&(next >= 1));
+				currentLink=document.links['link_' + nside + next];
+			    } while ((!currentLink)&&(next >= 1));
 			}
 			ChangeBgColor();
-			//Move to the next bookmark
-			var code=document.links['link_' + nside + next].name;
-			document.links['link_' + nside + next].focus();
+			//Move to the next link
+			currentLink.focus();
 			current = next;
 			side = nside;
 			//Prevent default action (ie. scrolling)
@@ -442,12 +444,6 @@ function check(e)
 			var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
 			window.location=dest;
 			}
-		//else if (key==404) 
-		//	{
-			//the GREEN button on the remote control have been pressed
-			//Switch to the Keyboard
-		//	top.frames["Keyboard"].focus();
-		//	}
 		else if (key==461|key==27) 
 			{
 			//the BACK button on the remote control or ESC have been pressed
@@ -474,7 +470,6 @@ function check(e)
 			return false;
 			}
 		}catch(Exception){}
-	//if (dialog_displayed==0)
 	if ((dialog_displayed==0)|(dialog_win=='move')|(dialog_win=='copy')|(dialog_win=='delete')|((key>=48)&&(key<=57)))
 	    {
 	    if (e.stopPropagation)
@@ -489,7 +484,13 @@ function ChangeBgColor()
 	{
 	//Change the TD element BgColor.
 	//document.bgColor = '#D3D3D3';
+	//currentLink=document.links['link_' + nside + next];
+	// TODO: experiment with childNodes of table, for example:
+	// Get your row by finding the TBODY, and find your cell using
+	// childNodes[row].childNodes[col]
+	// ^- that should improve performance comparing to getElementById()
 	document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
+	//currentLink.bgColor = '#FFFFFF';
 	document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
 	}
 
@@ -694,7 +695,7 @@ fi
     #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
     #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:43%;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:7%;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
     #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:7%;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
-    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;min-width:43%;width:43%;max-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
+    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;min-width:43%;width:43%;max-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     #echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
     echo '<Table id="fullheight" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable">'
@@ -821,3 +822,8 @@ fi
     #echo "<script type='text/javascript'></script>"
 ?>
 </BODY></HTML>
+
+<?
+echo "<script type='text/javascript'>document.getElementById('ldf').innerHTML ='`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`';</script>"
+echo "<script type='text/javascript'>document.getElementById('rdf').innerHTML ='`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`';</script>"
+?>
