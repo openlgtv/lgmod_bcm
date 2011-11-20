@@ -37,7 +37,7 @@ Content-type: text/html
 <script type="text/javascript">
 <!--
 
-var col = 3; //number of 'cells' in a row
+var col = 4; //number of 'cells' in a row
 var current;
 var next;
 
@@ -173,8 +173,9 @@ then
 	feedThumb="${content3x%%\;*}"
 	#echo "$feedUrl"
 	#####echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>"
-	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
-	if [ "$(($item_nr % 3))" = "0" ]
+	########echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
+	echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
+	if [ "$(($item_nr % 4))" = "0" ]
 	then
 	    echo "</tr><tr>"
 	fi
@@ -207,7 +208,7 @@ else
 	    feedThumb="${content3x%%\;*}"
 	    #####echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
 	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>" | tr '|' ' '
-	    if [ "$(($item_nr % 3))" = "0" ]
+	    if [ "$(($item_nr % 4))" = "0" ]
 	    then
 		echo "</tr><tr>"
 	    fi
