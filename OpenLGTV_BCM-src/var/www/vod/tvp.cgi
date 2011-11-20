@@ -26,7 +26,8 @@ Content-type: text/html
     a:hover,
     a:focus,
     a:active {
-	color: red;
+	//color: red;
+	color: #CC0000;
 	background-color: lightblue;
 	text-decoration: bold;
     }
@@ -156,18 +157,23 @@ then
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
-    #for content in `grep -v "^$" $log_file | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' -e 's/\&amp;/\&/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
     for content in `grep -v "^$" $log_file | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | grep -v 'version="1.0"' | sed -e 's/.*url="//g' -e 's/\&amp;/\$/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
     do
 	#feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
 	#feedTitle=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
 	#feedThumb=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
 	#feedUrl=`echo $content | cut -d\; -f1 | tr '\?\&' '\@\$'`
-	feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
-	feedTitle=`echo $content | cut -d\; -f2 | tr '|' ' '`
-	feedThumb=`echo $content | cut -d\; -f3 | tr '|' ' '`
+	#####feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
+	feedUrl="${content%%\;*}"
+	content2x="${content#*\;}"
+	#####feedTitle=`echo $content | cut -d\; -f2 | tr '|' ' '`
+	feedTitle="${content2x%%\;*}"
+	content3x="${content2x#*\;}"
+	#####feedThumb=`echo $content | cut -d\; -f3 | tr '|' ' '`
+	feedThumb="${content3x%%\;*}"
 	#echo "$feedUrl"
-	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>"
+	#####echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>"
+	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
 	if [ "$(($item_nr % 3))" = "0" ]
 	then
 	    echo "</tr><tr>"
@@ -191,10 +197,16 @@ else
 	    #feedThumb=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
 	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
 	    #feedUrl=`echo $content | cut -d\; -f1 | tr '\?\&' '\@\$'`
-	    feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
-	    feedThumb=`echo $content | cut -d\; -f2 | tr '|' ' '`
-	    feedTitle=`echo $content | cut -d\; -f3 | tr '|' ' '`
-	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
+	    #####feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
+	    feedUrl="${content%%\;*}"
+	    content2x="${content#*\;}"
+	    #####feedThumb=`echo $content | cut -d\; -f2 | tr '|' ' '`
+	    feedTitle="${content2x%%\;*}"
+	    content3x="${content2x#*\;}"
+	    #####feedTitle=`echo $content | cut -d\; -f3 | tr '|' ' '`
+	    feedThumb="${content3x%%\;*}"
+	    #####echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
+	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>" | tr '|' ' '
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
 		echo "</tr><tr>"
