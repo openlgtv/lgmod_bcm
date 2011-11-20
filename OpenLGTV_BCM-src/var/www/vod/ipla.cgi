@@ -20,7 +20,8 @@ Content-type: text/html
     a:hover,
     a:focus,
     a:active {
-	color: red;
+	//color: red;
+	color: #990000;
 	background-color: green;
     }
 </style>
