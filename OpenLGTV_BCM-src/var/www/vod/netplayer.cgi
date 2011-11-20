@@ -124,13 +124,13 @@ else
 fi
 
 type2=`echo $type | awk -F/ '{print $2}'`
-log_file=/tmp/log/vod/netplayer/$type2.log
+log_file=/var/log/vod/netplayer/$type2.log
 
 #echo "$url $log_file <br/>"
 
-if [ ! -d "/tmp/log/vod/netplayer" ]
+if [ ! -d "/var/log/vod/netplayer" ]
 then
-    mkdir -p /tmp/log/vod/netplayer
+    mkdir -p /var/log/vod/netplayer
 fi
 
 if [ "$type" = "text/xml" ]

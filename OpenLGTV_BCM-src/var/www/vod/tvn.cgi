@@ -34,18 +34,18 @@ if [ "$FORM_url" != "" ]
 then
     url="$FORM_url"
     type="$FORM_type"
-    log_file=/tmp/log/vod/tvn/$type.log
+    log_file=/var/log/vod/tvn/$type.log
     echo "var col = 3; //number of 'cells' in a row"
 else
     url="$menuLoc"
     type=menu
-    log_file=/tmp/log/vod/tvn/$type.log
+    log_file=/var/log/vod/tvn/$type.log
     echo "var col = 1; //number of 'cells' in a row"
 fi
 
-if [ ! -d "/tmp/log/vod/tvn" ]
+if [ ! -d "/var/log/vod/tvn" ]
 then
-    mkdir -p /tmp/log/vod/tvn
+    mkdir -p /var/log/vod/tvn
 fi
 
 ?>

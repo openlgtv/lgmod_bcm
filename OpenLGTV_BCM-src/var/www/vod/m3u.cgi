@@ -114,10 +114,10 @@ useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.
 echo "Playlist loaded from: $FORM_url<br/>"
 
 menuLoc="$FORM_url"
-log_file=/tmp/log/vod/m3u.log.m3u
-if [ ! -d "/tmp/log/vod" ]
+log_file=/var/log/vod/m3u.log.m3u
+if [ ! -d "/var/log/vod" ]
 then
-    mkdir -p /tmp/log/vod
+    mkdir -p /var/log/vod
 fi
 
 rm -f $log_file $log_file.html > /dev/null 2>&1
