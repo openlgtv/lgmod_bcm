@@ -690,15 +690,10 @@ fi
 
 #if [ "$type" = "menu" ]
 #then
-    #echo '<center><font size="+1" color="yellow"><b>OpenLGTV BCM FileManager</b> by xeros</font><br/>'
-    echo "<table id='fullheight' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
-    #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='50%'><b>$rpth/</b></td></tr></thead>"
-    #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:43%;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:7%;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
-    #echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:7%;'><b>`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td><td valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%'><b>`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`</b></td></tr></thead>"
-    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;min-width:43%;width:43%;max-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
-    #echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel'>"
+    echo "<table id='fulltable' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
+    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;min-width:43%;width:43%;max-width:500px;min-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;min-width:500px;'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
-    echo '<Table id="fullheight" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable">'
+    echo '<Table id="lpanel" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable" id="lpaneltbody">'
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
@@ -716,7 +711,8 @@ fi
 	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
 	lfilename="${lcontent_2x%%@*}"
 	lfilename_space="${lfilename//&nbsp;/ }"
-	lfilename_ext="${lfilename_space##*.}"
+	lfilename_ext_full="${lfilename_space##*.}"
+	lfilename_ext="${lfilename_ext_full:0:5}"
 	if [ "${#lfilename_space}" -gt "53" ]
 	then
 	    if [ "$ltype" = "directory" ]
@@ -763,7 +759,7 @@ fi
     IFS="$SIFS"
     #echo '</tbody></table></td><td valign="top" width="50%" class="panel">'
     echo '</tbody></table></td><td valign="top" width="50%" class="panel" colspan="2">'
-    echo '<Table id="fullheight" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable">'
+    echo '<Table id="rpanel" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable" id="rpaneltbody">'
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
@@ -781,6 +777,8 @@ fi
 	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
 	rfilename="${rcontent_2x%%@*}"
 	rfilename_space="${rfilename//&nbsp;/ }"
+	rfilename_ext_full="${rfilename_space##*.}"
+	rfilename_ext="${rfilename_ext_full:0:5}"
 	if [ "${#rfilename_space}" -gt "53" ]
 	then
 	    if [ "$rtype" = "directory" ]
@@ -788,7 +786,7 @@ fi
 		rfilename="${rfilename_space:0:53}~"
 		rfilename="${rfilename// /&nbsp;}"
 	    else
-		rfilename="${rfilename_space:0:50}~.${rfilename_space##*.}"
+		rfilename="${rfilename_space:0:50}~.${rfilename_ext}"
 		rfilename="${rfilename// /&nbsp;}"
 	    fi
 	fi
@@ -818,8 +816,23 @@ fi
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
     #echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
-    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
+    ####echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
+    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
     #echo "<script type='text/javascript'></script>"
+    ##echo '<font color="white">'
+    ##echo "<script type='text/javascript'>"
+    ####echo "document.write(document.documentElement.clientWidth, '/', document.documentElement.clientHeight);" # document.body size in FF
+    ####echo "document.write(window.innerWidth, '/', window.innerHeight);"                                       # window size, but including address, icons and bar in FF
+    ####echo "var fulltablestyle=document.getElementById('fulltable').style;"
+    ####echo "fulltablestyle.height=window.documentElement.clientHeight-30;"
+    #echo "fulltablestyle.height=window.innerHeight-30;"
+    #echo "fulltablestyle.max-height=document.documentElement.clientHeight-30;"
+    #echo "document.write(document.getElementById('fulltable').style[0]);"
+    ##echo "</script>"
+    #echo "<script type='text/javascript'>document.getElementById('lpaneltbody').style.height=document.documentElement.clientHeight-30;</script>"
+    #echo "<script type='text/javascript'>document.getElementById('rpaneltbody').style.height=document.documentElement.clientHeight-30;</script>"
+    #echo "</script>"
+    #echo '</font>'
 ?>
 </BODY></HTML>
 
