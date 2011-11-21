@@ -146,7 +146,7 @@ wget -q -U "$useragent" -O - "$url" > $log_file
 
 if [ "$type" = "menu" ]
 then
-    echo '<center><img src="http://www.ipla.tv/images/logo.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
+    echo '<br/><br/><center><img src="http://www.ipla.tv/images/logo.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
     echo '<font size="+3"><br/>'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     item_nr=1
