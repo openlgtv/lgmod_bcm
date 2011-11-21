@@ -33,11 +33,15 @@ Content-type: text/html
 	max-height:690px;
     }
     tbody.scrollable {
+	max-height:650px;
 	display: block;
 	height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
+    }
+    tbody.lpaneltbody {
 	max-height:650px;
+	maxHeight:650px;
     }
     td.panel {
 	min-width: 415px;
@@ -704,7 +708,6 @@ fi
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    #for lcontent in `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $lpth/* | grep -v "@directory" | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'` 
     for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" $lpth/* | sort | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
     do
 	ltype="${lcontent%%@*}"
@@ -757,7 +760,6 @@ fi
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
-    #echo '</tbody></table></td><td valign="top" width="50%" class="panel">'
     echo '</tbody></table></td><td valign="top" width="50%" class="panel" colspan="2">'
     echo '<Table id="rpanel" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable" id="rpaneltbody">'
     if [ "$rpth" != "" ]
@@ -770,7 +772,6 @@ fi
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    #for rcontent in `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` `busybox stat -c "%n@%F@%z@%A@%s" $rpth/* | grep -v "@directory" | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'` 
     for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" $rpth/* | sort | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'`
     do
 	rtype="${rcontent%%@*}"
@@ -801,7 +802,6 @@ fi
 	then
 	    rimage="dir.gif"
 	else
-	    #rimage="generic.gif"
 	    if [ "$rtype" = "symbolic&nbsp;link" ]
 	    then
 		rimage="link.png"
@@ -815,24 +815,18 @@ fi
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
-    #echo '<center><font size="+1" color="yellow"><font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />] PLAY</font></font><br/></center>'
     ####echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
     echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
-    #echo "<script type='text/javascript'></script>"
-    ##echo '<font color="white">'
-    ##echo "<script type='text/javascript'>"
-    ####echo "document.write(document.documentElement.clientWidth, '/', document.documentElement.clientHeight);" # document.body size in FF
-    ####echo "document.write(window.innerWidth, '/', window.innerHeight);"                                       # window size, but including address, icons and bar in FF
-    ####echo "var fulltablestyle=document.getElementById('fulltable').style;"
-    ####echo "fulltablestyle.height=window.documentElement.clientHeight-30;"
-    #echo "fulltablestyle.height=window.innerHeight-30;"
-    #echo "fulltablestyle.max-height=document.documentElement.clientHeight-30;"
-    #echo "document.write(document.getElementById('fulltable').style[0]);"
-    ##echo "</script>"
-    #echo "<script type='text/javascript'>document.getElementById('lpaneltbody').style.height=document.documentElement.clientHeight-30;</script>"
-    #echo "<script type='text/javascript'>document.getElementById('rpaneltbody').style.height=document.documentElement.clientHeight-30;</script>"
-    #echo "</script>"
-    #echo '</font>'
+    echo '<font color="white">'
+    echo "<script type='text/javascript'>"
+    #echo "document.write(document.documentElement.clientWidth, '/', document.documentElement.clientHeight);" # document.body size in FF
+    #echo "document.write(window.innerWidth, '/', window.innerHeight);"                                       # window size, but including address, icons and bar in FF 5.0, real size of inner window on FF 7.0
+    echo "var fulltablestyle=document.getElementById('fulltable').style;"
+    echo "fulltablestyle.height=window.innerHeight-30;"
+    echo "document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;"
+    echo "document.getElementById('rpaneltbody').style.maxHeight=window.innerHeight-70;"
+    echo "</script>"
+    echo '</font>'
 ?>
 </BODY></HTML>
 
