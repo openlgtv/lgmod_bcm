@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-beta installation script v.1.92 by xeros
+# OpenLGTV BCM 0.5.0-beta installation script v.1.93 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -536,6 +536,7 @@ then
     touch /mnt/user/lock/backup-first_dump_of_writable_partitions-done.lock
 fi
 
+[ "$no_install" = "1" ] && echo "To install OpenLGTV BCM you need to use \"$0 install\" command."
 [ "$no_install" = "1" ] && exit 0
 
 echo 'NOTE: Freeing memory (killing daemons) ...'

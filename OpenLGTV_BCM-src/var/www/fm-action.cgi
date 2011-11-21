@@ -51,7 +51,7 @@ Content-type: text/html
 #useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
 #useragent="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
 
-log_file=/tmp/log/fm.log
+log_file=/var/log/fm.log
 
 if [ -n "$FORM_side" ]
 then

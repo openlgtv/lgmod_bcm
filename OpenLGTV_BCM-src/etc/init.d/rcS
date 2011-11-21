@@ -25,7 +25,7 @@ export TERM=vt100
 mount -t proc proc /proc
 mount -t ramfs tmp /tmp
 
-mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron
+mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc
 
 #touch /var/log/boot                                                             2>&1 | tee -a $bootlogf
 
@@ -204,6 +204,9 @@ fi
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."
 hostname OpenLGTV_BCM
 
+[ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs
+[ ! -d "/mnt/user/modules" ]             && mkdir -p /mnt/user/modules
+
 # Lets load modules in background to shorten boot time
 /etc/rc.d/rc.modules &
 
@@ -220,6 +223,7 @@ then
     #cat /dev/mtd$mtd_nvram > /tmp/nvram &
     /etc/rc.d/rc.nvram &
 fi
+
 
 nice -n 20 /etc/rc.d/rc.fwinfo &
 

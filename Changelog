@@ -252,11 +252,16 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: netcast_config_check.sh script to verify which NetCast config versions are used
     * ADD: support for both old and new NetCast configs and NetCast upgrade/downgrade handling
     * ADD: uinput kernel driver
-    * ADD: hotplug wrapper to handle /lib/firmware/* loading when needed in future and USB storage handling so from now on USB stick/disk does not need to be connected at boot
+    * ADD: hotplug wrapper to handle /lib/firmware/* loading when needed in future and USB storage/hid handling so from now on USB stick/disk does not need to be connected at boot
     * ADD: with new hotplug-capable scripts Yahoo Widgets Engine/Data from USB storage devices is hotpluggable also - on connect YWE gots prepared and on umount from remote it gets stopped
     * ADD: 'upgrade mode' - when there are LG firmware upgrade EPK files on USB stick in LG_DTV dir then some services get stopped and caches cleaned when needed - depends on file size to ensure no out-of-mem LG upgrade fail
     * ADD: hotplugging of USB HID devices (shows/hides mouse pointer also)
     * ADD: two-panel onscreen web-based FileManager with recursive copy, move, mkdir, delete, playback/view support via remote control
+    * ADD: support for permanent crontabs storage on user partition
+    * ADD: possibility to disable telnet service and use alternative SSH port (2222) instead of default (22) through WebUI settings
+    * ADD: Yahoo Widgets Engine respects now 'region' set in YWE UI instead of using forced US
+    * ADD: possiblity to change 'region', 'language' and 'yweversion' of Yahoo Widgets Engine via /mnt/user/ywe/{region,lang,version} without need to change YWE UI configuration/restart
+    * ADD: support for multiple NFS/CIFS Network Shares (even nested one inside each other) - WebUI should handle about 9-10 shares configuration
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling
@@ -266,7 +271,7 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: Internet Browser can be separated from WebUI (and proxied) with it's own NetCast icon in WebUI settings
     * CHANGE: increase Bluetooth transfer storage from 10MB to 50MB
     * CHANGE: support for OpenLGTV_BCM dir on any partition number on any of two USB ports in TV
-    * CHANGE: installation is now being done via single installation file - OpenLGTV_BCM-vX.Y.Z.tar.sh
+    * CHANGE: installation is now being done via single installation file - OpenLGTV_BCM-vX.Y.Z.tar.sh and need to be executed by: "/path/to/OpenLGTV_BCM-v0.5.0.tar.sh install"
     * CHANGE: for safety reasons installation is now being done in chrooted virtual environment to ensure rootfs stability while flashing procedure
     * CHANGE: use konfabulator-exec.sh even for US models to give ability to run custom ywe from USB storage device
     * CHANGE: squashfs image is now being build with 256KB block size for better compression of partition image
@@ -274,6 +279,10 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: NetCast links are now organized in 6x6 grid instead of 4x6 as before and channel up/down arrows besides scrolling change focus now also
     * CHANGE: NetCast links icons are now being downloaded at upgrade
     * CHANGE: NetCast configs detection now manages if configs should get cleaned on NetCast upgrade/downgrade (makes backup copy of netcast dir)
+    * CHANGE: performance improvements in most web components: WebUI, Internet Browser, YWE translation, VOD services,...
+    * CHANGE: minor visual improvements to WebUI and VOD services
+    * CHANGE: settings cleanup - "confirmations rebooting netcast_kill_browser netcast_keyboard_mouse_support use_samsung_ywe_instead_of_lg force_copy_config_netcast force_copy_config_ywe" are now removed (netcast_keyboard_mouse_support is renamed to netcast_mouse_support)
+    * CHANGE: WebUI can be now properly navigated using arrows instead of 'red'/'green' buttons
     * REMOVE: 'tcpdump' binary for space reasons
     * REMOVE: 'top' binary - use busybox applet instead
     * REMOVE: 'empty' binary - not used at all

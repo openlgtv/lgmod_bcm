@@ -39,18 +39,18 @@ if [ "$FORM_url" != "" ]
 then
     url="$FORM_url"
     type="$FORM_type"
-    log_file=/tmp/log/vod/ipla/$type.log
+    log_file=/var/log/vod/ipla/$type.log
     echo "var col = 3; //number of 'cells' in a row"
 else
     url="$menuLoc"
     type=menu
-    log_file=/tmp/log/vod/ipla/$type.log
+    log_file=/var/log/vod/ipla/$type.log
     echo "var col = 1; //number of 'cells' in a row"
 fi
 
-if [ ! -d "/tmp/log/vod/ipla" ]
+if [ ! -d "/var/log/vod/ipla" ]
 then
-    mkdir -p /tmp/log/vod/ipla
+    mkdir -p /var/log/vod/ipla
 fi
 
 ?>
