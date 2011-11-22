@@ -15,39 +15,48 @@ Content-type: text/html
     //#fullheight{height:500px}
     body {
 	font-family:monospace;
-	height: 710px;
+	//height: 710px;
 	//font-family:"TiresiasScreenfont";
     }
     a:link {
 	color:black;
 	text-decoration:bold;
     }
+    table.fulltable {
+	//min-height:690px;
+	height:690px;
+	//max-height=690px;
+    }
     tbody.main {
 	width: 95%;
 	height: 95%;
-	//overflow:scroll;
-	//height:10em;
-	//display:inline-block;
 	overflow-y:auto;
 	overflow-x: hidden;
-	max-height:690px;
+	//max-height:690px;
     }
     tbody.scrollable {
-	max-height:650px;
+	//max-height:650px;
 	display: block;
 	height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
     }
-    tbody.lpaneltbody {
-	max-height:650px;
-	maxHeight:650px;
-    }
-    td.panel {
-	min-width: 415px;
+    td.lpanelpath, .rpanelpath {
+	//min-width: 415px;
+	overflow:hidden;
+	white-space:nowrap;
+	//min-width:43%;
+	width:43%;
+	//max-width:500px;
+	//min-width:500px;
     }
     td.filename {
-	min-width: 400px;
+	//min-width: 400px;
+	//width: 400px;
+	//width: 390px;
+	width: 100%;
+	overflow:hidden;
+	white-space:nowrap;
     }
     td.size {
 	min-width: 70px;
@@ -206,12 +215,24 @@ function keypad(num)
 //******** END OF MOBILE PHONE-STYLE KEYPAD *********
 
 //Attach the function with the event
-if(document.addEventListener) document.addEventListener('keydown', check, false);
-else if(document.attachEvent) document.attachEvent('onkeydown', func);
-else document.onkeydown = check;
+if(document.addEventListener)
+    {
+    document.addEventListener('keydown', check, false);
+    window.addEventListener('resize', windowResize, false);
+    }
+else if(document.attachEvent)
+    {
+    document.attachEvent('onkeydown', func);
+    window.attachEvent('onresize', func);
+    }
+else
+    {
+    document.onkeydown = check;
+    window.onresize = windowResize;
+    }
 
 window.onload = OnLoadSetCurrent;
-     
+
 function check(e)
 	{
 	if (!e) var e = window.event;
@@ -519,6 +540,7 @@ function OnLoadSetCurrent(element)
 	//top.frames["Keyboard"].focus();
 	document.links['link_' + side + current].focus();
 	ChangeBgColor();
+	windowResize();
 	}
 	
 function mkdirDialog()
@@ -670,12 +692,19 @@ function dialogRemove()
 	OnLoadSetCurrent();
         }
 
-document.defaultAction = true;
+function windowResize()
+	{
+	var fulltablestyle=document.getElementById('fulltable').style;
+	fulltablestyle.height=window.innerHeight-30;
+	document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;
+	document.getElementById('rpaneltbody').style.maxHeight=window.innerHeight-70;
+	document.body.style.height=window.innerHeight-20;
+	}
 
+document.defaultAction = true;
 
 // -->
 </script>
-
 
 </HEAD>
 <BODY bgcolor="black">
@@ -694,8 +723,8 @@ fi
 
 #if [ "$type" = "menu" ]
 #then
-    echo "<table id='fulltable' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' style='min-height:690px; height:690px; max-height=690px;' padding='0' cellpadding='0px'>"
-    echo "<thead><tr border='1' height='18px'><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;min-width:43%;width:43%;max-width:500px;min-width:500px;'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td valign='top' align='center' bgcolor='yellow' width='43%' style='overflow:hidden;white-space:nowrap;width:43%;max-width:500px;min-width:500px;'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
+    echo "<table id='fulltable' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' padding='0' cellpadding='0px'>"
+    echo "<thead><tr border='1' height='18px'><td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
     echo '<Table id="lpanel" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable" id="lpaneltbody">'
     if [ "$lpth" != "" ]
@@ -723,7 +752,7 @@ fi
 		lfilename="${lfilename_space:0:53}~"
 		lfilename="${lfilename// /&nbsp;}"
 	    else
-		lfilename="${lfilename_space:0:50}~.${lfilename_ext}"
+		lfilename="${lfilename_space:0:47}~.${lfilename_ext}"
 		lfilename="${lfilename// /&nbsp;}"
 	    fi
 	fi
@@ -787,7 +816,7 @@ fi
 		rfilename="${rfilename_space:0:53}~"
 		rfilename="${rfilename// /&nbsp;}"
 	    else
-		rfilename="${rfilename_space:0:50}~.${rfilename_ext}"
+		rfilename="${rfilename_space:0:47}~.${rfilename_ext}"
 		rfilename="${rfilename// /&nbsp;}"
 	    fi
 	fi
@@ -821,10 +850,22 @@ fi
     echo "<script type='text/javascript'>"
     #echo "document.write(document.documentElement.clientWidth, '/', document.documentElement.clientHeight);" # document.body size in FF
     #echo "document.write(window.innerWidth, '/', window.innerHeight);"                                       # window size, but including address, icons and bar in FF 5.0, real size of inner window on FF 7.0
-    echo "var fulltablestyle=document.getElementById('fulltable').style;"
-    echo "fulltablestyle.height=window.innerHeight-30;"
-    echo "document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;"
-    echo "document.getElementById('rpaneltbody').style.maxHeight=window.innerHeight-70;"
+    ####echo "function windowResize() {"
+    ####echo "var fulltablestyle=document.getElementById('fulltable').style;"
+    ####echo "fulltablestyle.height=window.innerHeight-30;"
+    ####echo "document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;"
+    ####echo "document.getElementById('rpaneltbody').style.maxHeight=window.innerHeight-70;"
+    ####echo "document.body.style.height=window.innerHeight-20;"
+    #echo "document.getElementById('filename').style.maxWidth=(window.innerWidth/2)-250;"
+    #echo "var filenameWidth=(window.innerWidth/2)-250;"
+    #echo "var x = pointer.getElementsByClassName('filename'); \
+    #	  for (var i=0;i<x.length;i++) \
+    #	  { \
+    #	  x[i].style.maxWidth = filenameWidth; \
+    #	  }"
+    ####echo "}"
+    ##echo "windowResize();"
+    ###echo "window.onresize=windowResize();"
     echo "</script>"
     echo '</font>'
 ?>

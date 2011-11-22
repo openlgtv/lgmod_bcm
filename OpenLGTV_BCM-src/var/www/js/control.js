@@ -299,11 +299,12 @@ function check(e)
 					}
 				}
 			} 
-		else if (key==13|key==10) 
+		else if (key==13) 
 			{
 			//Simulate click on button elements for OK remote button
 			currElementName=PageElements[currElementIndex].value;
-			if ((PageElements[currElementIndex].type == 'button')|(PageElements[currElementIndex].type == 'checkbox'))
+			//if ((PageElements[currElementIndex].type == 'button')|(PageElements[currElementIndex].type == 'checkbox'))
+			if (PageElements[currElementIndex].type == 'button')
 				{
 				    //document.forms['URL'].elements[currElementName].click();
 				    document.getElementById(currElementName).click();
@@ -318,10 +319,12 @@ function check(e)
 				{
 				    window.location=document.getElementById(currElementName).href;
 				}
-			//else if (PageElements[currElementIndex].type == 'checkbox')
-			//	{
-			//	    document.forms['URL'].elements[currElementName].click();
-			//	}
+			else if (PageElements[currElementIndex].type == 'checkbox')
+				{
+				    //document.getElementById(currElementName).click();
+				    document.forms['URL'].elements[currElementName].click();
+				}
+			return false;
 			}
 		else if (key==32) 
 			{
