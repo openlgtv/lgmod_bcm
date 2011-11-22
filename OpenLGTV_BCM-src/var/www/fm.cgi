@@ -33,6 +33,7 @@ Content-type: text/html
 	overflow-y:auto;
 	overflow-x: hidden;
 	//max-height:690px;
+	min-height:690px;
     }
     tbody.scrollable {
 	//max-height:650px;
@@ -51,10 +52,10 @@ Content-type: text/html
 	//min-width:500px;
     }
     td.filename {
-	//min-width: 400px;
+	min-width: 400px;
 	//width: 400px;
 	//width: 390px;
-	width: 100%;
+	//width: 100%;
 	overflow:hidden;
 	white-space:nowrap;
     }
@@ -558,7 +559,8 @@ function mkdirDialog()
 	    <input type="hidden" name="lpth" value="' + lpth + '"> \
 	    <input type="hidden" name="rpth" value="' + rpth + '"> \
 	    <input type="hidden" name="action" value="mkdir"> \
-	    </form></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></font>';
+	    //'</form></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
 	dialog_displayed = 1;
@@ -592,7 +594,7 @@ function copyDialog()
 	    <input type="hidden" name="rpth" value="' + rpth_fix + '"> \
 	    <input type="hidden" name="action" value="copy"> \
 	    <input type="hidden" name="confirm" value="yes"> \
-	    </form></center></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
 	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
 	}
@@ -624,7 +626,7 @@ function moveDialog()
 	    <input type="hidden" name="rpth" value="' + rpth_fix + '"> \
 	    <input type="hidden" name="action" value="move"> \
 	    <input type="hidden" name="confirm" value="yes"> \
-	    </form></center></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
 	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
 	}
@@ -645,7 +647,7 @@ function renameDialog()
 	    <input type="hidden" name="lpth" value="' + lpth + '"> \
 	    <input type="hidden" name="rpth" value="' + rpth + '"> \
 	    <input type="hidden" name="action" value="rename"> \
-	    </form></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></font>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
 	dialog_displayed = 1;
@@ -679,7 +681,7 @@ function deleteDialog()
 	    <input type="hidden" name="rpth" value="' + rpth_fix + '"> \
 	    <input type="hidden" name="action" value="delete"> \
 	    <input type="hidden" name="confirm" value="yes"> \
-	    </form></center></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></td></tr></table>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
 	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
 	}
@@ -724,7 +726,7 @@ fi
 #if [ "$type" = "menu" ]
 #then
     echo "<table id='fulltable' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' padding='0' cellpadding='0px'>"
-    echo "<thead><tr border='1' height='18px'><td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='max-width:100px;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
+    echo "<thead><tr border='1' height='18px'><td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
     echo '<Table id="lpanel" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable" id="lpaneltbody">'
     if [ "$lpth" != "" ]
@@ -845,9 +847,9 @@ fi
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
     ####echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
-    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
-    echo '<font color="white">'
-    echo "<script type='text/javascript'>"
+    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <span onClick="javascript:renameDialog();"><font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME</span> &nbsp; <span onClick="javascript:deleteDialog();"><font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span> &nbsp; <span onClick="javascript:copyDialog();"><font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <span onClick="javascript:moveDialog();"><font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span> &nbsp; <span onClick="javascript:mkdirDialog();"><font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span><font color="white"> &nbsp; <span onClick="javascript:var dest=\'fm.cgi?type=related&side=\' + side + \'&lpth=\' + cpth + \'&rpth=\' + cpth;window.location=dest;">[<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font></span><br/></center>'
+    ###echo '<font color="white">'
+    ###echo "<script type='text/javascript'>"
     #echo "document.write(document.documentElement.clientWidth, '/', document.documentElement.clientHeight);" # document.body size in FF
     #echo "document.write(window.innerWidth, '/', window.innerHeight);"                                       # window size, but including address, icons and bar in FF 5.0, real size of inner window on FF 7.0
     ####echo "function windowResize() {"
@@ -866,8 +868,8 @@ fi
     ####echo "}"
     ##echo "windowResize();"
     ###echo "window.onresize=windowResize();"
-    echo "</script>"
-    echo '</font>'
+    ###echo "</script>"
+    ###echo '</font>'
 ?>
 </BODY></HTML>
 
