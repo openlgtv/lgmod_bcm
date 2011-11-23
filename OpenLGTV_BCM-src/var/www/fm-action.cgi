@@ -149,7 +149,14 @@ function check(e)
 			//NetCastBack API
 			//window.NetCastBack();
 			//lets get back to WebUI instead of closing NetCast service
-			history.go(-1);
+			<? 
+			if [ "$action" != "play" ]
+			then
+			    echo "history.go(-1);"
+			else
+			    echo "backToFM();"
+			fi
+			?>
 			}
 		else if (key==1001) 
 			{
@@ -196,6 +203,7 @@ function sleep(milliseconds)
 
 document.defaultAction = true;
 
+<? echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}\"; }" ?>
 
 // -->
 </script>
@@ -245,7 +253,6 @@ then
     #	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-3)\",$timeout);</script>"
     #else
 	echo "<script type=\"text/javascript\">"
-	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}\"; }"
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
     #fi
@@ -404,10 +411,13 @@ else
 	##echo "<script type=\"text/javascript\">setTimeout(\"history.go(-2)\",$timeout);</script>"
 	#echo "<script type=\"text/javascript\">setTimeout(\"history.go(-1)\",$timeout);</script>"
     #else
+    if [ "$action" != "play" ]
+    then
 	echo "<script type=\"text/javascript\">"
 	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}\"; }"
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
+    fi
     #fi
 fi
 echo '</div>'

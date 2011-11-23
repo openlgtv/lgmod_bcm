@@ -722,7 +722,7 @@ function windowResize()
 	var filenameSize=(window.innerWidth/2)-200;
 	//document.write('<style type="text/css">td.filename {width:' + filenameSize  + 'px;}</style>');
 	var fulltablestyle=document.getElementById('fulltable').style;
-	fulltablestyle.height=window.innerHeight-30;
+	fulltablestyle.height=window.innerHeight-32;
 	document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;
 	document.getElementById('rpaneltbody').style.maxHeight=window.innerHeight-70;
 	document.body.style.height=window.innerHeight-20;
