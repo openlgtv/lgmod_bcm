@@ -9,6 +9,8 @@ Content-type: text/html
 <!-- fm-action.cgi script for handling actions like copy/move/delete/play and confirm/cancel of operation -->
 <!-- Source code released under GPL License -->
 
+<!-- TODO: text and images files viewer with remote control keys binding - to be able to at least get back to FileManager -->
+
 <style type="text/css">
     //#fullheight{height:500px}
     body {
@@ -198,6 +200,13 @@ document.defaultAction = true;
 // -->
 </script>
 
+<?
+if [ "$action" = "play" ]
+then
+    echo "<meta HTTP-EQUIV='REFRESH' content='2; url=root$spth'>"
+fi
+
+?>
 
 </HEAD>
 <BODY bgcolor="black">
@@ -236,7 +245,7 @@ then
     #	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-3)\",$timeout);</script>"
     #else
 	echo "<script type=\"text/javascript\">"
-	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}\"; }"
+	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}\"; }"
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
     #fi
@@ -249,13 +258,13 @@ then
     #echo '<script type="text/javascript" src="player/base64.js"></script>'
     echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
     #sleep 2
-    echo "<script type='text/javascript'>"
+    ####echo "<script type='text/javascript'>"
     #echo "window.location='file:///mnt/browser/pages/player/index.html?lg_media_url=base64(http://127.0.0.1:88/root$spth)';"
     #echo "sleep(2000);"
     #echo "window.location=\"root$spth\";"
-    echo "function playback() { window.location=\"root$spth\"; }"
-    echo "setTimeout(\"playback()\",2700);"
-    echo "</script>"
+    ####echo "function playback() { window.location=\"root$spth\"; }"
+    ####echo "setTimeout(\"playback()\",2700);"
+    ####echo "</script>"
 fi
 
 if [ "$FORM_confirm" != "yes" ]
@@ -271,7 +280,7 @@ then
 	else
 	    if [ "$action" != "play" ]
 	    then
-		echo "UNRECOGNISED ACTION!"
+		echo "UNRECOGNIZED ACTION!"
 		#sleep 2
 		echo '<script type="text/javascript">setTimeout(\"history.go(-1)\",2000);</script>"'
 	    fi
@@ -309,7 +318,7 @@ else
 	echo "<div id='status' style='font-size: 30px;'></div>"
 	dfile="`basename "$spth"`"
 	#echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='javascript:history.go(-2);'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
-	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
+	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
 	counter=0
 	[ -z "$ssize" ] && ssize=1
 	sleep 1
@@ -385,7 +394,7 @@ else
     fi
     if [ "$error" != "1" ]
     then
-	echo "<br/><br/><font color='green' size='+3'<b>DONE</b></font><br/>"
+	echo "<br/><br/><center><font color='green' size='+4'><b>DONE</b></font></center>"
 	timeout=2000
     else
 	timeout=8000
@@ -396,7 +405,7 @@ else
 	#echo "<script type=\"text/javascript\">setTimeout(\"history.go(-1)\",$timeout);</script>"
     #else
 	echo "<script type=\"text/javascript\">"
-	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}\"; }"
+	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}\"; }"
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
     #fi
