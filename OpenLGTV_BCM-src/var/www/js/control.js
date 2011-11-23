@@ -437,13 +437,26 @@ function check(e)
 			{
 			//the red button on the remote control have been pressed
 			//Switch to the previous control
-			PrevControl();
+			//PrevControl();
+			//go to NetCast links
+			if(typeof GoToNetCastLinks == 'function')
+			    {
+				GoToNetCastLinks();
+			    }
+			else
+			    {
+				window.location='browser/links.html';
+			    }
+			return false;
 			}
 		else if (key==404) 
 			{
 			//the green button on the remote control have been pressed
 			//Switch to the next control
-			NextControl();
+			//NextControl();
+			//FileManager
+			window.location='fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2';
+			return false;
 			}
 		else if (key==405) 
 			{

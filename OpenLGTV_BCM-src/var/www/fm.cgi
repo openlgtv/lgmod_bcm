@@ -274,20 +274,7 @@ function check(e)
 			    {
 				next = 1;
 			    }
-			//Check if new link exists, if not then go to previous one until finds the one that exists
-			currentLink=document.links['link_' + nside + next];
-			if (!currentLink)
-			{
-			    do {
-				next = next - 1;
-				currentLink=document.links['link_' + nside + next];
-			    } while ((!currentLink)&&(next >= 1));
-			}
-			ChangeBgColor();
-			//Move to the next link
-			currentLink.focus();
-			current = next;
-			side = nside;
+			selectItem();
 			//Prevent default action (ie. scrolling)
 			e.preventDefault();
 			return false;
@@ -703,6 +690,24 @@ function windowResize()
 	document.body.style.height=window.innerHeight-20;
 	}
 
+function selectItem()
+	{
+	//Check if new link exists, if not then go to previous one until finds the one that exists
+	currentLink=document.links['link_' + nside + next];
+	if (!currentLink)
+	{
+	    do {
+		next = next - 1;
+		currentLink=document.links['link_' + nside + next];
+	    } while ((!currentLink)&&(next >= 1));
+	}
+	ChangeBgColor();
+	//Move to the next link
+	currentLink.focus();
+	current = next;
+	side = nside;
+	}
+
 document.defaultAction = true;
 
 // -->
@@ -732,7 +737,7 @@ fi
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	echo "<tr id=\"tr_l1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_l1\" onClick=\"javascript:nside='l';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	litem_nr=2
     else
 	litem_nr=1
@@ -787,7 +792,7 @@ fi
 		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	    #fi
 	fi
-	echo "<tr id=\"tr_l${litem_nr}\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
+	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:nside='l';next=${litem_nr};selectItem();\"><td class='filename'><img src=\"Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"$dlink\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -796,7 +801,7 @@ fi
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	echo "<tr id=\"tr_r1\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_r1\" onClick=\"javascript:nside='r';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	ritem_nr=2
     else
 	ritem_nr=1
@@ -840,14 +845,14 @@ fi
 		rimage="generic.gif"
 	    fi
 	fi
-	echo "<tr id=\"tr_r${ritem_nr}\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
+	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:nside='r';next=${ritem_nr};selectItem();\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
     ####echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
-    echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <span onClick="javascript:renameDialog();"><font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME</span> &nbsp; <span onClick="javascript:deleteDialog();"><font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span> &nbsp; <span onClick="javascript:copyDialog();"><font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <span onClick="javascript:moveDialog();"><font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span> &nbsp; <span onClick="javascript:mkdirDialog();"><font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span><font color="white"> &nbsp; <span onClick="javascript:var dest=\'fm.cgi?type=related&side=\' + side + \'&lpth=\' + cpth + \'&rpth=\' + cpth;window.location=dest;">[<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font></span><br/></center>'
+    #################echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <span onClick="javascript:renameDialog();"><font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME</span> &nbsp; <span onClick="javascript:deleteDialog();"><font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span> &nbsp; <span onClick="javascript:copyDialog();"><font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <span onClick="javascript:moveDialog();"><font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span> &nbsp; <span onClick="javascript:mkdirDialog();"><font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span><font color="white"> &nbsp; <span onClick='javascript:var dest=\'fm.cgi?type=related\&side=\' + side + \'&lpth=\' + cpth + \'&rpth=\' + cpth;window.location=dest;">[<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font></span><br/></center>'
     ###echo '<font color="white">'
     ###echo "<script type='text/javascript'>"
     #echo "document.write(document.documentElement.clientWidth, '/', document.documentElement.clientHeight);" # document.body size in FF
@@ -871,6 +876,7 @@ fi
     ###echo "</script>"
     ###echo '</font>'
 ?>
+<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <span onClick="javascript:renameDialog();"><font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME</span> &nbsp; <span onClick="javascript:deleteDialog();"><font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span> &nbsp; <span onClick="javascript:copyDialog();"><font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <span onClick="javascript:moveDialog();"><font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span> &nbsp; <span onClick="javascript:mkdirDialog();"><font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span><font color="white"> &nbsp; <span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + cpth + '&rpth=' + cpth;window.location=dest;">[<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font></span><br/></center>
 </BODY></HTML>
 
 <?

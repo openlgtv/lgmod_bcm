@@ -45,9 +45,17 @@ then
 	fi
 	echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator to enable all NetCast services (netcast_config_enable_all=1) file: $real_configxml ..."
 	/scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver enable_all
-	echo "OpenLGTV_BCM-INFO: changing back netcast_config_enable_all=1 option to netcast_config_enable_all=0 in /mnt/user/cfg/settings file to prevent config.xml rewrite at every boot..."
-	sed -i -e 's/netcast_config_enable_all=1/netcast_config_enable_all=0/g' /mnt/user/cfg/settings
+	###echo "OpenLGTV_BCM-INFO: changing back netcast_config_enable_all=1 option to netcast_config_enable_all=0 in /mnt/user/cfg/settings file to prevent config.xml rewrite at every boot..."
+	###sed -i -e 's/netcast_config_enable_all=1/netcast_config_enable_all=0/g' /mnt/user/cfg/settings
+	echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock/netcast_enable_all.lock lockfile to prevent config.xml rewrite at every boot..."
+	touch /mnt/user/lock/netcast_enable_all.lock
 	echo "OpenLGTV_BCM-INFO: note: if you want more NetCast items then put their icons (from other countries firmwares) into /home/netcast_icons and use netcast_enable_all again"
+    else
+	if [ -f "/mnt/user/lock/netcast_enable_all.lock" -a -f "$real_configxml.pre_netcast_enable_all" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: removing /mnt/user/lock/netcast_enable_all.lock lockfile and reverting back pre_netcast_enable_all config.xml..."
+	    cat "$real_configxml.pre_netcast_enable_all" > "$real_configxml"
+	fi
     fi
     if [ "$netcast_config_add_yahoo" = "1" ]
     then

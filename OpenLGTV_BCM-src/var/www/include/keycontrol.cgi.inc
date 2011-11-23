@@ -26,8 +26,10 @@
 	</div>
 	<div id="footer" class="footer">
 		<ul>
-			<a id="RedBtn"    onClick="javascript:PrevControl();" href="#" style="text-decoration:none; color:white"><li class="red"><span><img src="Images/Keyboard/red_button.png" border="0" /></span>Prev Ctrl</li></a>
-			<a id="GreenBtn"  onClick="javascript:NextControl();" href="#" style="text-decoration:none; color:white"><li class="green"><span><img src="Images/Keyboard/green_button.png" border="0" /></span>Next Ctrl</li></a>
+			<!-- a id="RedBtn"    onClick="javascript:PrevControl();" href="#" style="text-decoration:none; color:white"><li class="red"><span><img src="Images/Keyboard/red_button.png" border="0" /></span>Prev Ctrl</li></a -->
+			<a id="RedBtn"    onClick="javascript:window.location='browser/links.html';" href="#" style="text-decoration:none; color:white"><li class="red"><span><img src="Images/Keyboard/red_button.png" border="0" /></span>NetCast</li></a>
+			<!-- a id="GreenBtn"  onClick="javascript:NextControl();" href="#" style="text-decoration:none; color:white"><li class="green"><span><img src="Images/Keyboard/green_button.png" border="0" /></span>Next Ctrl</li></a -->
+			<a id="GreenBtn"  onClick="javascript:window.location='fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2';" href="#" style="text-decoration:none; color:white"><li class="green"><span><img src="Images/Keyboard/green_button.png" border="0" /></span>FileMgr</li></a>
 			<a id="YellowBtn" onClick="javascript:SaveForm();" href="#" style="text-decoration:none; color:white"><li class="yellow"><span><img src="Images/Keyboard/yellow_button.png" border="0" /></span>Save</li></a>
 			<a id="BlueBtn"   onClick="javascript:BackSpace();" href="#" style="text-decoration:none; color:white"><li class="blue"><span><img src="Images/Keyboard/blue_button.png" border="0" /></span>BackSpace</li></a>
 			<a id="BackBtn"   onClick="javascript:history.go(-1);" href="#" style="text-decoration:none; color:white"><li id="return_bt" class="return"><span><img src="Images/Keyboard/back_button.png" border="0" /></span>Back</li></a>

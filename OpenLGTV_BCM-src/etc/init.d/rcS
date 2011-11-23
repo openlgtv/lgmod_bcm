@@ -224,8 +224,7 @@ then
     /etc/rc.d/rc.nvram &
 fi
 
-
-nice -n 20 /etc/rc.d/rc.fwinfo &
+nice -n 20 /etc/rc.d/rc.fwinfo | tee -a /var/log/fwinfo.log &
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
