@@ -256,7 +256,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: with new hotplug-capable scripts Yahoo Widgets Engine/Data from USB storage devices is hotpluggable also - on connect YWE gots prepared and on umount from remote it gets stopped
     * ADD: 'upgrade mode' - when there are LG firmware upgrade EPK files on USB stick in LG_DTV dir then some services get stopped and caches cleaned when needed - depends on file size to ensure no out-of-mem LG upgrade fail
     * ADD: hotplugging of USB HID devices (shows/hides mouse pointer also)
-    * ADD: two-panel onscreen web-based FileManager with recursive copy, move, mkdir, delete, playback/view support via remote control
+    * ADD: two-panel onscreen web-based FileManager with recursive copy, move, mkdir, delete, playback/view support via remote control or mouse (and keyboard keys remotely)
     * ADD: support for permanent crontabs storage on user partition
     * ADD: possibility to disable telnet service and use alternative SSH port (2222) instead of default (22) through WebUI settings
     * ADD: Yahoo Widgets Engine respects now 'region' set in YWE UI instead of using forced US
@@ -283,6 +283,7 @@ Answer for people asking if they can use it if they have already made modificati
     * CHANGE: minor visual improvements to WebUI and VOD services
     * CHANGE: settings cleanup - "confirmations rebooting netcast_kill_browser netcast_keyboard_mouse_support use_samsung_ywe_instead_of_lg force_copy_config_netcast force_copy_config_ywe" are now removed (netcast_keyboard_mouse_support is renamed to netcast_mouse_support)
     * CHANGE: WebUI can be now properly navigated using arrows instead of 'red'/'green' buttons
+    * CHANGE: 'netcast_enable_all' switch works now like other settings - can be enabled/disabled
     * REMOVE: 'tcpdump' binary for space reasons
     * REMOVE: 'top' binary - use busybox applet instead
     * REMOVE: 'empty' binary - not used at all
