@@ -24,12 +24,12 @@ Content-type: text/html
 	color:black;
 	text-decoration:bold;
     }
-    table.fulltable {
+    table.fulltable, #fulltable {
 	//min-height:690px;
 	height:690px;
 	//max-height=690px;
     }
-    tbody.main {
+    tbody.main, #main {
 	width: 95%;
 	height: 95%;
 	overflow-y:auto;
@@ -37,42 +37,56 @@ Content-type: text/html
 	//max-height:690px;
 	min-height:690px;
     }
-    tbody.scrollable {
+    tbody.scrollable, #scrollable {
 	//max-height:650px;
 	display: block;
 	height: 100%;
 	overflow-y: auto;
+	//overflow-y: hidden;
 	overflow-x: hidden;
     }
-    td.lpanelpath, .rpanelpath {
+    td.lpanelpath, .rpanelpath, #lpanelpath, #rpanelpath {
 	//min-width: 415px;
 	overflow:hidden;
 	white-space:nowrap;
 	//min-width:43%;
 	width:43%;
+	//width:500px;
 	//max-width:500px;
-	//min-width:500px;
+	min-width:300px;
     }
-    td.filename {
-	min-width: 400px;
+    td.filename, #filename {
+	//min-width: 400px;
 	//width: 400px;
+	width: 700px;
 	//width: 390px;
-	//width: 100%;
+	width: 100%;
 	overflow:hidden;
 	white-space:nowrap;
     }
-    td.size {
+    td.size, #size {
 	min-width: 70px;
     }
-    td.date {
+    td.date, #date {
 	overflow:hidden;
 	white-space:nowrap;
     }
+    td {
+	//border: 1px solid red;
+    }
 </style>
+
 <title>CGI FileManager by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript">
 <!--
+
+//var filenameSize=(window.innerWidth/2)-255;
+var filenameSize=(window.innerWidth/2)-200;
+
+//TODO: if filenameSize < 440 (from 1280/2-200) then cut filename characters earlier
+
+document.write('<style type="text/css">td.filename {width:' + filenameSize  + 'px;}</style>');
 
 <?
 
@@ -705,6 +719,8 @@ function dialogRemove()
 
 function windowResize()
 	{
+	var filenameSize=(window.innerWidth/2)-200;
+	//document.write('<style type="text/css">td.filename {width:' + filenameSize  + 'px;}</style>');
 	var fulltablestyle=document.getElementById('fulltable').style;
 	fulltablestyle.height=window.innerHeight-30;
 	document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;
