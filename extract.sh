@@ -3,7 +3,7 @@
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
-SKIP_LINES=96
+SKIP_LINES=97
 
 echo "OpenLGTV BCM installator"
 

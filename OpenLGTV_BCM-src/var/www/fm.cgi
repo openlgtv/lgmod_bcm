@@ -775,7 +775,8 @@ fi
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	echo "<tr id=\"tr_l1\" onClick=\"javascript:nside='l';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	#echo "<tr id=\"tr_l1\" onClick=\"javascript:nside='l';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_l1\" onClick=\"javascript:nside='l';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.png\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	litem_nr=2
     else
 	litem_nr=1
@@ -810,7 +811,8 @@ fi
 	lsize="${lcontent_5x%%@*}"
 	if [ "$ltype" = "directory" ]
 	then
-	    limage="dir.gif"
+	    #limage="dir.gif"
+	    limage="dir.png"
 	    dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	else
 	    #if [ "$ltype" = "symbolic link" ]
@@ -839,7 +841,8 @@ fi
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	echo "<tr id=\"tr_r1\" onClick=\"javascript:nside='r';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	#echo "<tr id=\"tr_r1\" onClick=\"javascript:nside='r';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_r1\" onClick=\"javascript:nside='r';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.png\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	ritem_nr=2
     else
 	ritem_nr=1
@@ -874,7 +877,8 @@ fi
 	rsize="${rcontent_5x%%@*}"
 	if [ "$rtype" = "directory" ]
 	then
-	    rimage="dir.gif"
+	    #rimage="dir.gif"
+	    rimage="dir.png"
 	else
 	    if [ "$rtype" = "symbolic&nbsp;link" ]
 	    then

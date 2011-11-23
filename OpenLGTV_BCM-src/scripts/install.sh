@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-beta installation script v.1.93 by xeros
+# OpenLGTV BCM 0.5.0-beta installation script v.1.94 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -46,6 +46,7 @@ do
     [ "$argv" = "no_install"      ] && no_install=1
     [ "$argv" = "install"         ] && no_install=0
     [ "$argv" = "chrooted"        ] && chrooted=1
+    [ "$argv" = "info"            ] && info=1
     [ "$argv" = "drop_caches"     ] && drop_caches=1
     [ "${argv#image=}" != "$argv" ] && ver="`basename ${argv#image=} | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`" && dir="`dirname ${argv#image=}`"
     argc=$(($argc+1))
@@ -111,6 +112,7 @@ fi
 
 cdir=$dir
 log=$dir/$file.log
+infolog=$dir/info.log
 #log="$dir/$file.log $tmp/$file.log"
 tmpout=$tmp/output.log
 tmpoutflashed=$tmp/flashed/output.log
@@ -167,6 +169,7 @@ then
     echo "This will be path for current firmware /dev/mtd$mtd_rootfs partition backup, too."
     dir=$tmp
     log=$dir/$file.log
+    infolog=$dir/info.log
     touch $log
     if [ "$?" -ne "0" ]
     then
@@ -353,6 +356,96 @@ then
 	echo "Please give us /var/log/OpenLGTV_BCM.log file taken from first boot, too - its very useful in case of any problems." | tee -a $log
     fi
 fi
+
+
+#info=1
+# info code by mmm4m5m for LGMOD S7, adapted to OpenLGTV BCM
+if [ -n "$info" ]; then
+	infofile="$infolog"
+        echo "NOTE: Create info file (1 min, $infofile) ..."
+        #echo "10010 $rootfs, $lginit, $PWD: $@" > "$infofile" || echo "Error: Info file failed"
+	busybox=/bin/busybox
+	mtd_mtdinfo=`grep -m 1 '"mtdinfo"' /proc/mtd | cut -d: -f 1`
+	mtd_boot=`grep -m 1 '"boot"' /proc/mtd | cut -d: -f 1`
+fi
+if [ -n "$info" ]; then
+        err=0
+        { echo -ne '\n\n#$#'" INFO($err): "; date
+                echo -e '\n\n$#' cat /proc/mtd; cat /proc/mtd || err=11
+                #echo -e '\n\n$# dump mtdinfo (/dev/mtd2)'; mtdinfo=$($busybox hexdump /dev/mtd2 -vs240 \
+                echo -e "\n\n$# dump mtdinfo (/dev/${mtd_mtdinfo})"; mtdinfo=$($busybox hexdump /dev/${mtd_mtdinfo} -vs240 \
+                        -e'32 "%_p" " %08x ""%08x " 32 "%_p" " %8d"" %8x " /1 "Uu:%x" /1 " %x " /1 "CIMF:%x" /1 " %x" "\n"'| \
+                        head -n`cat /proc/mtd|wc -l`) || err=13; echo "0:$mtdinfo"|head -n1;echo "$mtdinfo"|tail -n+2|grep '' -n
+                echo -e '\n\n$# dump the magic (/dev/mtd#)'; for i in $(cat /proc/mtd | grep '^mtd' | sed -e 's/:.*//' -e 's/^/\/dev\//'); do
+                        echo -n "$i: "; $busybox hexdump $i -vn32 -e'32 "%4_c" "\n"' || err=13; done
+                #echo -e '\n\n$# dump boot version (/dev/mtd1)'
+                echo -e "\n\n$# dump boot version (/dev/${mtd_boot})"
+                #s=7;w=5;m=3;cat /dev/mtd1 |tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'|sed -e'/[a-zA-Z]\{'$m'\}\|[0-9]\{'$m'\}/!d' \
+                s=7;w=5;m=3;cat /dev/${mtd_boot} |tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'|sed -e'/[a-zA-Z]\{'$m'\}\|[0-9]\{'$m'\}/!d' \
+                        -e'/[-_=/\.:0-9a-zA-Z]\{'$w'\}/!d' -e's/  \+/ /g' -e'/.\{'$s'\}/!d'| head -n5 || err=18
+                ##echo -e '\n\n$# dump boot version (/dev/mtd5)'
+                ##s=7;w=5;m=3;cat /dev/mtd5 |tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'|sed -e'/[a-zA-Z]\{'$m'\}\|[0-9]\{'$m'\}/!d' \
+                ##        -e'/[-_=/\.:0-9a-zA-Z]\{'$w'\}/!d' -e's/  \+/ /g' -e'/.\{'$s'\}/!d'| head -n5 || err=18
+        } >> "$infofile"; sync
+        ##} >> "$infofile"; sync; echo 3 > /proc/sys/vm/drop_caches; sleep 1 # drop caches has bad impact in stability after flashing rootfs
+        { echo -ne '\n\n#$#'" INFO($err): "; date
+                echo -e '\n\n$#' free; free || err=12
+                echo -e '\n\n$#' cat /proc/cpuinfo; cat /proc/cpuinfo || err=11
+                echo -e '\n\n$#' lsmod; lsmod || err=12
+                echo -e '\n\n$#' cat /proc/version; cat /proc/version || err=11
+                echo -e '\n\n$#' cat /proc/cmdline; printf '%s\n' $(cat /proc/cmdline) || err=11
+                echo -e '\n\n$#' hostname; hostname || err=12
+                echo -e '\n\n$#' cat /proc/filesystems; cat /proc/filesystems || err=11
+                echo -e '\n\n$#' export; export | sort || err=10
+                echo -e '\n\n$#' printenv; printenv | sort || err=12
+                ##echo -e '\n\n$#' ps axl; ps axl || err=12 # no 'a' parameter in BusyBox 'ps' on BCM
+                ##echo -e '\n\n$#' ps axv; ps axv || err=12
+                echo -e '\n\n$#' ps w; ps w || err=12
+                echo -e '\n\n$#' cat /proc/mounts; cat /proc/mounts || err=11
+                echo -e '\n\n$#' fdisk -l; fdisk -l $(cat /proc/mtd | grep '^mtd' | sed -e 's/:.*//' -e 's/^mtd/\/dev\/mtdblock/') | grep : || err=14
+                ##cat /tmp/install-info || err=11
+        } >> "$infofile"; sync
+        ##} >> "$infofile"; sync; echo 3 > /proc/sys/vm/drop_caches; sleep 1
+        { echo -ne '\n\n#$#'" INFO($err): "; date
+                echo -e '\n\n$# dump RELEASE version'
+                #f=/mnt/lg/lgapp/RELEASE; b=10000; s=$(stat -c%s $f); s=$((s/b*8/17)); flag=''
+                #dd bs=$b skip=$s count=300 if=$f 2>/dev/null|tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'| \
+                #        grep '....'|grep -m2 -B1 -A5 swfarm || { err=19; flag=1; }
+                #dd bs=$b skip=$((s+600)) count=300 if=$f 2>/dev/null|tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'| \
+                #        grep '....'|grep -m2 -B1 -A10 swfarm || { err=19; flag=1; }
+                #if [ -n "$flag" ]; then cat $f|tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'| \
+                #        grep '....'|grep -m2 -B1 -A10 swfarm || err=18; fi
+                /etc/rc.d/rc.fwinfo || err=18
+        } >> "$infofile"; sync
+        ##} >> "$infofile"; sync; echo 3 > /proc/sys/vm/drop_caches; sleep 1
+        { echo -ne '\n\n#$#'" INFO($err): "; date
+                echo -e '\n\n$# strings lginit (lg-init)'
+                f=/mnt/lg/lginit/lg-init; [ ! -f $f ] && { f=/mnt/lg/lginit/lginit; [ -f $f ] && md5sum $f; }
+                w=5;m=3;[ -f $f ] && cat $f |tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'|sed -e'/[a-zA-Z]\{'$m'\}\|[0-9]\{'$m'\}/!d' \
+                        -e'/[-_=/\.:0-9a-zA-Z]\{'$w'\}/!d' -e's/  \+/ /g'| head -n70
+                #        -e'/[-_=/\.:0-9a-zA-Z]\{'$w'\}/!d' -e's/  \+/ /g'| head -n70 || err=18  # lginit might not be there
+                #echo -e '\n\n$# strings boot (/dev/mtd1)'
+                echo -e "\n\n$# strings boot (/dev/${mtd_boot})"
+                #s=7;w=5;m=3;cat /dev/mtd1 |tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'|sed -e'/[a-zA-Z]\{'$m'\}\|[0-9]\{'$m'\}/!d' \
+                s=7;w=5;m=3;cat /dev/${mtd_boot} |tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'|sed -e'/[a-zA-Z]\{'$m'\}\|[0-9]\{'$m'\}/!d' \
+                        -e'/[-_=/\.:0-9a-zA-Z]\{'$w'\}/!d' -e's/  \+/ /g' -e'/.\{'$s'\}/!d'| tail -n35 || err=18
+                ##echo -e '\n\n$# strings boot (/dev/mtd5)'
+                ##s=7;w=5;m=3;cat /dev/mtd5 |tr [:space:] ' '|tr -c ' [:alnum:][:punct:]' '\n'|sed -e'/[a-zA-Z]\{'$m'\}\|[0-9]\{'$m'\}/!d' \
+                ##        -e'/[-_=/\.:0-9a-zA-Z]\{'$w'\}/!d' -e's/  \+/ /g' -e'/.\{'$s'\}/!d'| tail -n35 || err=18
+                ##echo -e '\n\n$#' diff /dev/mtd1 /dev/mtd5; diff /dev/mtd1 /dev/mtd5
+        } >> "$infofile"; sync
+        ##} >> "$infofile"; sync; echo 3 > /proc/sys/vm/drop_caches; sleep 1
+        #       # backup partitions
+        #       echo -e '\n\n$# diff backup /dev/mtd# '
+        #       diff /dev/mtd15 /dev/mtd20 && diff /dev/mtd16 /dev/mtd21 && diff /dev/mtd17 /dev/mtd22
+        #       # cramfs - no need, we check the same below
+        #       appxip_addr=`cat /proc/cmdline | awk -v RS='[ ]' -F= '/appxip_addr=/ { print $2 }'`
+        #       echo -e '\n\n$# dump lgapp (/dev/mem)'; $busybox hexdump /dev/mem -vs$((appxip_addr)) -n160 -e'4 "%08x "" " 16 "%_p"" " 4 "%08x "" " 10 "%_p" 1/2 " %04x" "\n" 7 "%08x "" " 7 "%_p"" " 1/1 "%02x " 4 "%08x " "\n" 10 "%_p" 1/2 " %04x" 3 " %08x"" " 15 "%_p" 3 " %08x" "\n"' || err=13
+        #       echo -e '\n\n$# dump RELEASE (/dev/mem)'; $busybox hexdump /dev/mem -vs$((appxip_addr+1024*4)) -n512 -e'128 "%_p" "\n"' || err=13
+        { echo -ne '\n\n#$#'" INFO($err): "; date; } >> "$infofile"; sync
+        [ $err != 0 ] && echo "Error($err): Info file failed"
+fi
+
 
 # Safety checks for supported rootfs version and partitions numbers
 if [ "$current_rootfs_ver" != "$supported_rootfs_ver" ]
@@ -712,6 +805,7 @@ then
     [ -n "`ls $dir/*.sh.zip 2>/dev/null`" ] && mv -f $dir/*.sh.zip $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
     [ -n "`ls $dir/*.tar.sh 2>/dev/null`" ] && mv -f $dir/*.tar.sh $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
     log=`echo $log | sed "s#$file#flashed/$file#"`
+    infolog=`echo $infolog | sed "s#info#flashed/info#"`
     cat $tmpoutflashed 2>/dev/null | tee -a $log
     date 2>&1 | tee -a $log
     echo "" | tee -a $log
@@ -795,6 +889,7 @@ mkdir -p $dir/flashed $tmp/flashed
 [ -n "`ls $dir/*.sh.zip 2>/dev/null`" ] && mv -f $dir/*.sh.zip $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 [ -n "`ls $dir/*.tar.sh 2>/dev/null`" ] && mv -f $dir/*.tar.sh $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
+infolog=`echo $infolog | sed "s#info#flashed/info#"`
 #cat $tmpoutflashed | tee -a $log
 #cat $tmpout | tee -a $log
 sync
