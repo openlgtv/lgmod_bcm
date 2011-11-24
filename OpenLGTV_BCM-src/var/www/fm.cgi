@@ -82,11 +82,13 @@ Content-type: text/html
 <!--
 
 //var filenameSize=(window.innerWidth/2)-255;
-var filenameSize=(window.innerWidth/2)-200;
+//var filenameSize=(window.innerWidth/2)-200;
 
 //TODO: if filenameSize < 440 (from 1280/2-200) then cut filename characters earlier
 
-document.write('<style type="text/css">td.filename {width:' + filenameSize  + 'px;}</style>');
+//document.write('<style type="text/css">td.filename {width:' + filenameSize  + 'px;}</style>');
+// static value bigger than the needed one is even better - cell width is being resized without need to refresh page
+document.write('<style type="text/css">td.filename {width:800px;}</style>');
 
 <?
 
