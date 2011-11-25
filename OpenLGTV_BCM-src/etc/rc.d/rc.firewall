@@ -1,0 +1,40 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.firewall
+# Firewall script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+hostsfile="/mnt/flash/data/hosts"
+firewall_dir1="/etc/firewall"
+firewall_dir2="/mnt/useretc/firewall"
+count=0
+
+if [ "$enable_firewall" = "1" ]
+then
+    echo "OpenLGTV_BCM-INFO: enabling firewall"
+    for ip in `cat ${firewall_dir1}/* ${firewall_dir2}/* 2>/dev/null`
+    do
+	ifconfig lo:${count} ${ip} netmask 255.255.255.255
+	count=$((${count}+1))
+    done
+    echo "OpenLGTV_BCM-INFO: firewall enabled"
+fi
+
+if [ "$disable_lg_network_upgrades" = "1" ]
+then
+    echo "OpenLGTV_BCM-INFO: dropping NSU upgrades"
+    if [ -z "`grep -m 1 snu.lge.com $hostsfile`" ]
+    then
+	echo "127.0.0.1		snu.lge.com snu.lge.com.usgcac.cdnetworks.net www.lge.com www.lg.com http://www.lge.co.kr test-btvnu.lge.com" >> $hostsfile
+    fi
+    for ip in `cat ${firewall_dir1}/lg/*`
+    do
+	ifconfig lo:${count} ${ip} netmask 255.255.255.255
+	count=$((${count}+1))
+    done
+    echo "OpenLGTV_BCM-INFO: dropping NSU upgrades - done"
+else
+    if [ -n "`grep -m 1 snu.lge.com $hostsfile`" ]
+    then
+	sed -i '/.*snu.lge.com/d' $hostsfile
+    fi
+fi
