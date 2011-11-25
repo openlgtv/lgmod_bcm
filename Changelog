@@ -242,7 +242,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: libncurses.so.5.7 and recompiled top binary to use the lib
     * ADD: lua, luac, liblua.so.5.1.4
     * ADD: libSDL-1.2.so.0.11.3 with DirectFB access for additional SDL apps that can now use TV screen
-    * ADD: OPENRELEASE 2.1.2 by rtokarev & jenya's uinput branch
+    * ADD: OPENRELEASE 2.1.2-5-g0a346da by rtokarev with possibility to bind scripts/executables actions to remote keys
     * ADD: CGI web page for remote control by mihaifireball under http://ip_of_tv/remote/
     * ADD: possibility to remove all OpenLGTV BCM configs or just NetCast configs for recreating defaults at next boot using WebUI
     * ADD: bootlog is copied at each boot with usb stick/disk plugged in to OpenLGTV_BCM/OpenLGTV_BCM.log file or OpenLGTV_BCM/OpenLGTV_BCM-firstboot.log when it's first boot
@@ -262,6 +262,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: Yahoo Widgets Engine respects now 'region' set in YWE UI instead of using forced US
     * ADD: possiblity to change 'region', 'language' and 'yweversion' of Yahoo Widgets Engine via /mnt/user/ywe/{region,lang,version} without need to change YWE UI configuration/restart
     * ADD: support for multiple NFS/CIFS Network Shares (even nested one inside each other) - WebUI should handle about 9-10 shares configuration
+    * ADD: "disable_LG_network_upgrades" option (set as defautl) in WebUI Settings to be able to stop LG firmware network upgrades
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling

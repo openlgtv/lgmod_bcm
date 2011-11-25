@@ -33,6 +33,8 @@ tar xzvf dev.tar.gz
 tar xzvf etc_passwd.tar.gz
 rm -f dev.tar.gz etc_passwd.tar.gz
 find . -name '.svn' | xargs rm -rf
+cp etc/openrelease/openrelease.cfg etc/default/openrelease.cfg.default
+cp etc/openrelease/openrelease_keymap.cfg etc/default/openrelease_keymap.cfg.default
 cd ..
 rm -f $ofile.sqf $ofile.md5 $ofile.sha1 $ofile.zip
 mksquashfs squashfs-root $ofile.sqf $squashfs_opts
