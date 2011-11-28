@@ -309,8 +309,16 @@ function check(e)
 				    //document.forms['URL'].elements[currElementName].click();
 				    document.getElementById(currElementName).click();
 				}
+			else if (PageElements[currElementIndex].type == 'txt' & txt_edit == '1')
+				{
+				    //Write the letter on the currFocusedElement field
+				    var URLText = document.forms['URL'].elements[currElementName].value;
+				    URLText = URLText + document.links['c' + next].name;
+				    document.forms['URL'].elements[currElementName].value = URLText;
+				}
 			else if (PageElements[currElementIndex].type == 'txt' & txt_edit == '0')
 				{
+				    //Switch to text edit
 				    d = document.getElementById(currElementName + 'Parent');
 				    d.style.backgroundColor=ParentEditColor;
 				    txt_edit=1;
@@ -328,6 +336,7 @@ function check(e)
 			}
 		else if (key==32) 
 			{
+			//TODO: make Spacebar check simmilar as Enter/OK
 			//spacebar
 			if (!PageElements[currElementIndex].focused)
 			    {
