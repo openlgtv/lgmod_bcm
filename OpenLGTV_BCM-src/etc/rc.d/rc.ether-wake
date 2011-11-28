@@ -1,0 +1,59 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.ether-wake
+# Ether Wake Script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+ethwaketab=/mnt/user/cfg/ethwaketab
+# File format:
+# (autowake on boot:0/1)#(hostname)#[ip.address]#(MAC:address)#[pa:ss:wo:rd]#[options]#
+# Example:
+# 1#SomeHost#192.168.0.1#00:11:22:33:44:55#aa:bb:cc:dd##
+
+if [ -f "$ndrvtab" ]
+then
+    echo "OpenLGTV_BCM-INFO: found Ether Wake configuration file $ethwaketab - parsing config content..."
+    if [ "$1" = "WebUI_WAKE" ]
+    then
+	WebUI_WAKE=1
+	if [ "$2" != "" ]
+	then
+	    id="$2"
+	    #read_ethwaketab="head -n $id $ethwaketab | tail -n 1"
+	    read_ethwaketab="head -n $id $ethwaketab"
+	else
+	    echo "OpenLGTV_BCM-ERROR: found Ether Wake configuration file $ethwaketab but mounting from WebUI needs ID number as argument..."
+	    exit 0
+	fi
+    else
+        read_ethwaketab="cat $ethwaketab"
+    fi
+    $read_ethwaketab | if [ "$WebUI_WAKE" = "1" ]; then tail -n 1; else cat; fi | while read ethwake
+    do
+	ew_autowake="`echo $ethwake | cut -d# -f1`"
+	ew_name="`echo $ethwake | cut -d# -f2`"
+	ew_ip="`echo $ethwake | cut -d# -f3`"
+	ew_mac="`echo $ethwake | cut -d# -f4`"
+	ew_pass="`echo $ethwake | cut -d# -f5`"
+	ew_opt="`echo $ethwake | cut -d# -f6`"
+	[ -n "$ew_pass" ] && ew_passHidden="*password*"
+	##echo ethwake: $ew_autowake $ew_name $ew_ip $ew_mac $ew_pass $ew_opt
+	echo "OpenLGTV_BCM-DEBUG: Ether Wake settings: ew_autowake=$ew_autowake ew_name=$ew_name ew_ip=$ew_ip ew_mac=$ew_mac ew_pass=$ew_passHidden ew_opt=$ew_opt ..."
+	if [ "$ew_autowake" = "1" -o "$WebUI_WAKE" = "1" ]
+	then
+	    echo "OpenLGTV_BCM-DEBUG: Trying to wake: ew_autowake=$ew_autowake ew_name=$ew_name ew_ip=$ew_ip full_ew_mac=$full_ew_mac ew_opt=$ew_opt uname=$uname ew_pass=$ew_passHidden ..."
+	    if [ -n "$ew_mac" ]
+	    then
+		if [ -n "$ew_pass" ]
+		then
+		    ether-wake "${ew_mac}" -p "${ew_pass}" "${ew_opt}"
+		else
+		    ether-wake "${ew_mac}" "${ew_opt}"
+		fi
+	    else
+		echo "OpenLGTV_BCM-ERROR: No MAC address set for Ether Wake"
+	    fi
+	fi
+    done
+else
+    echo "OpenLGTV_BCM-INFO: NOT found Ether Wake configuration file $ethwaketab - skipping Ether Wake configuration..."
+fi

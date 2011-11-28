@@ -263,6 +263,7 @@ Answer for people asking if they can use it if they have already made modificati
     * ADD: possiblity to change 'region', 'language' and 'yweversion' of Yahoo Widgets Engine via /mnt/user/ywe/{region,lang,version} without need to change YWE UI configuration/restart
     * ADD: support for multiple NFS/CIFS Network Shares (even nested one inside each other) - WebUI should handle about 9-10 shares configuration
     * ADD: "disable_LG_network_upgrades" option (set as defautl) in WebUI Settings to be able to stop LG firmware network upgrades
+    * ADD: support for waking up ethernet WakeOnLan capable devices on boot via rc.ether-wake script (and /mnt/user/cfg/ethwaketab config file) - althrough no WebUI option to edit it yet
     * UPDATE: tmux upgraded from 1.4 to 1.5 with use dynamic libncurses library instead of staticly linked code
     * UPDATE: busybox upgraded from 1.18.4(+passwd patch) to 1.19.2(+crond patch) with additional setserial, ubi*, users, groups, whois, pstree, pwdx,.. applets
     * CHANGE: /etc/rc.d/rc.mount rewrite for more flexible partitions handling

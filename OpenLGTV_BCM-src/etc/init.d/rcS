@@ -233,6 +233,8 @@ echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
 echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
 #############/etc/rc.d/rc.usb &
 
+/etc/rc.d/rc.ether-wake &
+
 /etc/rc.d/rc.firewall
 
 /etc/rc.d/rc.httpd
@@ -278,7 +280,7 @@ source /etc/rc.d/rc.release
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 #/bin/sh
 
-echo "OpenLGTV_BCM-INFO: Done...login now"
+echo "OpenLGTV_BCM-INFO: rcS end... login now"
 echo ""
 
 
