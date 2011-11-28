@@ -1,7 +1,7 @@
 alternative_port_for_ssh=0            #Use alternative port (2222) for SSH connections
 disable_telnet=0                      #Disable telnet service (check if SSH works OK first)
 disable_lg_network_upgrades=1         #Disable LG firmware Internet upgrades
-enable_firewall=0                     #Enable the primitive firewall
+enable_firewall=0                     #Enable the primitive firewall (work in progress)
 netcast_config_add_openlgtv=1         #Add OpenLGTV BCM icon to NetCast configs
 netcast_config_add_yahoo=0            #Add Yahoo Widgets icon to NetCast configs
 netcast_config_add_www=1              #Add WWW icon to NetCast configs

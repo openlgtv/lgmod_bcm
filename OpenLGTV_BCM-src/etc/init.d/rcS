@@ -51,6 +51,8 @@ source /etc/rc.d/rc.mount2
 echo "OpenLGTV_BCM-INFO: enabling possibility to break init script with CTRL+C now"
 stty brkint
 
+source /etc/rc.d/rc.modules-lg
+
 source /etc/rc.d/rc.mount3
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
@@ -236,7 +238,7 @@ echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
 /etc/rc.d/rc.httpd
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-(sleep 10; /etc/rc.d/rc.directfb)&
+(sleep 15; /etc/rc.d/rc.directfb)&
 
 if [ "$uver" != "$ver" ]
 then
