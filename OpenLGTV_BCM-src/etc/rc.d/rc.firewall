@@ -13,8 +13,9 @@ then
     echo "OpenLGTV_BCM-INFO: dropping NSU upgrades"
     if [ -z "`grep -m 1 snu.lge.com $hostsfile`" ]
     then
-	echo "127.0.0.1		snu.lge.com snu.lge.com.usgcac.cdnetworks.net www.lge.co.kr test-btvnu.lge.com" >> $hostsfile
-	echo "8.8.8.8		www.lge.com www.lg.com" >> $hostsfile
+	echo    "127.0.0.1		snu.lge.com snu.lge.com.usgcac.cdnetworks.net www.lge.co.kr test-btvnu.lge.com" >> $hostsfile
+	#echo     "8.8.8.8		www.lge.com www.lg.com" >> $hostsfile
+	echo "80.93.62.127		www.lge.com www.lg.com" >> $hostsfile
     fi
     for ip in `cat ${firewall_dir1}/lg/*`
     do
