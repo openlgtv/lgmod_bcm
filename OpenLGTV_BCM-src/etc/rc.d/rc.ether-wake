@@ -45,9 +45,9 @@ then
 	    then
 		if [ -n "$ew_pass" ]
 		then
-		    ether-wake "${ew_mac}" -p "${ew_pass}" "${ew_opt}"
+		    ether-wake ${ew_mac} -p ${ew_pass} ${ew_opt}
 		else
-		    ether-wake "${ew_mac}" "${ew_opt}"
+		    ether-wake ${ew_mac} ${ew_opt}
 		fi
 	    else
 		echo "OpenLGTV_BCM-ERROR: No MAC address set for Ether Wake"
