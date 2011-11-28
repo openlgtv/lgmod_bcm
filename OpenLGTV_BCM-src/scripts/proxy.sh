@@ -12,14 +12,13 @@
 [ -z "$proxy_log_file" ]      && proxy_log_file=/var/log/proxy.log
 [ -z "$proxy_inject_file" ]   && proxy_inject_file=/mnt/user/www/inject.js
 [ -z "$proxy_inject_url" ]    && proxy_inject_url="http://127.0.0.1:88/user/inject.js"
+[ -z "$proxy_adblock_flt" ]   && proxy_adblock_flt='doubleclick\.net|emediate\.eu|googleadservices\.com|/adserver\.|/googleads\.|://ads\.|/www/delivery/|media\.richrelevance.com/rrserver/js/|/advertising/|yieldmanager\.com|pagead2\.googlesyndication\.com|hit\.gemius\.pl'
+[ -z "$proxy_useragent" ]     && proxy_useragent="Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0"
 
 # For proxy testing on PC
 #[ -z "$nc" ]                 && nc="busybox nc"
 [ -z "$nc" ]                  && nc=nc
 [ -z "$awk" ]                 && awk=awk
-
-# User-Agent: 
-[ -z "$useragent" ]           && useragent="Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0"
 
 read_lines="request host line3 line4 line5 line6 line7 line8 line9 line10 line11 line12 line13 line14 line15 line16 line17 line18 line19 line20"
 
@@ -33,7 +32,7 @@ do
     if [ "$linex" = "request" ]
     then
 	# Adblock for common ads
-	if [ -n "`echo $request | egrep -i 'doubleclick\.net|emediate\.eu|googleadservices\.com|/adserver\.|/googleads\.|://ads\.|/www/delivery/|media\.richrelevance.com/rrserver/js/|/advertising/|yieldmanager\.com|pagead2\.googlesyndication\.com|hit\.gemius\.pl'`" ]
+	if [ -n "`echo $request | egrep -i '$proxy_adblock_flt'`" ]
 	then
 	    # Log reject if debug >= 1
 	    if [ "$proxy_log_debug" -ge "1" ]
@@ -48,7 +47,7 @@ do
     # Log content if debug >= 2
     if [ "$proxy_log_debug" -ge "2" ]
     then
-	echo `echo $content` >&2
+	echo "$content" >&2
     fi
     # Check original Content-Length
     #if [ "`echo $content | $awk '{print $1}'`" = "Content-Length:" ]
@@ -56,7 +55,9 @@ do
     if [ "${content%% *}" = "Content-Length:" ]
     then
 	#content_length="`echo $content | $awk '{print $2}' | tr -d '\r'`"
-	content_length="`echo $content | cut -d" " -f2 | tr -d '\r'`"
+	content2="${content#* }"
+	#content_length="`echo $content | cut -d" " -f2 | tr -d '\r'`"
+	content_length="`echo $content2 | tr -d '\r'`"
 	# Log Content-Length info if debug >= 1
 	if [ "$proxy_log_debug" -ge "1" ]
 	then
@@ -76,21 +77,24 @@ do
     fi
 done
 
-
 # Check IP addres/DNS name and port number of host to connect to
 #connect_to=`echo -e "$host\n$line3\n$line4" | grep 'Host:' | $awk '{print $2}' | $sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' -e 's/\r//g'`
 connect_to=`echo -e "$host\n$line3\n$line4" | grep 'Host:' | cut -d" " -f2 | sed -e 's#http://##g' -e 's#/##g' -e 's#?.*##g' -e 's/\r//g'`
-connect_to_port_test=`echo $connect_to | $awk -F: '{print $2}'"`
-#connect_to=`echo $connect_to | $awk -F: '{print $1}'"`
-#connect_to=`echo $connect_to | cut -d: -f1`
-connect_to=${connect_to%:*}
+#connect_to_port_test=`echo $connect_to | $awk -F: '{print $2}'`
+connect_to_port_test="${connect_to#*:}"
 
-if [ -n "$connect_to_port_test" ]
+#echo "ID $id CONNECT_TO $connect_to CONNECT_TO_PORT_TEST $connect_to_port_test" >&2
+
+if [ -n "$connect_to_port_test" -a "$connect_to_port_test" != "$connect_to" ]
 then
     connect_to_port="$connect_to_port_test"
 else
     connect_to_port="$proxy_connect_port"
 fi
+
+#connect_to=`echo $connect_to | $awk -F: '{print $1}'"`
+#connect_to=`echo $connect_to | cut -d: -f1`
+connect_to=${connect_to%:*}
 
 # Log connection host and port if debug >= 1
 if [ "$proxy_log_debug" -ge "1" ]
@@ -132,7 +136,7 @@ echo -e $(for linex in $read_lines
     then
 	sed \
 	    -e 's/\(Accept-Encoding:\).*/\1 identity\r/g' \
-	    -e "s#\(User-Agent:\).*#\1 $useragent\r#g" | \
+	    -e "s#\(User-Agent:\).*#\1 $proxy_useragent\r#g" | \
 	if [ "$proxy_log_debug" -ge "3" ]
 	then
 	    tee -a $proxy_log_file
