@@ -4,28 +4,20 @@
 # Source code released under GPL License
 
 MODULES_ROOTFS_LIST="input-core hid usbhid evdev uinput cifs fuse"
-if [ "$MODULES_CUSTOM_LIST" = "" ]
+MODULES_CUSTOM_LIST_FILE=/mnt/user/etc/modules.custom
+if [ -f "$MODULES_CUSTOM_LIST_FILE" ]
 then
-    #MODULES_CUSTOM_LIST="input-core hid usbhid evdev cifs fuse"
+    MODULES_CUSTOM_LIST="`cat $MODULES_CUSTOM_LIST_FILE`"
+else
     MODULES_CUSTOM_LIST=""
 fi
 
-MOD_RPATH="/lib/modules"
 MOD_PATH1="/home/modules"
 MOD_PATH2="/mnt/user/modules"
+MOD_RPATH="/lib/modules"
 
-for mod in $MODULES_ROOTFS_LIST
-do
-    mod_file="$MOD_RPATH/$mod.ko"
-    if [ -f "$mod_file" ]
-    then
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-	echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
-	insmod "$mod_file"
-    fi
-done
-
-for mod in $MODULES_CUSTOM_LIST
+# load listed modules then custom ones - first check /home/modules, then /mnt/user/modules and as last from /lib/modules
+for mod in $MODULES_ROOTFS_LIST $MODULES_CUSTOM_LIST
 do
     mod_file="$MOD_PATH1/$mod.ko"
     if [ -f "$mod_file" ]
@@ -40,6 +32,14 @@ do
 	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
 	    insmod "$mod_file"
+	else
+	    mod_file="$MOD_RPATH/$mod.ko"
+	    if [ -f "$mod_file" ]
+	    then
+		#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
+		echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
+		insmod "$mod_file"
+	    fi
 	fi
     fi
 done
