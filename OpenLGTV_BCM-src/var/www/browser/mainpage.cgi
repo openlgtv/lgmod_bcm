@@ -156,9 +156,9 @@ function check(e)
 			//Delete the selected bookmark
 			DeleteBookmark();
 			}
-		else if (key==457) 
+		else if (key==457|key==220) 
 			{
-			//the info button on the remote control have been pressed
+			//the info or pause button on the remote control have been pressed
 			//window.location='links.html';
 			GoToNetCastLinks();
 			}
@@ -334,7 +334,7 @@ document.defaultAction = true;
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td colspan=2>
-					<a onClick="javascript:GoToNetCastLinks();" href="#"><img src="Images/Keyboard/info_button.png" align="middle" Border="0" /></a>
+					<a onClick="javascript:GoToNetCastLinks();" href="#"><img src="Images/Keyboard/info_button.png" align="middle" Border="0" /><b>/</b><img src="Images/Keyboard/pause_button.png" align="middle" Border="0" /></a>
 					<b>NetCast services</b>
 				</td>
 				<td colspan=2>

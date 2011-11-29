@@ -268,9 +268,9 @@ function check(e)
 			ShowHideKeyboardTab();
 			return false;
 			}
-		else if (key==457) 
+		else if (key==457|key==220) 
 			{
-			//the info button on the remote control have been pressed
+			//the info or pause button on the remote control have been pressed
 			//window.location='links.html';
 			GoToNetCastLinks();
 			}
