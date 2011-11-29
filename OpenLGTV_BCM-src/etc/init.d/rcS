@@ -240,7 +240,16 @@ echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
 /etc/rc.d/rc.httpd
 
 #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-(sleep 15; /etc/rc.d/rc.directfb)&
+
+# possible workaround to find the right value for 'slow' mouses
+if [ -f "/mnt/user/cfg/mouse_delay" ]
+then
+    export dfbdelay=`cat /mnt/user/cfg/mouse_delay`
+else
+    export dfbdelay=18
+fi
+
+(sleep $dfbdelay; /etc/rc.d/rc.directfb)&
 
 if [ "$uver" != "$ver" ]
 then

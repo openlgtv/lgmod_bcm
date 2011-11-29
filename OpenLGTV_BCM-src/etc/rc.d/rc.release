@@ -11,7 +11,7 @@ then
     then
 	echo "OpenLGTV_BCM-WARN: OPENRELEASE configs not found in /mnt/user/etc/openrelease, preparing defaults"
 	mkdir -p /mnt/user/etc/openrelease
-	cp -f /etc/openrelease/* /mnt/user/etc/openrelease/
+	cp -f /etc/openrelease/*.cfg /mnt/user/etc/openrelease/
     fi
     if [ -f "/mnt/user/etc/openrelease/openrelease.cfg" -a "/mnt/user/etc/openrelease/openrelease_keymap.cfg" ]
     then
