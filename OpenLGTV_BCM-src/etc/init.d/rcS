@@ -207,7 +207,7 @@ echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."
 hostname OpenLGTV_BCM
 
 [ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs
-[ ! -d "/mnt/user/modules" ]             && mkdir -p /mnt/user/modules
+[ ! -d "/mnt/user/modules/lg" ]          && mkdir -p /mnt/user/modules/lg
 
 # Lets load modules in background to shorten boot time
 /etc/rc.d/rc.modules &
