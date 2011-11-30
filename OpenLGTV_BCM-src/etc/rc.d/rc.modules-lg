@@ -15,8 +15,11 @@ then
     done
 fi
 
-if [ -e "/mnt/lg/res/lglib/bcmdriver.ko" ]
-then
-    echo "OpenLGTV_BCM-INFO: loading /mnt/lg/res/lglib/bcmdriver.ko kernel module..."
-    insmod /mnt/lg/res/lglib/bcmdriver.ko
-fi
+for bcmdriver in /mnt/lg/res/lglib/bcmdriver.ko /mnt/lg/res/lgres/bcmdriver.ko
+do
+    if [ -f "$bcmdriver" ]
+    then
+	echo "OpenLGTV_BCM-INFO: loading $bcmdriver kernel module..."
+	insmod $bcmdriver
+    fi
+done
