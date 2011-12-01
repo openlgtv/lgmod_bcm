@@ -9,12 +9,13 @@ eecho(){ echo "OpenLGTV_BCM-ERROR: ${scriptname}: $*"; }
 
 scriptname="`basename $0`"
 [ -z "$mtd_nvram" ] && mtd_nvram="`grep -m 1 \"nvram\" /proc/mtd | sed -e 's/mtd\(..\):.*/\1/g'`"
-F=nvram; FF="/home/${F}"
+F=nvram; FX="/home/backup"; FF="${FX}/${F}"
 { for f in $FF; do
 	h=$(hexdump -n64 -e'"%_c"' /dev/mtd${mtd_nvram})
 	[ "$h" = $'377*' ] && { wecho "backup: empty"; break; }
 	cat /dev/mtd$mtd_nvram > /tmp/${F}
 	#f=$f.gz; [ -f $f ] && continue; # TODO: force new backup if different
+	[ -d "${FX}" ] || mkdir -p "${FX}"
 	f=$f.gz; [ -f $f ] && break;
 	h=$(hexdump -vs1330 -n13 -e'"%_p"' /tmp/${F})
 	touch "/mnt/lg/cmn_data/model.${h%%.*}" "/mnt/user/model.${h%%.*}"; # expose model name
@@ -22,3 +23,8 @@ F=nvram; FF="/home/${F}"
 	cat /tmp/$F | gzip -1 > $f; sync; break
 done; }
 # >/dev/kmsg 2>&1
+
+f=RELEASE.cfg; cfg=/mnt/lg/cmn_data/$f; rdir=/mnt/lg/model; rcfg=$rdir/$f; bcfg=/home/backup/$f
+[ -f "$bcfg" ] || cat "$rcfg" > "$bcfg"
+[ -f "$cfg"  ] || sed -e 's/^\(eDebugMode,\).*$/\1EVENT/' "$rcfg" > "$cfg"
+[ -f "$cfg"  ] && mount -o bind "$cfg" "$rcfg"
