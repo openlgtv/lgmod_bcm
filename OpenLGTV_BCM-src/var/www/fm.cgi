@@ -565,8 +565,13 @@ function OnLoadSetCurrent(element)
 function mkdirDialog()
 	{
 	var newdiv = document.createElement("div");
+	var newdivWidth=716;
+	var newdivHeight=176;
+	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
+	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
+	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
@@ -589,7 +594,12 @@ function copyDialog()
 	{
 	dialog_win='copy';
 	var newdiv = document.createElement("div");
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
+	var newdivWidth=916;
+	var newdivHeight=276;
+	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
+	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
+	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	//var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&name=' + cpth + '/' + document.getElementById('link_' + side + current).name;
@@ -623,7 +633,12 @@ function moveDialog()
 	{
 	dialog_win='move';
 	var newdiv = document.createElement("div");
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
+	var newdivWidth=916;
+	var newdivHeight=276;
+	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
+	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
+	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	src=cpth + '/' + document.getElementById('link_' + side + current).name;
@@ -656,8 +671,13 @@ function moveDialog()
 function renameDialog()
 	{
 	var newdiv = document.createElement("div");
+	var newdivWidth=716;
+	var newdivHeight=176;
+	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
+	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
+	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	var kb = '<FONT color="black" size="+3"> \
@@ -680,8 +700,13 @@ function deleteDialog()
 	{
 	dialog_win='delete';
 	var newdiv = document.createElement("div");
+	var newdivWidth=716;
+	var newdivHeight=176;
+	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
+	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
 	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
+	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
 	src=cpth + '/' + document.getElementById('link_' + side + current).name;

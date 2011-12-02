@@ -8,7 +8,7 @@ md5password="`grep -m 1 ^root: /etc/shadow | cut -d: -f2`"
 if [ ! -f "/mnt/user/etc/httpd.conf" ]
 then
     echo "OpenLGTV_BCM-INFO: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..."
-    cat /etc/httpd.conf | sed 's/D:*/A:*/g' > /mnt/user/etc/httpd.conf
+    cat /etc/httpd.conf | sed -e 's/^D:*/A:*/g' -e 's/^I:/#I:/g' > /mnt/user/etc/httpd.conf
     if [ "`grep -m 1 ^root:x /etc/passwd`" = "" ]
     then
 	echo "OpenLGTV_BCM-WARN: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it"
