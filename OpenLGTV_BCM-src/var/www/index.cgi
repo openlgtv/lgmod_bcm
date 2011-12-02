@@ -17,10 +17,45 @@ then
 	echo "<META http-equiv='refresh' content='0;url=${FORM_auth}?${QUERY_STRING}'>" 
     fi
 else
-    #TODO: write pin authorization in JavaScript so /auth.cgi?auth=... could be used to authorize by pin to any local or remote sites (useful for OPENRELEASE button assignments to WebUI/FileManager/etc... (parental lock))
-    echo "<div style='position: absolute; left: 300px; top: 350px; width:600px; background-color:red;height:70px; font-size:50px; padding: 50px; border: 1px solid #D3D3D3;'>Enter PIN:</div>"
+    echo "<div style='position: absolute; left: 300px; top: 350px; width:600px; background-color:red;height:70px; font-size:50px; padding: 50px; border: 1px solid #D3D3D3;'><b>Enter PIN: &nbsp; <span id='pin'></span></b></div>"
+    echo -e "	<script type='text/javascript'> \n\
+	var pin='${pin}'; \n\
+	var pin2=''; \n\
+	var eventHandler = detectEvent; \n\
+	document['onkeydown'] = eventHandler; \n\
+	function detectEvent(e) { \n\
+	    var evt = e || window.event; \n\
+	    var key=evt.keyCode; \n\
+	    if ( key >= 48 & key <= 57 ) \n\
+	    { \n\
+		document.getElementById('pin').innerHTML += '*'; \n\
+		pin2 += String.fromCharCode(evt.keyCode); \n\
+	    } else if ( key == 13 ) \n\
+	    { \n\
+		if ( pin2 == pin ) \n\
+		{ "
+		    if [ -z "${QUERY_STRING}" ]
+		    then
+			echo "window.location.replace('home.cgi');"
+		    else
+			echo "window.location.replace('${FORM_auth}?${QUERY_STRING}');"
+		    fi
+		echo -e " \n\
+		} else {\n\
+		    document.getElementById('pin').innerHTML = ''; \n\
+		    pin2=''; \n\
+		} \n\
+	    } else if ( key == 461 ) \n\
+	    { \n
+		window.NetCastBack(); \n\
+	    } else if ( key == 1001 ) \n\
+	    { \n\
+		window.NetCastExit(); \n\
+	    } \n\
+	    return false; \n\
+	} \n\
+    </script>"
 fi
 ?>
 </HEAD>
-<BODY bgcolor="black">
 <? tail -n 11 /var/www/index.html ?>

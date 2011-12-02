@@ -203,7 +203,7 @@ function sleep(milliseconds)
 
 document.defaultAction = true;
 
-<? echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}\"; }" ?>
+<? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }" ?>
 
 // -->
 </script>
@@ -414,7 +414,7 @@ else
     if [ "$action" != "play" ]
     then
 	echo "<script type=\"text/javascript\">"
-	echo "function backToFM(){ window.location=\"fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}\"; }"
+	echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }"
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
     fi

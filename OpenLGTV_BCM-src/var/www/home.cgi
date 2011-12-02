@@ -90,6 +90,14 @@ function GoToNetCastLinks()
 					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value=""/>
 				</div>
 			</div>
+			<div id="txtPinParent" style="background-color:white;height:30px; font-size:16px;">
+				<div style="position: relative; left: 5px; top: 7px; height:23;">
+					WebUI [TV] PIN (type '0' to disable): 
+				</div>
+				<div style="position: relative; left: 300px; top: -22px;">
+					<input id="txtPin" name="qPin" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value=""/>
+				</div>
+			</div>
 			<?
 			 if [ "$FORM_run" = "Run" -a "$FORM_qPassw" != "" -a "$FORM_qUser" = "$FORM_qPassw" ]
 			 then
@@ -100,18 +108,29 @@ function GoToNetCastLinks()
 			    sed -i -e "s:^root\:$cur_encPassw:root\:$new_encPassw:g" /mnt/user/etc/shadow 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 			    echo '<div style="background-color:white;"><center><font size="+3" color="red"><b><span id="spanPASSSET">NEW PASSWORD SET !!!</span></b></font><br/><b>Password change to WebUI will take effect after reboot!</b></center></div>'
 			 fi
+			 if [ "$FORM_run" = "Run" -a "$FORM_qPin" != "" ]
+			 then
+			    pin="$FORM_qPin"
+			    if [ "$pin" != "0" ]
+			    then
+				echo "OpenLGTV BCM-INFO: WebUI: pin change" >> /var/log/OpenLGTV_BCM.log
+				echo "$pin" > /mnt/user/cfg/pin
+				echo "<div style='background-color:white;'><center><font size='+3' color='red'><b><span id='spanPASSSET'>NEW PIN TO WEBUI SET: $pin !!!</span></b></font><br/><b></b></center></div>"
+			    else
+				echo "OpenLGTV BCM-INFO: WebUI: pin disable" >> /var/log/OpenLGTV_BCM.log
+				echo "" > /mnt/user/cfg/pin
+				echo '<div style="background-color:white;"><center><font size="+3" color="red"><b><span id="spanPASSSET">PIN TO WEBUI - DISABLED !!!</span></b></font><br/><b></b></center></div>'
+			    fi
+			 fi
 			?>
-
 		</form>
 	</div>
 	<? if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]
 	then
 	    echo "<!--"
-	fi ?>
-	
+	fi 
 
-
-<? if [ "$HTTP_HOST" = "127.0.0.1:88" ]; then echo "<!-- "; fi ?>
+if [ "$HTTP_HOST" = "127.0.0.1:88" ]; then echo "<!-- "; fi ?>
 <div style="position: absolute; left: 5px; bottom: 110px; height:85; background-color:red; border: 1px solid #D3D3D3;">
 <div class="posthead"><center>Upload the firmware file (*.epk) to first partition of USB drive connected to USB1 port (FAT32 or NTFS)&nbsp;<br/>
 		              into LG_DTV dir if it's LG upgrade or (*.tar.sh) into OpenLGTV_BCM/upgrade if it's OpenLGTV BCM upgrade.</center></div><div class="posttext">
@@ -143,7 +162,6 @@ function GoToNetCastLinks()
 	then
 	    echo "-->"
 	fi ?>
-
 
 </body>
 </html>

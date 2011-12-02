@@ -156,7 +156,7 @@ function check(e)
 			//Delete the selected bookmark
 			DeleteBookmark();
 			}
-		else if (key==457|key==220) 
+		else if (key==457|key==19) 
 			{
 			//the info or pause button on the remote control have been pressed
 			//window.location='links.html';

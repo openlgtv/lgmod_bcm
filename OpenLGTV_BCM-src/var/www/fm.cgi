@@ -92,9 +92,6 @@ document.write('<style type="text/css">td.filename {width:800px;}</style>');
 
 <?
 
-#useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
-#useragent="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
-
 log_file=/var/log/fm.log
 
 if [ "$FORM_side" != "" ]
@@ -114,7 +111,6 @@ then
     export rpth="$FORM_rpth"
 fi
 
-#echo "<script type='text/javascript'>"
 if [ "$side" = "l" -a "$lpth" != "" ]
 then
     cpth="$lpth"
@@ -141,7 +137,6 @@ then
     sleep 1
     echo "window.location=dest;"
 fi
-#echo "</script>"
 
 if [ -n "$FORM_select" ]
 then
@@ -289,12 +284,12 @@ function check(e)
 		switch(key)
 			{
 			case  9: next = current; if (side=='l') { nside = 'r'; cpth=rpth; opth=lpth; } else { nside = 'l'; cpth=lpth; opth=rpth; }; break; //FAV/TAB
-			case 33: next = (1*current) - 10; break; //CH UP
-			case 34: next = (1*current) + 10; break; //CH DOWN
+			case 33: next = (1*current) - 10; break;                           //CH UP
+			case 34: next = (1*current) + 10; break;                           //CH DOWN
 			case 37: next = current; nside = 'l'; cpth=lpth; opth=rpth; break; //LEFT
-			case 38: next = current - col; break; //UP
+			case 38: next = current - col; break;                              //UP
 			case 39: next = current; nside = 'r'; cpth=rpth; opth=lpth; break; //RIGHT
-			case 40: next = (1*current) + col; break; //DOWN
+			case 40: next = (1*current) + col; break;                          //DOWN
 			}
 		if (key==9|key==33|key==34|key==37|key==38|key==39|key==40)
 		    {
@@ -922,30 +917,6 @@ fi
     IFS="$SIFS"
     echo '</tbody></table></td></tr></tbody>'
     echo '</table>'
-    ####echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME &nbsp; <font color="red">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font> &nbsp; <font color="ltgreen">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font> &nbsp; <font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font><font color="white"> &nbsp; [<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font><br/></center>'
-    #################echo '<center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <span onClick="javascript:renameDialog();"><font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME</span> &nbsp; <span onClick="javascript:deleteDialog();"><font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span> &nbsp; <span onClick="javascript:copyDialog();"><font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <span onClick="javascript:moveDialog();"><font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span> &nbsp; <span onClick="javascript:mkdirDialog();"><font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span><font color="white"> &nbsp; <span onClick='javascript:var dest=\'fm.cgi?type=related\&side=\' + side + \'&lpth=\' + cpth + \'&rpth=\' + cpth;window.location=dest;">[<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font></span><br/></center>'
-    ###echo '<font color="white">'
-    ###echo "<script type='text/javascript'>"
-    #echo "document.write(document.documentElement.clientWidth, '/', document.documentElement.clientHeight);" # document.body size in FF
-    #echo "document.write(window.innerWidth, '/', window.innerHeight);"                                       # window size, but including address, icons and bar in FF 5.0, real size of inner window on FF 7.0
-    ####echo "function windowResize() {"
-    ####echo "var fulltablestyle=document.getElementById('fulltable').style;"
-    ####echo "fulltablestyle.height=window.innerHeight-30;"
-    ####echo "document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;"
-    ####echo "document.getElementById('rpaneltbody').style.maxHeight=window.innerHeight-70;"
-    ####echo "document.body.style.height=window.innerHeight-20;"
-    #echo "document.getElementById('filename').style.maxWidth=(window.innerWidth/2)-250;"
-    #echo "var filenameWidth=(window.innerWidth/2)-250;"
-    #echo "var x = pointer.getElementsByClassName('filename'); \
-    #	  for (var i=0;i<x.length;i++) \
-    #	  { \
-    #	  x[i].style.maxWidth = filenameWidth; \
-    #	  }"
-    ####echo "}"
-    ##echo "windowResize();"
-    ###echo "window.onresize=windowResize();"
-    ###echo "</script>"
-    ###echo '</font>'
 ?>
 <!-- nobr><center><font size="+1" color="yellow"><font color="white">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> PLAY &nbsp; <span onClick="javascript:renameDialog();"><font color="white">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font> RENAME</span> &nbsp; <span onClick="javascript:deleteDialog();"><font color="FF3333">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span> &nbsp; <span onClick="javascript:copyDialog();"><font color="#00FF00">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span> &nbsp; <b>OpenLGTV BCM FileManager</b> by xeros &nbsp; <span onClick="javascript:moveDialog();"><font color="yellow">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span> &nbsp; <span onClick="javascript:mkdirDialog();"><font color="lightblue">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span><font color="white"> &nbsp; <span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + cpth + '&rpth=' + cpth;window.location=dest;">[<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font> SAME PATH</font></span><br/></center></nobr -->
 <center><table border="0" cellpadding="0" width="100%"><tr align="center"><td><font color="white" size="+1">[<img src="Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> <font size="+1" color="yellow">PLAY</font></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1"> RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;window.location=dest;">[<img src="Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1"> SAME PATH</font></span></td></tr></table></center>
