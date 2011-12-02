@@ -7,7 +7,8 @@ content-type: text/html
 <!-- Source code released under GPL License -->
 <HEAD>
 <? 
-if [ -z "`cat /mnt/user/cfg/pin`" ]
+pin="`cat /mnt/user/cfg/pin 2>/dev/null`"
+if [ -z "${pin}" ]
 then
     if [ -z "${QUERY_STRING}" ]
     then
@@ -15,18 +16,11 @@ then
     else
 	echo "<META http-equiv='refresh' content='0;url=${FORM_auth}?${QUERY_STRING}'>" 
     fi
+else
+    #TODO: write pin authorization in JavaScript so /auth.cgi?auth=... could be used to authorize by pin to any local or remote sites (useful for OPENRELEASE button assignments to WebUI/FileManager/etc... (parental lock))
+    echo "<div style='position: absolute; left: 300px; top: 350px; width:600px; background-color:red;height:70px; font-size:50px; padding: 50px; border: 1px solid #D3D3D3;'>Enter PIN:</div>"
 fi
 ?>
 </HEAD>
-<BODY>
-<FONT SIZE="+0">
-<CENTER>
-<BR/><BR/>
-<IMG SRC="Images/openlgtvbcm_logo.png" ALT="OpenLGTV BCM"/>
-<BR/>OpenLGTV BCM Web UI<BR/><BR/>
-[Work in Progress]<BR/>
-<? env ?>
-</CENTER>
-</FONT>
-</BODY>
-</HTML>
+<BODY bgcolor="black">
+<? tail -n 11 /var/www/index.html ?>
