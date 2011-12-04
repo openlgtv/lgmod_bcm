@@ -235,7 +235,7 @@ echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
 
 /etc/rc.d/rc.ether-wake &
 
-/etc/rc.d/rc.firewall
+/etc/rc.d/rc.firewall no_delete &
 
 /etc/rc.d/rc.httpd
 

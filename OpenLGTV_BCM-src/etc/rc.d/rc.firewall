@@ -8,21 +8,18 @@ firewall_dir1="/etc/firewall"
 firewall_dir2="/mnt/user/etc/firewall"
 count=0
 
+[ "$1" = "no_delete" ] && no_delete=1
+
 if [ "$disable_lg_network_upgrades" = "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: dropping NSU upgrades"
+    echo "OpenLGTV_BCM-INFO: rc.firewall: dropping NSU upgrades"
     if [ -z "`grep -m 1 snu.lge.com $hostsfile`" ]
     then
 	echo    "127.0.0.1		snu.lge.com snu.lge.com.usgcac.cdnetworks.net www.lge.co.kr test-btvnu.lge.com" >> $hostsfile
 	#echo     "8.8.8.8		www.lge.com www.lg.com" >> $hostsfile
 	echo "80.93.62.127		www.lge.com www.lg.com" >> $hostsfile
     fi
-    for ip in `cat ${firewall_dir1}/lg/*`
-    do
-	ifconfig lo:${count} ${ip} netmask 255.255.255.255
-	count=$((${count}+1))
-    done
-    echo "OpenLGTV_BCM-INFO: dropping NSU upgrades - done"
+    list=`grep -h -v '^#' ${firewall_dir1}/lg/*.drop 2>/dev/null`
 else
     if [ -n "`grep -m 1 snu.lge.com $hostsfile`" ]
     then
@@ -32,11 +29,33 @@ fi
 
 if [ "$enable_firewall" = "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: enabling firewall"
-    for ip in `cat ${firewall_dir1}/* ${firewall_dir2}/* 2>/dev/null`
+    echo "OpenLGTV_BCM-INFO: rc.firewall: enabling firewall"
+    list="$list `grep -h -v '^#' ${firewall_dir1}/*.drop ${firewall_dir2}/*.drop 2>/dev/null`"
+fi
+
+if [ "$disable_lg_network_upgrades" = "1" -o "$enable_firewall" = "1" ]
+then
+    for target in $list
     do
-	ifconfig lo:${count} ${ip} netmask 255.255.255.255
+	echo "OpenLGTV_BCM-DEBUG: rc.firewall: rejecting route from/to: $target"
+	#ifconfig lo:${count} ${target} netmask 255.255.255.255
+	netmask="${target#*/}"
+	if [ "${netmask}" != "${target}" ]
+	then
+	    ip="${target%/*}"
+	    if [ -n "${netmask:2,1}" ]
+	    then
+		[ -z "${no_delete}" ] && route del -net ${ip} netmask ${netmask} reject 2>/dev/null
+		route add -net ${ip} netmask ${netmask} reject
+	    else
+		[ -z "${no_delete}" ] && route del -net ${target} reject 2>/dev/null
+		route add -net ${target} reject
+	    fi
+	else
+	    [ -z "${no_delete}" ] && route del -host ${target} reject 2>/dev/null
+	    route add -host ${target} reject
+	fi
 	count=$((${count}+1))
     done
-    echo "OpenLGTV_BCM-INFO: firewall enabled"
+    echo "OpenLGTV_BCM-INFO: rc.firewall: finished"
 fi
