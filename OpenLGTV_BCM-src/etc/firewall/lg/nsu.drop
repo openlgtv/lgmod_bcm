@@ -1,3 +1,5 @@
+# List of dropped routes:
+# (host or network)[/(netmask or prefix for network)]
 61.110.198.104
 87.118.248.8
 91.194.205.36
