@@ -14,6 +14,8 @@ export addon_addon_mgr_bat="/mnt/addon/bin/addon_mgr.bat"
 export user_addon_mgr_bat="/mnt/user/netcast/addon_mgr.bat"
 export addon_extra_conf="/mnt/addon/browser/extra_conf"
 export user_extra_conf="/mnt/user/netcast/extra_conf"
+export user_opt="/mnt/user/netcast/opt"
+export addon_opt="/mnt/addon/browser/opt"
 export netcast_config_ok=1
 
 # Check for proper NetCast configs structure (might need to be extended in future)
@@ -209,6 +211,20 @@ if [ -f "/mnt/user/www/links.html" ]
 then
     echo "OpenLGTV_BCM-INFO: using customised /mnt/user/www/links.html as Internet Browser NetCast links page..."
     mount --bind /mnt/user/www/links.html /var/www/browser/links.html
+fi
+
+if [ -d "$user_opt" ]
+then
+    for opt_file in ${user_opt}/*
+    do
+	opt_file_name="${opt_file##*/}"
+	opt_file_dst="${addon_opt}/${opt_file_name}"
+	if [ -f "$opt_file_dst" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: using custom $opt_file as $opt_file_dst ..."
+	    mount --bind "$opt_file" "$opt_file_dst"
+	fi
+    done
 fi
 
 echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 10s delay ..."
