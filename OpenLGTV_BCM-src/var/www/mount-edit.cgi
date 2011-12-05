@@ -23,10 +23,6 @@ content-type: text/html
 # 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password] - up to 0.5.0-beta1
 # 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]#[0|1] - changed by 0.5.0-beta2 (added field for dir listing cache)
 
-#echo '<div style="position: absolute; left: 650px; top: 10px; width:300px; background-color:white;height:50px;">'
-#echo ndrv: $FORM_qURL $FORM_qPassw $FORM_qUser $FORM_radio1 $FORM_check1 $opt $uname $pass
-#echo '</div>'
-
 id="$FORM_id"
 
 if [ "$FORM_qURL" != "" -a "$FORM_radio1" != "" -a "$id" != "" ]
@@ -45,9 +41,6 @@ then
 	precache=0
     fi
 
-    #echo '<div style="position: absolute; left: 650px; top: 10px; width:400px; background-color:white;height:150px;">'
-    #echo form: $FORM_qURL $FORM_qPassw $FORM_qUser $FORM_radio1 $FORM_check1
-    #echo "save: $automount#$FORM_radio1#$FORM_qURL#NetShare##$FORM_qUser#$FORM_qPassw"
     cp -f /mnt/user/cfg/ndrvtab /mnt/user/cfg/ndrvtab.bck
     if [ "$FORM_qPath" != "" ]
     then
@@ -62,7 +55,6 @@ then
     else
 	sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache?" /mnt/user/cfg/ndrvtab
     fi
-    #echo '</div>'
 fi
 
 if [ -f "/mnt/user/cfg/ndrvtab" -a "$id" != "" ]
@@ -76,7 +68,6 @@ then
     uname="`echo $ndrv | cut -d# -f6`"
     pass="`echo $ndrv | cut -d# -f7`"
     precache="`echo $ndrv | cut -d# -f8`"
-    #mntstat=`mount | grep "$src.*$dst"`
 fi
 
 if [ "$FORM_mount" = "1" ]
@@ -111,13 +102,7 @@ fi
 				    then
 					if [ -f "/mnt/user/cfg/ndrvtab" ]
 					then
-					    # TODO: replace this ugly check
-					    #if [ ! -d "/mnt/usb1/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive1/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive2/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive3/OpenLGTV_BCM" -a ! -d "/mnt/usb1/Drive4/OpenLGTV_BCM" -a ! -d "/mnt/usb2/Drive4/OpenLGTV_BCM" ]
-					    #then
-						#echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount button: You need to plug USB stick with OpenLGTV_BCM dir first\" style=\"width:600px\" disabled />"
-					    #else
-						echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount\" style=\"width:100px\" />"
-					    #fi
+					    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount\" style=\"width:100px\" />"
 					else
 					    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount button: You need to save first to be able to mount\" style=\"width:600px\" disabled />"
 					fi
@@ -199,12 +184,7 @@ fi
 				    <?
 					if [ "$FORM_save" = "1" ]
 					then
-					    #if [ -f "/tmp/settings.save" ]
-					    #then
-						#mv /mnt/user/cfg/settings /mnt/user/cfg/settings.bck
-						#mv /tmp/settings.save /mnt/user/cfg/settings
-						echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts file: /mnt/user/cfg/ndrvtab changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
-					    #fi
+					    echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts file: /mnt/user/cfg/ndrvtab changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
 					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
 					else
 					    if [ "$mounting_error" = "1" ]

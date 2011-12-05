@@ -17,17 +17,11 @@ content-type: text/html
 			rm -f /tmp/settings.save
 			for i in `cat /mnt/user/cfg/settings | sort | cut -d\# -f1`
 			do
-			    #opt_name=`echo $i | awk -F= '{print $1}'`
 			    opt_name="${i%=*}"
-			    #opt_val=`echo $i | awk -F= '{print $2}'`
 			    opt_val="${i#*=}"
-			    #opt_def="`grep ^$opt_name /mnt/user/cfg/settings.default`"
 			    opt_def="`grep -m 1 ^$opt_name /etc/default/settings.default`"
-			    #opt_desc="`echo $opt_def | awk -F# '{print $2}'`"
 			    opt_desc="${opt_def#*\#}"
-			    [ -z "$opt_desc" ] && opt_desc="DEPRECIATED, WILL BE REMOVED SOON"
-			    #opt_def_val="`echo $opt_def | awk -F# '{print $1}' | awk -F= '{print $2}'`"
-			    #opt_def_valx="`echo $opt_def | awk -F# '{print $1}' | awk -F= '{print $2}'`"
+			    [ -z "$opt_desc" ] && opt_desc="NOT SUPPORTED"
 			    opt_def_valx1="${opt_def%\#*}"
 			    opt_def_valx="${opt_def#*=}"
 			    opt_def_val="${opt_def_valx:0:1}"
@@ -40,10 +34,8 @@ content-type: text/html
 				fi
 				echo "$opt_name=$opt_val" >> /tmp/settings.save
 			    else
-				#opt_val=`echo $i | awk -F= '{print $2}'`
 				opt_val="${i#*=}"
 			    fi
-			    #opt_checked=`if [ "$opt_val" = "1" ]; then echo checked; fi`
 			    opt_checked=""
 			    [ "$opt_val" = "1" ] && opt_checked=checked
 			    echo "<div id=\"check"$id_nr"Parent\" style=\"background-color:white;height:32px;\">"
@@ -51,10 +43,8 @@ content-type: text/html
 			    echo "<input type=\"checkbox\" name=\"check$id_nr\" value=\"1\" $opt_checked><div style='display: inline-block; width: 290px; font-size: 16px;'>"
 			    if [ "$opt_val" != "$opt_def_val" ]
 			    then
-				#echo "<font color='red'>"
 				echo "<font color='#D30105'>"
 			    else
-				#echo "<font color='green'>"
 				echo "<font color='#0E5900'>"
 			    fi
 			    echo "<b>$opt_name</b></font></div>"

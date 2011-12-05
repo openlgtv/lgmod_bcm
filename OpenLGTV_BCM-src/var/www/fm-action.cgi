@@ -49,10 +49,6 @@ Content-type: text/html
 <!--
 
 <?
-
-#useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
-#useragent="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
-
 log_file=/var/log/fm.log
 
 if [ -n "$FORM_side" ]
@@ -221,16 +217,11 @@ fi
 
 <?
 
-#echo "spth: $spth dpth: $dpth lpth: $lpth rpth: $rpth"
-
 echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
 
-#echo '<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px; background-color:white;">'
 echo '<div style="width:85%; margin:auto; font-size:16px; background-color:white;">'
 
 [ "$FORM_pid" != "" ] && pid="$FORM_pid"
-
-#echo "spth $spth dpth $dpth lpth $lpth rpth $rpth lpthx $lpthx rpthx $rpthx side $side pid $pid<br/><br/>" | tee -a /tmp/log.log
 
 if [ -n "$FORM_cancel" -a -n "$pid" ]
 then
@@ -246,32 +237,17 @@ then
 	    kill -9 "$pid" 2>&1
 	fi
     fi
-    #echo "side: $side lpthx: $lpthx rpthx: $rpthx"
     timeout=1000
-    #if [ "$FORM_onlystatus" != "1" ]
-    #then
-    #	echo "<script type=\"text/javascript\">setTimeout(\"history.go(-3)\",$timeout);</script>"
-    #else
-	echo "<script type=\"text/javascript\">"
-	echo "setTimeout(\"backToFM()\",$timeout);"
-	echo "</script>"
-    #fi
+    echo "<script type=\"text/javascript\">"
+    echo "setTimeout(\"backToFM()\",$timeout);"
+    echo "</script>"
     echo "</font></div></center></body></head></html>"
     exit 0
 fi
 
 if [ "$action" = "play" ]
 then
-    #echo '<script type="text/javascript" src="player/base64.js"></script>'
     echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
-    #sleep 2
-    ####echo "<script type='text/javascript'>"
-    #echo "window.location='file:///mnt/browser/pages/player/index.html?lg_media_url=base64(http://127.0.0.1:88/root$spth)';"
-    #echo "sleep(2000);"
-    #echo "window.location=\"root$spth\";"
-    ####echo "function playback() { window.location=\"root$spth\"; }"
-    ####echo "setTimeout(\"playback()\",2700);"
-    ####echo "</script>"
 fi
 
 if [ "$FORM_confirm" != "yes" ]
@@ -288,7 +264,6 @@ then
 	    if [ "$action" != "play" ]
 	    then
 		echo "UNRECOGNIZED ACTION!"
-		#sleep 2
 		echo '<script type="text/javascript">setTimeout(\"history.go(-1)\",2000);</script>"'
 	    fi
 	fi
@@ -324,23 +299,15 @@ else
 	time_start_status="`date +'%s'`"
 	echo "<div id='status' style='font-size: 30px;'></div>"
 	dfile="`basename "$spth"`"
-	#echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='javascript:history.go(-2);'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
 	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
 	counter=0
 	[ -z "$ssize" ] && ssize=1
 	sleep 1
-	#echo "ssize: $ssize"
 	for i in `seq 2000`
 	do
-	    #ssize=$(busybox stat -c "%s " "$spth")        # only files
-	    #dsize=$(busybox stat -c "%s" "$dpth/$dfile")
-	    #ssize=$(du -s "$spth" | cut -f1)              # in KB, dirs and files but on one filesystem - different values on different fs
-	    #dsize=$(du -s "$dpth/$dfile" | cut -f1)
-	    #echo "i: $i"
 	    SIFS="$IFS" IFS=$'\n'
 	    dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') 
 	    IFS="$SIFS"
-	    #echo "ssize $ssize dsize $dsize"
 	    [ "$dsize" = "" ] && dsize=0
 	    percent="$(($dsize * 100 / $ssize))"
 	    time_now="`date +'%s'`"
@@ -348,9 +315,7 @@ else
 	    elapsed_status=$((${time_now}-${time_start_status}))
 	    average_bps=$((${dsize}/${elapsed}))
 	    average_kbps=$((${average_bps}/1024))
-	    #echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent%<br/><br/>Elapsed time: $counter seconds<br/><br/>';</script>"
 	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize / $ssize bytes<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
-	    #echo "Copied: $dsize / $ssize bytes<br/><br/>Progress: $percent%<br/><br/>"
 	    sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
@@ -406,11 +371,6 @@ else
     else
 	timeout=8000
     fi
-    #if [ "$FORM_onlystatus" != "1" ]
-    #then
-	##echo "<script type=\"text/javascript\">setTimeout(\"history.go(-2)\",$timeout);</script>"
-	#echo "<script type=\"text/javascript\">setTimeout(\"history.go(-1)\",$timeout);</script>"
-    #else
     if [ "$action" != "play" ]
     then
 	echo "<script type=\"text/javascript\">"
@@ -418,7 +378,6 @@ else
 	echo "setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
     fi
-    #fi
 fi
 echo '</div>'
 
