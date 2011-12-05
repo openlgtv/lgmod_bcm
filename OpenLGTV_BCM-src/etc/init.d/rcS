@@ -246,7 +246,7 @@ if [ -f "/mnt/user/cfg/mouse_delay" ]
 then
     export dfbdelay=`cat /mnt/user/cfg/mouse_delay`
 else
-    export dfbdelay=18
+    export dfbdelay=19
 fi
 
 (sleep $dfbdelay; /etc/rc.d/rc.directfb)&

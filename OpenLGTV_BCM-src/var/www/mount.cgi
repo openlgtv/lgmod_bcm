@@ -20,7 +20,8 @@ content-type: text/html
 			</div>
 
 <?
-# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]
+# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password] - up to 0.5.0-beta1
+# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]#[0|1] - changed by 0.5.0-beta2 (added field for dir listing cache)
 
 echo "<div id='info' style='background-color:white;height:30px;'>"
 echo "<table width='100%' border='1' style='background-color:pink;font-weight:bold;'><tr><td class='mountsrc'>Source</td><td class='mountdst'>Mount path</td><td class='mountfstype'>Type</td><td class='mountuname'>Username</td><td class='mountauto'>AutoMnt</td><td class='mountedit'>Edit</td></tr></table>"
@@ -44,13 +45,16 @@ then
 
     cat /mnt/user/cfg/ndrvtab | while read ndrv
     do
-	automount=`echo $ndrv | awk -F# '{print $1}'`
-	fs_type=`echo $ndrv | awk -F# '{print $2}'`
-	src=`echo $ndrv | awk -F# '{print $3}'`
-	dst=`echo $ndrv | awk -F# '{print $4}'`
-	opt=`echo $ndrv | awk -F# '{print $5}'`
-	uname=`echo $ndrv | awk -F# '{print $6}'`
-	pass=`echo $ndrv | awk -F# '{print $7}'`
+	automount=`echo $ndrv | cut -d# -f1`
+	fs_type=`echo $ndrv | cut -d# -f2`
+	src=`echo $ndrv | cut -d# -f3`
+	dst=`echo $ndrv | cut -d# -f4`
+	# not needed for just listed table
+	# TODO: rewrite command to remove 'echo' + 'cut' and use just shell string substitutions to improve performance
+	##opt=`echo $ndrv | cut -d# -f5`
+	uname=`echo $ndrv | cut -d# -f6`
+	##pass=`echo $ndrv | cut -d# -f7`
+	##precache=`echo $ndrv | cut -d# -f8`
 	#mntstat=`mount | grep "$src.*$dst"`
 	echo "<div id='link${link_id}Parent' style='background-color:white;height:40px;'>"
 	echo "<table width='100%' border='1'><tr><td class='mountsrc'>$src</td><td class='mountdst'>$dst</td><td class='mountfstype'>$fs_type</td><td class='mountuname'>$uname</td><td class='mountauto'>$automount</td>"

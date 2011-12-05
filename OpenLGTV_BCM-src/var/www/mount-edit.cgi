@@ -20,8 +20,8 @@ content-type: text/html
 			</div>
 
 <?
-# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]
-# for now only one mount point is supported, could be extended in future
+# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password] - up to 0.5.0-beta1
+# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]#[0|1] - changed by 0.5.0-beta2 (added field for dir listing cache)
 
 #echo '<div style="position: absolute; left: 650px; top: 10px; width:300px; background-color:white;height:50px;">'
 #echo ndrv: $FORM_qURL $FORM_qPassw $FORM_qUser $FORM_radio1 $FORM_check1 $opt $uname $pass
@@ -37,7 +37,14 @@ then
     else
 	automount=0
     fi
-    
+
+    if [ "$FORM_check2" = "precache" ]
+    then
+	precache=1
+    else
+	precache=0
+    fi
+
     #echo '<div style="position: absolute; left: 650px; top: 10px; width:400px; background-color:white;height:150px;">'
     #echo form: $FORM_qURL $FORM_qPassw $FORM_qUser $FORM_radio1 $FORM_check1
     #echo "save: $automount#$FORM_radio1#$FORM_qURL#NetShare##$FORM_qUser#$FORM_qPassw"
@@ -51,9 +58,9 @@ then
     
     if [ "`cat /mnt/user/cfg/ndrvtab | wc -l`" -lt "$id" ]
     then
-	echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw" >> /mnt/user/cfg/ndrvtab
+	echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache" >> /mnt/user/cfg/ndrvtab
     else
-	sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw?" /mnt/user/cfg/ndrvtab
+	sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache?" /mnt/user/cfg/ndrvtab
     fi
     #echo '</div>'
 fi
@@ -68,6 +75,7 @@ then
     opt="`echo $ndrv | cut -d# -f5`"
     uname="`echo $ndrv | cut -d# -f6`"
     pass="`echo $ndrv | cut -d# -f7`"
+    precache="`echo $ndrv | cut -d# -f8`"
     #mntstat=`mount | grep "$src.*$dst"`
 fi
 
@@ -171,6 +179,16 @@ fi
 					echo '<input type="checkbox" name="check1" value="automount" checked> AutoMount'
 				   else
 					echo '<input type="checkbox" name="check1" value="automount"> AutoMount'
+				   fi ?>
+				</div>
+			</div>
+			<div id="check2Parent" style="background-color:white;height:40px; font-size:16px;">
+				<div style="position: relative; left: 5px; top: 5px;">
+				<? if [ "$precache" = "1" ]
+				   then
+					echo '<input type="checkbox" name="check2" value="precache" checked> Precache directory listing for media player (do not enable when there is no invisible dirs problem)'
+				   else
+					echo '<input type="checkbox" name="check2" value="precache"> Precache directory listing for media player (do not enable when there is no invisible dirs problem)'
 				   fi ?>
 				</div>
 			</div>

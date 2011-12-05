@@ -38,10 +38,11 @@ then
 	opt="`echo $ndrv | cut -d# -f5`"
 	uname="`echo $ndrv | cut -d# -f6`"
 	pass="`echo $ndrv | cut -d# -f7`"
+	precache="`echo $ndrv | cut -d# -f8`"
 	passHidden="*password*"
 	#mntstat=`mount | grep "$src.*$dst"`
 	##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
-	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden ..."
+	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden precache=$precache ..."
 	if [ -z "`grep -m 1 \"^$src \" /proc/mounts`" ]
 	then
 	    if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
@@ -76,7 +77,7 @@ then
 		#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		if [ -d "$full_dst" ]
 		then
-		    echo "OpenLGTV_BCM-DEBUG: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden ..."
+		    echo "OpenLGTV_BCM-DEBUG: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden precache=$precache..."
 		    if [ "$fs_type" = "cifs" ]
 		    then
 			if [ "$WebUI_MOUNT" = "1" ]
@@ -106,11 +107,13 @@ then
 		    then
 			echo "OpenLGTV_BCM-ERROR: mounting network share has not succeeded - check yours share configuration"
 			exit $mount_err_code
-		    ####else
-			#####echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
+		    fi
+		    if [ "$precache" = "1" ]
+		    then
+			echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
 			#$(sleep 10; echo nice -n 20 ls -alR "$full_dst") > /dev/null 2>&1 &
 			#$(sleep 10; echo nice -n 20 ls -aR "$full_dst") > /dev/null 2>&1 &
-			#####(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
+			(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
 		    fi
 		else
 		    echo echo "OpenLGTV_BCM-WARNING: dir $full_dst does not exist, share $src with set mount point $dst not mounted"
