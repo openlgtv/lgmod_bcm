@@ -18,7 +18,6 @@ then
 	if [ "$2" != "" ]
 	then
 	    id="$2"
-	    #read_ethwaketab="head -n $id $ethwaketab | tail -n 1"
 	    read_ethwaketab="head -n $id $ethwaketab"
 	else
 	    echo "OpenLGTV_BCM-ERROR: rc.etherwake: found Ether Wake configuration file $ethwaketab but mounting from WebUI needs ID number as argument..."
@@ -29,14 +28,18 @@ then
     fi
     $read_ethwaketab | if [ "$WebUI_WAKE" = "1" ]; then tail -n 1; else cat; fi | while read ethwake
     do
-	ew_autowake="`echo $ethwake | cut -d# -f1`"
-	ew_name="`echo $ethwake | cut -d# -f2`"
-	ew_ip="`echo $ethwake | cut -d# -f3`"
-	ew_mac="`echo $ethwake | cut -d# -f4`"
-	ew_pass="`echo $ethwake | cut -d# -f5`"
-	ew_opt="`echo $ethwake | cut -d# -f6`"
+	ew_autowake="${ethwake%%#*}"
+	ethwake_2="${ethwake#*\#}"
+	ew_name="${ethwake_2%%#*}"
+	ethwake_3="${ethwake_2#*\#}"
+	ew_ip="${ethwake_3%%#*}"
+	ethwake_4="${ethwake_3#*\#}"
+	ew_mac="${ethwake_4%%#*}"
+	ethwake_5="${ethwake_4#*\#}"
+	ew_pass="${ethwake_5%%#*}"
+	ethwake_6="${ethwake_5#*\#}"
+	ew_opt="${ethwake_6%%#*}"
 	[ -n "$ew_pass" ] && ew_passHidden="*password*"
-	##echo ethwake: $ew_autowake $ew_name $ew_ip $ew_mac $ew_pass $ew_opt
 	echo "OpenLGTV_BCM-DEBUG: rc.etherwake: Ether Wake settings: ew_autowake=$ew_autowake ew_name=$ew_name ew_ip=$ew_ip ew_mac=$ew_mac ew_pass=$ew_passHidden ew_opt=$ew_opt ..."
 	if [ "$ew_autowake" = "1" -o "$WebUI_WAKE" = "1" ]
 	then

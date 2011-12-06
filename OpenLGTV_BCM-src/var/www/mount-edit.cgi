@@ -5,7 +5,6 @@ content-type: text/html
 
 <html>
 <? include/keycontrol.cgi.inc ?>
-
 	<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px;">
 		<form id="URL" name="URL" action="mount-edit.cgi" method="GET">
 			<? 
@@ -33,14 +32,12 @@ then
     else
 	automount=0
     fi
-
     if [ "$FORM_check2" = "precache" ]
     then
 	precache=1
     else
 	precache=0
     fi
-
     cp -f /mnt/user/cfg/ndrvtab /mnt/user/cfg/ndrvtab.bck
     if [ "$FORM_qPath" != "" ]
     then
@@ -60,14 +57,21 @@ fi
 if [ -f "/mnt/user/cfg/ndrvtab" -a "$id" != "" ]
 then
     ndrv="`head -n $FORM_id /mnt/user/cfg/ndrvtab | tail -n 1`"
-    automount="`echo $ndrv | cut -d# -f1`"
-    fs_type="`echo $ndrv | cut -d# -f2`"
-    src="`echo $ndrv | cut -d# -f3`"
-    dst="`echo $ndrv | cut -d# -f4`"
-    opt="`echo $ndrv | cut -d# -f5`"
-    uname="`echo $ndrv | cut -d# -f6`"
-    pass="`echo $ndrv | cut -d# -f7`"
-    precache="`echo $ndrv | cut -d# -f8`"
+    automount="${ndrv%%#*}"
+    ndrv_2="${ndrv#*\#}"
+    fs_type="${ndrv_2%%#*}"
+    ndrv_3="${ndrv_2#*\#}"
+    src="${ndrv_3%%#*}"
+    ndrv_4="${ndrv_3#*\#}"
+    dst="${ndrv_4%%#*}"
+    ndrv_5="${ndrv_4#*\#}"
+    opt="${ndrv_5%%#*}"
+    ndrv_6="${ndrv_5#*\#}"
+    uname="${ndrv_6%%#*}"
+    ndrv_7="${ndrv_6#*\#}"
+    pass="${ndrv_7%%#*}"
+    ndrv_8="${ndrv_7#*\#}"
+    precache="${ndrv_8%%#*}"
 fi
 
 if [ "$FORM_mount" = "1" ]
@@ -88,7 +92,7 @@ fi
 
 if [ "$FORM_umount" = "1" ]
 then
-    share_path="`grep -m 1 "$dst " /proc/mounts | awk '{print $2}'`"
+    share_path="`grep -m 1 "$dst " /proc/mounts | cut -d' ' -f2`"
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to unmount NetShare: $share_path id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
     umount "$share_path" >> /var/log/OpenLGTV_BCM.log 2>&1
 fi
@@ -199,7 +203,5 @@ fi
 			</div>
 		</form>
 	</div>	
-
-
 </body>
 </html>

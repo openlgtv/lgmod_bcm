@@ -20,7 +20,6 @@ then
 	if [ "$2" != "" ]
 	then
 	    id="$2"
-	    #read_ndrvtab="head -n $id $ndrvtab | tail -n 1"
 	    read_ndrvtab="head -n $id $ndrvtab"
 	else
 	    echo "OpenLGTV_BCM-ERROR: found Network Share configuration file $ndrvtab but mounting from WebUI needs Share ID number as argument..."
@@ -31,17 +30,22 @@ then
     fi
     $read_ndrvtab | if [ "$WebUI_MOUNT" = "1" ]; then tail -n 1; else cat; fi | sort -k4 -t# | while read ndrv
     do
-	automount="`echo $ndrv | cut -d# -f1`"
-	fs_type="`echo $ndrv | cut -d# -f2`"
-	src="`echo $ndrv | cut -d# -f3`"
-	dst="`echo $ndrv | cut -d# -f4`"
-	opt="`echo $ndrv | cut -d# -f5`"
-	uname="`echo $ndrv | cut -d# -f6`"
-	pass="`echo $ndrv | cut -d# -f7`"
-	precache="`echo $ndrv | cut -d# -f8`"
+	automount="${ndrv%%#*}"
+	ndrv_2="${ndrv#*\#}"
+	fs_type="${ndrv_2%%#*}"
+	ndrv_3="${ndrv_2#*\#}"
+	src="${ndrv_3%%#*}"
+	ndrv_4="${ndrv_3#*\#}"
+	dst="${ndrv_4%%#*}"
+	ndrv_5="${ndrv_4#*\#}"
+	opt="${ndrv_5%%#*}"
+	ndrv_6="${ndrv_5#*\#}"
+	uname="${ndrv_6%%#*}"
+	ndrv_7="${ndrv_6#*\#}"
+	pass="${ndrv_7%%#*}"
+	ndrv_8="${ndrv_7#*\#}"
+	precache="${ndrv_8%%#*}"
 	passHidden="*password*"
-	#mntstat=`mount | grep "$src.*$dst"`
-	##echo ndrv: $automount $fs_type $src $dst $opt $uname $pass
 	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden precache=$precache ..."
 	if [ -z "`grep -m 1 \"^$src \" /proc/mounts`" ]
 	then
