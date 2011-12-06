@@ -3,7 +3,6 @@
 // changed by xeros
 // Source code released under GPL License
 
-
 //******** MOBILE PHONE-STYLE KEYPAD *********
 var keys = new Array();
 
@@ -292,9 +291,7 @@ function check(e)
 				//Move to the next key on the keyboard
 				var code=document.links['c' + next].name;
 				document.links['c' + next].focus();
-				//document.images['i' + next].src = 'Images/Keyboard/' + next + 'b.png';
 				document.images['i' + next].src = 'Images/Keyboard/bt_focus.png';
-				//document.images['i' + current].src = 'Images/Keyboard/' + current + 'n.png';
 				document.images['i' + current].src = 'Images/Keyboard/bt_nofocus.png';
 				current = next;
 				}
@@ -316,10 +313,8 @@ function check(e)
 			{
 			//Simulate click on button elements for OK remote button
 			currElementName=PageElements[currElementIndex].value;
-			//if ((PageElements[currElementIndex].type == 'button')|(PageElements[currElementIndex].type == 'checkbox'))
 			if (PageElements[currElementIndex].type == 'button')
 				{
-				    //document.forms['URL'].elements[currElementName].click();
 				    document.getElementById(currElementName).click();
 				}
 			else if (PageElements[currElementIndex].type == 'txt' & txt_edit == '1')
@@ -342,7 +337,6 @@ function check(e)
 				}
 			else if (PageElements[currElementIndex].type == 'checkbox')
 				{
-				    //document.getElementById(currElementName).click();
 				    document.forms['URL'].elements[currElementName].click();
 				}
 			return false;
@@ -458,8 +452,6 @@ function check(e)
 		else if (key==403) 
 			{
 			//the red button on the remote control have been pressed
-			//Switch to the previous control
-			//PrevControl();
 			//go to NetCast links
 			if(typeof GoToNetCastLinks == 'function')
 			    {
@@ -474,8 +466,6 @@ function check(e)
 		else if (key==404) 
 			{
 			//the green button on the remote control have been pressed
-			//Switch to the next control
-			//NextControl();
 			//FileManager
 			window.location='fm.cgi?type=related&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2';
 			return false;
@@ -712,8 +702,7 @@ function OnLoadSetCurrent()
 	document.links['c1'].focus();
 	
 	//Setting the current input control 
-	//currElementIndex=0;
-	currElementIndex=6;
+	currElementIndex=7;
 	checkElementPlus(currElementIndex);
 	currElementName=PageElements[currElementIndex].value;
 	//Change the background color of selected control
@@ -722,8 +711,6 @@ function OnLoadSetCurrent()
 	d.style.backgroundColor=ParentFocusColor;
 	if (document.getElementById('spanSAVED')) {
 	    document.getElementById('spanSAVED').innerHTML='SETTINGS SAVED !!!';
-	    //sleep(300);
-	    //document.getElementById('spanSAVED').innerHTML='-';
 	}
 }
 

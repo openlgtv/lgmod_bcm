@@ -93,14 +93,14 @@ a.menubutton:hover {
 	color:red;
 }
 
-.mountsrc{
+.mountsrc, .ew_name{
 	width:300px;
 	max-width:300px;
 	overflow:hidden;
 	white-space:nowrap;
 }
 
-.mountdst{
+.mountdst, .ew_ip, .ew_mac{
 	width:190px;
 	max-width:190px;
 	overflow:hidden;
@@ -114,7 +114,7 @@ a.menubutton:hover {
 	text-align:center;
 }
 
-.mountuname{
+.mountuname, .ew_pass, .ew_opt, .ew_autowake{
 	width:100px;
 	max-width:100px;
 	overflow:hidden;
@@ -122,14 +122,7 @@ a.menubutton:hover {
 	white-space:nowrap;
 }
 
-.mountauto{
-	width:80px;
-	max-width:80px;
-	overflow:hidden;
-	text-align:center;
-}
-
-.mountedit{
+.mountauto, .mountedit, .ew_edit{
 	width:80px;
 	max-width:80px;
 	overflow:hidden;

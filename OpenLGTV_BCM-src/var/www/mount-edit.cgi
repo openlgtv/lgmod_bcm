@@ -5,16 +5,23 @@ content-type: text/html
 
 <html>
 <? include/keycontrol.cgi.inc ?>
-	<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px;">
+	<div style="position: absolute; left: 10px; top: 10px; width:880px; font-size:16px;">
 		<form id="URL" name="URL" action="mount-edit.cgi" method="GET">
 			<? 
-			    export pagename="Network Share Mounts"
+			    if [ "$FORM_type" = "etherwake" ]
+			    then
+				input_file=/mnt/user/cfg/ethwaketab
+				export pagename="Ether Wake"
+			    else
+				input_file=/mnt/user/cfg/ndrvtab
+				export pagename="Network Shares"
+			    fi
 			    include/header_links.cgi.inc
 			?>
 			<div id="textOnly" style="background-color:white;height:50px;">
 				<div style="position: relative; left: 5px; top: 0px;">
-					<br />
-					<center><b>Note: Relative destination mount paths need FAT/NTFS formated USB storage device.</b></center><br />
+					<? [ "$FORM_type" != "etherwake" ] && echo "<br /><center><b>Note: Relative destination mount paths need FAT/NTFS formated USB storage device.</b></center><br />" ?>
+					<? [ "$FORM_type" = "etherwake" ]  && echo "<br /><center><b>Wake remotely machines which support WakeOnLan feature</b></center><br />" ?>
 				</div>
 			</div>
 
@@ -26,69 +33,95 @@ id="$FORM_id"
 
 if [ "$FORM_qURL" != "" -a "$FORM_radio1" != "" -a "$id" != "" ]
 then
-    if [ "$FORM_check1" = "automount" ]
-    then
-	automount=1
-    else
-	automount=0
-    fi
-    if [ "$FORM_check2" = "precache" ]
-    then
-	precache=1
-    else
-	precache=0
-    fi
-    cp -f /mnt/user/cfg/ndrvtab /mnt/user/cfg/ndrvtab.bck
+    automount=0
+    precache=0
+    [ "$FORM_check1" = "automount" ] && automount=1
+    [ "$FORM_check2" = "precache" ]  && precache=1
+    cp -f ${input_file} ${input_file}.bck
     if [ "$FORM_qPath" != "" ]
     then
 	qPath="$FORM_qPath"
     else
 	qPath="NetShare"
     fi
-    
-    if [ "`cat /mnt/user/cfg/ndrvtab | wc -l`" -lt "$id" ]
+    if [ "`cat ${input_file} | wc -l`" -lt "$id" ]
     then
-	echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache" >> /mnt/user/cfg/ndrvtab
+	if [ "$FORM_type" = "etherwake" ]
+	then
+	    # (autowake on boot:0/1)#(hostname)#[ip.address]#(MAC:address)#[pa:ss:wo:rd]#[options]#
+	    echo "$automount#$FORM_qURL#$FORM_qUser#$FORM_qPassw#$qPath##" >> ${input_file}
+	else
+	    echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache" >> ${input_file}
+	fi
     else
-	sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache?" /mnt/user/cfg/ndrvtab
+	if [ "$FORM_type" = "etherwake" ]
+	then
+	    sed -i -e "$id s?.*?$automount#$FORM_qURL#$FORM_qUser#$FORM_qPassw#$qPath##?" ${input_file}
+	else
+	    sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache?" ${input_file}
+	fi
     fi
 fi
 
-if [ -f "/mnt/user/cfg/ndrvtab" -a "$id" != "" ]
+if [ -f "${input_file}" -a "$id" != "" ]
 then
-    ndrv="`head -n $FORM_id /mnt/user/cfg/ndrvtab | tail -n 1`"
-    automount="${ndrv%%#*}"
+    ndrv="`head -n $FORM_id ${input_file} | tail -n 1`"
     ndrv_2="${ndrv#*\#}"
-    fs_type="${ndrv_2%%#*}"
     ndrv_3="${ndrv_2#*\#}"
-    src="${ndrv_3%%#*}"
     ndrv_4="${ndrv_3#*\#}"
-    dst="${ndrv_4%%#*}"
     ndrv_5="${ndrv_4#*\#}"
-    opt="${ndrv_5%%#*}"
     ndrv_6="${ndrv_5#*\#}"
-    uname="${ndrv_6%%#*}"
     ndrv_7="${ndrv_6#*\#}"
-    pass="${ndrv_7%%#*}"
     ndrv_8="${ndrv_7#*\#}"
-    precache="${ndrv_8%%#*}"
+    automount="${ndrv%%#*}"
+    if [ "$FORM_type" = "etherwake" ]
+    then
+	automntname="AutoWake on boot"
+	ew_autowake="${ndrv%%#*}"
+	ew_name="${ndrv_2%%#*}"
+	ew_ip="${ndrv_3%%#*}"
+	ew_mac="${ndrv_4%%#*}"
+	ew_pass="${ndrv_5%%#*}"
+	ew_opt="${ndrv_6%%#*}"
+	# ugly variables but make the code changes minimal
+	src="${ew_name}"
+	uname="${ew_ip}"
+	pass="${ew_mac}"
+	dst="${ew_pass}"
+    else
+	automntname="AutoMount"
+	fs_type="${ndrv_2%%#*}"
+	src="${ndrv_3%%#*}"
+	dst="${ndrv_4%%#*}"
+	opt="${ndrv_5%%#*}"
+	uname="${ndrv_6%%#*}"
+	pass="${ndrv_7%%#*}"
+	precache="${ndrv_8%%#*}"
+    fi
 fi
+
+mount_err_code=0
 
 if [ "$FORM_mount" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to mount NetShare id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
     /etc/rc.d/rc.mount-netshare WebUI_MOUNT "$id" >> /var/log/OpenLGTV_BCM.log 2>&1
     export mount_err_code="$?"
-    if [ "$mount_err_code" -ne "0" ]
-    then
-	export mounting_error=1
-    fi
 fi
 
-if [ "$dst" = "" ]
+if [ "$FORM_wake" = "1" ]
 then
-    dst="NetShare"
+    echo "OpenLGTV_BCM-INFO: WebUI: EtherWake - trying to wake id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
+    /etc/rc.d/rc.ether-wake WebUI_WAKE "$id" >> /var/log/OpenLGTV_BCM.log 2>&1
+    export mount_err_code="$?"
 fi
+
+if [ "$mount_err_code" -ne "0" ]
+then
+    export mounting_error=1
+fi
+
+[ "$dst" = "" ] && dst="NetShare"
 
 if [ "$FORM_umount" = "1" ]
 then
@@ -98,27 +131,37 @@ then
 fi
 
 ?>
-
 			<center>
 			    <div id="link11Parent" style="background-color:white;height:40px;">
 				<?
+				    action=mount
 				    if [ -z "`grep "$dst " /proc/mounts`" ]
 				    then
-					if [ -f "/mnt/user/cfg/ndrvtab" ]
+					if [ -f "${input_file}" ]
 					then
-					    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount\" style=\"width:100px\" />"
+					    input_rest="value=\"Mount\" style=\"width:100px\""
 					else
-					    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=$id';\" value=\"Mount button: You need to save first to be able to mount\" style=\"width:600px\" disabled />"
+					    input_rest="value=\"Mount button: You need to save first to be able to mount\" style=\"width:600px\" disabled"
 					fi
 				    else
-					echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?umount=1&id=$id';\" onClick=\"javascript:window.location='mount-edit.cgi?umount=1&id=$id';\" value=\"Unmount\" style=\"width:400px\" />"
+					action=umount
+					input_rest="value=\"Unmount\" style=\"width:400px\""
 				    fi
+				    [ "$FORM_type" = "etherwake" ] && action=wake && input_rest="value=\"Wake\" style=\"width:100px\""
+				    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?${action}=1&id=${id}&type=${FORM_type}';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=${id}&type=${FORM_type}';\" ${input_rest} />"
 				?>
 			    </div>
 			</center>
 			<div id="txtURLParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					URL: 
+					<?
+					    if [ "$FORM_type" = "etherwake" ]
+					    then
+						echo "Name:"
+					    else
+						echo "URL:"
+					    fi
+					?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
 				    <input id="txtURL" name="qURL" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $src ?>"/>
@@ -126,7 +169,14 @@ fi
 			</div>
 			<div id="txtUserParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					Username: 
+					<?
+					    if [ "$FORM_type" = "etherwake" ]
+					    then
+						echo "IP address:"
+					    else
+						echo "Username:"
+					    fi
+					?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
 					<input id="txtUser" name="qUser" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $uname ?>"/>
@@ -134,7 +184,14 @@ fi
 			</div>
 			<div id="txtPasswParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					Password: 
+					<?
+					    if [ "$FORM_type" = "etherwake" ]
+					    then
+						echo "MAC:"
+					    else
+						echo "Password:"
+					    fi
+					?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
 					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pass ?>"/>
@@ -142,12 +199,20 @@ fi
 			</div>
 			<div id="txtPathParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					Mount path: 
+					<?
+					    if [ "$FORM_type" = "etherwake" ]
+					    then
+						echo "Password:"
+					    else
+						echo "Mount path:"
+					    fi
+					?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
 					<input id="txtPath" name="qPath" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $dst ?>"/>
 				</div>
 			</div>
+			<? [ "$FORM_type" = "etherwake" ] && echo "<!--" ?>
 			<div id="radio1Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					Network Protocol: 
@@ -161,16 +226,18 @@ fi
 					   fi ?>
 				</div>
 			</div>
+			<? [ "$FORM_type" = "etherwake" ] && echo "-->" ?>
 			<div id="check1Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 				<? if [ "$automount" = "1" ]
 				   then
-					echo '<input type="checkbox" name="check1" value="automount" checked> AutoMount'
+					echo "<input type='checkbox' name='check1' value='automount' checked> $automntname"
 				   else
-					echo '<input type="checkbox" name="check1" value="automount"> AutoMount'
+					echo "<input type='checkbox' name='check1' value='automount'> $automntname"
 				   fi ?>
 				</div>
 			</div>
+			<? [ "$FORM_type" = "etherwake" ] && echo "<!--" ?>
 			<div id="check2Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 				<? if [ "$precache" = "1" ]
@@ -181,6 +248,7 @@ fi
 				   fi ?>
 				</div>
 			</div>
+			<? [ "$FORM_type" = "etherwake" ] && echo "--><input type='hidden' name='type' value='etherwake'><input type='hidden' name='radio1' value='etherwake'>" ?>
 			<input type="hidden" name="save" value="1">
 			<? echo "<input type='hidden' name='id' value='$id'>" ?>
 			<div id="textOnly" style="background-color:white;height:64px;">
@@ -188,7 +256,7 @@ fi
 				    <?
 					if [ "$FORM_save" = "1" ]
 					then
-					    echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts file: /mnt/user/cfg/ndrvtab changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
+					    echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts file: ${input_file} changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
 					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
 					else
 					    if [ "$mounting_error" = "1" ]

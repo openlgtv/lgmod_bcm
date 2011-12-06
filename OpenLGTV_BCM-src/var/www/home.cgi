@@ -20,7 +20,7 @@ function GoToNetCastLinks()
 	}
 </script>
 
-	<div style="position: absolute; left: 10px; top: 10px; width:860px; font-size:16px;">
+	<div style="position: absolute; left: 10px; top: 10px; width:880px; font-size:16px;">
 		<form id="URL" name="URL">
 			<? 
 			  export pagename="Home Page"

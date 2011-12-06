@@ -219,7 +219,7 @@ Answer for people asking if they can use it if they have already made modificati
     * FIX: install.sh kill konfabulator before installation to get more free memory
     * ADD: new NetCast web browser based links (from SmartTV NetCast 2.0) in Internet Browser page - 132 links currently compared to 68 before (by nicola_12345)
 
-0.5.0:
+0.5.0-beta1:
     * FIX: ywe first time configuration
     * FIX: abc.net.au link fix
     * FIX: /home was not writable on US and KR 2010 BCM models
@@ -291,6 +291,18 @@ Answer for people asking if they can use it if they have already made modificati
     * REMOVE: 'top' binary - use busybox applet instead
     * REMOVE: 'empty' binary - not used at all
     * REMOVE: 'file' binary - useless without magic info
+
+0.5.0-beta2:
+    * FIX: DLNA servers/shares visibility
+    * ADD: VOB, MPEG, DAT, ASF file extensions for FileManager playback
+    * ADD: support for both lower and uppercase file extensions for FileManager playback (but mixed case extensions are not supported)
+    * ADD: precache parameter for Network Shares to cache directories list (workaround for invisible dirs on some NFS shares)
+    * ADD: posibility to use custom msdl and web browser certificates from /mnt/user/netcast/opt dir
+    * ADD: PIN authorization for local (on-screen) WebUI access - something like parental lock, authorization cgi can be used to PIN-lock any web page
+    * ADD: EtherWake WebUI submenu
+    * CHANGE: time for USB mouse detection on boot raised from 18 to 19 seconds - less probability to get mouse not detected
+    * CHANGE: Network Shares Mount and Ether-Wake performance improvements in both WebUI and boot scripts
+    * CHANGE: rc.firewall behavior change to drop routes instead of binding local interface IPs
 
 Remaining issues with 0.5.0 development branch:
     * compatibility break with autoupgrade method from older versions - need to install 0.5.0 via telnet/ssh/serial again

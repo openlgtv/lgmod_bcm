@@ -9,7 +9,7 @@ ethwaketab=/mnt/user/cfg/ethwaketab
 # Example:
 # 1#SomeHost#192.168.0.1#00:11:22:33:44:55#aa:bb:cc:dd##
 
-if [ -f "$ndrvtab" ]
+if [ -f "$ethwaketab" ]
 then
     echo "OpenLGTV_BCM-INFO: rc.etherwake: found Ether Wake configuration file $ethwaketab - parsing config content..."
     if [ "$1" = "WebUI_WAKE" ]
@@ -28,16 +28,16 @@ then
     fi
     $read_ethwaketab | if [ "$WebUI_WAKE" = "1" ]; then tail -n 1; else cat; fi | while read ethwake
     do
-	ew_autowake="${ethwake%%#*}"
 	ethwake_2="${ethwake#*\#}"
-	ew_name="${ethwake_2%%#*}"
 	ethwake_3="${ethwake_2#*\#}"
-	ew_ip="${ethwake_3%%#*}"
 	ethwake_4="${ethwake_3#*\#}"
-	ew_mac="${ethwake_4%%#*}"
 	ethwake_5="${ethwake_4#*\#}"
-	ew_pass="${ethwake_5%%#*}"
 	ethwake_6="${ethwake_5#*\#}"
+	ew_autowake="${ethwake%%#*}"
+	ew_name="${ethwake_2%%#*}"
+	ew_ip="${ethwake_3%%#*}"
+	ew_mac="${ethwake_4%%#*}"
+	ew_pass="${ethwake_5%%#*}"
 	ew_opt="${ethwake_6%%#*}"
 	[ -n "$ew_pass" ] && ew_passHidden="*password*"
 	echo "OpenLGTV_BCM-DEBUG: rc.etherwake: Ether Wake settings: ew_autowake=$ew_autowake ew_name=$ew_name ew_ip=$ew_ip ew_mac=$ew_mac ew_pass=$ew_passHidden ew_opt=$ew_opt ..."
