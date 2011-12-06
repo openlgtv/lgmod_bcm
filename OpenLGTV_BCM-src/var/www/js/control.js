@@ -564,7 +564,14 @@ function BackSpace()
 			var currentId=currElementIndex-9;
 			if (currentId>0)
 				{
-				window.location='mount.cgi?action=remove&id=' + currentId;
+				if (window.location.toString().match('type=etherwake'))
+					{
+					window.location='mount.cgi?action=remove&type=etherwake&id=' + currentId;
+					}
+				else
+					{
+					window.location='mount.cgi?action=remove&id=' + currentId;
+					}
 				}
 			}
 		}
