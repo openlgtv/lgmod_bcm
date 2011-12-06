@@ -43,7 +43,7 @@ then
 	echo "OpenLGTV_BCM-DEBUG: rc.etherwake: Ether Wake settings: ew_autowake=$ew_autowake ew_name=$ew_name ew_ip=$ew_ip ew_mac=$ew_mac ew_pass=$ew_passHidden ew_opt=$ew_opt ..."
 	if [ "$ew_autowake" = "1" -o "$WebUI_WAKE" = "1" ]
 	then
-	    echo "OpenLGTV_BCM-DEBUG: rc.etherwake: Trying to wake: ew_autowake=$ew_autowake ew_name=$ew_name ew_ip=$ew_ip full_ew_mac=$full_ew_mac ew_opt=$ew_opt uname=$uname ew_pass=$ew_passHidden ..."
+	    echo "OpenLGTV_BCM-DEBUG: rc.etherwake: Trying to wake: ew_autowake=$ew_autowake ew_name=$ew_name ew_ip=$ew_ip ew_mac=$ew_mac ew_opt=$ew_opt uname=$uname ew_pass=$ew_passHidden ..."
 	    if [ -n "$ew_mac" ]
 	    then
 		if [ -n "$ew_pass" ]

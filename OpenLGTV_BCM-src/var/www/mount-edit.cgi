@@ -20,8 +20,10 @@ content-type: text/html
 			?>
 			<div id="textOnly" style="background-color:white;height:50px;">
 				<div style="position: relative; left: 5px; top: 0px;">
-					<? [ "$FORM_type" != "etherwake" ] && echo "<br /><center><b>Note: Relative destination mount paths need FAT/NTFS formated USB storage device.</b></center><br />" ?>
-					<? [ "$FORM_type" = "etherwake" ]  && echo "<br /><center><b>Wake remotely machines which support WakeOnLan feature</b></center><br />" ?>
+					<?
+					    [ "$FORM_type" != "etherwake" ] && echo "<br /><center><b>Note: Relative destination mount paths need FAT/NTFS formated USB storage device.</b></center><br />" && automntname="AutoMount"
+					    [ "$FORM_type" = "etherwake" ]  && echo "<br /><center><b>Wake remotely machines which support WakeOnLan feature</b></center><br />" && automntname="AutoWake on boot"
+					?>
 				</div>
 			</div>
 
@@ -42,7 +44,7 @@ then
     then
 	qPath="$FORM_qPath"
     else
-	qPath="NetShare"
+	[ "$FORM_type" != "etherwake" ] && qPath="NetShare"
     fi
     if [ "`cat ${input_file} | wc -l`" -lt "$id" ]
     then
@@ -76,7 +78,6 @@ then
     automount="${ndrv%%#*}"
     if [ "$FORM_type" = "etherwake" ]
     then
-	automntname="AutoWake on boot"
 	ew_autowake="${ndrv%%#*}"
 	ew_name="${ndrv_2%%#*}"
 	ew_ip="${ndrv_3%%#*}"
@@ -89,7 +90,6 @@ then
 	pass="${ew_mac}"
 	dst="${ew_pass}"
     else
-	automntname="AutoMount"
 	fs_type="${ndrv_2%%#*}"
 	src="${ndrv_3%%#*}"
 	dst="${ndrv_4%%#*}"
@@ -121,7 +121,7 @@ then
     export mounting_error=1
 fi
 
-[ "$dst" = "" ] && dst="NetShare"
+[ "$dst" = "" -a "$FORM_type" != "etherwake" ] && dst="NetShare"
 
 if [ "$FORM_umount" = "1" ]
 then
@@ -148,7 +148,7 @@ fi
 					input_rest="value=\"Unmount\" style=\"width:400px\""
 				    fi
 				    [ "$FORM_type" = "etherwake" ] && action=wake && input_rest="value=\"Wake\" style=\"width:100px\""
-				    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?${action}=1&id=${id}&type=${FORM_type}';\" onClick=\"javascript:window.location='mount-edit.cgi?mount=1&id=${id}&type=${FORM_type}';\" ${input_rest} />"
+				    echo -n "<input type=\"button\" id=\"link11\" onKeyPress=\"javascript:window.location='mount-edit.cgi?${action}=1&id=${id}&type=${FORM_type}';\" onClick=\"javascript:window.location='mount-edit.cgi?${action}=1&id=${id}&type=${FORM_type}';\" ${input_rest} />"
 				?>
 			    </div>
 			</center>

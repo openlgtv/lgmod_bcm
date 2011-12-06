@@ -44,10 +44,10 @@ echo "</div>"
 
 share_id=1
 link_id=11
+num_lines="`cat ${input_file} 2>/dev/null | wc -l`"
 
-if [ -f "${input_file}" ]
+if [ "${num_lines}" != "0" ]
 then
-    num_lines="`cat ${input_file} | wc -l`"
     if [ "$FORM_id" != "" -a "$FORM_action" = "remove" ]
     then
 	id="$FORM_id"
@@ -91,31 +91,41 @@ then
 	share_id="$((${share_id}+1))"
 	link_id="$((${link_id}+1))"
     done
+else
+    noSetupMsg="No Network Shares Defined Yet"
+    [ "$FORM_type" = "etherwake" ] && noSetupMsg="No Devices To Wake Up Defined Yet"
+    echo "<div id='link${link_id}Parent' style='background-color:white;height:40px;text-align:center;font-size:26px;'>$noSetupMsg</div>"
 fi
-
+if [ "$FORM_type" = "etherwake" ]
+then
+    yellowtxt="Add Device"
+    bluetxt="Del Device"
+    echo "<input type='hidden' name='type' value='etherwake'>"
+else
+    yellowtxt="Add Share"
+    bluetxt="Del Share"
+fi
 echo "<script type='text/javascript'>"
 echo "var share_id = $((${num_lines}+1));"
-
+echo "var type = '${FORM_type}';"
 ?>
-
 
 var yellowbtn = document.getElementById('YellowBtn');
 var bluebtn = document.getElementById('BlueBtn')
-yellowbtn.innerHTML = '<li class="yellow"><span><img src="Images/Keyboard/yellow_button.png" border=\"0\" /></span>Add Share</li>';
-bluebtn.innerHTML = '<li class="blue"><span><img src="Images/Keyboard/blue_button.png" border=\"0\" /></span>Del Share</li>';
+<? 
+    echo "yellowbtn.innerHTML = '<li class=\"yellow\"><span><img src=\"Images/Keyboard/yellow_button.png\" border=\"0\" /></span>$yellowtxt</li>';"
+    echo "bluebtn.innerHTML = '<li class=\"blue\"><span><img src=\"Images/Keyboard/blue_button.png\" border=\"0\" /></span>$bluetxt</li>';"
+?>
 var currentId;
 
 // ugly workaround: the real BackSpace() function code has been changed to match '/mount.cgi' only
 
 <?
-
-echo "yellowbtn.href = 'mount-edit.cgi?id=' + share_id;"
-echo "function SaveForm() { window.location='mount-edit.cgi?id=' + share_id; }"
-
+echo "yellowbtn.href = 'mount-edit.cgi?type=' + type + '&id=' + share_id;"
+echo "function SaveForm() { window.location='mount-edit.cgi?type=' + type + '&id=' + share_id; }"
 ?>
 
 </script>
-
 		</form>
 	</div>	
 </body>
