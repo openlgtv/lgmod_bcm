@@ -294,12 +294,12 @@ Answer for people asking if they can use it if they have already made modificati
 
 0.5.0-beta2:
     * FIX: DLNA servers/shares visibility
-    * ADD: VOB, MPEG, DAT, ASF file extensions for FileManager playback
+    * ADD: VOB, MPEG, DAT, ASF, MTS file extensions for FileManager playback
     * ADD: support for both lower and uppercase file extensions for FileManager playback (but mixed case extensions are not supported)
     * ADD: precache parameter for Network Shares to cache directories list (workaround for invisible dirs on some NFS shares)
     * ADD: posibility to use custom msdl and web browser certificates from /mnt/user/netcast/opt dir
     * ADD: PIN authorization for local (on-screen) WebUI access - something like parental lock, authorization cgi can be used to PIN-lock any web page
-    * ADD: EtherWake WebUI submenu
+    * ADD: EtherWake WebUI submenu with possibility to add/edit/delete devices to wake (via 'Wake' button or to wake on boot)
     * CHANGE: time for USB mouse detection on boot raised from 18 to 19 seconds - less probability to get mouse not detected
     * CHANGE: Network Shares Mount and Ether-Wake performance improvements in both WebUI and boot scripts
     * CHANGE: rc.firewall behavior change to drop routes instead of binding local interface IPs
