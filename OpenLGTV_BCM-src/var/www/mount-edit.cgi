@@ -33,7 +33,8 @@ content-type: text/html
 
 id="$FORM_id"
 
-if [ "$FORM_qURL" != "" -a "$FORM_radio1" != "" -a "$id" != "" ]
+#if [ "$FORM_qURL" != "" -a "$FORM_radio1" != "" -a "$id" != "" ]
+if [ "$FORM_qURL" != "" -a "$FORM_action" != "" -a "$id" != "" ]
 then
     automount=0
     precache=0
@@ -129,6 +130,8 @@ then
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to unmount NetShare: $share_path id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
     umount "$share_path" >> /var/log/OpenLGTV_BCM.log 2>&1
 fi
+
+[ "$FORM_type" = "" ] && FORM_type=netshare
 
 ?>
 			<center>
@@ -248,7 +251,10 @@ fi
 				   fi ?>
 				</div>
 			</div>
-			<? [ "$FORM_type" = "etherwake" ] && echo "--><input type='hidden' name='type' value='etherwake'><input type='hidden' name='radio1' value='etherwake'>" ?>
+			<? 
+			    [ "$FORM_type" = "etherwake" ] && echo "-->"
+			    echo "<input type='hidden' name='type' value='$FORM_type'><input type='hidden' name='action' value='$FORM_type'>"
+			?>
 			<input type="hidden" name="save" value="1">
 			<? echo "<input type='hidden' name='id' value='$id'>" ?>
 			<div id="textOnly" style="background-color:white;height:64px;">
