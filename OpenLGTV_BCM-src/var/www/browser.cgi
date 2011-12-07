@@ -7,14 +7,14 @@ content-type: text/html
 <HEAD>
 <META http-equiv="refresh" content="0;url=browser-real.cgi">
 </HEAD>
-<BODY>
+<BODY BGCOLOR="BLACK">
 <CENTER>
-<FONT SIZE="+6">
+<FONT SIZE="+7" COLOR="WHITE">
 <BR/><BR/>
-<IMG SRC="Images/openlgtvbcm_logo.png" ALT="OpenLGTV BCM"/>
+<IMG SRC="Images/openlgtvbcm_logo.png" ALT="OpenLGTV BCM Internet Browser"/>
 <BR/>OpenLGTV BCM<BR/><BR/>
 Internet Browser<BR/></FONT><BR/><BR/>
-<B>LOADING...</B>
+<FONT COLOR="YELLOW" SIZE="+2"><B>LOADING...</B></FONT>
 </FONT>
 </CENTER>
 </BODY>
