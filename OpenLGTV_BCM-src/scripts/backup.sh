@@ -25,8 +25,6 @@ mkdir -p $back_dir
 cd $back_dir
 if [ "$2" != "writable_only" ]
 then
-  #cat /proc/mtd | sed 's/mtd\(.\):/mtd0\1:/'
-  #for i in `cat /proc/mtd | grep -v erasesize | awk "BEGIN {printf \"mtd%02d_%s\", \"$1\", \"$4\"}" | sed 's/\"//g' | sed 's/://g'`
   for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/' -e 's/://g'`
   do
     if [ "$make_catdump" = "1" ]

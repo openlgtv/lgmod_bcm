@@ -33,9 +33,6 @@ then
 		echo "hotplug: Error: $FIRMWARE not found." > /dev/kmsg
 	fi
     else
-	#if [ "$PHYSDEVDRIVER" = "usb-storage" ]
-	# Launch "rc.usb hotplug sd?" only for /block/sd? devices, ommiting launching on found partitions
-	#if [ "$PHYSDEVDRIVER" = "sd" -a "$SUBSYSTEM" = "block" -a "${DEVPATH:0:9}" = "/block/sd" -a "${DEVPATH:10:1}" = "" ]
 	if [ "${DEVPATH:0:9}" = "/block/sd" -a "${DEVPATH:10:1}" = "" ]
 	then
 	    /etc/rc.d/rc.usb hotplug "${DEVPATH:7:3}" >> /var/log/OpenLGTV_BCM.log &

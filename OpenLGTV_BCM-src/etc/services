@@ -1,24 +1,6 @@
 # /etc/services:
 # $Id: services,v 1.22 2001/07/19 20:13:27 notting Exp $
-#
-# Network services, Internet style
-#
-# Note that it is presently the policy of IANA to assign a single well-known
-# port number for both TCP and UDP; hence, most entries here have two entries
-# even if the protocol doesn't support UDP operations.
-# Updated from RFC 1700, ``Assigned Numbers'' (October 1994).  Not all ports
-# are included, only the more common ones.
-#
-# The latest IANA port assignments can be gotten from
-#	http://www.iana.org/assignments/port-numbers
-# The Well Known Ports are those from 0 through 1023.
-# The Registered Ports are those from 1024 through 49151
-# The Dynamic and/or Private Ports are those from 49152 through 65535
-#
-# Each line describes one service, and is of the form:
-# 
 # service-name  port/protocol  [aliases ...]   [# comment]
-
 tcpmux		1/tcp				# TCP port service multiplexer
 tcpmux		1/udp				# TCP port service multiplexer
 rje		5/tcp				# Remote Job Entry
@@ -93,10 +75,6 @@ hostname	101/udp		hostnames	# usually from sri-nic
 iso-tsap	102/tcp		tsap		# part of ISODE.
 csnet-ns	105/tcp		cso		# also used by CSO name server
 csnet-ns	105/udp		cso
-# unfortunately the poppassd (Eudora) uses a port which has already
-# been assigned to a different service. We list the poppassd as an
-# alias here. This should work for programs asking for this service.
-# (due to a bug in inetd the 3com-tsmux line is disabled)
 #3com-tsmux	106/tcp		poppassd
 #3com-tsmux	106/udp		poppassd
 rtelnet		107/tcp				# Remote Telnet
@@ -244,9 +222,6 @@ ircs		994/udp
 pop3s		995/tcp				# POP-3 over SSL
 pop3s		995/udp				# POP-3 over SSL
 
-#
-# UNIX specific services
-#
 exec		512/tcp
 biff		512/udp		comsat
 login		513/tcp
@@ -277,24 +252,6 @@ afpovertcp	548/tcp				# AFP over TCP
 afpovertcp	548/udp				# AFP over TCP
 remotefs	556/tcp		rfs_server rfs	# Brunhoff remote filesystem
 
-#
-# From ``PORT NUMBERS'':
-#
-#>REGISTERED PORT NUMBERS
-#>
-#>The Registered Ports are listed by the IANA and on most systems can be
-#>used by ordinary user processes or programs executed by ordinary
-#>users.
-#>
-#>Ports are used in the TCP [RFC793] to name the ends of logical
-#>connections which carry long term conversations.  For the purpose of
-#>providing services to unknown callers, a service contact port is
-#>defined.  This list specifies the port used by the server process as
-#>its contact port.
-#>
-#>The IANA registers uses of these ports as a convienence to the
-#>community.
-#
 socks		1080/tcp			# socks proxy server
 socks		1080/udp			# socks proxy server
 h323hostcallsc	1300/tcp			# H323 Host Call Secure
@@ -412,37 +369,24 @@ wnn6-ds		26208/udp
 traceroute	33434/tcp
 traceroute	33434/udp
 
-#
-# Datagram Delivery Protocol services
-#
 rtmp		1/ddp				# Routing Table Maintenance Protocol
 nbp		2/ddp				# Name Binding Protocol
 echo		4/ddp				# AppleTalk Echo Protocol
 zip		6/ddp				# Zone Information Protocol
-#
-# Kerberos (Project Athena/MIT) services
-# Note that these are for Kerberos v4, and are unofficial.  Sites running
-# v4 should uncomment these and comment out the v5 entries above.
-#
+
 kerberos_master	751/udp				# Kerberos authentication
 kerberos_master	751/tcp				# Kerberos authentication
 passwd_server	752/udp				# Kerberos passwd server
 krbupdate	760/tcp		kreg		# Kerberos registration
 kpop		1109/tcp			# Pop with Kerberos
 knetd		2053/tcp			# Kerberos de-multiplexor
-#
-# Kerberos 5 services, also not registered with IANA
-#
+
 krb5_prop	754/tcp				# Kerberos slave propagation
 eklogin		2105/tcp			# Kerberos encrypted rlogin
-#
-# Unofficial but necessary (for NetBSD) services
-#
+
 supfilesrv	871/tcp				# SUP server
 supfiledbg	1127/tcp			# SUP debugging
-#
-# Unofficial but useful/necessary other services
-#
+
 netstat		15/tcp				# (was once asssigned, no more)
 fsp		21/udp		fspd		#
 linuxconf	98/tcp				# Linuxconf HTML access
@@ -507,6 +451,4 @@ tfido		60177/tcp			# Ifmail
 tfido		60177/udp			# Ifmail
 fido		60179/tcp			# Ifmail
 fido		60179/udp			# Ifmail
-
 # Local services
-

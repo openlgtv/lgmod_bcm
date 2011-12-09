@@ -6,22 +6,19 @@
 
 [ -z "$ywedir" ] && ywedir=/mnt/addon/ywe
 
-#if [ ! -d "$ywedir" -a ! -h "$ywedir" ]
-#then
-    if [ "$OpenLGTV_BCM_USB" = "" ]
-    then
+if [ "$OpenLGTV_BCM_USB" = "" ]
+then
 	if [ -f "/tmp/usbdir" ]
 	then
 	    export OpenLGTV_BCM_USB="`cat /tmp/usbdir`/OpenLGTV_BCM"
 	fi
-    fi
-    ywedir_old="$ywedir"
-    [ -d "$OpenLGTV_BCM_USB/ywe" ] && ywedir="$OpenLGTV_BCM_USB/ywe"
-    if [ "$ywedir" != "$ywedir_old" ]
-    then
+fi
+ywedir_old="$ywedir"
+[ -d "$OpenLGTV_BCM_USB/ywe" ] && ywedir="$OpenLGTV_BCM_USB/ywe"
+if [ "$ywedir" != "$ywedir_old" ]
+then
 	echo "OpenLGTV_BCM-INFO: konfabulator-exec.sh: ywe not found in ywedir=$ywedir_old path, but found in $ywedir..."
-    fi
-#fi
+fi
 
 if [ -f "$ywedir/bin/konfabulator.sh" -o -h "$ywedir/bin/konfabulator.sh" ]
 then
@@ -43,7 +40,6 @@ then
 	    umount -f $ywd
 	done
 else
-	# if konfabulator.sh file does not exist, try to run web browser instead
 	echo "OpenLGTV_BCM-WARN: konfabulator-exec.sh: $ywedir/bin/konfabulator.sh file does not exist, trying to start web browser with info message instead..."
 	if [ -f "/mnt/browser/run3556" -o -h "/mnt/browser/run3556" ]
 	then
