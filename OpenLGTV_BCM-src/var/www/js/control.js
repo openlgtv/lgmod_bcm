@@ -719,11 +719,27 @@ function OnLoadSetCurrent()
 	if (document.getElementById('spanSAVED')) {
 	    document.getElementById('spanSAVED').innerHTML='SETTINGS SAVED !!!';
 	}
+	updateClock()
+	setInterval('updateClock()', 1000 );
 }
-
 function hasFocus(elementIndex)
 {
 	return this.focused;
 }
-	document.defaultAction = true;
-	//-->
+function updateClock ()
+{
+	var currentTime = new Date();
+	var currentHours = currentTime.getHours();
+	var currentMinutes = currentTime.getMinutes();
+	var currentSeconds = currentTime.getSeconds();
+	currentMinutes = (currentMinutes < 10 ? "0" : "") + currentMinutes;
+	currentSeconds = (currentSeconds < 10 ? "0" : "") + currentSeconds;
+	var timeOfDay = '';
+//	timeOfDay = ( currentHours < 12 ) ? "AM" : "PM";
+//	currentHours = ( currentHours > 12 ) ? currentHours - 12 : currentHours;
+	currentHours = (currentHours == 0) ? 12 : currentHours;
+	var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+	document.getElementById("clock").firstChild.nodeValue = currentTimeString;
+}
+document.defaultAction = true;
+//-->

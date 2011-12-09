@@ -107,7 +107,6 @@ then
     exit 0
 fi
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 source /etc/rc.d/rc.usb-remount
 
 # Do OpenLGTV_BCM dir based actions only when the OpenLGTV_BCM dir is on the drive which was just connected
@@ -170,7 +169,6 @@ then
         echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/make_backup file, starting backup to USB storage device..."
         /scripts/backup.sh $OpenLGTV_BCM_USB/backup
         mv -f $OpenLGTV_BCM_USB/make_backup $OpenLGTV_BCM_USB/make_backup.used
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     fi
     if [ -f "$OpenLGTV_BCM_USB/reset_config" ]
     then
@@ -185,7 +183,6 @@ then
         #export ywe_usb_ywe_lg=1
         #export ywedata_usb_widget_data=1
         source /etc/rc.d/rc.ywe
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     fi
     if [ -d "$OpenLGTV_BCM_USB/autorun" ]
     then
@@ -194,7 +191,6 @@ then
 	do
 	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
 	    $scr_autorun
-	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	done
     fi
     if [ -d "$OpenLGTV_BCM_USB/WebUI-devel" ]
@@ -213,11 +209,9 @@ then
 	else
 	    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC"
 	fi
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     fi
 fi
 /etc/rc.d/rc.mount-netshare
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
     if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log" ]
@@ -230,7 +224,6 @@ then
 else
     echo "OpenLGTV_BCM-INFO: there is no OpenLGTV_BCM dir on USB storage device"
 fi
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
 echo "OpenLGTV_BCM-INFO: rc.usb removing LOCKDIR: $LOCKDIR..."
 

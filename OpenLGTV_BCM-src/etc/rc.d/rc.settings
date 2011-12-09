@@ -3,7 +3,6 @@
 # Settings setup script by xeros
 # Source code released under GPL License
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 if [ -n "`grep '#' /mnt/user/cfg/settings 2>/dev/null`" ]
 then
     echo "OpenLGTV_BCM-WARN: OpenLGTV BCM settings config file (/mnt/user/cfg/settings) is BROKEN, creating new settings files with default values"

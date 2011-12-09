@@ -14,7 +14,6 @@ content-type: text/html
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 
 <link rel="stylesheet" type="text/css" href="css/keyboard.css"/>
-	
 <script type="text/javascript">
 
 //******** MOBILE PHONE-STYLE KEYPAD *********
@@ -103,7 +102,6 @@ var iframe_shown=0;
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
 
-     
 function check(e)
 	{
 	if (!e) var e = window.event;
@@ -318,7 +316,7 @@ function GoToURL()
 	{
 	//Load the page addressed by the currFocusedElement field
 	var URLText = document.forms['URL'].elements[currElementName].value;
-	
+
 	if (URLText == '')
 		{
 		//if the URL is empty, goes to the list of all Netcast Services
@@ -332,22 +330,21 @@ function GoToURL()
 		{
 		document.getElementById('MainPage').src = 'http://' + URLText;
 		}
-	}	
-
+	}
 
 function ChangeBgColor()
 	{
 	//Change the page's BgColor.
 	document.bgColor = '#D3D3D3';
 	}
-	
+
 function BackSpace()
 	{
 	//I send a backspace on the currFocusedElement field
 	var URLText = document.forms['URL'].elements[currElementName].value;
 	document.forms['URL'].elements[currElementName].value = URLText.slice(0,URLText.length-1);
 	}
-	
+
 function SearchOnGoogle()
 	{
 	//Search on google the content of currFocusedElement field
@@ -356,25 +353,25 @@ function SearchOnGoogle()
 	var URLText = 'http://www.bing.com/search?q=' + document.forms['URL'].elements[currElementName].value;
 	document.getElementById('MainPage').src = URLText;
 	}
-	
+
 function setCurrent(element)
 	{
 	var string = element.id;
 	current = string.slice(1,string.length);
 	}
-	
+
 function OnLoadSetCurrent()
 	{
 	current = 1;
 	document.links['c1'].focus();
-	
+
 	//Resizing MainPage IFrame
 	ResizeIFrame();
-	
+
 	//change page's BgColor
 	document.bgColor = '#FFFFFF';
 	document.getElementById('MainPage').bgColor = '#D3D3D3';
-	
+
 	elem=document.forms['URL'].elements[currElementName];
 	elem.focused = false;
 	elem.hasFocus = function()
@@ -411,13 +408,9 @@ function FullIFrame()
 function ShowHideKeyboardTab()
 	{
 	if (iframe_shown==1)
-	    {
 	    FullIFrame();
-	    }
 	else
-	    {
 	    ResizeIFrame();
-	    }
 	}
 
 //windows.PostMessage management
@@ -425,34 +418,30 @@ function ShowHideKeyboardTab()
 window.addEventListener("message", receiveMessage, false);
 
 function receiveMessage(event)
+	{
+	if (event.data == 'FocusToYou')
 		{
-		if (event.data == 'FocusToYou')
-			{
-			//set focus on current document
-			document.links['c1'].focus();
-			//Change the page's BgColor.
-			document.bgColor = '#FFFFFF';
-			}
-		else if (event.data == 'ShowHideKeyboardTab')
-			{
-			//show or hide iframe with KeyboardTab
-			if (iframe_shown==1)
-			    {
-			    FullIFrame();
-			    }
-			else
-			    {
-			    ResizeIFrame();
-			    }
-			}
-		else if (event.data == 'SearchOnGoogle')
-			{
-			//Search on google the content of currFocusedElement field
-			SearchOnGoogle();
-			}
-		return;
+		//set focus on current document
+		document.links['c1'].focus();
+		//Change the page's BgColor.
+		document.bgColor = '#FFFFFF';
 		}
-		
+	else if (event.data == 'ShowHideKeyboardTab')
+		{
+		//show or hide iframe with KeyboardTab
+		if (iframe_shown==1)
+		    FullIFrame();
+		else
+		    ResizeIFrame();
+		}
+	else if (event.data == 'SearchOnGoogle')
+		{
+		//Search on google the content of currFocusedElement field
+		SearchOnGoogle();
+		}
+	return;
+	}
+
 function SwitchFocusedPage()
 	{
 	//Change the pages BgColor.
@@ -468,10 +457,9 @@ document.defaultAction = true;
 </head>
 <body bgcolor="#D3D3D3">
 
-	<!-- iframe id="MainPage" src="browser/mainpage.cgi" width="50%" height="100%" valign = "top" align="right" frameborder="0" -->
-	<iframe id="MainPage" src="browser/mainpage.cgi" width="80%" height="97%" valign = "top" align="right" frameborder="0">
-		<p>Your browser does not support iframes.</p>
-	</iframe>
+<iframe id="MainPage" src="browser/mainpage.cgi" width="80%" height="97%" valign = "top" align="right" frameborder="0">
+	<p>Your browser does not support iframes.</p>
+</iframe>
 <div id="keyboardtab" style="">
 	<div style="position: absolute; left: 0px; top: 5px;">
 		<form id="URL" name="URL">
@@ -481,11 +469,9 @@ document.defaultAction = true;
 			<input id="txtURL" type="textarea" style="width:263px" value=""/>
 		</form>
 	</div>	
-	
 	<div style="position: absolute; left: 0px; top: 145px;">
 		<? cat include/keypad_table.html.inc ?>
 	</div>
-	<!-- div style="position: absolute; left: 400px; top: 480px;" -->
 	<div style="position: absolute; left: -1px; top: 350px;">
 		<Table Border=0 cellspacing=0>
 			<tr>
@@ -493,7 +479,6 @@ document.defaultAction = true;
 			</tr>
 		</Table>
 	</div>
-	
 	<div style="position: absolute; left: 5px; top: 540px;">
 		<Table Border=0 cellspacing=0>
 			<tr>

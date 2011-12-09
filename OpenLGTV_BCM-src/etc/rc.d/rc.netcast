@@ -78,7 +78,6 @@ if [ -d "/mnt/addon/contents/netcast" -a "$netcast_config_ok" = "1" ]
 then
     if [ ! -d "/home/netcast_icons" ]
     then
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	echo "OpenLGTV_BCM-INFO: creating /home/netcast_icons dir for NetCast icons copy..."
 	mkdir -p /home/netcast_icons
 	if [ -d "/home/netcast_icons" -a -d "/mnt/addon/contents/netcast" ]
@@ -98,23 +97,19 @@ then
     fi
     if [ ! -f "/home/netcast_icons/icon_openlgtv.swf" ]
     then
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM NetCast icon from /var/icons/openlgtv.swf to /home/netcast_icons/icon_openlgtv.swf..."
 	cp /var/icons/openlgtv.swf /home/netcast_icons/icon_openlgtv.swf
     fi
     if [ ! -f "/home/netcast_icons/icon_www.swf" ]
     then
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	echo "OpenLGTV_BCM-INFO: making copy of OpenLGTV BCM Internet Browser icon from /var/icons/www.swf to /home/netcast_icons/icon_www.swf..."
 	cp /var/icons/www.swf /home/netcast_icons/icon_www.swf
     fi
     if [ ! -f "/home/netcast_icons/icon_yahoo.swf" ]
     then
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets icon from /var/icons/y.swf to /home/netcast_icons/icon_yahoo.swf..."
 	cp /var/icons/y.swf /home/netcast_icons/icon_yahoo.swf
     fi
-    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
     if [ -f "/home/netcast_icons/icon_openlgtv.swf" -a "/mnt/addon/contents/netcast" ]
     then
 	echo "OpenLGTV_BCM-INFO: found NetCast icons copy in /home/netcast_icons dir - linking it to /mnt/addon/contents/netcast dir..."
@@ -167,9 +162,7 @@ then
 	    cat "$addon_addon_mgr_bat" >> "$user_addon_mgr_bat"
 	    chmod 644 "$user_addon_mgr_bat"
 	fi
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	source /etc/rc.d/rc.netcast-modify
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	if [ -f "$user_config_xml" -a -f "$user_addon_mgr_bat" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using links to NetCast configs on addon partition..."

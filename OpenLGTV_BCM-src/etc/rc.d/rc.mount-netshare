@@ -78,7 +78,6 @@ then
 			mkdir -p "$full_dst"
 		    fi
 		fi
-		#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		if [ -d "$full_dst" ]
 		then
 		    echo "OpenLGTV_BCM-DEBUG: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden precache=$precache..."
@@ -106,7 +105,6 @@ then
 			    mount -t nfs "$src" "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
 			fi
 		    fi
-		    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		    if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
 		    then
 			echo "OpenLGTV_BCM-ERROR: mounting network share has not succeeded - check yours share configuration"

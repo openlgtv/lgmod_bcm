@@ -37,8 +37,8 @@ function GoToNetCastLinks()
 			?>
 				<div style="position: relative; left: 5px; top: 5px;">
 					<br />
-					<b><font size="+1">LG rootfs version:</font></b> <? cat /etc/ver | awk -F, '{print $1}' ?><br />
-					<b><font size="+1">LG Web Browser version:</font></b> <? grep Revision: /mnt/browser/run3556 | awk -F: '{print $2}' | sed 's/\"//g' ?><br />
+					<font size="+1"><b>Uptime:</b><? uptime | sed -e 's#\([a-zA-Z ][a-zA-Z: ]*\)#\&nbsp;<b>\1</b>\&nbsp;#g' -e 's#\&nbsp;,#, \&nbsp;#g' ?></font><br />
+					<b><font size="+1">LG Web Browser version:</font></b> <? grep Revision: /mnt/browser/run3556 | cut -d: -f2 | sed 's/\"//g' ?><br />
 					<b><font size="+1">Web Browser User Agent string:</font></b><br />
 					<font size="-1"><? echo "$HTTP_USER_AGENT" ?></font>
 				</div>

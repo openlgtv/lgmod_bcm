@@ -4,6 +4,7 @@
 			<div id="textOnly" style="background-color:white;height:130px; background-color:yellow">
 				<center><font size="+3"><b>OpenLGTV BCM <? cat /etc/ver2 ?><br/></font><font size="+2">Web UI<br/></font><font color="blue" size="+3"><? echo $pagename ?></font></b></font></center>
 			</div>
+			<div style="position: absolute; left: 755px; top: 10px;"><b><span id="clock">&nbsp;</span></b></div>
 			<!-- div id="link1Parent" class="menuitem" style="background-color:white;height:32px;display:inline-block;width:110px" -->
 			<div id="link1Parent" class="menuitem" style="width:100px">
 				<!-- center><input type="button" id="link1" class="menubutton" onKeyPress="javascript:window.location='home.cgi';" onClick="javascript:window.location='home.cgi';" value="Home" style="width:100px" /></center -->

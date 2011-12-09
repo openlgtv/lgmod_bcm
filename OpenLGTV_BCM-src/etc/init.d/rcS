@@ -12,22 +12,17 @@
 # root=/dev/mtdblock3  ro  rootfstype=squashfs mem=316M bmem=196M ip=192.168.0.2:192.168.0.1:192.168.0.1:255.255.255.0::eth0  usbpwr  lcdmodules  lock_time=0 panic=0 lpj=201728 bcmrac=3 migration_cost=1000 bver=1.02.20 start_kernel=4040
 
 echo "OpenLGTV_BCM-INFO: variables initialization"
-#export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:.
 export PATH=.:/mnt/user/bin:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
-#export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib:/mnt/lg/res/lgres
 export LD_LIBRARY_PATH=.:/mnt/user/lib:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
 
 source /etc/rc.d/rc.variables
 
-# TERM should be set only for boot, profile loaded at login shouldn't set it itself
 export TERM=vt100
 
 mount -t proc proc /proc
 mount -t ramfs tmp /tmp
 
 mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc
-
-#touch /var/log/boot                                                             2>&1 | tee -a $bootlogf
 
 echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."               | tee -a $bootlogf
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf
@@ -37,14 +32,11 @@ AUTORUN=`grep autorun /proc/cmdline`
 if [ "$AUTORUN" != "" ]
 then
 
-#mount -t ramfs tmp /tmp
-
 echo "OpenLGTV_BCM-INFO: starting in AUTORUN mode"                                    | tee -a $bootlogf
 
 source /etc/rc.d/rc.mount1                                                       2>&1 | tee -a $bootlogf
 
 /sbin/bootlogd -p /var/run/bootlogd.pid -l $bootlogf
-# '| tee -a $bootlogf' is not needed from this place - bootlogd should log boot messages
 
 source /etc/rc.d/rc.mount2
 
@@ -54,17 +46,6 @@ stty brkint
 source /etc/rc.d/rc.modules-lg
 
 source /etc/rc.d/rc.mount3
-
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-
-# mount partitons (/etc/fstab)
-#mount -a			# rcS default
-#mount --bind /mnt/flash/data	/mnt/lg/recdb
-
-#export HOOK_SEGV=YES		# rcS default
-#export LOG_CALLER=YES		# rcS default
-#export LOAD_SYM=1		# rcS default
-#export OSAMEM_SIZE=0x200000	# rcS default
 
 if [ ! -f "/mnt/flash/data/resolv.conf" ]
 then
@@ -89,13 +70,11 @@ echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data
 touch /var/run/utmp /var/log/wtmp /var/log/lastlog
 chgrp utmp /var/run/utmp /var/log/wtmp
 chmod 0664 /var/run/utmp /var/log/wtmp
-#mv -f $bootlogf /var/log/
 
 source /etc/rc.d/rc.network
 
 source /etc/rc.d/rc.kill-lginit
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"
 #ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 ntpd -p pool.ntp.org > /dev/null 2>&1 &
@@ -123,18 +102,14 @@ then
     mkdir -p /mnt/user/lock
 fi
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 if [ ! -f "/usr/etc/passwd" ]
 then
-    #mount -t tmpfs none /usr/etc
     if [ -f "/mnt/user/etc/passwd" ]
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/passwd file"
-	#cp /mnt/user/etc/passwd /usr/etc/passwd
 	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
     else
         echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/passwd file based on default one"
-	#cp /etc/passwd.org /usr/etc/passwd
 	cp /etc/passwd.org /mnt/user/etc/passwd
 	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
     fi
@@ -144,30 +119,25 @@ then
     if [ -f "/mnt/user/etc/shadow" ]
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/shadow file"
-	#cp /mnt/user/etc/shadow /usr/etc/shadow
 	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
     else
         echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/shadow file based on default one"
-	#cp /etc/shadow.org /usr/etc/shadow
 	cp /etc/shadow.org /mnt/user/etc/shadow
 	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
     fi
 fi
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 if [ ! -d "/usr/etc/dropbear" ]
 then
     if [ -d "/mnt/user/etc/dropbear" ]
     then
         echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys"
-	#cp -r /mnt/user/etc/dropbear /usr/etc/
 	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
     else
         echo "OpenLGTV_BCM-WARN: generating new SSH host keys in /mnt/user/etc/dropear path"
 	mkdir -p /mnt/user/etc/dropbear
 	dropbearkey -t dss -f /mnt/user/etc/dropbear/dropbear_dss_host_key
 	dropbearkey -t rsa -f /mnt/user/etc/dropbear/dropbear_rsa_host_key
-	#cp -r /mnt/user/etc/dropbear /usr/etc/
 	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
     fi
 fi
@@ -184,7 +154,6 @@ fi
 
 source /etc/rc.d/rc.settings
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 echo "OpenLGTV_BCM-INFO: starting portmapper..."
 portmap &
 
@@ -209,29 +178,21 @@ hostname OpenLGTV_BCM
 [ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs
 [ ! -d "/mnt/user/modules/lg" ]          && mkdir -p /mnt/user/modules/lg
 
-# Lets load modules in background to shorten boot time
 /etc/rc.d/rc.modules &
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 source /etc/rc.d/rc.netcast
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 source /etc/rc.d/rc.ywe
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 
-# Making nvram copy
 if [ "$mtd_nvram" != "" ]
 then
     echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd$mtd_nvram partition..."
-    #cat /dev/mtd$mtd_nvram > /tmp/nvram &
     /etc/rc.d/rc.nvram &
 fi
 
 nice -n 20 /etc/rc.d/rc.fwinfo | tee -a /var/log/fwinfo.log &
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."
 echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
-#############/etc/rc.d/rc.usb &
 
 /etc/rc.d/rc.ether-wake &
 
@@ -239,9 +200,6 @@ echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
 
 /etc/rc.d/rc.httpd
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
-
-# possible workaround to find the right value for 'slow' mouses
 if [ -f "/mnt/user/cfg/mouse_delay" ]
 then
     export dfbdelay=`cat /mnt/user/cfg/mouse_delay`
@@ -266,12 +224,9 @@ fi
 if [ -d "/mnt/user/init.d" ]
 then
     scr_files="`find /mnt/user/init.d/* -perm -u=x 2>/dev/null`"
-    #if [ "`ls /mnt/user/init.d/ | wc -l`" -gt "0" ]
-    #if [ "`echo $scr_files | wc -w`" -gt "0" ]
     if [ -n "$scr_files" ]
     then
 	echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"
-	#for scr_file in /mnt/user/init.d/*
 	for scr_file in $scr_files
 	do
 	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
@@ -286,7 +241,6 @@ echo ""
 
 source /etc/rc.d/rc.release
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 #/bin/sh
 
 echo "OpenLGTV_BCM-INFO: rcS end... login now"
@@ -299,7 +253,6 @@ else
 
 # default, (almost) original rcS script execution for compatibility with other 'auto' CFE modes
 
-# mount partitons (/etc/fstab)
 mount -a
 #mount --bind /mnt/flash/data	/mnt/lg/recdb
 
@@ -316,7 +269,6 @@ AUTORUN=`grep autorun /proc/cmdline`
 
 if [ "$AUTORUN" != "" ]; then
 
-	# lgapp mount parameters
 	XIPADDR=`cat /proc/xipfs`
 
 	if [ "$XIPADDR" != "" ] && [ "$XIPADDR" != "0x0" ]; then
@@ -328,7 +280,6 @@ if [ "$AUTORUN" != "" ]; then
 	export LD_LIBRARY_PATH=/mnt/lg/res/lgres
 	touch  /mnt/flash/data/resolv.conf
 
-	# we will remove this code, when btusb.ko is built in kernel.
 	if [ -e /mnt/lg/res/lgres/btusb.ko ]; then
 		insmod /mnt/lg/res/lgres/btusb.ko
 	fi
@@ -338,8 +289,6 @@ if [ "$AUTORUN" != "" ]; then
 	fi	
 
 	ifconfig lo 127.0.0.1 netmask 255.0.0.0
-	#ifconfig eth0 192.168.0l.1 netmask $NETMASK up
-	#route add default gw $GATEWAY
 
 	if [ -e /lg/lgapp/NetworkManager ]; then
 		/lg/lgapp/NetworkManager -d
@@ -352,9 +301,6 @@ if [ "$AUTORUN" != "" ]; then
 	cd /lg/lgapp; ./RELEASE
 fi
 
-#
-# Network parameters
-#
 mkdir /var/run /var/log
 cat /dev/null > /var/run/utmp
 cat /dev/null > /var/log/wtmp
@@ -366,9 +312,6 @@ SERVER_IP=$(cat /proc/cmdline | awk 'BEGIN { RS="[ ]"; FS=":"; } /ip=/ { print $
 GATEWAY=$(cat /proc/cmdline | awk 'BEGIN { RS="[ ]"; FS=":"; } /ip=/ { print $3 } END {}')
 NETMASK=$(cat /proc/cmdline | awk 'BEGIN { RS="[ ]"; FS=":"; } /ip=/ { print $4 } END {}')
 
-#
-# Network setting
-#
 ifconfig lo 127.0.0.1 netmask 255.0.0.0
 ifconfig eth0 $TARGET_IP netmask $NETMASK up
 route add default gw $GATEWAY
@@ -384,9 +327,6 @@ fi
 mount -t tmpfs none /usr/etc
 cp /etc/passwd.org /usr/etc/passwd
 
-#
-# Mount nfs
-#
 if [ "$AUTORUN" == "" ]; then
 	sleep 3
 	let i=0
@@ -399,7 +339,6 @@ if [ "$AUTORUN" == "" ]; then
 		usleep 10000
 	done
 	echo "Server IP=$SERVER_IP Target IP=$TARGET_IP"
-	#echo "Mounting /share/global_platform as /home"
 	echo "Mounting /share/global_platform/bcm35xx as /home"
 	mount -t nfs -o rsize=32768,wsize=32768,tcp,nolock $SERVER_IP:/share/global_platform/bcm35xx /home
 	echo "Mount-binding /home as /mnt/lg/lgapp"
@@ -434,9 +373,7 @@ export PREMIUM_MASTER=master.swf
 export STORE_MASTER=StoreMaster.swf
 export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
 
-
 echo "Done...login now"
 echo ""
-
 
 fi

@@ -22,26 +22,21 @@ do
     mod_file="$MOD_PATH1/$mod.ko"
     if [ -f "$mod_file" ]
     then
-	#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
 	insmod "$mod_file"
     else
 	mod_file="$MOD_PATH2/$mod.ko"
 	if [ -f "$mod_file" ]
 	then
-	    #/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 	    echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
 	    insmod "$mod_file"
 	else
 	    mod_file="$MOD_RPATH/$mod.ko"
 	    if [ -f "$mod_file" ]
 	    then
-		#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 		echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
 		insmod "$mod_file"
 	    fi
 	fi
     fi
 done
-
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"

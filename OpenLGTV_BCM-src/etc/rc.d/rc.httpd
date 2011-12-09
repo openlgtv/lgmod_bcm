@@ -28,7 +28,6 @@ then
     sed -i -e "s:^/\:openlgtv\:.*:/\:openlgtv\:$md5password:g" /mnt/user/etc/httpd.conf
 fi
 
-#/bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"
 echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"
 #httpd -h /var/www
 httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www
