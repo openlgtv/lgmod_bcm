@@ -3,7 +3,7 @@
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
-SKIP_LINES=97
+SKIP_LINES=98
 
 echo "OpenLGTV BCM installator"
 
@@ -92,5 +92,6 @@ else
     /usr/sbin/chroot "$CHR" "$base/install.sh" "$@"
 fi
 #TODO: umount,...
+for i in `grep " $CHR" /proc/mounts | awk '{print $2}' | tac`; do umount ${i}; done
 
 exit;
