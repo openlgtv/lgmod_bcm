@@ -184,6 +184,17 @@ then
         #export ywedata_usb_widget_data=1
         source /etc/rc.d/rc.ywe
     fi
+    if [ -f "$OpenLGTV_BCM_USB/extroot.tar.gz" ]
+    then
+        echo "OpenLGTV_BCM-INFO: found extroot package in $OpenLGTV_BCM_USB/extroot.tar.gz - extracting it"
+        tar xzvf "$OpenLGTV_BCM_USB/extroot.tar.gz" -C "$OpenLGTV_BCM_USB"
+    fi
+    if [ -d "$OpenLGTV_BCM_USB/extroot" ]
+    then
+        echo "OpenLGTV_BCM-INFO: found extroot dir in $OpenLGTV_BCM_USB/extroot - mounting it to /tmp/extroot"
+        mkdir -p /tmp/extroot
+        mount --bind "$OpenLGTV_BCM_USB/extroot" /tmp/extroot
+    fi
     if [ -d "$OpenLGTV_BCM_USB/autorun" ]
     then
         echo "OpenLGTV_BCM-INFO: executing custom autorun scripts from $OpenLGTV_BCM_USB/autorun/"

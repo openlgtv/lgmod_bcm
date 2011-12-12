@@ -9,7 +9,8 @@ echo "OpenLGTV_BCM-INFO: links_icons_preload.sh: running..."
 
 icons_dir="/home/netcast_icons/www"
 
-ilink1="http://smarttv.net46.net/smarttv_logos.zip"
+#ilink1="http://smarttv.net46.net/smarttv_logos.zip" # unavailable
+ilink1="http://dl.dropbox.com/u/43758310/smarttv_logos.zip"
 ilink2="http://dl.dropbox.com/u/43758310/smarttv_logos.zip"
 ilink3="http://smarttv.awardspace.info/smarttv_logos.xxx"
 

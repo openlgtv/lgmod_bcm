@@ -12,8 +12,10 @@
 # root=/dev/mtdblock3  ro  rootfstype=squashfs mem=316M bmem=196M ip=192.168.0.2:192.168.0.1:192.168.0.1:255.255.255.0::eth0  usbpwr  lcdmodules  lock_time=0 panic=0 lpj=201728 bcmrac=3 migration_cost=1000 bver=1.02.20 start_kernel=4040
 
 echo "OpenLGTV_BCM-INFO: variables initialization"
-export PATH=.:/mnt/user/bin:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
-export LD_LIBRARY_PATH=.:/mnt/user/lib:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
+#export PATH=.:/mnt/user/bin:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
+export PATH=.:/tmp/extroot/bin:/tmp/extroot/sbin:/tmp/extroot/usr/bin:/tmp/extroot/usr/sbin:/mnt/user/bin:/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/sbin:/mnt/browser/bin:/mnt/addon/bin:/mnt/addon/stagecraft/bin:/scripts
+#export LD_LIBRARY_PATH=.:/mnt/user/lib:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
+export LD_LIBRARY_PATH=.:/tmp/extroot/lib:/tmp/extroot/usr/lib:/mnt/user/lib:/lib:/usr/lib:/usr/local/lib:/mnt/lg/res/lgres:/mnt/browser/lib:/mnt/addon/lib:/mnt/addon/stagecraft/lib
 
 source /etc/rc.d/rc.variables
 
