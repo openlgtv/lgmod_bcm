@@ -12,6 +12,7 @@ OpenLGTV BCM Changelog
     * ADD: EtherWake WebUI submenu with possibility to add/edit/delete devices to wake (via 'Wake' button or to wake on boot)
     * ADD: unified for all platforms info.sh script by mmm4m5m from LGMOD S7
     * ADD: support for future OpenLGTV_BCM/extroot.tar.gz package and OpenLGTV_BCM/extroot dir on USB storage partititions (should be NTFS formated)
+    * UPDATE: updated BusyBox from 1.19.2 to 1.19.3 and get rid of busybox2 symlink
     * CHANGE: time for USB mouse detection on boot raised from 18 to 19 seconds - less probability to get mouse not detected
     * CHANGE: Network Shares Mount and Ether-Wake performance improvements in both WebUI and boot scripts
     * CHANGE: rc.firewall behavior change to drop routes instead of binding local interface IPs
