@@ -6,7 +6,6 @@
 echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
 for mnt in `grep ^/dev/sd /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
 do
-    #mnt_src=`echo $mnt | awk -F# '{print $1}'`
     mnt_src=`echo $mnt | cut -d# -f1`
     mnt_dst=`echo $mnt | cut -d# -f2`
     mnt_fs=`echo $mnt | cut -d# -f3`

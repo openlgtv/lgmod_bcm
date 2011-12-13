@@ -25,7 +25,14 @@ echo "OpenLGTV_BCM-INFO: rc.usb: LOCKDIR: $LOCKDIR created"
 
 sleep 1
 
-while [ -z "`grep -m 1 ^/dev/sd /proc/mounts`" ]
+if [ "$2" != "" ]
+then
+    device="$2"
+else
+    device="sd"
+fi
+
+while [ -z "`grep -m 1 ^/dev/$device /proc/mounts`" ]
 do
     sleep 1
     k=$(($k+1))
@@ -109,8 +116,6 @@ fi
 
 source /etc/rc.d/rc.usb-remount
 
-# Do OpenLGTV_BCM dir based actions only when the OpenLGTV_BCM dir is on the drive which was just connected
-#if [ -d "$OpenLGTV_BCM_USB" -a ! -f "/tmp/usbdir" ]
 if [ -d "$OpenLGTV_BCM_USB" -a "$2" != "" -a "$USB_DEV" = "$2" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."
@@ -118,51 +123,41 @@ then
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
-	#if [ -f "$OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-v*.sqf" ]
-	#then
-	    [ "$platform" = "" -a -f "/mnt/user/etc/vars" ] && source /mnt/user/etc/vars
-	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM $platform upgrade..."
-	    sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf 2>/dev/null | wc -l`
-	    tarsh_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.tar.sh 2>/dev/null | wc -l`
-	    if [ "$sqf_file_count" -gt 1 -o "$tarsh_file_count" -gt 1 ]
+	[ "$platform" = "" -a -f "/mnt/user/etc/vars" ] && source /mnt/user/etc/vars
+	echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM $platform upgrade..."
+	sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf 2>/dev/null | wc -l`
+	tarsh_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.tar.sh 2>/dev/null | wc -l`
+	if [ "$sqf_file_count" -gt 1 -o "$tarsh_file_count" -gt 1 ]
+	then
+	    echo "OpenLGTV_BCM-WARN: theres too much OpenLGTV BCM upgrade (.sqf or .tar.sh) files in $OpenLGTV_BCM_USB/upgrade/, refusing to autoupgrade"
+	else
+	    if [ "$tarsh_file_count" -eq "1" ]
 	    then
-		echo "OpenLGTV_BCM-WARN: theres too much OpenLGTV BCM upgrade (.sqf or .tar.sh) files in $OpenLGTV_BCM_USB/upgrade/, refusing to autoupgrade"
+		tarsh_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.tar.sh`
+		echo "OpenLGTV_BCM-INFO: found $tarsh_upgrade_file file - trying use it for OpenLGTV BCM upgrade..."
+		curr_dir=`pwd`
+		cd $OpenLGTV_BCM_USB/upgrade/
+		$tarsh_upgrade_file autoupgrade
+		exit 0
+	    fi
+	    if [ "$tarsh_file_count" -lt "1" -a "$sqf_file_count" -lt "1" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.tar.sh or .sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade"
 	    else
-		if [ "$tarsh_file_count" -eq "1" ]
+		if [ "$sqf_file_count" -eq "1" ]
 		then
-		    tarsh_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.tar.sh`
-		    echo "OpenLGTV_BCM-INFO: found $tarsh_upgrade_file file - trying use it for OpenLGTV BCM upgrade..."
-		    curr_dir=`pwd`
-		    cd $OpenLGTV_BCM_USB/upgrade/
-		    #echo "OpenLGTV_BCM-INFO: unzipping $zip_upgrade_file file"
-		    #unzip -o $zip_upgrade_file -d $OpenLGTV_BCM_USB/upgrade/
-		    #echo "OpenLGTV_BCM-INFO: removing $zip_upgrade_file file"
-		    #rm -f $zip_upgrade_file
-		    $tarsh_upgrade_file autoupgrade
-		    exit 0
-		    #cd $curr_dir
-		    #sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf | wc -l`
-		fi
-		if [ "$tarsh_file_count" -lt "1" -a "$sqf_file_count" -lt "1" ]
-		then
-		    echo "OpenLGTV_BCM-INFO: there are no OpenLGTV BCM upgrade (.tar.sh or .sqf) files in $OpenLGTV_BCM_USB/upgrade/, nothing to upgrade"
-		else
-		    if [ "$sqf_file_count" -eq "1" ]
+		    sqf_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf`
+		    if [ -f "$OpenLGTV_BCM_USB/upgrade/install.sh" ]
 		    then
-			sqf_upgrade_file=`ls $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf`
-			if [ -f "$OpenLGTV_BCM_USB/upgrade/install.sh" ]
-			then
-			    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/install.sh script, using it instead of builtin one"
-			    $OpenLGTV_BCM_USB/upgrade/install.sh image=$sqf_upgrade_file autoupgrade
-			else
-			    /scripts/install.sh image=$sqf_upgrade_file autoupgrade
-			fi
-			exit 0
-			#exit $?
+			echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/install.sh script, using it instead of builtin one"
+			$OpenLGTV_BCM_USB/upgrade/install.sh image=$sqf_upgrade_file autoupgrade
+		    else
+			/scripts/install.sh image=$sqf_upgrade_file autoupgrade
 		    fi
+		    exit 0
 		fi
 	    fi
-        #fi
+	fi
     fi
     if [ -f "$OpenLGTV_BCM_USB/make_backup" ]
     then
@@ -178,10 +173,6 @@ then
     if [ -d "$OpenLGTV_BCM_USB/ywedata" -o -d "$OpenLGTV_BCM_USB/ywe" -o -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
     then
         echo "OpenLGTV_BCM-INFO: found at ywe or ywedata dirs or ywe.tar.gz file in $OpenLGTV_BCM_USB/ - executing Yahoo Widgets configs setup again"
-        #umount /mnt/widget.data
-        #mount --bind $OpenLGTV_BCM_USB/ywedata /mnt/widget.data
-        #export ywe_usb_ywe_lg=1
-        #export ywedata_usb_widget_data=1
         source /etc/rc.d/rc.ywe
     fi
     if [ -f "$OpenLGTV_BCM_USB/extroot.tar.gz" ]
@@ -211,7 +202,6 @@ then
 	killall httpd
 	sleep 1
 	echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"
-	#httpd -h /var/www
 	httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www
 	if [ -f "/mnt/user/etc/httpd.conf" ]
 	then
@@ -227,7 +217,7 @@ if [ -d "$OpenLGTV_BCM_USB" ]
 then
     if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log" ]
     then
-        echo "OpenLGTV_BCM-INFO: making copy of firstboot $bootlogf log file to $OpenLGTV_BCM_USB/"
+	echo "OpenLGTV_BCM-INFO: making copy of firstboot $bootlogf log file to $OpenLGTV_BCM_USB/"
 	cp -f $bootlogf $OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log
     fi
     echo "OpenLGTV_BCM-INFO: making copy of $bootlogf log file to $OpenLGTV_BCM_USB/"

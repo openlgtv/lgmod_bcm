@@ -142,7 +142,6 @@
 	    if [ -f "/mnt/user/ywe/konfabulator.sh" -a ! -f "/mnt/user/ywe/samsung/konfabulator.sh" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making copy of Yahoo Widgets Engine startup script with proper path for Samsung Widgets ONLY - /mnt/user/ywe/samsung/konfabulator.sh..."
-		#cp /mnt/user/ywe/konfabulator.sh /mnt/user/ywe/samsung/konfabulator.sh
 		cat /mnt/user/ywe/konfabulator.sh | sed "s#^export KF_APP_PATH.*#export KF_APP_PATH=$ywedir#g" > /mnt/user/ywe/samsung/konfabulator.sh
 		chmod 755 /mnt/user/ywe/samsung/konfabulator.sh
 	    fi
