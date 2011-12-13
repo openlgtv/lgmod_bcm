@@ -16,17 +16,13 @@ then
 else
     if [ -n "`grep -m 1 USE_ETH=YES /mnt/flash/data/nm.rc`" ]
     then
-	#if [ "`grep -m 1 DHCP /mnt/flash/data/nm.rc | awk -F= '{print $2}'`" -eq "0" ]
 	if [ "`grep -m 1 DHCP /mnt/flash/data/nm.rc | cut -d"=" -f2`" -eq "0" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using static network setup from NetworkManager config"
-	    #TARGET_IP=`grep -m 1 IP_Address /mnt/flash/data/nm.rc | awk '{FS="="; print $2}'`
 	    TARGET_IP=`grep -m 1 IP_Address /mnt/flash/data/nm.rc | cut -d"=" -f2`
-	    #GATEWAY=`grep -m 1 IP_Gateway /mnt/flash/data/nm.rc | awk '{FS="="; print $2}'` 
 	    GATEWAY=`grep -m 1 IP_Gateway /mnt/flash/data/nm.rc | cut -d"=" -f2` 
 	    # we wont get server ip from NetworkManager config, so lets get gateway address instead
 	    SERVER_IP="$GATEWAY"
-	    #NETMASK=`grep -m 1 IP_Netmask /mnt/flash/data/nm.rc | awk '{FS="="; print $2}'`
 	    NETMASK=`grep -m 1 IP_Netmask /mnt/flash/data/nm.rc | cut -d"=" -f2`
 	    network_set=1
 	else

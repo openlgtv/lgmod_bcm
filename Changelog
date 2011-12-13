@@ -3,6 +3,7 @@ OpenLGTV BCM Changelog
 0.5.0-beta2 [NOT RELEASED YET]:
 
     * FIX: DLNA servers/shares visibility
+    * FIX: OpenLGTV BCM, WWW, Yahoo Widgets icons removal when disabled in WebUI
     * ADD: VOB, MPEG, DAT, ASF, MTS file extensions for FileManager playback
     * ADD: support for both lower and uppercase file extensions for FileManager playback (but mixed case extensions are not supported)
     * ADD: precache parameter for Network Shares to cache directories list (workaround for invisible dirs on some NFS shares)

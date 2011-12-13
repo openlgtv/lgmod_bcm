@@ -32,12 +32,10 @@ then
 	if [ ! -f "/mnt/user/lock/netcast_enable_all.lock" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making copy of current StageCraft configuration: $real_configxml to $real_configxml.pre_netcast_enable_all"
-	    #cp -f "$real_configxml" "$real_configxml.pre_netcast_enable_all"
 	    cat "$real_configxml" > "$real_configxml.pre_netcast_enable_all"
 	    if [ -f "/mnt/addon/contents/config.xml" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: using /mnt/addon/contents/config.xml as template for $real_configxml on netcast_enable_all option"
-		#cp -f /mnt/addon/contents/config.xml "$real_configxml"
 		cat /mnt/addon/contents/config.xml > "$real_configxml"
 	    fi
 	    if [ -f "/mnt/user/lock/ywe_added_to_config_xml.lock" ]
@@ -47,8 +45,6 @@ then
 	    fi
 	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator to enable all NetCast services (netcast_config_enable_all=1) file: $real_configxml ..."
 	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver enable_all
-	    ###echo "OpenLGTV_BCM-INFO: changing back netcast_config_enable_all=1 option to netcast_config_enable_all=0 in /mnt/user/cfg/settings file to prevent config.xml rewrite at every boot..."
-	    ###sed -i -e 's/netcast_config_enable_all=1/netcast_config_enable_all=0/g' /mnt/user/cfg/settings
 	    echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock/netcast_enable_all.lock lockfile to prevent config.xml rewrite at every boot..."
 	    touch /mnt/user/lock/netcast_enable_all.lock
 	    echo "OpenLGTV_BCM-INFO: note: if you want more NetCast items then put their icons (from other countries firmwares) into /home/netcast_icons and use netcast_enable_all again"
@@ -63,45 +59,31 @@ then
     fi
     if [ "$netcast_config_add_yahoo" = "1" ]
     then
-	if [ "$country_model" != "US" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add Yahoo Widgets option (netcast_config_add_yahoo=1) file: $real_configxml ..."
-	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver add=yahoo
-	else
-	    echo "OpenLGTV_BCM-INFO: skipping adding Yahoo Widgets option (netcast_config_add_yahoo=1) in US TV models as it exists there..."
-	fi
+	[ "$country_model" != "US" ] && /scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver add=yahoo
+	[ "$country_model"  = "US" ] && echo "OpenLGTV_BCM-INFO: skipping adding Yahoo Widgets option (netcast_config_add_yahoo=1) in US TV models as it exists there..."
+    else
+	[ "$country_model" != "US" ] && /scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver del=yahoo
+	[ "$country_model"  = "US" ] && echo "OpenLGTV_BCM-INFO: skipping adding Yahoo Widgets option (netcast_config_add_yahoo=0) in US TV models as it exists there and shouldnt get removed..."
     fi
     if [ "$netcast_config_add_openlgtv" = "1" ]
     then
-	if [ -f "$real_browapptxt" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Web UI option (netcast_config_add_openlgtv=1) config.xml file: $real_configxml browser_application.txt file: $real_browapptxt ..."
-	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver add=openlgtv browser_application_txt=$real_browapptxt
-	else
-	    echo "OpenLGTV_BCM-WARN: havent found any useful browser_application.txt file, skipping custom NetCast configuration (OpenLGTV BCM NetCast item)..."
-	fi
+	/scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver add=openlgtv browser_application_txt=$real_browapptxt
+    else
+	/scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver del=openlgtv browser_application_txt=$real_browapptxt
     fi
     if [ "$netcast_config_add_www" = "1" ]
     then
-	if [ -f "$real_browapptxt" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for add OpenLGTV BCM Internet Browser option (netcast_config_add_www=1) config.xml file: $real_configxml browser_application.txt file: $real_browapptxt ..."
-	    /scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver add=www browser_application_txt=$real_browapptxt
-	else
-	    echo "OpenLGTV_BCM-WARN: havent found any useful browser_application.txt file, skipping custom NetCast configuration (OpenLGTV BCM Internet Browser item)..."
-	fi
+	/scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver add=www browser_application_txt=$real_browapptxt
+    else
+	/scripts/netcast_config_regenerator.sh config_xml=$real_configxml config_ver=$config_ver del=www browser_application_txt=$real_browapptxt
     fi
-    #v- not used as killing browser should be done in konfabulator.sh
-    #if [ "$netcast_kill_browser" = "1" ]
-    #then
-    	if [ -f "$real_run3556" ]
-    	then
-    	    echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for killing old browser instance in browser startup script (netcast_kill_browser=1) run3556 file: $real_run3556 ..."
-    	    /scripts/netcast_config_regenerator.sh run3556=$real_run3556 config_ver=$config_ver kill_browser
-    	else
-    	    echo "OpenLGTV_BCM-WARN: havent found any useful run3556 file, skipping custom NetCast Web Browser start script modification..."
-    	fi
-    #fi
+    if [ -f "$real_run3556" ]
+    then
+	echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for killing old browser instance in browser startup script (netcast_kill_browser=1) run3556 file: $real_run3556 ..."
+	/scripts/netcast_config_regenerator.sh run3556=$real_run3556 config_ver=$config_ver kill_browser
+    else
+	echo "OpenLGTV_BCM-WARN: havent found any useful run3556 file, skipping custom NetCast Web Browser start script modification..."
+    fi
 else
     echo "OpenLGTV_BCM-ERROR: havent found any useful config.xml file, skipping custom NetCast configuration..."
 fi
@@ -117,7 +99,5 @@ else
     then
 	echo "OpenLGTV_BCM-INFO: running NetCast Config Regenerator for removing proxy setup (netcast_webproxy=0) run3556 file: $real_run3556 extra_conf file: $real_extra_conf proxy_config.txt file: $proxy_config_proxy..."
 	/scripts/netcast_config_regenerator.sh unset_proxy run3556=$real_run3556 config_ver=$config_ver extra_conf=$real_extra_conf proxy_config_txt=$proxy_config_proxy
-	#echo "OpenLGTV_BCM-INFO: removing proxy setup (netcast_webproxy=0) proxy_config.txt file: $proxy_config_proxy..."
-	#rm -f $proxy_config_proxy
     fi
 fi

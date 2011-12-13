@@ -116,49 +116,37 @@ then
 	mount --bind /home/netcast_icons /mnt/addon/contents/netcast
     fi
 fi
-### DEPRECIATED settings - force_copy_config_netcast
-### if [ -f "$addon_browser_application_txt" -a -f "$browser_browser_application_txt" -a -f "$addon_config_xml" -a -f "$addon_addon_mgr_bat" -a -f "$browser_run3556" -o "$force_copy_config_netcast" = "1" ]
 if [ -f "$addon_browser_application_txt" -a -f "$browser_browser_application_txt" -a -f "$addon_config_xml" -a -f "$addon_addon_mgr_bat" -a -f "$browser_run3556" ]
 then
     if [ "$netcast_config_ok" = "1" ]
     then
-	### DEPRECIATED settings - force_copy_config_netcast
-	### if [ "$force_copy_config_netcast" = "1" ]
-	### then
-	###     echo "OpenLGTV_BCM-WARN: forced NetCast configs copy..."
-	### fi
 	if [ ! -f "$user_browser_application_txt" -a -f "$addon_browser_application_txt" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making browser config copy - $addon_browser_application_txt..."
-	    #cp $browser_browser_application_txt $user_browser_application_txt
 	    cat "$addon_browser_application_txt" > "$user_browser_application_txt"
 	    chmod 644 "$user_browser_application_txt"
 	fi
 	if [ ! -f "$user_run3556" -a -f "$browser_run3556" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making browser startup script copy - $browser_run3556..."
-	    #cp $browser_run3556 $user_run3556
 	    cat "$browser_run3556" > "$user_run3556"
 	    chmod 775 "$user_run3556"
 	fi
 	if [ ! -f "$user_extra_conf" -a -f "$addon_extra_conf" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making additional settings file for browser copy - $addon_extra_conf..."
-	    #cp $addon_extra_conf $user_extra_conf
 	    cat "$addon_extra_conf" > "$user_extra_conf"
 	    chmod 775 "$user_extra_conf"
 	fi
 	if [ ! -f "$user_config_xml" -a -f "$addon_config_xml" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making StageCraft config copy - $addon_config_xml..."
-	    #cp $addon_config_xml $user_config_xml
 	    cat "$addon_config_xml" >> "$user_config_xml"
 	    chmod 644 "$user_config_xml"
 	fi
 	if [ ! -f "$user_addon_mgr_bat" -a -f "$addon_addon_mgr_bat" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: making Addon_Mgr config copy - $addon_addon_mgr_bat..."
-	    #cp $addon_addon_mgr_bat $user_addon_mgr_bat
 	    cat "$addon_addon_mgr_bat" >> "$user_addon_mgr_bat"
 	    chmod 644 "$user_addon_mgr_bat"
 	fi

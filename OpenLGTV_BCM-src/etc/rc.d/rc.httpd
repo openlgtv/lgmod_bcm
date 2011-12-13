@@ -29,7 +29,6 @@ then
 fi
 
 echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"
-#httpd -h /var/www
 httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www
 if [ -f "/mnt/user/etc/httpd.conf" ]
 then
