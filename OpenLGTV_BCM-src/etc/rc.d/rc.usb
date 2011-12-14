@@ -23,14 +23,30 @@ fi
 
 echo "OpenLGTV_BCM-INFO: rc.usb: LOCKDIR: $LOCKDIR created"
 
-sleep 1
+device="sd"
+[ "$2" != "" ] && device="$2"
 
-if [ "$2" != "" ]
+if [ "$3" = "remove" ]
 then
-    device="$2"
-else
-    device="sd"
+    #echo "OpenLGTV_BCM-INFO: device is $2 removed, killing processes and unmounting fs..."
+    echo "OpenLGTV_BCM-INFO: device is $2 removed, unmounting fs..."
+    for mountpoint in `grep ^/dev/${device} /proc/mounts | cut -d" " -f2 | tac`
+    do
+	echo "OpenLGTV_BCM-INFO: processing mountpoint: $mountpoint ..."
+	##fuser -k ${mountpoint}
+	#for pid in `fuser ${mountpoint}`
+	#do
+	    # do sth here?
+	    # filter out RELEASE PIDs just in case
+	#done
+	umount -f ${mountpoint}
+    done
+    echo "OpenLGTV_BCM-INFO: rc.usb removing LOCKDIR: $LOCKDIR..."
+    rmdir "$LOCKDIR"
+    exit 0
 fi
+
+sleep 1
 
 while [ -z "`grep -m 1 ^/dev/$device /proc/mounts`" ]
 do
@@ -116,7 +132,7 @@ fi
 
 source /etc/rc.d/rc.usb-remount
 
-if [ -d "$OpenLGTV_BCM_USB" -a "$2" != "" -a "$USB_DEV" = "$2" ]
+if [ -d "$OpenLGTV_BCM_USB" -a "$USB_DEV" = "$device" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."
     echo "$USB_DIR" > /tmp/usbdir

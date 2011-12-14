@@ -49,6 +49,11 @@ else
 	if [ "$PHYSDEVDRIVER" = "usbhid" -a "${DEVPATH:20:5}" = "event" ]
 	then
 	    (date; rmdir "$USBHID_CONNECTED_DIR"; /etc/rc.d/rc.directfb hotplug remove) >> /var/log/OpenLGTV_BCM.log &
+	else
+	    if [ "${DEVPATH:0:9}" = "/block/sd" -a "${DEVPATH:10:1}" = "" ]
+	    then
+		/etc/rc.d/rc.usb hotplug "${DEVPATH:7:3}" "$ACTION" >> /var/log/OpenLGTV_BCM.log &
+	    fi
 	fi
     fi
 fi
