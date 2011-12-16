@@ -1,6 +1,6 @@
 OpenLGTV BCM Changelog
 
-0.5.0-beta2 [NOT RELEASED YET]:
+0.5.0-beta2:
 
     * FIX: DLNA servers/shares visibility
     * FIX: OpenLGTV BCM, WWW, Yahoo Widgets icons removal when disabled in WebUI
