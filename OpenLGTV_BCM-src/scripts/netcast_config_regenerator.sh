@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM NetCast config parser and regenerator v.0.8.3 by xeros
+# OpenLGTV BCM NetCast config parser and regenerator v.0.8.4 by xeros
 # Source code released under GPL License
 
 echo "OpenLGTV_BCM-INFO: NetCast config parser and regenerator script."
@@ -279,9 +279,12 @@ then
 	    echo "OpenLGTV_BCM-INFO: NetCast config generator: removing \"$del\" id from existing config.xml: $org_cfgxml config_ver: $config_ver"
 	    if [ "$config_ver" = "2" -o "$config_ver" = "1" ]
 	    then
-		cat $org_cfgxml | \
-		    sed -n -e "1h;1!H;\${;g;s#<item id=\"$del\"[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*</item>[^<]*##g;p;}" \
-			> $new_cfgxml
+		#cat $org_cfgxml | \
+		#    sed -n -e "1h;1!H;\${;g;s#<item id=\"$del\"[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*</item>[^<]*##g;p;}" \
+		#	> $new_cfgxml
+		cat "$org_cfgxml" | \
+		    sed -n -e '1h;1!H;${;g;s#<item id="'"$del"'"[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*</item>[^<]*##g;p;}' \
+			> "$new_cfgxml"
 	    else
 		echo "OpenLGTV_BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
 	    fi

@@ -16,9 +16,13 @@ F=nvram; FX="/home/backup"; FF="${FX}/${F}"
 	cat /dev/mtd$mtd_nvram > /tmp/${F}
 	#f=$f.gz; [ -f $f ] && continue; # TODO: force new backup if different
 	[ -d "${FX}" ] || mkdir -p "${FX}"
-	f=$f.gz; [ -f $f ] && break;
+	f=$f.gz; [ -f $f -a "$uver" = "$ver" ] && break;
+	cmn=/mnt/lg/cmn_data; usr=/mnt/user
 	h=$(hexdump -vs1330 -n13 -e'"%_p"' /tmp/${F})
-	touch "/mnt/lg/cmn_data/model.${h%%.*}" "/mnt/user/model.${h%%.*}"; # expose model name
+	touch "$cmn/model.${h%%.*}"  "$usr/model.${h%%.*}";  # expose model name
+	h=$(hexdump -vs674 -n16 -e'"%_p"' /tmp/${F})
+	touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # and serial
+	f=$f.gz; [ -f $f ] && break;
 	iecho "backup: $f"
 	cat /tmp/$F | gzip -1 > $f; sync; break
 done; }

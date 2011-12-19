@@ -45,9 +45,7 @@ source /etc/rc.d/rc.mount2
 echo "OpenLGTV_BCM-INFO: enabling possibility to break init script with CTRL+C now"
 stty brkint
 
-source /etc/rc.d/rc.modules-lg
-
-source /etc/rc.d/rc.mount3
+export uver=`cat /mnt/user/etc/ver2`
 
 if [ ! -f "/mnt/flash/data/resolv.conf" ]
 then
@@ -61,8 +59,6 @@ then
     touch /mnt/flash/data/hosts
 fi
 
-export uver=`cat /mnt/user/etc/ver2`
-
 #
 # Network parameters
 #
@@ -74,6 +70,9 @@ chgrp utmp /var/run/utmp /var/log/wtmp
 chmod 0664 /var/run/utmp /var/log/wtmp
 
 source /etc/rc.d/rc.network
+
+# TODO: change it to source to get env vars after testing
+/etc/rc.d/rc.tftpd &
 
 source /etc/rc.d/rc.kill-lginit
 
@@ -180,6 +179,8 @@ hostname OpenLGTV_BCM
 [ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs
 [ ! -d "/mnt/user/modules/lg" ]          && mkdir -p /mnt/user/modules/lg
 
+/etc/rc.d/rc.modules-lg
+
 /etc/rc.d/rc.modules &
 
 source /etc/rc.d/rc.netcast
@@ -190,6 +191,8 @@ then
     echo "OpenLGTV_BCM-INFO: making NVRAM copy from /dev/mtd$mtd_nvram partition..."
     /etc/rc.d/rc.nvram &
 fi
+
+source /etc/rc.d/rc.mount3
 
 nice -n 20 /etc/rc.d/rc.fwinfo | tee -a /var/log/fwinfo.log &
 
