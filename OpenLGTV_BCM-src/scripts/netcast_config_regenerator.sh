@@ -279,11 +279,16 @@ then
 	    echo "OpenLGTV_BCM-INFO: NetCast config generator: removing \"$del\" id from existing config.xml: $org_cfgxml config_ver: $config_ver"
 	    if [ "$config_ver" = "2" -o "$config_ver" = "1" ]
 	    then
+		# INFO: works properly (but slow) on <170KB files, on bigger ones 'sed' does endless loop eating all resources
 		#cat $org_cfgxml | \
 		#    sed -n -e "1h;1!H;\${;g;s#<item id=\"$del\"[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*</item>[^<]*##g;p;}" \
 		#	> $new_cfgxml
+		##cat "$org_cfgxml" | \
+		##    sed -n -e '1h;1!H;${;g;s#<item id="'"$del"'"[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*</item>[^<]*##g;p;}' \
+		##	> "$new_cfgxml"
+		# INFO: easiest ways are the best - thanks mmm4m5m
 		cat "$org_cfgxml" | \
-		    sed -n -e '1h;1!H;${;g;s#<item id="'"$del"'"[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*</item>[^<]*##g;p;}' \
+		    tr '\n' '\0' | sed -e 's/\(<item\)/\n\1/g' | grep -v '^<item id="'"$del\"" | tr -d '\n' | tr '\0' '\n' \
 			> "$new_cfgxml"
 	    else
 		echo "OpenLGTV_BCM-ERROR: NetCast config generator: there is no support for config_ver: $config_ver config.xml: $org_cfgxml yet"
