@@ -1,0 +1,25 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.tftpd
+# TFTP service setup script by xeros
+# Source code released under GPL License
+
+# TODO: limit space? more actions?
+
+MODEL=`echo /mnt/lg/user/model.*`
+SERIAL=`echo /mnt/lg/user/serial.*`
+[ -f "$MODEL"  ] && MODEL="${MODEL#*model.}"    || MODEL=''
+[ -f "$SERIAL" ] && SERIAL="${SERIAL#*serial.}" || SERIAL=''
+export tftproot=/tmp/tftproot
+tdir="$SERIAL"
+[ "$tdir" = "" ] && tdir="$MODEL"
+[ "$tdir" = "" ] && tdir=opnlgtv
+export tdirfull="$tftproot/$tdir"
+
+mkdir -p "$tdirfull"
+chown nobody "$tdirfull"
+
+echo "OpenLGTV_BCM-INFO: starting TFTP service listening on port 6069, accepting uploads into \"$tdir\" dir only"
+udpsvd -vc2 0.0.0.0 6069 tftpd -u nobody -c "$tftproot" &
+
+# example for uploads:
+# atftp -p -l /path/to/local/file -r tv_serial_number/remote.file --tftp-timeout 1 192.168.0.2 6069
