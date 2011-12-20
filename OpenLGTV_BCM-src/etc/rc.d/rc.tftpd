@@ -19,6 +19,7 @@ for i in 1 2 3
 do
     mkdir -p "$tdirfull/stage${i}"
 done
+mkdir -p "$tdirfull/upgrade"
 #chown -R nobody "$tdirfull"
 chown -R 99 "$tdirfull" # /etc/passwd is not yet available to resolve 'nobody' username
 
@@ -26,5 +27,11 @@ echo "OpenLGTV_BCM-INFO: starting TFTP service listening on port 6069, accepting
 # tftpd doesn't accept UID as user parameter but it does reject connections if username is not resolved so client keeps retrying connections
 udpsvd -vc2 0.0.0.0 6069 tftpd -u nobody -c "$tftproot" &
 
-# example for uploads:
-# atftp -p -l /path/to/local/file -r tv_serial_number/remote.file --tftp-timeout 1 192.168.0.2 6069
+# examples for uploads:
+# atftp -p -l /path/to/local/file.sh -r tv_serial_number/stage1/remote_file.sh --tftp-timeout 1 192.168.0.2 6069
+
+# tftp 192.168.x.x 6069
+# > binary
+# > rexmt 1
+# > timeout 60
+# > put tv_serial_number/stage1/remote_file.sh

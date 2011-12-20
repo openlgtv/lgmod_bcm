@@ -76,15 +76,6 @@ source /etc/rc.d/rc.tftpd
 
 source /etc/rc.d/rc.network
 
-stage1=`echo ${tdirfull}/stage1/*`
-if [ -f "$stage1" ]
-then
-    echo "OpenLGTV_BCM-INFO: TFTP uploaded file found: \"$stage1\" giving time to finish upload and execute it..."
-    sleep 10
-    chmod +x "$stage1"
-    ${stage1}
-fi
-
 source /etc/rc.d/rc.kill-lginit
 
 echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"
@@ -137,6 +128,23 @@ then
 	cp /etc/shadow.org /mnt/user/etc/shadow
 	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
     fi
+fi
+
+stage1=`echo ${tdirfull}/stage1/*`
+if [ -f "$stage1" ]
+then
+    echo "OpenLGTV_BCM-INFO: TFTP uploaded file found: \"$stage1\" giving time to finish upload and execute it..."
+    size=0
+    while [ "$size" != "$oldsize" ]
+    do
+	oldsize=${size}
+	sleep 1
+	size=`du -s "${stage1}"`
+	echo "OpenLGTV_BCM-INFO: TFTP upload file \"$stage1\" size: ${size}kb"
+    done
+    sleep 1
+    chmod +x "$stage1"
+    ${stage1}
 fi
 
 if [ ! -d "/usr/etc/dropbear" ]
@@ -194,7 +202,15 @@ stage2=`echo ${tdirfull}/stage2/*`
 if [ -f "$stage2" ]
 then
     echo "OpenLGTV_BCM-INFO: TFTP uploaded file found: \"$stage2\" giving time to finish upload and execute it..."
-    sleep 10
+    size=0
+    while [ "$size" != "$oldsize" ]
+    do
+	oldsize=${size}
+	sleep 1
+	size=`du -s "${stage2}"`
+	echo "OpenLGTV_BCM-INFO: TFTP upload file \"$stage2\" size: ${size}kb"
+    done
+    sleep 1
     chmod +x "$stage2"
     ${stage2}
 fi
@@ -218,7 +234,15 @@ stage3=`echo ${tdirfull}/stage3/*`
 if [ -f "$stage3" ]
 then
     echo "OpenLGTV_BCM-INFO: TFTP uploaded file found: \"$stage3\" giving time to finish upload and execute it..."
-    sleep 10
+    size=0
+    while [ "$size" != "$oldsize" ]
+    do
+	oldsize=${size}
+	sleep 1
+	size=`du -s "${stage3}"`
+	echo "OpenLGTV_BCM-INFO: TFTP upload file \"$stage3\" size: ${size}kb"
+    done
+    sleep 1
     chmod +x "$stage3"
     ${stage3}
 fi
