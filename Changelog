@@ -6,8 +6,9 @@ OpenLGTV BCM Changelog
     * FIX: udhcpc script now sets default IP address before making requests instead of 0.0.0.0 when configuration set to DHCP but no DHCP servers around
     * FIX: FileManager link in WebUI
     * FIX: back from playback in FileManager had mixed paths
-    * ADD: TFTP server service for early boot recovery - uploads authenticated by TV serial number
+    * ADD: TFTP server service for early boot recovery (3 stages) - uploads need to be authenticated by TV serial number
     * ADD: text files and images viewer in FileManager that's usable with remote control
+    * UPDATE: improve Yavido alternative with bigger font, arrows navigation and shorter refresh time
 
 0.5.0-beta2:
 

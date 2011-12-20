@@ -223,6 +223,9 @@ then
     ${stage3}
 fi
 
+echo "OpenLGTV_BCM-INFO: stopping TFTP service"
+killall udpsvd
+
 source /etc/rc.d/rc.mount3
 
 nice -n 20 /etc/rc.d/rc.fwinfo | tee -a /var/log/fwinfo.log &

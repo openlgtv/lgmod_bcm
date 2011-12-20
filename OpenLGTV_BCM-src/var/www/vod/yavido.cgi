@@ -19,12 +19,12 @@ Content-type: text/html
 </style>
 <title>YAVIDO alternative by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta HTTP-EQUIV='REFRESH' content="30; url="yavido.cgi">
+<meta HTTP-EQUIV='REFRESH' content="15; url="yavido.cgi">
 <script type="text/javascript">
 <!--
 
 var col = 1; //number of 'cells' in a row
-var current;
+var current = 1;
 var next;
 
 document.onkeydown = check;
@@ -43,23 +43,12 @@ function check(e)
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		//alert('key: '+key+' current: '+current+' next: '+next);
 		if (key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
 			document.links['link' + next].focus();
-			//set TD background
-			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
-			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
-			//set current=next
 			current = next;
-			}
-		else if (key==404) 
-			{
-			//the green button on the remote control have been pressed
-			//Switch to the Keyboard
-			top.frames["Keyboard"].focus();
 			}
 		else if (key==461) 
 			{
@@ -78,23 +67,12 @@ function check(e)
 		}catch(Exception){}
 	}
 
-function setCurrent(element)
-	{
-	var string = element.id;
-	//cut number after 'link' name
-	current = string.slice(4,string.length);
-	}
-	
-
 	function OnLoadSetCurrent(element)
 	{
-	current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
 	
 document.defaultAction = true;
-
 
 // -->
 </script>
@@ -102,7 +80,7 @@ document.defaultAction = true;
 <body>
 
 <center><img src="http://www.yavido.tv/sites/default/files/yaml_2col_31_logo.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/></center><br/><br/>
-<font size="+2">
+<font size="+3">
 <center>
 
 <?
@@ -113,8 +91,8 @@ menuLoc="http://lge.yavido.tv/ajax/portal/getPlaylist.php?action=home"
 
 wget -q -U "$useragent" "$menuLoc" -O - | \
     sed -e 's/\(\.mp4"\)/\1<\/a>\n/g' | \
-    sed -e 's/"AUTHOR":"\(.*\)","TITLE":"\(.*\)","URL":"\(.*mp4\)"/\n<a href="\3">\1 - \2<\/a><br>\n/g' -e 's/\\//g' | \
-    grep "^<a"
+    sed -e 's/"AUTHOR":"\(.*\)","TITLE":"\(.*\)","URL":"\(.*mp4\)"/\n<a href="\3">\1 - \2<\/a><br><br>\n/g' -e 's/\\//g' | \
+    grep "^<a" | grep -n "href" | sed 's/^\(.*\):<a/<a id="link\1"/g'
 ?>
 
 </center></font>
