@@ -118,7 +118,7 @@ PageElements[5].type = ['anchor'];
 
 PageElements[6] = new Object();
 PageElements[6].value = ['link7'];
-PageElements[6].type = ['button'];
+PageElements[6].type = ['anchor'];
 
 PageElements[7] = new Object();
 PageElements[7].value = ['link8'];

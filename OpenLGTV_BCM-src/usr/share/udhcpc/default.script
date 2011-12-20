@@ -1,5 +1,6 @@
 #!/bin/sh
 # udhcpc script edited by Tim Riker <Tim@Rikers.org>
+# modified by xeros
 
 RESOLV_CONF="/tmp/resolv.conf"
 
@@ -12,8 +13,8 @@ BROADCAST="broadcast +"
 
 case "$1" in
 	deconfig)
-		echo "Setting IP address 0.0.0.0 on $interface"
-		ifconfig $interface 0.0.0.0
+		echo "Setting IP address 192.168.100.99 with netmask 255.255.255.0 on $interface"
+		ifconfig $interface 192.168.100.99 netmask 255.255.255.0
 		;;
 
 	renew|bound)
@@ -22,7 +23,7 @@ case "$1" in
 
 		if [ -n "$router" ] ; then
 			echo "Deleting routers"
-			while route del default gw 0.0.0.0 dev $interface ; do
+			while route del default dev $interface ; do
 				:
 			done
 

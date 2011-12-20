@@ -69,10 +69,13 @@ touch /var/run/utmp /var/log/wtmp /var/log/lastlog
 chgrp utmp /var/run/utmp /var/log/wtmp
 chmod 0664 /var/run/utmp /var/log/wtmp
 
-source /etc/rc.d/rc.network
+echo "OpenLGTV_BCM-INFO: setting loopback network connection..."
+ifconfig lo 127.0.0.1 netmask 255.0.0.0
 
 # TODO: change it to source to get env vars after testing
 /etc/rc.d/rc.tftpd &
+
+source /etc/rc.d/rc.network
 
 source /etc/rc.d/rc.kill-lginit
 

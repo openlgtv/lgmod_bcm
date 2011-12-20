@@ -1,5 +1,14 @@
 OpenLGTV BCM Changelog
 
+0.5.0-beta3 [NOT RELEASED YET]:
+
+    * FIX: boot if any of netcast_config_add_* options was disabled and NetCast config.xml is too big to parse
+    * FIX: udhcpc script now sets default IP address before making requests instead of 0.0.0.0 when configuration set to DHCP but no DHCP servers around
+    * FIX: FileManager link in WebUI
+    * FIX: back from playback in FileManager had mixed paths
+    * ADD: TFTP server service for early boot recovery - uploads authenticated by TV serial number
+    * ADD: text files and images viewer in FileManager that's usable with remote control
+
 0.5.0-beta2:
 
     * FIX: DLNA servers/shares visibility

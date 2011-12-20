@@ -41,8 +41,6 @@ fi
 #
 # Network setting
 #
-echo "OpenLGTV_BCM-INFO: setting loopback network connection..."
-ifconfig lo 127.0.0.1 netmask 255.0.0.0
 if [ "$network_set" -eq "1" ]
 then
     echo "OpenLGTV_BCM-INFO: TARGET_IP: $TARGET_IP SERVER_IP: $SERVER_IP GATEWAY: $GATEWAY NETMASK: $NETMASK"

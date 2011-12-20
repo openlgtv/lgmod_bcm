@@ -42,6 +42,9 @@ Content-type: text/html
     td.panel {
 	min-width: 410px;
     }
+    pre{
+	text-align: left;
+    }
 </style>
 <title>CGI FileManager by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -207,7 +210,20 @@ document.defaultAction = true;
 <?
 if [ "$action" = "play" ]
 then
-    echo "<meta HTTP-EQUIV='REFRESH' content='2; url=root$spth'>"
+    ext="${spth##*.}"
+    ext="`echo $ext | tr [:upper:] [:lower:]`"
+    if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" ]
+    then
+	#cat "$spth"
+	ftype=text
+    else
+	if [ "$ext" = "jpg" -o "$ext" = "jpeg" -o "$ext" = "png" -o "$ext" = "gif" ]
+	then
+	    ftype=image
+	else
+	    echo "<meta HTTP-EQUIV='REFRESH' content='2; url=root$spth'>"
+	fi
+    fi
 fi
 
 ?>
@@ -219,7 +235,7 @@ fi
 
 echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
 
-echo '<div style="width:85%; margin:auto; font-size:16px; background-color:white;">'
+echo '<div style="width:95%; margin:auto; font-size:16px; background-color:white;">'
 
 [ "$FORM_pid" != "" ] && pid="$FORM_pid"
 
@@ -247,7 +263,19 @@ fi
 
 if [ "$action" = "play" ]
 then
-    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
+    if [ "$ftype" = "text" ]
+    then
+	echo "<pre align='left'>"
+	cat "$spth"
+	echo "</pre>"
+    else
+	if [ "$ftype" = "image" ]
+	then
+	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img src='root$spth' width='100%' height='100%'/></div>"
+	else
+	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
+	fi
+    fi
 fi
 
 if [ "$FORM_confirm" != "yes" ]

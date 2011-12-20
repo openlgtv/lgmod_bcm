@@ -117,27 +117,32 @@ if [ "$side" = "l" -a "$lpth" != "" ]
 then
     cpth="$lpth"
     opth="$rpth"
+    selected="$FORM_lselected"
+    oside=r
 else
     if [ "$side" = "r" -a "$rpth" != "" ]
     then
 	cpth="$rpth"
 	opth="$lpth"
+	selected="$FORM_rselected"
+	oside=l
     fi
 fi
 
-echo "var side = '$side';"
-echo "var lpth = '$lpth';"
-echo "var rpth = '$rpth';"
-echo "var cpth = '$cpth';"
-echo "var opth = '$opth';"
+echo "var side  = '$side';"
+echo "var oside = '$oside';"
+echo "var lpth  = '$lpth';"
+echo "var rpth  = '$rpth';"
+echo "var cpth  = '$cpth';"
+echo "var opth  = '$opth';"
 
 if [ -f "$cpth" ]
 then
     echo "var cpth = '$cpth';"
     #echo "var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpth=' + lpth + '&rpth=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;"
-    echo "var dest='fm-action.cgi?action=play&side=$side&lpth=$cpth&rpth=$cpth';"
+    echo "var dest='fm-action.cgi?action=play&side=$side&${side}pth=$cpth&${oside}pth=$opth&select=${selected}';"
     sleep 1
-    echo "window.location=dest;"
+    echo "window.location.replace(dest);"
 fi
 
 if [ -n "$FORM_select" ]
