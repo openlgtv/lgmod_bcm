@@ -15,8 +15,11 @@ tdir="$SERIAL"
 [ "$tdir" = "" ] && tdir=opnlgtv
 export tdirfull="$tftproot/$tdir"
 
-mkdir -p "$tdirfull"
-chown nobody "$tdirfull"
+for i in 1 2 3
+do
+    mkdir -p "$tdirfull/stage${i}"
+done
+chown -R nobody "$tdirfull"
 
 echo "OpenLGTV_BCM-INFO: starting TFTP service listening on port 6069, accepting uploads into \"$tdir\" dir only"
 udpsvd -vc2 0.0.0.0 6069 tftpd -u nobody -c "$tftproot" &

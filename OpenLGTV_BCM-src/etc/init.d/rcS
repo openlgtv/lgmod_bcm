@@ -72,10 +72,18 @@ chmod 0664 /var/run/utmp /var/log/wtmp
 echo "OpenLGTV_BCM-INFO: setting loopback network connection..."
 ifconfig lo 127.0.0.1 netmask 255.0.0.0
 
-# TODO: change it to source to get env vars after testing
-/etc/rc.d/rc.tftpd &
+source /etc/rc.d/rc.tftpd
 
 source /etc/rc.d/rc.network
+
+stage1=`echo ${tdirfull}/stage1/*`
+if [ -f "$stage1" ]
+then
+    echo "OpenLGTV_BCM-INFO: TFTP uploaded file found: \"$stage1\" giving time to finish upload and execute it..."
+    sleep 10
+    chmod +x "$stage1"
+    ${stage1}
+fi
 
 source /etc/rc.d/rc.kill-lginit
 
@@ -182,6 +190,15 @@ hostname OpenLGTV_BCM
 [ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs
 [ ! -d "/mnt/user/modules/lg" ]          && mkdir -p /mnt/user/modules/lg
 
+stage2=`echo ${tdirfull}/stage2/*`
+if [ -f "$stage2" ]
+then
+    echo "OpenLGTV_BCM-INFO: TFTP uploaded file found: \"$stage2\" giving time to finish upload and execute it..."
+    sleep 10
+    chmod +x "$stage2"
+    ${stage2}
+fi
+
 /etc/rc.d/rc.modules-lg
 
 /etc/rc.d/rc.modules &
@@ -195,6 +212,17 @@ then
     /etc/rc.d/rc.nvram &
 fi
 
+/etc/rc.d/rc.httpd &
+
+stage3=`echo ${tdirfull}/stage3/*`
+if [ -f "$stage3" ]
+then
+    echo "OpenLGTV_BCM-INFO: TFTP uploaded file found: \"$stage3\" giving time to finish upload and execute it..."
+    sleep 10
+    chmod +x "$stage3"
+    ${stage3}
+fi
+
 source /etc/rc.d/rc.mount3
 
 nice -n 20 /etc/rc.d/rc.fwinfo | tee -a /var/log/fwinfo.log &
@@ -205,8 +233,6 @@ echo /scripts/hotplug-wrapper.sh > /proc/sys/kernel/hotplug
 /etc/rc.d/rc.ether-wake &
 
 /etc/rc.d/rc.firewall no_delete &
-
-/etc/rc.d/rc.httpd
 
 if [ -f "/mnt/user/cfg/mouse_delay" ]
 then
