@@ -2,12 +2,19 @@
 # Hotplug wrapper for LGMOD
 # Originally created by djpety (c)2011
 # Modified/adapted for LGMOD S7 by mmm4m5m and for OpenLGTV BCM by xeros
-# v1.2.1
+# v1.2.2
 
 HOTPLUG_FW_DIRS='/mnt/user/firmware /lib/firmware'
 USBHID_CONNECTED_DIR="/var/run/usbhid.connected"
 
 echo "hotplug: ACTION=$ACTION SUBSYSTEM=$SUBSYSTEM FIRMWARE=$FIRMWARE DEVPATH=$DEVPATH PHYSDEVDRIVER=$PHYSDEVDRIVER ($@)" > /dev/kmsg
+
+if [ -f "/mnt/lg/lginit/lginit" ]
+then
+    /etc/rc.d/rc.kill-lginit > /dev/kmsg &
+    /bin/hotplug-real "$@"
+    exit 0
+fi
 
 if [ "$ACTION" == "add" ]
 then
@@ -58,4 +65,4 @@ else
     fi
 fi
 
-/bin/hotplug "$@"
+/bin/hotplug-real "$@"

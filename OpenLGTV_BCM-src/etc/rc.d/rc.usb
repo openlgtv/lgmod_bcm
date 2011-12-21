@@ -52,8 +52,14 @@ while [ -z "`grep -m 1 ^/dev/$device /proc/mounts`" ]
 do
     sleep 1
     k=$(($k+1))
-    if [ $k -gt 30 ]; then break; fi
+    if [ $k -gt 10 ]; then break; fi
+    #if [ $k -gt 30 ]; then break; fi
 done
+
+export fstype=`blkid /dev/$device | sed -e 's/^.*TYPE="//g' -e 's/".*//g'`
+echo "OpenLGTV_BCM-INFO: USB storage device: \"$device\" connected, fstype: \"$fstype\""
+
+# TODO: make actions for mounting ext3 and ext3 but first need to find empty mountpoint
 
 for jj in 1 2 3 4
 do

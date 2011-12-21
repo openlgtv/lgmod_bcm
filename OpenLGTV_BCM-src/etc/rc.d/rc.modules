@@ -3,7 +3,8 @@
 # Kernel modules loading script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-MODULES_ROOTFS_LIST="input-core hid usbhid evdev uinput cifs fuse"
+#MODULES_ROOTFS_LIST="input-core hid usbhid evdev uinput cifs fuse"
+MODULES_ROOTFS_LIST="input-core hid usbhid evdev uinput cifs fuse jbd2 ext4"
 MODULES_CUSTOM_LIST_FILE=/mnt/user/etc/modules.custom
 if [ -f "$MODULES_CUSTOM_LIST_FILE" ]
 then

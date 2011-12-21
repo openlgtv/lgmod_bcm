@@ -47,6 +47,7 @@ do
     [ "$argv" = "install"         ] && no_install=0
     [ "$argv" = "chrooted"        ] && chrooted=1
     [ "$argv" = "info"            ] && info=1
+    [ "$argv" = "paste"           ] && info_arg=paste
     [ "$argv" = "drop_caches"     ] && drop_caches=1
     [ "${argv#image=}" != "$argv" ] && ver="`basename ${argv#image=} | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`" && dir="`dirname ${argv#image=}`"
     argc=$(($argc+1))
@@ -357,19 +358,8 @@ then
     fi
 fi
 
-
-#info=1
-# info code by mmm4m5m for LGMOD S7, adapted to OpenLGTV BCM
-#if [ -n "$info" ]; then
-	#infofile="$infolog"
-        #echo "NOTE: Create info file (1 min, $infofile) ..."
-        ##echo "10010 $rootfs, $lginit, $PWD: $@" > "$infofile" || echo "Error: Info file failed"
-	#busybox=/bin/busybox
-	#mtd_mtdinfo=`grep -m 1 '"mtdinfo"' /proc/mtd | cut -d: -f 1`
-	#mtd_boot=`grep -m 1 '"boot"' /proc/mtd | cut -d: -f 1`
-#fi
 if [ -n "$info" ]; then
-	/scripts/info.sh $infolog
+	/scripts/info.sh $info_arg $infolog
 fi
 
 # Safety checks for supported rootfs version and partitions numbers
