@@ -3,8 +3,12 @@
 # USB Storage Remounting Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+# use $device and $usbport variables set in rc.usb
+[ -z "$device"  ] && device=sd
+[ -z "$usbport" ] && usbport=usb1
+
 echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
-for mnt in `grep ^/dev/sd /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
+for mnt in `grep ^/dev/$device /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
 do
     mnt_src=`echo $mnt | cut -d# -f1`
     mnt_dst=`echo $mnt | cut -d# -f2`
@@ -18,11 +22,11 @@ do
 	echo "OpenLGTV_BCM-INFO: mounting NTFS partition with ntfs-3g: $mnt_src into $mnt_dst"
 	ntfs-3g $mnt_src $mnt_dst
     fi
-    if [ "$mnt_dst" = "$USB_DIR" ]
-    then
-	echo "OpenLGTV_BCM-INFO: setting USB_DIR_FS on $mnt_src to $mnt_fs"
-	export USB_DIR_FS=$mnt_fs
-    fi
+    ##if [ "$mnt_dst" = "$USB_DIR" ]
+    ##then
+    ##	echo "OpenLGTV_BCM-INFO: setting USB_DIR_FS on $mnt_src to $mnt_fs"
+    ##	export USB_DIR_FS=$mnt_fs
+    ##fi
     #I am not sure if should we list dirs of all mounted drives or not - need to think about it
     #if [ -z "`grep \"$mnt_dst\" /tmp/usbdirs`" ]
     #then
@@ -30,14 +34,30 @@ do
     #fi
 done
 
-for partdev in `fdisk -l | grep ^/dev/sd | grep -v Extended | cut -d" " -f1`
+for partdev in `fdisk -l | grep ^/dev/$device | grep -v Extended | cut -d" " -f1`
 do
+    mnt_dst=""
     if [ -z `grep "^$partdev" /proc/mounts` ]
     then
 	#export fstype=`blkid "$partdev" | sed -e 's/^.*TYPE="//g' -e 's/".*//g'`
 	export fstype=`blkid "$partdev" | grep "^${partdev}" | sed -e 's/^.*TYPE="//g' -e 's/".*//g'` # just in case
-	echo "OpenLGTV_BCM-INFO: USB partition mounting: \"$partdev\" connected, fstype: \"$fstype\""
-	# TODO: make destination mount point availability check and real mount with options based on filesystem type
+	echo "OpenLGTV_BCM-INFO: found not mounted USB partition: \"$partdev\", fstype: \"$fstype\""
+	if [ -n "`grep $fstype /proc/filesystems`" ]
+	then
+	    for i in 1 2 3 4 5 6
+	    do
+		[ -z "`grep /mnt/${usbport}/Drive${i} /proc/mounts`" ] && mnt_dst="/mnt/${usbport}/Drive${i}" && break
+	    done
+	    if [ -n "$mnt_dst" ]
+	    then
+		echo "OpenLGTV_BCM-INFO: USB partition mounting: \"$partdev\" connected, fstype: \"$fstype\", mount point: \"$mnt_dst\""
+		mount -t "$fstype" "$partdev" "$mnt_dst"
+	    else
+		echo "OpenLGTV_BCM-ERROR: no free mount points for USB partition: \"$partdev\", fstype: \"$fstype\""
+	    fi
+	else
+	    echo "OpenLGTV_BCM-WARN: filesystem: \"$fstype\" on USB partitition: \"$partdev\" is not supported by kernel (module not loaded?)"
+	fi
     fi
 done
 echo "OpenLGTV_BCM-INFO: rc.usb-remount end"

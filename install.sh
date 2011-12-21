@@ -42,8 +42,8 @@ argc=0
 for argv in "$@"
 do
     [ "$argv" = "autoupgrade"     ] && confirmations=0 && rebooting=1 && no_install=0 && autoupgrade=1
-    [ "$argv" = "no_backup"       ] && make_backup=0
-    [ "$argv" = "no_install"      ] && no_install=1
+    [ "$argv" = "nobackup"        ] && make_backup=0
+    [ "$argv" = "noinstall"       ] && no_install=1
     [ "$argv" = "install"         ] && no_install=0
     [ "$argv" = "chrooted"        ] && chrooted=1
     [ "$argv" = "info"            ] && info=1

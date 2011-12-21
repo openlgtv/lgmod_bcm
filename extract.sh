@@ -14,9 +14,9 @@ then
     echo " extract     - just extracts image to /tmp"
     echo " chroot      - extracts, mounts, chroots into new rootfs with /bin/sh only, no installation"
     echo " info        - gathers much useful info for development into info.log file"
-    echo " no_install  - as above but checks for prerequestities and makes backup if running on LG firmware then exits just before flashing"
+    echo " noinstall   - as above but checks for prerequestities and makes backup if running on LG firmware then exits just before flashing"
     echo " install     - makes real installation"
-    echo " no_backup   - skip doing backup before installation"
+    echo " nobackup    - skip doing backup before installation"
     echo " drop_caches - drop caches during installation to free more memory (unstable)"
     echo " help        - this usage information"
     exit 0
@@ -88,7 +88,7 @@ then
     echo "Starting shell inside chrooted (virtual) root filesystem environment..."
     /usr/sbin/chroot "$CHR" /bin/sh
 else
-    echo "Starting installation: $base/install.sh $@"
+    echo "Starting installer: $base/install.sh $@"
     /usr/sbin/chroot "$CHR" "$base/install.sh" "$@"
 fi
 #TODO: umount,...

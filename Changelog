@@ -8,6 +8,9 @@ OpenLGTV BCM Changelog
     * FIX: back from playback in FileManager had mixed paths
     * ADD: TFTP server service for early boot recovery (3 stages) - uploads need to be authenticated by TV serial number
     * ADD: text files and images viewer in FileManager that's usable with remote control
+    * ADD: /mnt/usb{1,2}/Drive{5,6} mount points
+    * ADD: support for EXT3, JFS, [ EXT4 via additional kernel modules ], other supported filesystems by kernel automounting on hotplug
+    * ADD: support for OpenLGTV_BCM dir, Yahoo Widgets, etc. on JFS, EXT3/[4],... formated partitions
     * UPDATE: improve Yavido alternative with bigger font, arrows navigation and shorter refresh time
 
 0.5.0-beta2:
