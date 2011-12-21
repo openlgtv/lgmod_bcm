@@ -11,7 +11,10 @@ echo "hotplug: ACTION=$ACTION SUBSYSTEM=$SUBSYSTEM FIRMWARE=$FIRMWARE DEVPATH=$D
 
 if [ -f "/mnt/lg/lginit/lginit" ]
 then
-    /etc/rc.d/rc.kill-lginit > /dev/kmsg &
+    if mkdir "/tmp/lginit-kill" 2>/dev/null
+    then
+	/etc/rc.d/rc.kill-lginit > /dev/kmsg &
+    fi
     /bin/hotplug-real "$@"
     exit 0
 fi

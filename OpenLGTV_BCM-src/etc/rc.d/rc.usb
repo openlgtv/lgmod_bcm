@@ -56,8 +56,8 @@ do
     #if [ $k -gt 30 ]; then break; fi
 done
 
-export fstype=`blkid /dev/$device | sed -e 's/^.*TYPE="//g' -e 's/".*//g'`
-echo "OpenLGTV_BCM-INFO: USB storage device: \"$device\" connected, fstype: \"$fstype\""
+#export fstype=`blkid /dev/$device | sed -e 's/^.*TYPE="//g' -e 's/".*//g'`
+#echo "OpenLGTV_BCM-INFO: USB storage device: \"$device\" connected, fstype: \"$fstype\""
 
 # TODO: make actions for mounting ext3 and ext3 but first need to find empty mountpoint
 

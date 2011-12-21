@@ -29,4 +29,15 @@ do
     #	echo "$mnt_dst" >> /tmp/usbdirs
     #fi
 done
+
+for partdev in `fdisk -l | grep ^/dev/sd | grep -v Extended | cut -d" " -f1`
+do
+    if [ -z `grep "^$partdev" /proc/mounts` ]
+    then
+	#export fstype=`blkid "$partdev" | sed -e 's/^.*TYPE="//g' -e 's/".*//g'`
+	export fstype=`blkid "$partdev" | grep "^${partdev}" | sed -e 's/^.*TYPE="//g' -e 's/".*//g'` # just in case
+	echo "OpenLGTV_BCM-INFO: USB partition mounting: \"$partdev\" connected, fstype: \"$fstype\""
+	# TODO: make destination mount point availability check and real mount with options based on filesystem type
+    fi
+done
 echo "OpenLGTV_BCM-INFO: rc.usb-remount end"
