@@ -55,7 +55,7 @@ do
 	    if [ -n "$mnt_dst" ]
 	    then
 		# VFAT and NTFS as support for disks connected to USB HUB
-		[ "$fstype" = "vfat" ] && mnt_args="rw,relatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro"
+		[ "$fstype" = "vfat" ] && mnt_args="-o rw,relatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro"
 		echo "OpenLGTV_BCM-INFO: USB partition mounting: \"$partdev\" connected, fstype: \"$fstype\", mount point: \"$mnt_dst\", args: \"$mnt_args\""
 		if [ "$fstype" = "ntfs" ]
 		then
