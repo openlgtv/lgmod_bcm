@@ -10,9 +10,13 @@
 echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
 for mnt in `grep ^/dev/$device /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
 do
-    mnt_src=`echo $mnt | cut -d# -f1`
-    mnt_dst=`echo $mnt | cut -d# -f2`
-    mnt_fs=`echo $mnt | cut -d# -f3`
+    #mnt_src=`echo $mnt | cut -d# -f1`
+    mnt_src="${mnt%%#*}"
+    #mnt_dst=`echo $mnt | cut -d# -f2`
+    mnt_dst="${mnt%#*}"
+    mnt_dst="${mnt_dst#*\#}"
+    #mnt_fs=`echo $mnt | cut -d# -f3`
+    mnt_fs="${mnt##*\#}"
     echo "OpenLGTV_BCM-DEBUG: mnt_src: $mnt_src mnt_dst: $mnt_dst mnt_fs: $mnt_fs"
     if [ "$mnt_fs" = "ntfs" ]
     then
