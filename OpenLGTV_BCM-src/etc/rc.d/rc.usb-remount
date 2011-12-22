@@ -50,8 +50,15 @@ do
 	    done
 	    if [ -n "$mnt_dst" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: USB partition mounting: \"$partdev\" connected, fstype: \"$fstype\", mount point: \"$mnt_dst\""
-		mount -t "$fstype" "$partdev" "$mnt_dst"
+		# VFAT and NTFS as support for disks connected to USB HUB
+		[ "$fstype" = "vfat" ] && mnt_args="rw,relatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro"
+		echo "OpenLGTV_BCM-INFO: USB partition mounting: \"$partdev\" connected, fstype: \"$fstype\", mount point: \"$mnt_dst\", args: \"$mnt_args\""
+		if [ "$fstype" = "ntfs" ]
+		then
+		    ntfs-3g "$partdev" "$mnt_dst" ${mnt_args}
+		else
+		    mount -t "$fstype" "$partdev" "$mnt_dst" ${mnt_args}
+		fi
 	    else
 		echo "OpenLGTV_BCM-ERROR: no free mount points for USB partition: \"$partdev\", fstype: \"$fstype\""
 	    fi
