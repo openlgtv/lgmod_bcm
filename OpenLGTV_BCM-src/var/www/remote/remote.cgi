@@ -28,7 +28,7 @@ content-type: text/html
 	    then
 		rel_stdin="/tmp/openrelease.in"
 	    fi
-	    [ "$FORM_IRkey" != "" ] && openrel_action=`grep -m1 "^${FORM_IRkey}" "$openrelease_keymap" | cut -d= -f2 | sed 's/^ *//g'`
+	    [ "$FORM_IRkey" != "" ] && openrel_action=`grep -m1 "^${FORM_IRkey}" "$openrelease_keymap" | sed -e "s/^$FORM_IRkey *= *//g" -e 's/"//g'`
 	    if [ "${openrel_action:0:2}" = "K_" ]
 	    then
 		if [ "${openrel_action:0:3}" = "K_X" ]
@@ -48,7 +48,7 @@ content-type: text/html
 		    command="${openrel_action#SYSTEM:}"
 		    command="${command# }"
 		    command="${command% &}"
-		    [ -n "$command" ] && ${command} &
+		    [ -n "$command" ] && $command &
 		fi
 	    fi
 	fi
