@@ -66,16 +66,20 @@ then
     export dpth="$rpth"
     export lpthx="`dirname \"$lpth\"`"
     export rpthx="$rpth"
+    export xselect="$FORM_lselected"
 else
     export spth="$rpth"
     export dpth="$lpth"
     export lpthx="$lpth"
     export rpthx="`dirname \"$rpth\"`"
+    export xselect="$FORM_rselected"
 fi
 
 echo "var side = '$side';"
 echo "var lpth = '$lpth';"
 echo "var rpth = '$rpth';"
+echo "var xselect = '$xselect';"
+echo "var refreshTime = '$FORM_timeout';"
 
 ?>
 
@@ -131,6 +135,7 @@ function check(e)
 			    document.getElementById('link_' + side + current).click();
 			    return false;
 			}
+		else if ((key>47)&(key<60)) { window.refreshTime=(key-48)*2000; return false; }
 		else if (key==461|key==27) 
 			{
 			//the back button on the remote control or ESC have been pressed
@@ -204,7 +209,8 @@ function resizeImage(imgId)
 
 document.defaultAction = true;
 
-<? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }" ?>
+<!-- ? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }" ? -->
+<? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${xselect}'); }" ?>
 
 // -->
 </script>
@@ -219,6 +225,7 @@ then
     play_enum_comment="OpenLGTV BCM FileManager: last played file number"
     if [ "$ftype" = "directory" -o "$ext" = "m3u" -o "$ext" = "pls" ]
     then
+	refresh=1
 	file_num=1
 	if [ "$ftype" = "directory" ]
 	then
@@ -247,6 +254,7 @@ then
     fi
     ext="${spth##*.}"
     ext="`echo $ext | tr [:upper:] [:lower:]`"
+    [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "<script type='text/javascript'>window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
     if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" ]
     then
 	ftype=text
@@ -255,9 +263,21 @@ then
 	then
 	    ftype=image
 	else
-	    echo "<meta HTTP-EQUIV='REFRESH' content='2; url=root$spth'>"
+	    #echo "<meta HTTP-EQUIV='REFRESH' content='2; url=root$spth'>"
+	    echo "<script type='text/javascript'>"
+	    if [ "$refresh" = "1" ]
+	    then
+		echo "setTimeout(\"window.location='root$spth'\",2000);"
+	    else
+		echo "setTimeout(\"window.location.replace('root$spth')\",2000);"
+	    fi
+	    echo "setTimeout(\"window.location.replace(window.location.href)\",4000);"
+	    echo "</script>"
 	fi
     fi
+    #[ "$refresh" = "1" ] && echo "<meta HTTP-EQUIV='REFRESH' content='2'>"
+    #[ "$refresh" = "1" ] && echo "<script type='text/javascript>document.write(\"<meta HTTP-EQUIV='REFRESH' content='window.refreshTime'>\");</script>"
+    [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]000/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
 fi
 
 ?>
@@ -269,7 +289,7 @@ fi
 
 [ "$ftype" != "text" ] && echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
 
-echo '<div style="width:95%; margin:auto; font-size:16px; background-color:white;">'
+[ "$ftype" != "image" ] && echo '<div style="width:95%; margin:auto; font-size:16px; background-color:white;">'
 
 [ "$FORM_pid" != "" ] && pid="$FORM_pid"
 
@@ -297,6 +317,7 @@ fi
 
 if [ "$action" = "play" ]
 then
+    [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo '<font color="green" size="+2"><b><script>document.write("Refresh time set to: ", window.refreshTime/1000, " second[s] (use number buttons to change it [x2])");</script></b></font>'
     if [ "$ftype" = "text" ]
     then
 	echo "<pre align='left'>"
@@ -305,9 +326,9 @@ then
     else
 	if [ "$ftype" = "image" ]
 	then
-	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image')\" src='root$spth'/></div>"
+	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image')\" width='1%' src='root$spth'/></div>"
 	else
-	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
+	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/><br/></font>"
 	fi
     fi
 fi
@@ -441,7 +462,7 @@ else
 	echo "</script>"
     fi
 fi
-echo '</div>'
+[ "$ftype" != "image" ] && echo '</div>'
 
 ?>
 </BODY></HTML>
