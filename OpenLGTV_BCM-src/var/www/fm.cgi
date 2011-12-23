@@ -14,7 +14,6 @@ Content-type: text/html
 <? killall df 2>/dev/null & ?>
 
 <style type="text/css">
-    //#fullheight{height:500px}
     body {
 	font-family:monospace;
 	//height: 710px;
@@ -27,41 +26,29 @@ Content-type: text/html
 	text-decoration:bold;
     }
     table.fulltable, #fulltable {
-	//min-height:690px;
 	height:690px;
-	//max-height=690px;
     }
     tbody.main, #main {
 	width: 95%;
 	height: 95%;
 	overflow-y:auto;
 	overflow-x: hidden;
-	//max-height:690px;
 	min-height:690px;
     }
     tbody.scrollable, #scrollable {
-	//max-height:650px;
 	display: block;
 	height: 100%;
 	overflow-y: auto;
-	//overflow-y: hidden;
 	overflow-x: hidden;
     }
     td.lpanelpath, .rpanelpath, #lpanelpath, #rpanelpath {
-	//min-width: 415px;
 	overflow:hidden;
 	white-space:nowrap;
-	//min-width:43%;
 	width:43%;
-	//width:500px;
-	//max-width:500px;
 	min-width:300px;
     }
     td.filename, #filename {
-	//min-width: 400px;
-	//width: 400px;
 	width: 700px;
-	//width: 390px;
 	width: 100%;
 	overflow:hidden;
 	white-space:nowrap;
@@ -73,9 +60,6 @@ Content-type: text/html
 	overflow:hidden;
 	white-space:nowrap;
     }
-    td {
-	//border: 1px solid red;
-    }
 </style>
 
 <title>CGI FileManager by xeros</title>
@@ -83,12 +67,9 @@ Content-type: text/html
 <script type="text/javascript">
 <!--
 
+//TODO: if filenameSize < 440 (from 1280/2-200) then cut filename characters earlier
 //var filenameSize=(window.innerWidth/2)-255;
 //var filenameSize=(window.innerWidth/2)-200;
-
-//TODO: if filenameSize < 440 (from 1280/2-200) then cut filename characters earlier
-
-//document.write('<style type="text/css">td.filename {width:' + filenameSize  + 'px;}</style>');
 // static value bigger than the needed one is even better - cell width is being resized without need to refresh page
 document.write('<style type="text/css">td.filename {width:800px;}</style>');
 
@@ -139,7 +120,6 @@ echo "var opth  = '$opth';"
 if [ -f "$cpth" ]
 then
     echo "var cpth = '$cpth';"
-    #echo "var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpth=' + lpth + '&rpth=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;"
     echo "var dest='fm-action.cgi?action=play&side=$side&${side}pth=$cpth&${oside}pth=$opth&select=${selected}';"
     sleep 1
     echo "window.location.replace(dest);"
@@ -273,8 +253,6 @@ function check(e)
 	//workaround to check for 'enter' on WebKit/KHTML which doesnt want to work in 'try' block
 	if (key==10|key==13|key==32) 
 		{   //ENTER/OK and SPACE
-		    //alert(document.getElementById('link_' + side + current).href); // link destination
-		    //alert(document.getElementById('link_' + side + current).text); // link name
 		    if (dialog_displayed==0)
 			{
 			document.getElementById('link_' + side + current).click();
@@ -316,7 +294,6 @@ function check(e)
 			{
 			//the PAUSE button on the remote control have been pressed or '\' on keyboard
 			//Set the same panel location path as current on other panel
-			//var dest='fm.cgi?type=related&side=' + side + '&lpth=' + cpth + '&rpth=' + cpth;
 			var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;
 			window.location=dest;
 			//Prevent default action
@@ -428,7 +405,6 @@ function check(e)
 			//Delete file or directory
 			// lpath and rpath variables are wrong - but the right ones lpth and rpth are gathered from link
 			var dest='fm-action.cgi?action=delete' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
-			//window.location=dest;
 			deleteDialog();
 			//Prevent default action
 			e.preventDefault();
@@ -439,7 +415,6 @@ function check(e)
 			//the GREEN button on the remote control or F5 have been pressed
 			//Copy file or directory
 			var dest='fm-action.cgi?action=copy' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
-			//window.location=dest;
 			copyDialog();
 			//Prevent default action
 			e.preventDefault();
@@ -450,7 +425,6 @@ function check(e)
 			//the YELLOW button on the remote control or F6 have been pressed
 			//Move file or directory
 			var dest='fm-action.cgi?action=move' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
-			//window.location=dest;
 			moveDialog();
 			//Prevent default action
 			e.preventDefault();
@@ -528,8 +502,6 @@ function check(e)
 function ChangeBgColor()
 	{
 	//Change the TD element BgColor.
-	//document.bgColor = '#D3D3D3';
-	//currentLink=document.links['link_' + nside + next];
 	// TODO: experiment with childNodes of table, for example:
 	// Get your row by finding the TBODY, and find your cell using
 	// childNodes[row].childNodes[col]
@@ -556,8 +528,6 @@ function setCurrent(element)
 
 function OnLoadSetCurrent(element)
 	{
-	//current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link_' + side + current].focus();
 	ChangeBgColor();
 	windowResize();
@@ -570,8 +540,6 @@ function mkdirDialog()
 	var newdivHeight=176;
 	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
 	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
-	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
 	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
@@ -585,7 +553,6 @@ function mkdirDialog()
 	    <input type="hidden" name="select" value="' + current + '"> \
 	    <input type="hidden" name="action" value="mkdir"> \
 	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></font>';
-	    //'</form></font><table width="100%"><tr valign="middle"><td align="right" valign="middle"><img src="Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
 	dialog_displayed = 1;
@@ -599,11 +566,9 @@ function copyDialog()
 	var newdivHeight=276;
 	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
 	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
-	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
 	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
-	//var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&name=' + cpth + '/' + document.getElementById('link_' + side + current).name;
 	src=cpth + '/' + document.getElementById('link_' + side + current).name;
 	if (side=='l')
 	    {
@@ -638,7 +603,6 @@ function moveDialog()
 	var newdivHeight=276;
 	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
 	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
-	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:200px; left:170px; width:916px; height:276px; border:2px solid black;');
 	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
@@ -676,8 +640,6 @@ function renameDialog()
 	var newdivHeight=176;
 	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
 	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
-	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
 	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
@@ -705,8 +667,6 @@ function deleteDialog()
 	var newdivHeight=176;
 	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
 	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
-	//newdiv.setAttribute('style', 'float:left; position:absolute; background: #efefef; padding:3px 0px 0 3px; top:0px; left:0px; width:716px; height:106px; overflow: hidden; z-index:10000;');
-	//newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:250px; left:260px; width:716px; height:176px; border:2px solid black;');
 	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
 	newdiv.id = "dialogWin";
 	document.body.appendChild(newdiv);
@@ -748,7 +708,6 @@ function dialogRemove()
 function windowResize()
 	{
 	var filenameSize=(window.innerWidth/2)-200;
-	//document.write('<style type="text/css">td.filename {width:' + filenameSize  + 'px;}</style>');
 	var fulltablestyle=document.getElementById('fulltable').style;
 	fulltablestyle.height=window.innerHeight-32;
 	document.getElementById('lpaneltbody').style.maxHeight=window.innerHeight-70;
@@ -809,7 +768,6 @@ fi
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	#echo "<tr id=\"tr_l1\" onClick=\"javascript:nside='l';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	echo "<tr id=\"tr_l1\" onClick=\"javascript:nside='l';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.png\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	litem_nr=2
     else
@@ -845,11 +803,9 @@ fi
 	lsize="${lcontent_5x%%@*}"
 	if [ "$ltype" = "directory" ]
 	then
-	    #limage="dir.gif"
 	    limage="dir.png"
 	    dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	else
-	    #if [ "$ltype" = "symbolic link" ]
 	    if [ "$ltype" = "symbolic&nbsp;link" ]
 	    then
 		limage="link.png"
@@ -875,7 +831,6 @@ fi
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	#echo "<tr id=\"tr_r1\" onClick=\"javascript:nside='r';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.gif\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	echo "<tr id=\"tr_r1\" onClick=\"javascript:nside='r';next=1;selectItem();\"><td class='filename'><img src=\"Images/file_icons/dir.png\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	ritem_nr=2
     else
@@ -911,7 +866,6 @@ fi
 	rsize="${rcontent_5x%%@*}"
 	if [ "$rtype" = "directory" ]
 	then
-	    #rimage="dir.gif"
 	    rimage="dir.png"
 	else
 	    if [ "$rtype" = "symbolic&nbsp;link" ]
@@ -922,7 +876,6 @@ fi
 	    fi
 	fi
 	dlink="fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth"
-	#echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:nside='r';next=${ritem_nr};selectItem();\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" name=\"$rfilename_space\" href=\"fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:nside='r';next=${ritem_nr};selectItem();\"><td class='filename'><img src=\"Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"${dlink}&rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done

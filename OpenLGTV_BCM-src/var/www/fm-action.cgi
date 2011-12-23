@@ -10,7 +10,6 @@ Content-type: text/html
 <!-- Source code released under GPL License -->
 
 <style type="text/css">
-    //#fullheight{height:500px}
     body {
 	font-family:monospace;
 	height: 720px;
@@ -23,9 +22,6 @@ Content-type: text/html
     tbody.main {
 	width: 95%;
 	height: 95%;
-	//overflow:scroll;
-	//height:10em;
-	//display:inline-block;
 	overflow-y:auto;
 	overflow-x: hidden;
 	max-height:700px;
@@ -133,11 +129,6 @@ function check(e)
 		else if (key==32) 
 			{
 			    document.getElementById('link_' + side + current).click();
-		//	    //alert(document.getElementById('link_' + side + current).href); // link destination
-		//	    //alert(document.getElementById('link_' + side + current).text); // link name
-		//	    var dest='fm-action.cgi?action=copy' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href;
-		//	    alert(dest);
-		//	    window.location=dest;
 			    return false;
 			}
 		else if (key==461|key==27) 
@@ -167,7 +158,6 @@ function check(e)
 function ChangeBgColor()
 	{
 	//Change the TD element BgColor.
-	//document.bgColor = '#D3D3D3';
 	document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
 	document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
 	}
@@ -184,7 +174,6 @@ function setCurrent(element)
 function OnLoadSetCurrent(element)
 	{
 	current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link_' + side + current].focus();
 	ChangeBgColor();
 	}
@@ -207,8 +196,6 @@ function resizeImage(imgId)
 	var winHeight = window.innerHeight;
 	var picAR = w/h;
 	var winAR = winWidth/winHeight;
-	//alert(picAR);
-	//alert(winAR);
 	if (picAR < winAR) { pic.height = winHeight; pic.width=winHeight*picAR; } else { pic.width = winWidth; pic.height=winWidth/picAR; }
 	//INFO: stretch image to screen regardless aspect ratio
 	//if (pic.offsetHeight > winHeight) { pic.height = winHeight; }
@@ -318,8 +305,6 @@ then
     else
 	if [ "$ftype" = "image" ]
 	then
-	    #echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' src='root$spth' width='100%' height='100%'/></div>"
-	    #echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' src='root$spth' width='100%'/></div>"
 	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image')\" src='root$spth'/></div>"
 	else
 	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
