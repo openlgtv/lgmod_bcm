@@ -9,8 +9,6 @@ Content-type: text/html
 <!-- fm-action.cgi script for handling actions like copy/move/delete/play and confirm/cancel of operation -->
 <!-- Source code released under GPL License -->
 
-<!-- TODO: text and images files viewer with remote control keys binding - to be able to at least get back to FileManager -->
-
 <style type="text/css">
     //#fullheight{height:500px}
     body {
@@ -200,6 +198,23 @@ function sleep(milliseconds)
 	    }
 	}
 
+function resizeImage(imgId)
+	{
+	var pic = document.getElementById(imgId);
+	var h = pic.offsetHeight;
+	var w = pic.offsetWidth;
+	var winWidth = window.innerWidth;
+	var winHeight = window.innerHeight;
+	var picAR = w/h;
+	var winAR = winWidth/winHeight;
+	//alert(picAR);
+	//alert(winAR);
+	if (picAR < winAR) { pic.height = winHeight; pic.width=winHeight*picAR; } else { pic.width = winWidth; pic.height=winWidth/picAR; }
+	//INFO: stretch image to screen regardless aspect ratio
+	//if (pic.offsetHeight > winHeight) { pic.height = winHeight; }
+	//if (pic.offsetWidth > winWidth) { pic.width = winWidth; }
+	}
+
 document.defaultAction = true;
 
 <? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }" ?>
@@ -210,11 +225,43 @@ document.defaultAction = true;
 <?
 if [ "$action" = "play" ]
 then
+    ftype="`busybox stat -c '%F' "${spth}"`"
+    ext="${spth##*.}"
+    [ -n "$ext" ] && ext="`echo $ext | tr [:upper:] [:lower:]`"
+    play_enum="${spth}/last_played.info"
+    play_enum_comment="OpenLGTV BCM FileManager: last played file number"
+    if [ "$ftype" = "directory" -o "$ext" = "m3u" -o "$ext" = "pls" ]
+    then
+	file_num=1
+	if [ "$ftype" = "directory" ]
+	then
+	    content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
+	else
+	    spthd="${spth%/*}"
+	    content_all=`grep -v "#" "$spth" | awk -F\n -v spthd="$spthd" '{print spthd "/" $1}' | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
+	    play_enum="${spth}.info"
+	    spth="${spthd}"
+	fi
+	if [ ! -f "${play_enum}" ]
+	then
+	    echo -e "# $play_enum_comment\n1" > "${play_enum}"
+	    start_playback=1
+	else
+	    start_playback=$((`grep -v "#" "${play_enum}"`+1))
+	    echo -e "# $play_enum_comment\n$start_playback" > "${play_enum}"
+	fi
+	file_num_max="`echo $content_all | wc -w`"
+	[ "$start_playback" -gt "$file_num_max" ] && echo -e "# $play_enum_comment\n0" > "${play_enum}" && start_playback=1
+	for content in $content_all
+	do
+	    [ "$file_num" = "$start_playback" ] && spth="`echo $content | sed 's/\&nbsp;/ /g'`" && break
+	    file_num=$((${file_num}+1))
+	done
+    fi
     ext="${spth##*.}"
     ext="`echo $ext | tr [:upper:] [:lower:]`"
-    if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" ]
+    if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" ]
     then
-	#cat "$spth"
 	ftype=text
     else
 	if [ "$ext" = "jpg" -o "$ext" = "jpeg" -o "$ext" = "png" -o "$ext" = "gif" ]
@@ -233,7 +280,7 @@ fi
 
 <?
 
-echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
+[ "$ftype" != "text" ] && echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
 
 echo '<div style="width:95%; margin:auto; font-size:16px; background-color:white;">'
 
@@ -271,7 +318,9 @@ then
     else
 	if [ "$ftype" = "image" ]
 	then
-	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img src='root$spth' width='100%' height='100%'/></div>"
+	    #echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' src='root$spth' width='100%' height='100%'/></div>"
+	    #echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' src='root$spth' width='100%'/></div>"
+	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image')\" src='root$spth'/></div>"
 	else
 	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
 	fi

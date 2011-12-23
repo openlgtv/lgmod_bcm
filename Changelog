@@ -13,6 +13,7 @@ OpenLGTV BCM Changelog
     * ADD: support for OpenLGTV_BCM dir, Yahoo Widgets, etc. on JFS, EXT3/[4],... formated partitions
     * ADD: support for storage devices connected to USB HUBs (but playback possibility from them is via FileManager only)
     * ADD: OPENRELEASE bound key actions in Remote Control web interface
+    * ADD: add directory, M3U and PLS playlists automated playback for local files in FileManager
     * UPDATE: improve Yavido alternative with bigger font, arrows navigation and shorter refresh time
 
 0.5.0-beta2:
