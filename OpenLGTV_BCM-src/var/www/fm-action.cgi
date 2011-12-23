@@ -245,7 +245,7 @@ then
 	    echo -e "# $play_enum_comment\n$start_playback" > "${play_enum}"
 	fi
 	file_num_max="`echo $content_all | wc -w`"
-	[ "$start_playback" -gt "$file_num_max" ] && echo -e "# $play_enum_comment\n0" > "${play_enum}" && start_playback=1
+	[ "$start_playback" -gt "$file_num_max" ] && echo -e "# $play_enum_comment\n1" > "${play_enum}" && start_playback=1
 	for content in $content_all
 	do
 	    [ "$file_num" = "$start_playback" ] && spth="`echo $content | sed 's/\&nbsp;/ /g'`" && break
@@ -318,6 +318,7 @@ fi
 if [ "$action" = "play" ]
 then
     [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo '<font color="green" size="+2"><b><script>document.write("Refresh time set to: ", window.refreshTime/1000, " second[s] (use number buttons to change it [x2])");</script></b></font>'
+    [ "$ftype" = "image" ] && echo "<br/><br/><font size='+2' color='yellow'><br/>Loading Image</font>"
     if [ "$ftype" = "text" ]
     then
 	echo "<pre align='left'>"
