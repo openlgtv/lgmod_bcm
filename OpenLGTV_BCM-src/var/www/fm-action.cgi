@@ -255,7 +255,7 @@ then
     ext="${spth##*.}"
     ext="`echo $ext | tr [:upper:] [:lower:]`"
     [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "<script type='text/javascript'>window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
-    if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" ]
+    if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" -o "$ext" = "cfg" -o "$ext" = "conf" ]
     then
 	ftype=text
     else

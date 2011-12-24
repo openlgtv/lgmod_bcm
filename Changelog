@@ -1,6 +1,6 @@
 OpenLGTV BCM Changelog
 
-0.5.0-beta3 [NOT RELEASED YET]:
+0.5.0-beta3 [2011.12.24]:
 
     * FIX: boot if any of netcast_config_add_* options was disabled and NetCast config.xml is too big to parse
     * FIX: udhcpc script now sets default IP address before making requests instead of 0.0.0.0 when configuration set to DHCP but no DHCP servers around
