@@ -46,7 +46,10 @@ Content-type: text/html
 <!--
 
 <?
-log_file=/var/log/fm.log
+log_dir=/var/log/fm
+log_file="$log_dir/fm.log"
+play_enum="$log_dir/last_played.info"
+[ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 
 if [ -n "$FORM_side" ]
 then
@@ -139,9 +142,9 @@ function check(e)
 			{
 			switch(imgZoom)
 				{
-				case 0: stretchImage('image'); imgZoom=1; break;
-				case 1: resizeImage('image'); imgZoom=2; break
-				case 2: fullImage('image'); imgZoom=0; break;
+				case 0: resizeImage('image',imgZoom); imgZoom=1; break;
+				case 1: resizeImage('image',imgZoom); imgZoom=2; break
+				case 2: resizeImage('image',imgZoom); imgZoom=0; break;
 				}
 			return false;
 			}
@@ -207,31 +210,19 @@ function sleep(milliseconds)
 	    }
 	}
 
-function resizeImage(imgId)
+function resizeImage(imgId,zoomType)
 	{
 	var pic = document.getElementById(imgId);
 	if (w==0) { w = pic.offsetWidth;  }
 	if (h==0) { h = pic.offsetHeight; }
 	var picAR = w/h;
 	var winAR = winWidth/winHeight;
-	if (picAR < winAR) { pic.height = winHeight; pic.width=winHeight*picAR; } else { pic.width = winWidth; pic.height=winWidth/picAR; }
-	//INFO: stretch image to screen regardless aspect ratio
-	//if (pic.offsetHeight > winHeight) { pic.height = winHeight; }
-	//if (pic.offsetWidth > winWidth) { pic.width = winWidth; }
-	}
-
-function stretchImage(imgId)
-	{
-	var pic = document.getElementById(imgId);
-	pic.width = winWidth;
-	pic.height = winHeight;
-	}
-
-function fullImage(imgId)
-	{
-	var pic = document.getElementById(imgId);
-	pic.width = w*100;
-	pic.height = h*100;
+	switch(zoomType)
+		{
+		case 0: if (picAR < winAR) { pic.height = winHeight; pic.width=winHeight*picAR; } else { pic.width = winWidth; pic.height=winWidth/picAR; }; break; //fullscreen respect aspect ratio
+		case 1: pic.width = winWidth; pic.height = winHeight; break; // stretch to fit the screen regardless aspect ratio
+		case 2: pic.width = w*100; pic.height = h*100; break; // original image size
+		}
 	}
 
 document.defaultAction = true;
@@ -247,7 +238,8 @@ then
     ftype="`busybox stat -c '%F' "${spth}"`"
     ext="${spth##*.}"
     [ -n "$ext" ] && ext="`echo $ext | tr [:upper:] [:lower:]`"
-    play_enum="${spth}/last_played.info"
+    #play_enum="${spth}/last_played.info"
+    ##play_enum="$log_dir/last_played.info"
     play_enum_comment="OpenLGTV BCM FileManager: last played file number"
     if [ "$ftype" = "directory" -o "$ext" = "m3u" -o "$ext" = "pls" ]
     then
@@ -259,7 +251,7 @@ then
 	else
 	    spthd="${spth%/*}"
 	    content_all=`grep -v "#" "$spth" | awk -F\n -v spthd="$spthd" '{print spthd "/" $1}' | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
-	    play_enum="${spth}.info"
+	    #play_enum="${spth}.info"
 	    spth="${spthd}"
 	fi
 	if [ ! -f "${play_enum}" ]
@@ -353,7 +345,7 @@ then
     else
 	if [ "$ftype" = "image" ]
 	then
-	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image')\" width='1%' src='root$spth'/></div>"
+	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image',0);\" width='1%' src='root$spth'/></div>"
 	else
 	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/><br/></font>"
 	fi
@@ -362,24 +354,24 @@ fi
 
 if [ "$FORM_confirm" != "yes" ]
 then
-    echo "<center><font size='+4' color='brown'><br/><b>"
-    if [ "$action" = "copy" -o "$action" = "move" ]
+    if [ "$action" != "play" ]
     then
-	echo "Are you sure you want to ${action}?<br/><font size='+3' color='blue'><br/>$spth<br/><br/><font color='black' size='+3'>to</font><font size='+3' color='blue'><br/><br/>$dpth/</font>"
-    else
-	if [ "$action" = "delete" ]
+	echo "<center><font size='+4' color='brown'><br/><b>"
+	if [ "$action" = "copy" -o "$action" = "move" ]
 	then
-	    echo "Are you sure you want to ${action}?<br/><font size='+2' color='black'><br/>$spth</font>"
+	    echo "Are you sure you want to ${action}?<br/><font size='+3' color='blue'><br/>$spth<br/><br/><font color='black' size='+3'>to</font><font size='+3' color='blue'><br/><br/>$dpth/</font>"
 	else
-	    if [ "$action" != "play" ]
+	    if [ "$action" = "delete" ]
 	    then
+		echo "Are you sure you want to ${action}?<br/><font size='+2' color='black'><br/>$spth</font>"
+	    else
 		echo "UNRECOGNIZED ACTION!"
 		echo '<script type="text/javascript">setTimeout(\"history.go(-1)\",2000);</script>"'
 	    fi
 	fi
+	echo "</b><br/><br/></font>"
+	echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
     fi
-    echo "</b><br/><br/></font>"
-    [ "$action" != "play" ] && echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
 else
     if [ "$action" = "copy" -o "$action" = "move" ]
     then

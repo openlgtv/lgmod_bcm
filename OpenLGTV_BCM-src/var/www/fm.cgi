@@ -75,7 +75,7 @@ document.write('<style type="text/css">td.filename {width:800px;}</style>');
 
 <?
 
-log_file=/var/log/fm.log
+[ -f "/var/log/fm/last_played.info" ] && rm /var/log/fm/last_played.info 2>/dev/null &
 
 if [ "$FORM_side" != "" ]
 then
