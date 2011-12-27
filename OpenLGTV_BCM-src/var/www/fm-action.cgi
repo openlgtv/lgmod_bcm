@@ -89,6 +89,11 @@ var next = current;
 //var side = 'l';
 var side = 'r';
 var nside = side;
+var winWidth = window.innerWidth;
+var winHeight = window.innerHeight;
+var imgZoom = 0;
+var h = 0;
+var w = 0;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
@@ -130,10 +135,20 @@ function check(e)
 			//Prevent scrolling
 			return false;
 			}
+		else if (key==13) 
+			{
+			switch(imgZoom)
+				{
+				case 0: stretchImage('image'); imgZoom=1; break;
+				case 1: resizeImage('image'); imgZoom=2; break
+				case 2: fullImage('image'); imgZoom=0; break;
+				}
+			return false;
+			}
 		else if (key==32) 
 			{
-			    document.getElementById('link_' + side + current).click();
-			    return false;
+			document.getElementById('link_' + side + current).click();
+			return false;
 			}
 		else if ((key>47)&(key<60)) { window.refreshTime=(key-48)*2000; return false; }
 		else if (key==461|key==27) 
@@ -195,10 +210,8 @@ function sleep(milliseconds)
 function resizeImage(imgId)
 	{
 	var pic = document.getElementById(imgId);
-	var h = pic.offsetHeight;
-	var w = pic.offsetWidth;
-	var winWidth = window.innerWidth;
-	var winHeight = window.innerHeight;
+	if (w==0) { w = pic.offsetWidth;  }
+	if (h==0) { h = pic.offsetHeight; }
 	var picAR = w/h;
 	var winAR = winWidth/winHeight;
 	if (picAR < winAR) { pic.height = winHeight; pic.width=winHeight*picAR; } else { pic.width = winWidth; pic.height=winWidth/picAR; }
@@ -207,9 +220,22 @@ function resizeImage(imgId)
 	//if (pic.offsetWidth > winWidth) { pic.width = winWidth; }
 	}
 
+function stretchImage(imgId)
+	{
+	var pic = document.getElementById(imgId);
+	pic.width = winWidth;
+	pic.height = winHeight;
+	}
+
+function fullImage(imgId)
+	{
+	var pic = document.getElementById(imgId);
+	pic.width = w*100;
+	pic.height = h*100;
+	}
+
 document.defaultAction = true;
 
-<!-- ? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }" ? -->
 <? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${xselect}'); }" ?>
 
 // -->

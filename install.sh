@@ -53,18 +53,6 @@ do
     argc=$(($argc+1))
 done
 
-#if [ "$2" = "autoupgrade" ]
-#then
-#    confirmations=0
-#    rebooting=1
-#    autoupgrade=1
-#else
-#    if [ "$2" = "no_backup" -o "$1" = "no_backup" ]
-#    then
-#	make_backup=0
-#    fi
-#fi
-
 if [ "$chrooted" != "1" ]
 then
     dir=`dirname $0`
@@ -73,12 +61,6 @@ then
 else
     xdir="$base"
 fi
-
-#if [ "$1" != "" -a "$1" != "no_backup" ]
-#then
-#    ver="`basename $1 | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`"
-#    dir="`dirname $1`"
-#fi
 
 file=OpenLGTV_BCM-GP2B-v$ver
 file2011=OpenLGTV_BCM-GP3B-v$ver
@@ -114,7 +96,6 @@ fi
 cdir=$dir
 log=$dir/$file.log
 infolog=$dir/info.log
-#log="$dir/$file.log $tmp/$file.log"
 tmpout=$tmp/output.log
 tmpoutflashed=$tmp/flashed/output.log
 reqfreemem=19000
@@ -186,14 +167,12 @@ echo "" | tee -a $log
 date 2>&1 | tee -a $log
 echo "OpenLGTV BCM 0.5.0-beta3 installation script for $platform platform by xeros" | tee -a $log
 
-#if [ "$2" = "autoupgrade" ]
 if [ "autoupgrade" = "1" ]
 then
     echo "Script is run as AUTOUPGRADE, forcing disable confirmations and reboot TV after successful flashing" | tee -a $log
     confirmations=0
     rebooting=1
     no_install=0
-    #autoupgrade=1
 fi
 
 backup_error=0
@@ -270,8 +249,6 @@ then
     exit 1
 fi
 # comparing magic bytes
-#if [ "`od -N4 -c $file.sqf | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
-#if [ "`head -c4 $file.sqf`" != "$magic" ]
 if [ "`head -c4 $cdir/$file.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
 then
     echo "File $file.sqf header is incorrect. Download firmware again." | tee -a $log
@@ -297,10 +274,8 @@ else
     fi
 fi
 # sha1sum compare
-#cat $tmp/$file.sha1 | sed "s#$file#$tmp/$file#" > $tmp/$file.2.sha1 2>$tmpout | tee -a $log
 sh -c "cat $tmp/$file.sha1 | sed \"s#$file#$tmp/$file#\" > $tmp/$file.2.sha1" > $tmpout 2>&1
 cat $tmpout | tee -a $log
-#sha1sum -c $tmp/$file.2.sha1 > $tmpout 2>&1
 sh -c "sha1sum $tmp/$file.sqf > $tmp/$file.2x.sha1" 2>&1 | tee -a $log
 diff $tmp/$file.2.sha1 $tmp/$file.2x.sha1 > $tmpout 2>&1
 if [ "$?" -ne "0" ]
@@ -349,8 +324,6 @@ then
 	cat /dev/mtd$mtd_rootfs > $devel_dir/mtd$mtd_rootfs.rootfs.dump
 	cat /dev/mtd$mtd_lginit > $devel_dir/mtd$mtd_lginit.lginit.dump
 	free > $devel_dir/free2.log
-	#cp -r /mnt/addon $devel_dir > /dev/null 2>&1
-	#cp -r /mnt/browser $devel_dir > /dev/null 2>&1
 	mkdir -p /mnt/user/lock
 	touch /mnt/user/lock/development-logs-dumped.lock
 	echo "Debug info saved in $devel_dir, please give them + install log to OpenLGTV BCM developers for analyse." | tee -a $log
@@ -480,18 +453,6 @@ then
 	    exit 1
 	fi
     fi
-    # v- not much space gain on rootfs after compressing using gzip or bzip2 using busybox applets
-    #if [ -f "$rootfs_bck" ]
-    #then
-    #	echo "Compressing $rootfs_bck file"  | tee -a $log
-    #	gzip -9 /home/backup/rootfs.bck 2>&1 | tee -a $log
-    #fi
-    #sync
-    #if [ -f "$lginit_bck" ]
-    #then
-    #	echo "Compressing $lginit_bck file"  | tee -a $log
-    #	gzip -9 /home/backup/lginit.bck 2>&1 | tee -a $log
-    #fi
     sync
 fi
 
@@ -505,7 +466,6 @@ then
 fi
 
 echo "Making backup from /dev/mtd$mtd_rootfs to $dir/$file-$rootfs_backup.sqf" | tee -a $log
-#cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf 2>$tmpout
 sh -c "cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf" > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
@@ -523,8 +483,6 @@ then
 fi
 sync
 # comparing magic bytes of dump
-#if [ "`od -N4 -c $dir/$file-$rootfs_backup.sqf | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
-#if [ "`head -c4 $dir/$file-$rootfs_backup.sqf`" != "$magic" ]
 if [ "`head -c4 $dir/$file-$rootfs_backup.sqf | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic" ]
 then
     echo "Gathered dump header from /dev/mtd$mtd_rootfs partition is incorrect. Maybe you try to flash to wrong partition?" | tee -a $log
@@ -537,7 +495,6 @@ then
     do
 	echo "Making tar backup of $mount_path ..." | tee -a $log
 	# v- theres not gzip in default firmware
-	#tar czvf $dir/`echo $mount_path | sed 's#^/##g' | sed 's#/#_#g'`.tar.gz $mount_path
 	tar cf $dir/`echo $mount_path | sed 's#/#_#g'`.tar -C / $mount_path 2>&1 | tee -a $log
     done
     mkdir -p /mnt/user/lock
@@ -602,7 +559,6 @@ else
     echo "Still DO NOT POWER OFF YOURS TV AND PC" | tee -a $log
     sync
     # FLASHING
-    #cat $tmp/$file.sqf > /dev/mtd$mtd_rootfs 2>$tmpout
     sh -c "cat $tmp/$file.sqf > /dev/mtd$mtd_rootfs" > $tmpout 2>&1
     if [ "$?" -ne "0" ]
     then
@@ -614,8 +570,6 @@ else
 	sync
 	echo "We need to ensure the partition is ok" | tee -a $log
 	sync
-	#sleep 30
-	#sleep 10
 	sleep 7
 	sync
     fi
@@ -626,7 +580,6 @@ then
     echo "Trying to flash through /dev/mtdblock$mtd_rootfs instead..." | tee -a $log
     echo "This method is not as good for flashing by hand but still could work as eraseing and flashing is handled by driver" | tee -a $log
     echo "This flashing method should take about 5 minutes for ensuring the saftyness" | tee -a $log
-    #cat $tmp/$file.sqf > /dev/mtdblock$mtd_rootfs 2>$tmpout
     sh -c "cat $tmp/$file.sqf > /dev/mtdblock$mtd_rootfs" > $tmpout 2>&1
     if [ "$?" -ne "0" ]
     then
@@ -651,11 +604,9 @@ fi
 # trying to read reboot path to make it preloaded for case of rootfs content changed
 ls -al `which reboot` > /dev/null 2>&1
 # making second dump
-#cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf 2>$tmpout
 sh -c "cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf" > $tmpout 2>&1
 cat $tmpout | tee -a $log
 sync
-#diff $dir/$file-$backup2.sqf $dir/$file.sqf > $tmpout 2>&1 
 diff $dir/$file-$backup2.sqf $tmp/$file.sqf > $tmpout 2>&1 
 if [ "$?" -ne "0" ]
 then
@@ -666,7 +617,6 @@ then
     sync
     sleep 120
     sync
-    #cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf 2>$tmpout
     sh -c "cat /dev/mtd$mtd_rootfs > $dir/$file-$backup2.sqf" > $tmpout 2>&1
     cat $tmpout | tee -a $log
     sync
@@ -702,7 +652,6 @@ fi
 sync
 # making backup of lginit
 echo "Making backup of lginit from /dev/mtd$mtd_lginit partition..." | tee -a $log
-#cat /dev/mtd$mtd_lginit > $dir/$file-$lginit_backup.sqf 2>$tmpout
 sh -c "cat /dev/mtd$mtd_lginit > $dir/$file-$lginit_backup.sqf" > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
@@ -717,9 +666,6 @@ then
     echo "Gathered dump header from /dev/mtd$mtd_rootfs partition shows that the lginit partition is already erased - good." | tee -a $log
     echo "Moving all files to $dir/flashed dir to prevent autoupgrade on next boot..."
     mkdir -p $dir/flashed $tmp/flashed
-    #[ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
-    #[ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
-    #[ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
     [ -n "`ls $dir/*.sqf 2>/dev/null`" ]    && mv -f $dir/*.sqf    $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
     [ -n "`ls $dir/*.sh.zip 2>/dev/null`" ] && mv -f $dir/*.sh.zip $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
     [ -n "`ls $dir/*.tar.sh 2>/dev/null`" ] && mv -f $dir/*.tar.sh $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
@@ -775,7 +721,6 @@ then
     echo "This flashing method should take about 5 minutes for ensuring the saftyness" | tee -a $log
     head -c$lginit_size /dev/zero > $tmp/lginit-zeroed.img 2>$tmpout
     cat $tmpout | tee -a $log
-    #cat $tmp/lginit-zeroed.img > /dev/mtdblock$mtd_lginit 2>$tmpout
     sh -c "cat $tmp/lginit-zeroed.img > /dev/mtdblock$mtd_lginit" > $tmpout 2>&1
     if [ "$?" -ne "0" ]
     then
@@ -801,16 +746,11 @@ sleep 5
 sync
 echo "Moving all files to flashed subdir to prevent autoupgrade on next boot..."
 mkdir -p $dir/flashed $tmp/flashed
-#[ -f "$dir/$file.sqf" ]    && mv -f $dir/*.sqf $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
-#[ -f "$dir/$file.sh.zip" ] && mv -f $dir/*.sh.zip $dir/*.log $dir/flashed/ > $tmpout 2>&1
-#[ -f "$dir/$file.tar.sh" ] && mv -f $dir/*.tar.sh $dir/*.log $dir/flashed/ > $tmpout 2>&1
 [ -n "`ls $dir/*.sqf 2>/dev/null`" ]    && mv -f $dir/*.sqf    $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 [ -n "`ls $dir/*.sh.zip 2>/dev/null`" ] && mv -f $dir/*.sh.zip $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 [ -n "`ls $dir/*.tar.sh 2>/dev/null`" ] && mv -f $dir/*.tar.sh $dir/*.sha1 $dir/*.log $dir/flashed/ > $tmpout 2>&1
 log=`echo $log | sed "s#$file#flashed/$file#"`
 infolog=`echo $infolog | sed "s#info#flashed/info#"`
-#cat $tmpoutflashed | tee -a $log
-#cat $tmpout | tee -a $log
 sync
 date 2>&1 | tee -a $log
 echo "" | tee -a $log

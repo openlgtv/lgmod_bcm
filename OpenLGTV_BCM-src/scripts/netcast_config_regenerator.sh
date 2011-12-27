@@ -119,15 +119,10 @@ then
 	    fi
 	done
 	echo -e '<xml>\r' > $new_cfgxml
-	#for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | sort | uniq`
-	# v- that might not contain all country groups
-	#for cntry in `cat $org_cfgxml | grep 'country code=' | awk -F\" '{print $2}' | grep COMMON | sort | uniq` AUS
 	for cntryx in $country_groups
 	do
 	    cntry=${cntryx}_COMMON
 	    echo -e "\t<country code=\"$cntry\">\r" >> $new_cfgxml
-	    # v- busybox sed has problems with handling '\r'
-	    #cat $tmp_cfgxml | sed -e 's/^/\t\t/g'| sed -e 's/></>\r\n\t\t\t</g' -e 's#\t</item>.*#</item>\r#g' >> $new_cfgxml
 	    cat $tmp2_cfgxml | sort | uniq | sed -e 's/^/\t\t/g'| sed -e 's/></>\n\t\t\t</g' -e 's#\t</item>.*#</item>#g' >> $new_cfgxml
 	    echo -e "\t</country>\r" >> $new_cfgxml
 	    echo -e "\r" >> $new_cfgxml
@@ -147,7 +142,6 @@ then
 			    echo "OpenLGTV_BCM-INFO: NetCast config generator: adding \"$id_name\" id to existing config.xml: $org_cfgxml, config_ver: $config_ver"
 			    if [ "$config_ver" = "2" ]
 			    then
-				#cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\r\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\r\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\r\n\t\t\t\t\t</item>\r\n#g" > $new_cfgxml
 				cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$id_name\" type=\"browser\" use_magic=\"true\" check_network=\"false\" resolution=\"1280*720\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>/mnt/browser/run3556</exec_engine>\n\t\t\t\t\t\t\t\t<exec_app>$id_number</exec_app>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
 			    else
 				if [ "$config_ver" = "1" ]
@@ -165,16 +159,12 @@ then
 			if [ "$org_brw_app_txt" != "" ]
 			then
 			    if [ ! -f "$org_brw_app_txt" ]; then echo "OpenLGTV_BCM-ERROR: NetCast config generator: $org_brw_app_txt file not found!"; exit 1; fi
-			    #is_id_openlgtv="`grep ^254 $org_brw_app_txt | grep \"http://127.0.0.1/\"`"
 			    is_id_openlgtv="`grep -m 1 ^$id_number $org_brw_app_txt`"
 			    is_id_openlgtv_link="`grep -m 1 ^$id_number $org_brw_app_txt | grep -m 1 \"$id_link\"`"
-			    #if [ -z "$is_id_openlgtv_link" ]
 			    if [ -z "$is_id_openlgtv" ]
 			    then
 				echo "OpenLGTV_BCM-INFO: NetCast config generator: adding \"$id_name\" id $id_number link: $id_link config_ver: $config_ver to existing browser_application.txt file: $org_brw_app_txt"
 				cp -f $org_brw_app_txt $new_brw_app_txt
-				#echo '254\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n' >> $new_brw_app_txt
-				#echo "$id_number\thttp://127.0.0.1/\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
 				if [ "$config_ver" = "2" ]
 				then
 				    echo -e "$id_number\t$id_link\t1\t1\t1\t1\t1\t1\t0\ten\t1\t1\t1\t1\r\n" >> $new_brw_app_txt
@@ -213,9 +203,6 @@ then
 			fi
 			;;
 		yahoo)
-			# v- we will not check if it exists there as it exist there for sure somewhere, we need to use lock file
-			#if [ -z "`grep $yid_name $org_cfgxml`" ]
-			#if [ ! -f "/mnt/user/lock/ywe_added_to_config_xml.lock" ]
 			if [ "`grep -m 3 id=.$yid_name.\  $org_cfgxml | wc -l`" -le "2" ]
 			then
 			    echo "OpenLGTV_BCM-INFO: NetCast config generator: adding \"$yid_name\" id to existing config.xml: $org_cfgxml config_ver: $config_ver"
@@ -225,7 +212,6 @@ then
 				ywedir=/mnt/addon/ywe
 				ywe_konfab_sh=/scripts/konfabulator-exec.sh
 			    else
-				#echo "OpenLGTV_BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywedir to /mnt/usb1/Drive1/OpenLGTV_BCM/ywe for \"$yid_name\" in existing config.xml"
 				echo "OpenLGTV_BCM-INFO: NetCast config generator: NOT found /mnt/addon/ywe, setting ywe_konfab_sh to /scripts/konfabulator-exec.sh for \"$yid_name\" in existing config.xml: $org_cfgxml"
 				ywedir=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
 				ywe_konfab_sh=/scripts/konfabulator-exec.sh
@@ -244,7 +230,6 @@ then
 			    fi
 			    mv -f $org_cfgxml $bck_cfgxml
 			    mv -f $new_cfgxml $org_cfgxml
-			    #touch /mnt/user/lock/ywe_added_to_config_xml.lock
 			else
 			    if [ -z "`egrep -m 1 '/scripts/konfabulator-exec.sh' $org_cfgxml`" ]
 			    then
@@ -273,20 +258,11 @@ then
     if [ "$del" != "" ]
     then
 	echo "OpenLGTV_BCM-INFO: NetCast config generator: \"del=$del\" argument passed..."
-	#if [ -n "`grep id=.$id_name $org_cfgxml`" ]
 	if [ -n "`grep -m 1 id=.$del.\  $org_cfgxml`" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: NetCast config generator: removing \"$del\" id from existing config.xml: $org_cfgxml config_ver: $config_ver"
 	    if [ "$config_ver" = "2" -o "$config_ver" = "1" ]
 	    then
-		# INFO: works properly (but slow) on <170KB files, on bigger ones 'sed' does endless loop eating all resources
-		#cat $org_cfgxml | \
-		#    sed -n -e "1h;1!H;\${;g;s#<item id=\"$del\"[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*[<]*[^<]*</item>[^<]*##g;p;}" \
-		#	> $new_cfgxml
-		##cat "$org_cfgxml" | \
-		##    sed -n -e '1h;1!H;${;g;s#<item id="'"$del"'"[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*<*[^<]*</item>[^<]*##g;p;}' \
-		##	> "$new_cfgxml"
-		# INFO: easiest ways are the best - thanks mmm4m5m
 		cat "$org_cfgxml" | \
 		    tr '\n' '\0' | sed -e 's/\(<item\)/\n\1/g' | grep -v '^<item id="'"$del\"" | tr -d '\n' | tr '\0' '\n' \
 			> "$new_cfgxml"
@@ -305,7 +281,6 @@ then
 	if [ -z "`grep -m 1 '^killall lb4wk GtkLauncher' $org_run3556`" ]
 	    then
 	    echo "OpenLGTV_BCM-INFO: NetCast config generator: adding \"killall lb4wk GtkLauncher\" at the beginning of existing run3556 script: $org_run3556"
-	    #cat $org_cfgxml | sed 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk:g' > $new_cfgxml
 	    sed -i -e 's:#!/bin/sh:#!/bin/sh\nkillall lb4wk GtkLauncher > /dev/null 2>\&1:g' $org_run3556
 	else
 	    echo "OpenLGTV_BCM-INFO: NetCast config generator: \"killall lb4wk GtkLauncher\" already exist in current run3556 script: $org_cfgxml"
