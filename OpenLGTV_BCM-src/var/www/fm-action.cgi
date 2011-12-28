@@ -77,6 +77,8 @@ else
     export rpthx="`dirname \"$rpth\"`"
     export xselect="$FORM_rselected"
 fi
+[ "$lpthx" = "/" -o "$lpthx" = "." ] && export lpthx=""
+[ "$rpthx" = "/" -o "$rpthx" = "." ] && export rpthx=""
 
 echo "var side = '$side';"
 echo "var lpth = '$lpth';"
@@ -352,6 +354,8 @@ then
     fi
 fi
 
+[ -f "$log_file" -a "$action" = "status" ] && export FORM_confirm=yes
+
 if [ "$FORM_confirm" != "yes" ]
 then
     if [ "$action" != "play" ]
@@ -365,22 +369,49 @@ then
 	    then
 		echo "Are you sure you want to ${action}?<br/><font size='+2' color='black'><br/>$spth</font>"
 	    else
-		echo "UNRECOGNIZED ACTION!"
-		echo '<script type="text/javascript">setTimeout(\"history.go(-1)\",2000);</script>"'
+		echo "No copy/move actions have been executed yet!<br/><br/>"
+		echo '<script type="text/javascript">setTimeout("history.go(-1)",3000);</script>'
+		exit 0
 	    fi
 	fi
 	echo "</b><br/><br/></font>"
 	echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
     fi
 else
-    if [ "$action" = "copy" -o "$action" = "move" ]
+    if [ "$action" = "copy" -o "$action" = "move" -o "$action" = "status" ]
     then
+	if [ "$action" = "status" ]
+	then
+	    # TODO TODO TODO TODO
+	    if [ -n "${pid}" ]
+	    then
+		stats="`grep '^${pid}#' ${log_file}`"
+	    else
+		stats="`tail -n1 ${log_file}`"
+		pid="${stats%%\#*}"
+	    fi
+	    FORM_onlystatus=1
+	    stats="${stats#*\#}"
+	    org_action="${action}"
+	    action="${stats%%\#*}"
+	    stats="${stats#*\#}"
+	    spth="${stats%%\#*}"
+	    stats="${stats#*\#}"
+	    dpth="${stats%%\#*}"
+	    #stats="${stats#*\#}"
+	    #time_start="${stats%%\#*}"
+	    time_start="${stats##*\#}"
+	    # TODO: what to do in this case?
+	    #[ -z "${lpthx}" ] && lpthx="${spth%/*}"
+	    #[ -z "${rpthx}" ] && rpthx="${dpth}"
+	    [ -z "${side}"  ] && side="l"
+	fi
 	echo "<font size='+5' color='brown' style='text-transform: uppercase;'><b>$action in progress</b></font><br/><br/>"
 	echo "<table>"
 	echo "<tr><td><font size='+3' color='green'>Source: </font></td><td><font size='+3' color='black'>$spth</font><td></tr>"
-	echo "<tr><td><font size='+3' color='green'>Target: </font></td><td><font size='+3' color='black'>$dpth</font><td></tr>"
+	echo "<tr><td><font size='+3' color='green'>Target: </font></td><td><font size='+3' color='black'>$dpth/</font><td></tr>"
 	echo "</table><br/>"
-	echo "${action}#${spth}#$dpth" >> "${log_dir}/${action}.log"
+	#echo "${action}#${spth}#$dpth" >> "${log_dir}/${action}.log"
 	echo "<br/>"
 	SIFS="$IFS" IFS=$'\n'
 	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
@@ -389,16 +420,23 @@ else
 	then
 	    if [ "$action" = "copy" ]
 	    then
-		cp -r "$spth" "$dpth/" > "${log_dir}/${action}.log" 2>&1 &
+		cp -r "$spth" "$dpth/" > "${log_dir}/${action}.error.log" 2>&1 &
 		pid="$!"
 	    else
-		mv "$spth" "$dpth/" > "${log_dir}/${action}.log" 2>&1 &
+		mv "$spth" "$dpth/" > "${log_dir}/${action}.error.log" 2>&1 &
 		pid="$!"
 	    fi
-	    date +"%s" > "${log_dir}/${action}.date.${pid}.log"
+	    time_start="`date +'%s'`"
+	    time_start_status="${time_start}"
+	    #echo "${pid}#${action}#${spth}#${dpth}#${time_start}" | tee "${log_dir}/${action}.date.${pid}.log" >> "${log_dir}/${action}.log"
+	    #echo "${pid}#${action}#${spth}#${dpth}#${time_start}" | tee "${log_dir}/${action}.date.${pid}.log" >> "${log_file}"
+	    echo "${pid}#${action}#${spth}#${dpth}#${time_start}" >> "${log_file}"
+	    #echo "${time_start}" > "${log_dir}/${action}.date.${pid}.log"
+	else
+	    #[ -z "${time_start}" ] && time_start="`cat ${log_dir}/${action}.date.${pid}.log`" && time_start="${time_start##*\#}"
+	    [ -z "${time_start}" ] && time_start="`grep '${pid}' '${log_file}'`" && time_start="${time_start##*\#}"
+	    time_start_status="`date +'%s'`"
 	fi
-	time_start="`cat ${log_dir}/${action}.date.${pid}.log`"
-	time_start_status="`date +'%s'`"
 	echo "<div id='status' style='font-size: 30px;'></div>"
 	dfile="`basename "$spth"`"
 	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
@@ -408,7 +446,7 @@ else
 	for i in `seq 2000`
 	do
 	    SIFS="$IFS" IFS=$'\n'
-	    dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') 
+	    dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}')
 	    IFS="$SIFS"
 	    [ "$dsize" = "" ] && dsize=0
 	    percent="$(($dsize * 100 / $ssize))"
@@ -418,7 +456,7 @@ else
 	    average_bps=$((${dsize}/${elapsed}))
 	    average_kbps=$((${average_bps}/1024))
 	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize / $ssize bytes<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
-	    sleep 2
+	    [ -n "`ps | grep \"^ *$pid \"`" ] && sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
 		SIFS="$IFS" IFS=$'\n'
@@ -430,15 +468,20 @@ else
 		    break
 		else
 		    echo "<font color='red' size='+3'><b>ERROR copying file!</b></font><br/><br/>"
-		    if [ -f "${log_dir}/${action}.log" ]
+		    if [ -f "${log_dir}/${action}.error.log" ]
 		    then
 			echo "<font color='red' size='+2'>"
-			cat "${log_dir}/${action}.log"
+			#cat "${log_dir}/${action}.log"
+			#tail -n+2 "${log_dir}/${action}.error.log"
+			cat "${log_dir}/${action}.error.log"
 			echo "</font>"
 		    fi
 		    error=1
 		    break
 		fi
+		# TODO: need to rethink that as other processes might have started in meantime
+		#rm -f "${log_dir}/${action}.error.log" "${log_dir}/${action}.date.${pid}.log" "${log_dir}/${action}.log"
+		#rm -f "${log_dir}/${action}.date.${pid}.log"
 	    fi
 	    if [ "${elapsed_status}" -gt "120" ]
 	    then
