@@ -1,5 +1,10 @@
 OpenLGTV BCM Changelog
 
+0.5.0-??? [NOT RELEASED YET]:
+    * ADD: image zooming/resizing using 'OK' button (or Enter on PC) in FileManager
+    * CHANGE: last_played.info file is now stored in /tmp instead of played dir location - no need to have write access to mounted shares for slideshow/dir playback in FileManager
+    * CHANGE: move haserl from /bin to /usr/bin for better CGI portability (compatibility with LGMOD S7)
+
 0.5.0-beta3 [2011.12.24]:
 
     * FIX: boot if any of netcast_config_add_* options was disabled and NetCast config.xml is too big to parse

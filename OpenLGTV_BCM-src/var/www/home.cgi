@@ -1,4 +1,4 @@
-#!/bin/haserl --upload-limit=14096 --upload-dir=/tmp
+#!/usr/bin/haserl --upload-limit=14096 --upload-dir=/tmp
 # home.cgi by xeros
 # Source code released under GPL License
 content-type: text/html

@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 <!-- header_links.cgi.inc by xeros -->
 <!-- Source code released under GPL License -->
 			<div id="textOnly" style="background-color:white;height:130px; background-color:yellow">

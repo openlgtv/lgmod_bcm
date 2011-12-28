@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 content-type: text/html
 
 <HTML>

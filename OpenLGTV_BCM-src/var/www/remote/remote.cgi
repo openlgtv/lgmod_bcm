@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 # remote.cgi by mihaifireball & xeros
 # Source code released under GPL License
 content-type: text/html

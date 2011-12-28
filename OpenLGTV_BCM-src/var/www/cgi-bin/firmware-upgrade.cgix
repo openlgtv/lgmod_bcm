@@ -1,4 +1,4 @@
-#!/bin/haserl --upload-limit=110000 --upload-dir=/tmp
+#!/usr/bin/haserl --upload-limit=110000 --upload-dir=/tmp
 content-type: text/html
 
 <html>

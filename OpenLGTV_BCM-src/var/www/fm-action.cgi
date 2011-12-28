@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -46,7 +46,7 @@ Content-type: text/html
 <!--
 
 <?
-log_dir=/var/log/fm
+log_dir=/tmp/var/log/fm
 log_file="$log_dir/fm.log"
 play_enum="$log_dir/last_played.info"
 [ ! -d "$log_dir" ] && mkdir -p "$log_dir"
@@ -380,7 +380,7 @@ else
 	echo "<tr><td><font size='+3' color='green'>Source: </font></td><td><font size='+3' color='black'>$spth</font><td></tr>"
 	echo "<tr><td><font size='+3' color='green'>Target: </font></td><td><font size='+3' color='black'>$dpth</font><td></tr>"
 	echo "</table><br/>"
-	echo "${action}#${spth}#$dpth" >> /var/log/${action}.log
+	echo "${action}#${spth}#$dpth" >> "${log_dir}/${action}.log"
 	echo "<br/>"
 	SIFS="$IFS" IFS=$'\n'
 	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
@@ -389,15 +389,15 @@ else
 	then
 	    if [ "$action" = "copy" ]
 	    then
-		cp -r "$spth" "$dpth/" > /var/log/${action}.log 2>&1 &
+		cp -r "$spth" "$dpth/" > "${log_dir}/${action}.log" 2>&1 &
 		pid="$!"
 	    else
-		mv "$spth" "$dpth/" > /var/log/${action}.log 2>&1 &
+		mv "$spth" "$dpth/" > "${log_dir}/${action}.log" 2>&1 &
 		pid="$!"
 	    fi
-	    date +"%s" > /var/log/${action}.date.${pid}.log
+	    date +"%s" > "${log_dir}/${action}.date.${pid}.log"
 	fi
-	time_start="`cat /var/log/${action}.date.${pid}.log`"
+	time_start="`cat ${log_dir}/${action}.date.${pid}.log`"
 	time_start_status="`date +'%s'`"
 	echo "<div id='status' style='font-size: 30px;'></div>"
 	dfile="`basename "$spth"`"
@@ -430,10 +430,10 @@ else
 		    break
 		else
 		    echo "<font color='red' size='+3'><b>ERROR copying file!</b></font><br/><br/>"
-		    if [ -f "/var/log/${action}.log" ]
+		    if [ -f "${log_dir}/${action}.log" ]
 		    then
 			echo "<font color='red' size='+2'>"
-			cat /var/log/${action}.log
+			cat "${log_dir}/${action}.log"
 			echo "</font>"
 		    fi
 		    error=1

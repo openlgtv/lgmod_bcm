@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 # mount.cgi by xeros, nicola_12345
 # Source code released under GPL License
 content-type: text/html

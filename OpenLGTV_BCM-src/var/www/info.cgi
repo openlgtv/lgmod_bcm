@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 # info.cgi by xeros
 # Source code released under GPL License
 content-type: text/html

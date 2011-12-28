@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 <head>
 <!-- Sample Key Control NetCast Web UI by nicola_12345, changes by xeros -->
 <!-- Source code released under GPL License -->

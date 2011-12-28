@@ -1,4 +1,4 @@
-#!/bin/haserl
+#!/usr/bin/haserl
 # settings.cgi by xeros
 # Source code released under GPL License
 content-type: text/html
