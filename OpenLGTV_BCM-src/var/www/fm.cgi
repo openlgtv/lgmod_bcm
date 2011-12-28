@@ -21,7 +21,7 @@ Content-type: text/html
 	overflow-x: hidden;
 	overflow-y: hidden;
     }
-    a:link {
+    a:link, a:visited {
 	color:black;
 	text-decoration:bold;
     }
@@ -765,6 +765,11 @@ then
     mv "$cpth/$FORM_txtOldName" "$cpth/$FORM_txtName"
 fi
 
+#mountpoints="`cat /proc/mounts | cut -d' ' -f2`"
+#mountpoints="`grep -v ' / ' /proc/mounts | cut -d' ' -f2 | tr '\n' ' '`"
+mountpoints="`egrep -v '^/dev/mtdblock| / |^proc|^tmp|^sysfs|^usbfs|^devpts| /usr/etc |^bt|^lgapp_xip' /proc/mounts | cut -d' ' -f2 | tr '\n' ' '`"
+mountpoints_length="${#mountpoints}"
+
 #if [ "$type" = "menu" ]
 #then
     echo "<table id='fulltable' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' padding='0' cellpadding='0px'>"
@@ -828,7 +833,13 @@ fi
 		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
 	    #fi
 	fi
-	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td class='filename'><img src=\"/Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"${dlink}&lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
+	# TODO?: check if file/dir is mountpoint - all methods are too slow - paradoxally grep is fastest when the list is long
+	check_mountpoints="${mountpoints#*$lpth/$lfilename }"
+	#if [ "${mountpoints#*$lpth/$lfilename }" != "${mountpoints}" ]
+	#if [ -n "`grep \" $lpth/$lfilename \" /proc/mounts`" ]
+	file_color=black
+	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
+	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td class='filename'><img src=\"/Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"${dlink}&lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -882,7 +893,10 @@ fi
 	    fi
 	fi
 	dlink="fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth"
-	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td class='filename'><img src=\"/Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"${dlink}&rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
+	file_color=black
+	check_mountpoints="${mountpoints#*$rpth/$rfilename }"
+	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
+	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td class='filename'><img src=\"/Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"${dlink}&rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"

@@ -15,7 +15,7 @@ Content-type: text/html
 	height: 720px;
 	//font-family:"TiresiasScreenfont";
     }
-    a:link {
+    a:link, a:visited {
 	color:black;
 	text-decoration:bold;
     }
@@ -67,14 +67,16 @@ if [ "$side" = "l" ]
 then
     export spth="$lpth"
     export dpth="$rpth"
-    export lpthx="`dirname \"$lpth\"`"
+    export lpthx="$lpth"
+    [ "$action" != "status" ] && export lpthx="`dirname \"$lpth\"`"
     export rpthx="$rpth"
     export xselect="$FORM_lselected"
 else
     export spth="$rpth"
     export dpth="$lpth"
     export lpthx="$lpth"
-    export rpthx="`dirname \"$rpth\"`"
+    export rpthx="$rpth"
+    [ "$action" != "status" ] && export rpthx="`dirname \"$rpth\"`"
     export xselect="$FORM_rselected"
 fi
 [ "$lpthx" = "/" -o "$lpthx" = "." ] && export lpthx=""
