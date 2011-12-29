@@ -1,11 +1,13 @@
 OpenLGTV BCM Changelog
 
 0.5.0-??? [NOT RELEASED YET]:
-    * FIX: copy/move/erase actions in FileManager when mouse was used for file/dir navigation
-    * ADD: image zooming/resizing using 'OK' button (or Enter on PC) in FileManager
-    * ADD: button to view last status of copy/move action after action was detached to background in FileManager
-    * ADD: color dir names in FileManager when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
-    * CHANGE: last_played.info file is now stored in /tmp instead of played dir location - no need to have write access to mounted shares for slideshow/dir playback in FileManager
+    * FIX: FileManager: copy/move/erase actions when mouse was used for file/dir navigation
+    * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
+    * ADD: FileManager: button to view last status of copy/move action after action was detached to background
+    * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
+    * CHANGE: FileManager: last_played.info file is now stored in /tmp instead of played dir location - no need to have write access to mounted shares for slideshow/dir playback
+    * CHANGE: FileManager: separate file/dir icons from filenames in table to make better vertical allignment
+    * CHANGE: FileManager: coloured (brown) non-local mount points (ie. mounted USB storage partitions, NFS/CIFS network shares)
     * CHANGE: move haserl from /bin to /usr/bin for better CGI portability (compatibility with LGMOD S7)
 
 0.5.0-beta3 [2011.12.24]:
