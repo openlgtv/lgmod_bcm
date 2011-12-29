@@ -24,7 +24,7 @@ do
 	umount -f $mnt_dst
 	sync
 	echo "OpenLGTV_BCM-INFO: mounting NTFS partition with ntfs-3g: $mnt_src into $mnt_dst"
-	ntfs-3g $mnt_src $mnt_dst
+	ntfs-3g -o permissions,noatime $mnt_src $mnt_dst
     fi
     ##if [ "$mnt_dst" = "$USB_DIR" ]
     ##then
@@ -55,7 +55,9 @@ do
 	    if [ -n "$mnt_dst" ]
 	    then
 		# VFAT and NTFS as support for disks connected to USB HUB
-		[ "$fstype" = "vfat" ] && mnt_args="-o rw,relatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro"
+		[ "$fstype" = "vfat" ] && mnt_args="-o rw,noatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro"
+		[ "$fstype" = "ntfs" ] && mnt_args="-o permissions,noatime"
+		[ "$fstype" = "ext3" -o "$fstype" = "ext4" ] && mnt_args="-o noatime"
 		echo "OpenLGTV_BCM-INFO: USB partition mounting: \"$partdev\" connected, fstype: \"$fstype\", mount point: \"$mnt_dst\", args: \"$mnt_args\""
 		if [ "$fstype" = "ntfs" ]
 		then
