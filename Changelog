@@ -10,6 +10,7 @@ OpenLGTV BCM Changelog
     * CHANGE: FileManager: coloured (brown) non-local mount points (ie. mounted USB storage partitions, NFS/CIFS network shares)
     * CHANGE: move haserl from /bin to /usr/bin for better CGI portability (compatibility with LGMOD S7)
     * CHANGE: mount options for VFAT/NTFS/EXT3/EXT4 got changed to use at least 'noatime' to make less writes to USB storage and keep permissions on NTFS
+    * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
 
 0.5.0-beta3 [2011.12.24]:
 
