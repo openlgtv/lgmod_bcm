@@ -779,7 +779,12 @@ mountpoints_length="${#mountpoints}"
 #if [ "$type" = "menu" ]
 #then
     echo "<table id='fulltable' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' padding='0' cellpadding='0px'>"
-    echo "<thead><tr border='1' height='18px'><td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
+    lpth_crop="$lpth"
+    rpth_crop="$rpth"
+    # static size to cut path at 77 chars to fit 1280 width on most web browsers that respect monotype font style
+    [ "${#lpth}" -gt "77" ] && lpth_crop="${lpth:0:63} ~~ ${lpth:$((${#lpth}-10))}"
+    [ "${#rpth}" -gt "77" ] && rpth_crop="${rpth:0:63} ~~ ${rpth:$((${#rpth}-10))}"
+    echo "<thead><tr border='1' height='18px'><td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
     echo '<Table id="lpanel" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable" id="lpaneltbody">'
     if [ "$lpth" != "" ]
@@ -793,7 +798,8 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" $lpth/* | sort | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
+    #for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" $lpth/* | sort | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
+    for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
     do
 	ltype="${lcontent%%@*}"
 	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
@@ -865,7 +871,8 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" $rpth/* | sort | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'`
+    #for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" $rpth/* | sort | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'`
+    for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
     do
 	rtype="${rcontent%%@*}"
 	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
@@ -920,6 +927,6 @@ mountpoints_length="${#mountpoints}"
 OnLoadSetCurrent();
 
 <?
-echo "document.getElementById('ldf').innerHTML ='`df -h \"$lpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`';"
-echo "document.getElementById('rdf').innerHTML ='`df -h \"$rpth/\" | tail -n 1 | awk '{print \$4 \"/\" \$2}'`';</script>"
+echo "document.getElementById('ldf').innerHTML ='`df -h \"$lpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
+echo "document.getElementById('rdf').innerHTML ='`df -h \"$rpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';</script>"
 ?>
