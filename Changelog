@@ -5,6 +5,7 @@ OpenLGTV BCM Changelog
     * FIX: FileManager: better handling of dirs with special characters
     * FIX: FileManager: get rid of 'awk' in free/total space counting and proper handle 'df' multiline output for space info
     * FIX: FileManager: crop full path if it doesn't fit panel width
+    * FIX: fallback with NTFS partitions remounting as read-only when remounting read-write wont succeed (problems with filesystem)
     * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
     * ADD: FileManager: button to view last status of copy/move action after action was detached to background
     * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)

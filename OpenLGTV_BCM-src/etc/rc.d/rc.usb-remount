@@ -10,32 +10,24 @@
 echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
 for mnt in `grep ^/dev/$device /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
 do
-    #mnt_src=`echo $mnt | cut -d# -f1`
     mnt_src="${mnt%%#*}"
-    #mnt_dst=`echo $mnt | cut -d# -f2`
     mnt_dst="${mnt%#*}"
     mnt_dst="${mnt_dst#*\#}"
-    #mnt_fs=`echo $mnt | cut -d# -f3`
     mnt_fs="${mnt##*\#}"
     echo "OpenLGTV_BCM-DEBUG: mnt_src: $mnt_src mnt_dst: $mnt_dst mnt_fs: $mnt_fs"
     if [ "$mnt_fs" = "ntfs" ]
     then
 	echo "OpenLGTV_BCM-INFO: unmounting NTFS partition: $mnt_src mounted in $mnt_dst"
-	umount -f $mnt_dst
+	umount -f "$mnt_dst"
 	sync
 	echo "OpenLGTV_BCM-INFO: mounting NTFS partition with ntfs-3g: $mnt_src into $mnt_dst"
-	ntfs-3g -o permissions,noatime $mnt_src $mnt_dst
+	ntfs-3g -o permissions,noatime "$mnt_src" "$mnt_dst"
+	if [ "$?" -ne "0" ]
+	then
+	    echo "OpenLGTV_BCM-ERROR: mounting NTFS partition with ntfs-3g: $mnt_src into $mnt_dst FAILED, trying fallback with remounting it READ-ONLY"
+	    mount -t ntfs "$mnt_src" "$mnt_dst" -o ro,noatime,uid=0,gid=0,fmask=0177,dmask=077,nls=utf8,errors=continue,mft_zone_multiplier=1
+	fi
     fi
-    ##if [ "$mnt_dst" = "$USB_DIR" ]
-    ##then
-    ##	echo "OpenLGTV_BCM-INFO: setting USB_DIR_FS on $mnt_src to $mnt_fs"
-    ##	export USB_DIR_FS=$mnt_fs
-    ##fi
-    #I am not sure if should we list dirs of all mounted drives or not - need to think about it
-    #if [ -z "`grep \"$mnt_dst\" /tmp/usbdirs`" ]
-    #then
-    #	echo "$mnt_dst" >> /tmp/usbdirs
-    #fi
 done
 
 for partdev in `fdisk -l | grep ^/dev/$device | grep -v Extended | cut -d" " -f1`
@@ -43,7 +35,6 @@ do
     mnt_dst=""
     if [ -z `grep "^$partdev" /proc/mounts` ]
     then
-	#export fstype=`blkid "$partdev" | sed -e 's/^.*TYPE="//g' -e 's/".*//g'`
 	export fstype=`blkid "$partdev" | grep "^${partdev}" | sed -e 's/^.*TYPE="//g' -e 's/".*//g'` # just in case
 	echo "OpenLGTV_BCM-INFO: found not mounted USB partition: \"$partdev\", fstype: \"$fstype\""
 	if [ -n "`grep $fstype /proc/filesystems`" ]
@@ -62,6 +53,11 @@ do
 		if [ "$fstype" = "ntfs" ]
 		then
 		    ntfs-3g "$partdev" "$mnt_dst" ${mnt_args}
+		    if [ "$?" -ne "0" ]
+		    then
+			echo "OpenLGTV_BCM-ERROR: mounting NTFS partition with ntfs-3g: $partdev into $mnt_dst FAILED, trying fallback with remounting it READ-ONLY"
+			mount -t ntfs "$partdev" "$mnt_dst" -o ro,noatime,uid=0,gid=0,fmask=0177,dmask=077,nls=utf8,errors=continue,mft_zone_multiplier=1
+		    fi
 		else
 		    mount -t "$fstype" "$partdev" "$mnt_dst" ${mnt_args}
 		fi

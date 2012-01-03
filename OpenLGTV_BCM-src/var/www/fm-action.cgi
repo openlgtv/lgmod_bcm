@@ -416,7 +416,7 @@ else
 	#echo "${action}#${spth}#$dpth" >> "${log_dir}/${action}.log"
 	echo "<br/>"
 	SIFS="$IFS" IFS=$'\n'
-	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
+	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
 	IFS="$SIFS"
 	if [ "$FORM_onlystatus" != "1" ]
 	then
@@ -448,7 +448,7 @@ else
 	for i in `seq 2000`
 	do
 	    SIFS="$IFS" IFS=$'\n'
-	    dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}')
+	    dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}')
 	    IFS="$SIFS"
 	    [ "$dsize" = "" ] && dsize=0
 	    percent="$(($dsize * 100 / $ssize))"
@@ -457,12 +457,65 @@ else
 	    elapsed_status=$((${time_now}-${time_start_status}))
 	    average_bps=$((${dsize}/${elapsed}))
 	    average_kbps=$((${average_bps}/1024))
-	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize / $ssize bytes<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
+	    if [ "${#dsize}" -lt "4" ]
+	    then
+		dsize_formated="${dsize} B"
+	    else
+		if [ "${#dsize}" -lt "7" ]
+		then
+		    #dsize_formated="$((${dsize}/1000)) $((${dsize}%1000))"
+		    dsize_formated="$((${dsize}/1024)) KB"
+		else
+		    if [ "${#dsize}" -lt "10" ]
+		    then
+			#dsize_formated="$((${dsize}/(1024*1024))) MB"
+			dsize_mb="$((${dsize}/(1024*1024)))"
+			#dsize_formated="${dsize_mb}.$((((${dsize}/1024)-(${dsize_mb}*1024))/10)) MB"
+			dsize_mb_mod="$((((${dsize}/1024)-(${dsize_mb}*1024))/10))"
+			[ "${#dsize_mb_mod}" -lt "2" ] && dsize_mb_mod="0${dsize_mb_mod}"
+			dsize_formated="${dsize_mb}.${dsize_mb_mod} MB"
+		    else
+			#dsize_formated="$((${dsize}/(1024*1024*1024))) GB"
+			dsize_gb="$((${dsize}/(1024*1024*1024)))"
+			#dsize_formated="${dsize_gb}.$((((${dsize}/1024/1024)-(${dsize_gb}*1024))/10)) GB"
+			dsize_gb_mod="$((((${dsize}/1024/1024)-(${dsize_gb}*1024))/10))"
+			[ "${#dsize_gb_mod}" -lt "2" ] && dsize_gb_mod="0${dsize_gb_mod}"
+			# ugly workaround for integer arithmetic calculation errors on non-integer (float) values
+			[ "$dsize_gb_mod" -gt "99" ] && dsize_gb_mod=99
+			dsize_formated="${dsize_gb}.${dsize_gb_mod} GB"
+		    fi
+		fi
+	    fi
+	    if [ "${#ssize}" -lt "4" ]
+	    then
+		ssize_formated="${ssize} B"
+	    else
+		if [ "${#ssize}" -lt "7" ]
+		then
+		    ssize_formated="$((${ssize}/1024)) KB"
+		else
+		    if [ "${#ssize}" -lt "10" ]
+		    then
+			ssize_mb="$((${ssize}/(1024*1024)))"
+			ssize_mb_mod="$((((${ssize}/1024)-(${ssize_mb}*1024))/10))"
+			[ "${#ssize_mb_mod}" -lt "2" ] && ssize_mb_mod="0${ssize_mb_mod}"
+			ssize_formated="${ssize_mb}.${ssize_mb_mod} MB"
+		    else
+			ssize_gb="$((${ssize}/(1024*1024*1024)))"
+			ssize_gb_mod="$((((${ssize}/1024/1024)-(${ssize_gb}*1024))/10))"
+			[ "${#ssize_gb_mod}" -lt "2" ] && ssize_gb_mod="0${ssize_gb_mod}"
+			[ "$ssize_gb_mod" -gt "99" ] && ssize_gb_mod=99
+			ssize_formated="${ssize_gb}.${ssize_gb_mod} GB"
+		    fi
+		fi
+	    fi
+	    #echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize / $ssize bytes<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
+	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_formated / $ssize_formated<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
 	    [ -n "`ps | grep \"^ *$pid \"`" ] && sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
 		SIFS="$IFS" IFS=$'\n'
-		dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{print sum}') 
+		dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}') 
 		IFS="$SIFS"
 		if [ "$ssize" -eq "$dsize" ]
 		then
