@@ -285,7 +285,6 @@ then
 	then
 	    ftype=image
 	else
-	    #echo "<meta HTTP-EQUIV='REFRESH' content='2; url=root$spth'>"
 	    echo "<script type='text/javascript'>"
 	    if [ "$refresh" = "1" ]
 	    then
@@ -297,8 +296,6 @@ then
 	    echo "</script>"
 	fi
     fi
-    #[ "$refresh" = "1" ] && echo "<meta HTTP-EQUIV='REFRESH' content='2'>"
-    #[ "$refresh" = "1" ] && echo "<script type='text/javascript>document.write(\"<meta HTTP-EQUIV='REFRESH' content='window.refreshTime'>\");</script>"
     [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]000/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
 fi
 
@@ -413,7 +410,6 @@ else
 	echo "<tr><td><font size='+3' color='green'>Source: </font></td><td><font size='+3' color='black'>$spth</font><td></tr>"
 	echo "<tr><td><font size='+3' color='green'>Target: </font></td><td><font size='+3' color='black'>$dpth/</font><td></tr>"
 	echo "</table><br/>"
-	#echo "${action}#${spth}#$dpth" >> "${log_dir}/${action}.log"
 	echo "<br/>"
 	SIFS="$IFS" IFS=$'\n'
 	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
@@ -430,12 +426,8 @@ else
 	    fi
 	    time_start="`date +'%s'`"
 	    time_start_status="${time_start}"
-	    #echo "${pid}#${action}#${spth}#${dpth}#${time_start}" | tee "${log_dir}/${action}.date.${pid}.log" >> "${log_dir}/${action}.log"
-	    #echo "${pid}#${action}#${spth}#${dpth}#${time_start}" | tee "${log_dir}/${action}.date.${pid}.log" >> "${log_file}"
 	    echo "${pid}#${action}#${spth}#${dpth}#${time_start}" >> "${log_file}"
-	    #echo "${time_start}" > "${log_dir}/${action}.date.${pid}.log"
 	else
-	    #[ -z "${time_start}" ] && time_start="`cat ${log_dir}/${action}.date.${pid}.log`" && time_start="${time_start##*\#}"
 	    [ -z "${time_start}" ] && time_start="`grep '${pid}' '${log_file}'`" && time_start="${time_start##*\#}"
 	    time_start_status="`date +'%s'`"
 	fi
@@ -459,58 +451,52 @@ else
 	    average_kbps=$((${average_bps}/1024))
 	    if [ "${#dsize}" -lt "4" ]
 	    then
-		dsize_formated="${dsize} B"
+		dsize_f="${dsize} B"
 	    else
 		if [ "${#dsize}" -lt "7" ]
 		then
-		    #dsize_formated="$((${dsize}/1000)) $((${dsize}%1000))"
-		    dsize_formated="$((${dsize}/1024)) KB"
+		    dsize_f="$((${dsize}/1024)) KB"
 		else
 		    if [ "${#dsize}" -lt "10" ]
 		    then
-			#dsize_formated="$((${dsize}/(1024*1024))) MB"
 			dsize_mb="$((${dsize}/(1024*1024)))"
-			#dsize_formated="${dsize_mb}.$((((${dsize}/1024)-(${dsize_mb}*1024))/10)) MB"
-			dsize_mb_mod="$((((${dsize}/1024)-(${dsize_mb}*1024))/10))"
-			[ "${#dsize_mb_mod}" -lt "2" ] && dsize_mb_mod="0${dsize_mb_mod}"
-			dsize_formated="${dsize_mb}.${dsize_mb_mod} MB"
+			dsize_mb_m="$((((${dsize}/1024)-(${dsize_mb}*1024))/10))"
+			[ "${#dsize_mb_m}" -lt "2" ] && dsize_mb_m="0${dsize_mb_m}"
+			dsize_f="${dsize_mb}.${dsize_mb_m} MB"
 		    else
-			#dsize_formated="$((${dsize}/(1024*1024*1024))) GB"
 			dsize_gb="$((${dsize}/(1024*1024*1024)))"
-			#dsize_formated="${dsize_gb}.$((((${dsize}/1024/1024)-(${dsize_gb}*1024))/10)) GB"
-			dsize_gb_mod="$((((${dsize}/1024/1024)-(${dsize_gb}*1024))/10))"
-			[ "${#dsize_gb_mod}" -lt "2" ] && dsize_gb_mod="0${dsize_gb_mod}"
+			dsize_gb_m="$((((${dsize}/1024/1024)-(${dsize_gb}*1024))/10))"
+			[ "${#dsize_gb_m}" -lt "2" ] && dsize_gb_m="0${dsize_gb_m}"
 			# ugly workaround for integer arithmetic calculation errors on non-integer (float) values
-			[ "$dsize_gb_mod" -gt "99" ] && dsize_gb_mod=99
-			dsize_formated="${dsize_gb}.${dsize_gb_mod} GB"
+			[ "$dsize_gb_m" -gt "99" ] && dsize_gb_m=99
+			dsize_f="${dsize_gb}.${dsize_gb_m} GB"
 		    fi
 		fi
 	    fi
 	    if [ "${#ssize}" -lt "4" ]
 	    then
-		ssize_formated="${ssize} B"
+		ssize_f="${ssize} B"
 	    else
 		if [ "${#ssize}" -lt "7" ]
 		then
-		    ssize_formated="$((${ssize}/1024)) KB"
+		    ssize_f="$((${ssize}/1024)) KB"
 		else
 		    if [ "${#ssize}" -lt "10" ]
 		    then
 			ssize_mb="$((${ssize}/(1024*1024)))"
-			ssize_mb_mod="$((((${ssize}/1024)-(${ssize_mb}*1024))/10))"
-			[ "${#ssize_mb_mod}" -lt "2" ] && ssize_mb_mod="0${ssize_mb_mod}"
-			ssize_formated="${ssize_mb}.${ssize_mb_mod} MB"
+			ssize_mb_m="$((((${ssize}/1024)-(${ssize_mb}*1024))/10))"
+			[ "${#ssize_mb_m}" -lt "2" ] && ssize_mb_m="0${ssize_mb_m}"
+			ssize_f="${ssize_mb}.${ssize_mb_m} MB"
 		    else
 			ssize_gb="$((${ssize}/(1024*1024*1024)))"
-			ssize_gb_mod="$((((${ssize}/1024/1024)-(${ssize_gb}*1024))/10))"
-			[ "${#ssize_gb_mod}" -lt "2" ] && ssize_gb_mod="0${ssize_gb_mod}"
-			[ "$ssize_gb_mod" -gt "99" ] && ssize_gb_mod=99
-			ssize_formated="${ssize_gb}.${ssize_gb_mod} GB"
+			ssize_gb_m="$((((${ssize}/1024/1024)-(${ssize_gb}*1024))/10))"
+			[ "${#ssize_gb_m}" -lt "2" ] && ssize_gb_m="0${ssize_gb_m}"
+			[ "$ssize_gb_m" -gt "99" ] && ssize_gb_m=99
+			ssize_f="${ssize_gb}.${ssize_gb_m} GB"
 		    fi
 		fi
 	    fi
-	    #echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize / $ssize bytes<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
-	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_formated / $ssize_formated<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
+	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_f / $ssize_f<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
 	    [ -n "`ps | grep \"^ *$pid \"`" ] && sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
@@ -526,8 +512,6 @@ else
 		    if [ -f "${log_dir}/${action}.error.log" ]
 		    then
 			echo "<font color='red' size='+2'>"
-			#cat "${log_dir}/${action}.log"
-			#tail -n+2 "${log_dir}/${action}.error.log"
 			cat "${log_dir}/${action}.error.log"
 			echo "</font>"
 		    fi
@@ -535,8 +519,7 @@ else
 		    break
 		fi
 		# TODO: need to rethink that as other processes might have started in meantime
-		#rm -f "${log_dir}/${action}.error.log" "${log_dir}/${action}.date.${pid}.log" "${log_dir}/${action}.log"
-		#rm -f "${log_dir}/${action}.date.${pid}.log"
+		#rm -f "${log_dir}/${action}.error.log" "${log_dir}/${action}.log" "${log_file}"
 	    fi
 	    if [ "${elapsed_status}" -gt "120" ]
 	    then

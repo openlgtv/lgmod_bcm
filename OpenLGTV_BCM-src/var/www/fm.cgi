@@ -771,13 +771,9 @@ then
     mv "$cpth/$FORM_txtOldName" "$cpth/$FORM_txtName"
 fi
 
-#mountpoints="`cat /proc/mounts | cut -d' ' -f2`"
-#mountpoints="`grep -v ' / ' /proc/mounts | cut -d' ' -f2 | tr '\n' ' '`"
 mountpoints="`egrep -v '^/dev/mtdblock| / |^proc|^tmp|^sysfs|^usbfs|^devpts| /usr/etc |^bt|^lgapp_xip' /proc/mounts | cut -d' ' -f2 | tr '\n' ' '`"
 mountpoints_length="${#mountpoints}"
 
-#if [ "$type" = "menu" ]
-#then
     echo "<table id='fulltable' width='100%' border='1' bordercolor='blue' cellspacing='5' bgcolor='white' padding='0' cellpadding='0px'>"
     lpth_crop="$lpth"
     rpth_crop="$rpth"
@@ -790,7 +786,6 @@ mountpoints_length="${#mountpoints}"
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	#echo "<tr id=\"tr_l1\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=1;selectItem();\"><td class='filename'><img src=\"/Images/file_icons/dir.png\"/><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	echo "<tr id=\"tr_l1\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	litem_nr=2
     else
@@ -798,7 +793,6 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    #for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" $lpth/* | sort | sed -e "s#$lpth/##g" -e 's# #\&nbsp;#g'`
     for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
     do
 	ltype="${lcontent%%@*}"
@@ -853,7 +847,6 @@ mountpoints_length="${#mountpoints}"
 	#if [ -n "`grep \" $lpth/$lfilename \" /proc/mounts`" ]
 	file_color=black
 	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
-	#echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td class='filename'><img src=\"/Images/file_icons/$limage\"/><a id=\"link_l${litem_nr}\" href=\"${dlink}&lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$limage\"/></td><td class='filename'><a id=\"link_l${litem_nr}\" href=\"${dlink}&lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
@@ -863,7 +856,6 @@ mountpoints_length="${#mountpoints}"
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	#echo "<tr id=\"tr_r1\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=1;selectItem();\"><td class='filename'><img src=\"/Images/file_icons/dir.png\"/><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	echo "<tr id=\"tr_r1\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	ritem_nr=2
     else
@@ -871,7 +863,6 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    #for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" $rpth/* | sort | sed -e "s#$rpth/##g" -e 's# #\&nbsp;#g'`
     for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
     do
 	rtype="${rcontent%%@*}"
@@ -891,12 +882,12 @@ mountpoints_length="${#mountpoints}"
 		rfilename="${rfilename// /&nbsp;}"
 	    fi
 	fi
-	rcontent_3x="${rcontent_2x#*@}" # from 3rd columnt up to end
+	rcontent_3x="${rcontent_2x#*@}"
 	rdate="${rcontent_3x%%@*}"
 	rdate_cut="${rdate%%.*}"
-	rcontent_4x="${rcontent_3x#*@}" # from 4th columnt up to end
+	rcontent_4x="${rcontent_3x#*@}"
 	rperm="${rcontent_4x%%@*}"
-	rcontent_5x="${rcontent_4x#*@}" # from 5th columnt up to end
+	rcontent_5x="${rcontent_4x#*@}"
 	rsize="${rcontent_5x%%@*}"
 	if [ "$rtype" = "directory" ]
 	then
@@ -913,7 +904,6 @@ mountpoints_length="${#mountpoints}"
 	file_color=black
 	check_mountpoints="${mountpoints#*$rpth/$rfilename }"
 	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
-	#echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td class='filename'><img src=\"/Images/file_icons/$rimage\"/><a id=\"link_r${ritem_nr}\" href=\"${dlink}&rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$rimage\"/></td><td class='filename'><a id=\"link_r${ritem_nr}\" href=\"${dlink}&rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done

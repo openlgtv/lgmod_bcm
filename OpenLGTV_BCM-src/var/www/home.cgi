@@ -29,7 +29,6 @@ function GoToNetCastLinks()
 			
 			  if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]
 			  then
-			    # Lets make more space for command output
 			    echo "<div id=\"textOnly\" style=\"background-color:white\"><!--"
 			  else
 			    echo "<div id=\"textOnly\" style=\"background-color:white;height:160px;\">"
@@ -103,7 +102,6 @@ function GoToNetCastLinks()
 			 then
 			    cur_encPassw="`grep ^root: /mnt/user/etc/shadow | awk -F: '{print $2}'`"
 			    new_encPassw="`httpd -m $FORM_qPassw`"
-			    #sed -i -e "s/^\(root:\).*\(:.*\)/\1$FORM_qPassw\2/g" /mnt/user/etc/shadow 2>&1
 			    echo "OpenLGTV BCM-INFO: WebUI: password change" >> /var/log/OpenLGTV_BCM.log
 			    sed -i -e "s:^root\:$cur_encPassw:root\:$new_encPassw:g" /mnt/user/etc/shadow 2>&1 | tee -a /var/log/OpenLGTV_BCM.log
 			    echo '<div style="background-color:white;"><center><font size="+3" color="red"><b><span id="spanPASSSET">NEW PASSWORD SET !!!</span></b></font><br/><b>Password change to WebUI will take effect after reboot!</b></center></div>'
