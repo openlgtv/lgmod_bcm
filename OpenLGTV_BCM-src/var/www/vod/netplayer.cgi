@@ -52,10 +52,6 @@ function check(e)
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
 			document.links['link' + next].focus();
-			//set TD background
-			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
-			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
-			//set current=next
 			current = next;
 			}
 		else if (key==404) 
@@ -126,8 +122,6 @@ fi
 type2=`echo $type | awk -F/ '{print $2}'`
 log_file=/var/log/vod/netplayer/$type2.log
 
-#echo "$url $log_file <br/>"
-
 if [ ! -d "/var/log/vod/netplayer" ]
 then
     mkdir -p /var/log/vod/netplayer
@@ -150,7 +144,6 @@ then
 	feedUrl=`echo $feedEnclosure | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	feedType=`echo $feedEnclosure | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
-	#echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\" onKeyPress=\"javascript:setCurrent(this);return false\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
 	if [ "$(($item_nr % 2))" = "0" ]
 	then
 	    echo "</tr><tr>"
@@ -159,7 +152,6 @@ then
     done
     echo '</tr>'
     echo '</table>'
-    #echo "item_nr: $item_nr"
     echo '</center></font>'
     echo '</BODY>'
 else

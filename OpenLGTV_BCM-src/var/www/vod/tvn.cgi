@@ -157,11 +157,6 @@ then
     [ "$type" = "category2" ] && new_type=playlist
     #wget -q -U "$useragent" -O - "$url" > $log_file
     wget -q -U "$useragent" "$url" -O $log_file
-    #echo "<tr>"
-    #grep -A3 '<div class="photoContainer">' $log_file | sed -e 's#<div class="photoContainer">#</td><td>#g' -e 's#href="/#href="tvn.cgi/#g' -e s'#alt="tvn Player -\(.*\)".*#alt="\1" /><br/>\1#g' | grep -v "^--$"
-    #grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n</td><td>#g' -e 's#href="/#href="tvn.cgi/#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1#g'
-    #grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n#g' -e 's#href="/#href="tvn.cgi/#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1</a>QQQXXQQQ#g' -e 's/^\t*//g' -e 's/^ *//g'
-    #echo "</tr>"
     item_nr=1
     #IFS=$(/bin/echo -e '\n')
     IFS=QQQXXQQQ
@@ -170,7 +165,6 @@ then
     do
 	if [ "$content" != "" ]
 	then
-	    #echo "$content" | sed -e "s/class=\"ajaxify\"/id=\"link$item_nr\"/g" -e 's/QQQXXQQQ//g'
 	    echo "$content" | sed -e "s#<a href=\"/#<a id=\"link$item_nr\" href=\"tvn.cgi\?type=$new_type\&url=http://tvnplayer.pl/#g" -e 's/QQQXXQQQ//g'
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
