@@ -218,18 +218,8 @@ then
     if [ -d "$OpenLGTV_BCM_USB/WebUI-devel" ]
     then
         echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/WebUI-devel dir, mount-binding it to /var/www and restarting web servers..."
-	mount --bind $OpenLGTV_BCM_USB/WebUI-devel /var/www
-	killall httpd
-	sleep 1
-	echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"
-	httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www
-	if [ -f "/mnt/user/etc/httpd.conf" ]
-	then
-	    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication"
-	    httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI"
-	else
-	    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC"
-	fi
+	mount --bind "$OpenLGTV_BCM_USB/WebUI-devel" /var/www
+	/etc/rc.d/rc.httpd restart &
     fi
 fi
 /etc/rc.d/rc.mount-netshare

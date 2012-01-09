@@ -39,7 +39,8 @@ do
 	echo "OpenLGTV_BCM-INFO: found not mounted USB partition: \"$partdev\", fstype: \"$fstype\""
 	if [ -n "`grep $fstype /proc/filesystems`" ]
 	then
-	    for i in 1 2 3 4 5 6
+	    #for i in 1 2 3 4 5 6 7 8 # INFO: need to think if we should use just 5-8 or 1-8, probably 5-8 is better that those dirs are visible in media player when at least one of 1-4 is automounted by RELEASE
+	    for i in 5 6 7 8
 	    do
 		[ -z "`grep /mnt/${usbport}/Drive${i} /proc/mounts`" ] && mnt_dst="/mnt/${usbport}/Drive${i}" && break
 	    done

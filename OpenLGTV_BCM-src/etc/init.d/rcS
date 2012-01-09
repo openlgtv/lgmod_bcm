@@ -228,7 +228,7 @@ then
     /etc/rc.d/rc.nvram &
 fi
 
-/etc/rc.d/rc.httpd &
+/etc/rc.d/rc.httpd start &
 
 stage3=`echo ${tdirfull}/stage3/*`
 if [ -f "$stage3" ]

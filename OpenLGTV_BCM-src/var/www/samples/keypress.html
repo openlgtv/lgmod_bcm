@@ -1,12 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
+<html><head>
 <title>Key presses detector</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript">
 <!--
-
 document.defaultAction = true;
 
 function initialize() {
@@ -26,17 +24,11 @@ function initialize() {
 function setEvents() {
 	var eventHandler = detectEvent;
 	document['on'+this.id] = eventHandler;
-	//document.onkeyup = detectEvent;
-	//document.onkeydown = detectEvent;
-	//document.onkeypress = detectEvent;
 }
 
 function detectEvent(e) {
 	var evt = e || window.event;
-	//writeText(evt.type);
 	writeText('keyCode: ' + evt.keyCode);
-	//writeText('charCode: ' + evt.charCode);
-	//writeText('');
 	return document.defaultAction;
 }
 
@@ -70,4 +62,3 @@ window.onload=initialize;
 
 </body>
 </html>
-

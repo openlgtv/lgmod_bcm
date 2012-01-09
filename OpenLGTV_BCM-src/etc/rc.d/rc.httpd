@@ -3,19 +3,28 @@
 # Web server configs generation and service starting for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+if [ "$1" != "start" ]
+then
+    echo "OpenLGTV_BCM-INFO: rc.httpd: stopping httpd service..."
+    killall httpd 2>&1 > /dev/null
+    sleep 1
+    killall -9 httpd 2>&1 > /dev/null
+    [ "$1" = "stop" ] && exit 0
+fi
+
 md5password="`grep -m 1 ^root: /etc/shadow | cut -d: -f2`"
 
 if [ ! -f "/mnt/user/etc/httpd.conf" ]
 then
-    echo "OpenLGTV_BCM-INFO: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..."
+    echo "OpenLGTV_BCM-INFO: rc.httpd: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..."
     cat /etc/httpd.conf | sed -e 's/^D:*/A:*/g' -e 's/^I:/#I:/g' > /mnt/user/etc/httpd.conf
     if [ "`grep -m 1 ^root:x /etc/passwd`" = "" ]
     then
-	echo "OpenLGTV_BCM-WARN: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it"
+	echo "OpenLGTV_BCM-WARN: rc.httpd: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it"
 	#echo '/:openlgtv:openlgtv' >> /mnt/user/etc/httpd.conf
 	echo '/:openlgtv:$1$3X/HLa0A$UNzgE.VueZjnJG1wCNIgB0' >> /mnt/user/etc/httpd.conf
     else
-	echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf"
+	echo "OpenLGTV_BCM-INFO: rc.httpd: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf"
 	echo "/:openlgtv:$md5password" >> /mnt/user/etc/httpd.conf
     fi
 fi
@@ -24,16 +33,16 @@ md5password_httpd="`grep -m 1 ^/:openlgtv: /mnt/user/etc/httpd.conf | cut -d: -f
 
 if [ "$md5password_httpd" != "$md5password" ]
 then
-    echo "OpenLGTV_BCM-INFO: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf config change"
+    echo "OpenLGTV_BCM-INFO: rc.httpd: using root password from /etc/shadow for user: openlgtv in /mnt/user/etc/httpd.conf config change"
     sed -i -e "s:^/\:openlgtv\:.*:/\:openlgtv\:$md5password:g" /mnt/user/etc/httpd.conf
 fi
 
-echo "OpenLGTV_BCM-INFO: starting local httpd on 127.0.0.1:88"
+echo "OpenLGTV_BCM-INFO: rc.httpd: starting local httpd on 127.0.0.1:88"
 httpd -c /etc/httpd.conf -p 127.0.0.1:88 -h /var/www
 if [ -f "/mnt/user/etc/httpd.conf" ]
 then
-    echo "OpenLGTV_BCM-INFO: starting external httpd on 0.0.0.0:80 - connections need authentication"
+    echo "OpenLGTV_BCM-INFO: rc.httpd: starting external httpd on 0.0.0.0:80 - connections need authentication"
     httpd -c /mnt/user/etc/httpd.conf -p 0.0.0.0:80 -h /var/www -r "OpenLGTV BCM WebUI" 2>&1
 else
-    echo "OpenLGTV_BCM-WARN: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC"
+    echo "OpenLGTV_BCM-WARN: rc.httpd: external httpd config in /mnt/user/etc/httpd.conf not found - you wont be able to connect to WebUI from PC"
 fi

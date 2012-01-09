@@ -20,7 +20,6 @@ Content-type: text/html
     a:hover,
     a:focus,
     a:active {
-	//color: red;
 	color: #990000;
 	background-color: green;
     }
@@ -31,10 +30,8 @@ Content-type: text/html
 <!--
 
 <?
-
 useragent="tv_samsung/4"
 menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
-
 if [ "$FORM_url" != "" ]
 then
     url="$FORM_url"
@@ -47,12 +44,7 @@ else
     log_file=/var/log/vod/ipla/$type.log
     echo "var col = 1; //number of 'cells' in a row"
 fi
-
-if [ ! -d "/var/log/vod/ipla" ]
-then
-    mkdir -p /var/log/vod/ipla
-fi
-
+[ ! -d "/var/log/vod/ipla" ] && mkdir -p /var/log/vod/ipla
 ?>
 
 var current;
@@ -60,7 +52,7 @@ var next;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
-     
+
 function check(e)
 	{
 	if (!e) var e = window.event;
@@ -76,16 +68,11 @@ function check(e)
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		//alert('key: '+key+' current: '+current+' next: '+next);
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
 			document.links['link' + next].focus();
-			//set TD background
-			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
-			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
-			//set current=next
 			current = next;
 			//Prevent scrolling
 			return false;
@@ -124,12 +111,10 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
-	
-document.defaultAction = true;
 
+document.defaultAction = true;
 
 // -->
 </script>
@@ -139,10 +124,7 @@ document.defaultAction = true;
 <BODY bgcolor="green">
 
 <?
-
 wget -q -U "$useragent" -O - "$url" > $log_file
-
-#echo "$url $log_file <br/>"
 
 if [ "$type" = "menu" ]
 then
@@ -152,22 +134,14 @@ then
     item_nr=1
     for content in `cat $log_file | tr '\n' ' ' | tr '{}' '\n' | grep feed | sed -e 's/  */ /g' -e 's/ \"/\"/g' -e 's#http://##g' -e 's/ /\#\#/g'`
     do
-	##echo "$content" >> /tmp/content.log
-	#feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | awk -F: '{print $2}' | tr -d '\"'`
-	#feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | awk -F: '{print $2}' | sed 's/\#\#/ /g' | tr -d '\"'`
-	#####feedUrl=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedUrl\" | cut -d: -f2 | tr -d '\"'`
 	contentUrl="${content#*\"feedUrl\":\"}"
 	[ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\",*}"
-	#####feedTitle=`echo $content | sed 's/\",\"/\"\n\"/g' | grep -i \"feedTitle\" | cut -d: -f2 | sed 's/\#\#/ /g' | tr -d '\"'`
 	contentTitle="${content#*\"feedTitle\":\"}"
 	[ "$contentTitle" != "$content" ] && feedTitle="${contentTitle%%\"*}"
-	#####if [ "`echo $content | grep '/category/'`" ]
 	if [ "${feedUrl#*/category/}" != "${feedUrl}" ]
 	then
-	    #####echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
 	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
 	else
-	    #####echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=related&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>"
 	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=related&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
 	fi
 	item_nr=$(($item_nr+1))
@@ -179,26 +153,14 @@ else
     item_nr=1
     if [ "$type" = "category" ]
     then
-	########for content in `egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | tr '\n' ' ' | tr '{}' '\n' | grep -i "/category/" | sed -e 's/  */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://##g'`
 	for content in `egrep -i '\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | tr '\n' ' ' | tr '{}' '\n' | grep -i "/category/" | sed -e 's/  */ /g' -e 's/ "/"/g' -e 's/ /\#\#/g' -e 's#http://##g'`
 	do
-	    #feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | awk -F: '{print $2}' | tr -d '\"'`
-	    #feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | tr -d '\"'`
-	    #feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-	    ##echo "$content" >> /tmp/content.log
-	    #####feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | cut -d: -f2 | tr -d '\"'`
 	    contentThumb="${content#*\"thumb\":\"}"
-	    ########feedThumb="${contentThumb%%\"\!\#\!*}"
 	    [ "$contentThumb" != "$content" ] && feedThumb="${contentThumb%%\",*}"
-	    #####feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | cut -d: -f2 | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 	    contentTitle="${content#*\"title\":\"}"
-	    ########feedTitle="${contentTitle%%\"\!\#\!*}"
 	    [ "$contentTitle" != "$content" ] && feedTitle="${contentTitle%%\",*}"
-	    #####feedUrl=`echo $content | sed 's/!#!/\n/g' | grep -i "\"url\":" | cut -d: -f2 | tr -d '\"'`
 	    contentUrl="${content#*\"url\":\"}"
-	    ########feedUrl="${contentUrl%%\"\!\#\!*}"
 	    [ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\",*}"
-	    #####echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=http://$feedUrl\" target=\"_parent\"><img src=\"http://$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>"
 	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=http://$feedUrl\" target=\"_parent\"><img src=\"http://$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>" | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/\\//g'
 	    if [ "$(($item_nr % 3))" = "0" ]
 	    then
@@ -207,22 +169,12 @@ else
 	    item_nr=$(($item_nr+1))
 	done
     else
-	#if [ "$type" = "category2" ]
-	    #####for content in `egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | tr '\n' ' ' | tr '{}' '\n' | grep -i "/movies/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
-	    #########for content in `egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | sed -e 's/: {//g' -e 's/},//g' | tr '\n' ' ' | tr '{}' '\n' | grep -i "/movies/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
-	    ############for content in `egrep -i '\"date\"|\"video\"|\"thumb\"|\"url\"|\"title\"|\{|\}' $log_file | sed -e 's/: {//g' -e 's/},//g' | tr '\n' ' ' | tr '{}' '\n' | egrep -i "/movies/|/category/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's/\",/\"!#!/g' -e 's#http://#http//#g'`
 	    for content in `egrep -i '\"date\"|\"video|\"thumb|\"url\"|\"title\"|\{|\}' $log_file | sed -e 's/: {//g' -e 's/},//g' | tr '\n' ' ' | tr '{}' '\n' | egrep -i "/movies/|/category/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's#http://#http//#g'`
 	    do
 		echo "$content" >> /tmp/content.log
-		#feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | awk -F: '{print $2}' | tr -d '\"'`
-		#feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-		#feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
-		#feedVideo=`echo $content | sed 's/!#!/\n/g' | grep -i "\"video\":" | awk -F: '{print $2}' | sed 's#http//#http://#g' | tr -d '\"'`
-		#####feedDate=`echo $content | sed 's/!#!/\n/g' | grep -i "\"date\":" | cut -d: -f2 | tr -d '\"'`
 		contentDate="${content#*\"date\":\"}"
 		feedDate=""
 		[ "$contentDate" != "$content" ] && feedDate="${contentDate%%\"*}"
-		#####feedThumb=`echo $content | sed 's/!#!/\n/g' | grep -i "\"thumb\":" | cut -d: -f2 | sed 's#http//#http://#g' | tr -d '\"'`
 		contentThumb="${content#*\"thumbnail_304x166\":\"}"
 		feedThumb=""
 		[ "$contentThumb" != "$content" ] && feedThumb="${contentThumb%%\"*}"
@@ -232,11 +184,9 @@ else
 		    feedThumb=""
 		    [ "$contentThumb" != "$content" ] && feedThumb="${contentThumb%%\"*}"
 		fi
-		#####feedTitle=`echo $content | sed 's/!#!/\n/g' | grep -i "\"title\":" | cut -d: -f2 | sed 's#http//#http://#g' | tr -d '\"' | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g'`
 		contentTitle="${content#*\"title\":\"}"
 		feedTitle=""
 		[ "$contentTitle" != "$content" ] && feedTitle="${contentTitle%%\"*}"
-		#####feedVideo=`echo $content | sed 's/!#!/\n/g' | grep -i "\"video\":" | cut -d: -f2 | sed 's#http//#http://#g' | tr -d '\"'`
 		contentVideo="${content#*\"video_hd\":\"}"
 		feedVideo=""
 		[ "$contentVideo" != "$content" ] && feedVideo="${contentVideo%%\"*}"
@@ -254,7 +204,6 @@ else
 		[ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\"*}"
 		if [ "$feedVideo" != "" ]
 		then
-		    #####echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate<br/>$feedTitle</b></a></center></td>"
 		    if [ "$hd" = "1" ]
 		    then
 			echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate HD!<br/>$feedTitle</b></a></center></td>" | sed -e 's#http//#http://#g' -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/u2\(...\)/\&\#x2\1\;/g' -e 's/\\//g'
@@ -270,11 +219,9 @@ else
 		fi
 		item_nr=$(($item_nr+1))
 	    done
-	#fi
     fi
     echo '</tr>'
     echo '</table>'
-    #echo "item_nr: $item_nr"
 fi
 
 ?>
