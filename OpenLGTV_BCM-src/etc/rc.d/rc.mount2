@@ -8,48 +8,6 @@ echo "OpenLGTV_BCM-INFO: mtd mounts..."
 # partitions names to mtd numbers assignment
 grep -v erasesize /proc/mtd | sed -e 's/://g' -e 's/\"//g' -e 's/^mtd//g' | awk '{print "mtd_" $4 "=" $1}' | tac > /tmp/partitions.list
 source /tmp/partitions.list
-# output example for EU 2010 BCM models:
-#mtd_total=40
-#mtd_reserved=39
-#mtd_bbminfo=38
-#mtd_macadr=37
-#mtd_env_nvm=36
-#mtd_hist=35
-#mtd_remain=34
-#mtd_browser=33
-#mtd_addon=32
-#mtd_opensrc=31
-#mtd_lgres=30
-#mtd_lgapp=29
-#mtd_kernel=28
-#mtd_lginit=27
-#mtd_sdpdata=26
-#mtd_user=25
-#mtd_authcxt=24
-#mtd_cert=23
-#mtd_idfile=22
-#mtd_nvram=21
-#mtd_vcsdata=20
-#mtd_brodata=19
-#mtd_browser=18
-#mtd_fladata=17
-#mtd_game=16
-#mtd_addon=15
-#mtd_opensrc=14
-#mtd_estream=13
-#mtd_ezcal=12
-#mtd_lgfont=11
-#mtd_lgres=10
-#mtd_lgapp=9
-#mtd_kernel=8
-#mtd_data=7
-#mtd_logo=6
-#mtd_model=5
-#mtd_lginit=4
-#mtd_rootfs=3
-#mtd_crc32info=2
-#mtd_mtdinfo=1
-#mtd_boot=0
 
 # quite ugly model checks, needs rewrite
 mtd_count="`grep -v erasesize /proc/mtd | wc -l`"

@@ -96,12 +96,10 @@ then
 			if [ "$WebUI_MOUNT" = "1" ]
 			then
 			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."
-			    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp
 			    mount -t nfs "$src" "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
 			    export mount_err_code="$?"
 			else
 			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."
-			    #mount -t nfs $src "$full_dst" -o nolock,rsize=32768,wsize=32768,tcp &
 			    mount -t nfs "$src" "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
 			fi
 		    fi

@@ -17,7 +17,7 @@ var current;
 var next;
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
-     
+
 function check(e)
 	{
 	if (!e) var e = window.event;
@@ -70,15 +70,14 @@ function check(e)
 	var string = element.id;
 	current = string.slice(1,string.length);
 	}
-	
+
 function OnLoadSetCurrent()
 	{
 	current = 1;
 	document.links['c1'].focus();
-	}	
-	
-document.defaultAction = true;
+	}
 
+document.defaultAction = true;
 
 // -->
 </script>
@@ -95,13 +94,11 @@ document.defaultAction = true;
     color: #FFFF00;
     background-color: #000000;
     }
-
 </style>
 
 </head>
 
 <body bgcolor="#000000">
-
 <center>
 <table border=0>
 <tr>
@@ -366,8 +363,6 @@ document.defaultAction = true;
 	<td align="center"><a id="c194" onKeyPress="javascript:setCurrent(this);return false" href='http://mini.maxdome.de/lg/index.html' target='_parent'><img src="Images/tmp/maxdome.png" border=2></a></td>
 </tr>
 </table>
-
 </center>
-
 </body>
 </html>

@@ -4,9 +4,6 @@
 # Source code released under GPL License
 
 /scripts/info_RELEASE.sh
-
 echo "NVRAM information:"
-
 nvram-edit | egrep "Model name|Platform|Debug status|Baudrate|Lang"
-
 grep -m 1 szOtaid /mnt/lg/model/RELEASE.cfg | awk -F, '{print "Model code:       " $2}'

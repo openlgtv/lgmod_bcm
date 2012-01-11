@@ -23,11 +23,7 @@ content-type: text/html
 			<td bgcolor="#FFFFFF" align="center">
 				<img src="Images/bookmark.png"><br><br>
 				<font size="6">Bookmark saved:<br>
-					<? echo "${GET_bookmarkURL}" ?>
-				
-				<? 
-					sed -i -e "${GET_bookmarkId}s|.*|${GET_bookmarkURL}|" /var/www/user/bookmarks.inc
-				?>
+				<? echo "${GET_bookmarkURL}"; sed -i -e "${GET_bookmarkId}s|.*|${GET_bookmarkURL}|" /var/www/user/bookmarks.inc ?>
 				</font>
 			</td>
 			<td bgcolor="#FFFFFF"></td>

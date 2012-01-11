@@ -19,7 +19,6 @@ Content-type: text/html
 </style>
 <title>M3U parser by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- meta HTTP-EQUIV='REFRESH' content="30; url=m3u.cgi" -->
 <script type="text/javascript">
 <!--
 
@@ -43,16 +42,11 @@ function check(e)
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		//alert('key: '+key+' current: '+current+' next: '+next);
 		if (key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
 			document.links['link' + next].focus();
-			//set TD background
-			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
-			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
-			//set current=next
 			current = next;
 			}
 		else if (key==404) 
@@ -89,7 +83,6 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
 	
@@ -115,10 +108,7 @@ echo "Playlist loaded from: $FORM_url<br/>"
 
 menuLoc="$FORM_url"
 log_file=/var/log/vod/m3u.log.m3u
-if [ ! -d "/var/log/vod" ]
-then
-    mkdir -p /var/log/vod
-fi
+[ ! -d "/var/log/vod" ] && mkdir -p /var/log/vod
 
 rm -f $log_file $log_file.html > /dev/null 2>&1
 

@@ -12,11 +12,6 @@ Content-type: text/html
     body {
 	font-family:"TiresiasScreenfont";
     }
-    //a:focus {
-    //	outline-size: 2px;
-    //	outline-style: solid;
-    //	outline-color: red;
-    //    }
     a:link,
     a:visited {
 	color: black;
@@ -26,7 +21,6 @@ Content-type: text/html
     a:hover,
     a:focus,
     a:active {
-	//color: red;
 	color: #CC0000;
 	background-color: lightblue;
 	text-decoration: bold;
@@ -59,16 +53,11 @@ function check(e)
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		//alert('key: '+key+' current: '+current+' next: '+next);
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
 			document.links['link' + next].focus();
-			//set TD background
-			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
-			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
-			//set current=next
 			current = next;
 			//Prevent scrolling
 			return false;
@@ -107,7 +96,6 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
 	

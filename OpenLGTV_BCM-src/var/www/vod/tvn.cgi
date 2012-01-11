@@ -25,7 +25,6 @@ Content-type: text/html
 
 <?
 
-#useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
 useragent="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
 
 menuLoc="http://tvnplayer.pl"
@@ -43,10 +42,7 @@ else
     echo "var col = 1; //number of 'cells' in a row"
 fi
 
-if [ ! -d "/var/log/vod/tvn" ]
-then
-    mkdir -p /var/log/vod/tvn
-fi
+[ ! -d "/var/log/vod/tvn" ] && mkdir -p /var/log/vod/tvn
 
 ?>
 
@@ -69,16 +65,11 @@ function check(e)
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		//alert('key: '+key+' current: '+current+' next: '+next);
 		if (key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
 			var code=document.links['link' + next].name;
 			document.links['link' + next].focus();
-			//set TD background
-			//document.getElementById('td' + next).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
-			//document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkNoFocus.png)';
-			//set current=next
 			current = next;
 			//Prevent scrolling
 			return false;
@@ -117,7 +108,6 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
 	
@@ -136,7 +126,6 @@ then
     echo "</HEAD>"
     echo "<BODY bgcolor="black">"
     echo '<center><img src="http://tvnplayer.pl/img/logo_menu.png"/><font color="white"><font size="+1"><br/>alternative</font><br/>by xeros</font><br/><br/>'
-    #echo '<font size="+3">'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
 fi
 

@@ -8,10 +8,6 @@
 # if 'rebooting' is set to '1' then TV is autorebooted after after successful flashing
 # if 'make_backup' is set to '1' then installer makes full backup of firmware if OpenLGTV BCM haven't been installed yet
 
-# TODO - ensure that env is stable after erasing rootfs:
-# - make erase lginit first, then rootfs (?)
-# or - copy /bin/busybox to /tmp/busybox and use it as prefix for commands after rootfs erase
-
 # vars set
 #confirmations=1
 confirmations=0
@@ -76,10 +72,6 @@ platform=GP2B
 
 proxy_lock_file=/var/run/proxy.lock
 KILL='addon_mgr stagecraft konfabulator lb4wk GtkLauncher nc udhcpc ntpd tcpsvd ls wget djmount msdl'
-#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl RELEASE'
-	# LG: addon_mgr stagecraft konfabulator lb4wk/GtkLauncher msdl RELEASE
-	# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd wget [djmount?]
-	# OpenLGTV BCM - processes which might be running at boot: ls wget
 pkill=pkill
 [ "`which pkill`" ] || pkill=killall
 

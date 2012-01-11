@@ -46,7 +46,6 @@ function check(e)
 			case 39: next = (1*current) + 1; break; //right
 			case 40: next = (1*current) + col; break; //down
 			}
-		//alert('key: '+key+' current: '+current+' next: '+next);
 		if (key==37|key==38|key==39|key==40)
 			{
 			//Move to the next bookmark
@@ -88,7 +87,6 @@ function setCurrent(element)
 function OnLoadSetCurrent(element)
 	{
 	current=1;
-	//top.frames["Keyboard"].focus();
 	document.links['link1'].focus();
 	}
 	
@@ -122,10 +120,7 @@ fi
 type2=`echo $type | awk -F/ '{print $2}'`
 log_file=/var/log/vod/netplayer/$type2.log
 
-if [ ! -d "/var/log/vod/netplayer" ]
-then
-    mkdir -p /var/log/vod/netplayer
-fi
+[ ! -d "/var/log/vod/netplayer" ] && mkdir -p /var/log/vod/netplayer
 
 if [ "$type" = "text/xml" ]
 then

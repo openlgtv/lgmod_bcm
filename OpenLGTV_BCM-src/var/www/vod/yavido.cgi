@@ -19,7 +19,7 @@ Content-type: text/html
 </style>
 <title>YAVIDO alternative by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta HTTP-EQUIV='REFRESH' content="15; url="yavido.cgi">
+<meta HTTP-EQUIV='REFRESH' content="15">
 <script type="text/javascript">
 <!--
 
@@ -84,17 +84,22 @@ document.defaultAction = true;
 <center>
 
 <?
+log_dir=/var/log/vod/yavido
+list_file="$log_dir/list.html"
+mkdir -p "$log_dir"
+
 useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"
-
 menuLoc="http://lge.yavido.tv/ajax/portal/getPlaylist.php?action=home"
-
 
 wget -q -U "$useragent" "$menuLoc" -O - | \
     sed -e 's/\(\.mp4"\)/\1<\/a>\n/g' | \
     sed -e 's/"AUTHOR":"\(.*\)","TITLE":"\(.*\)","URL":"\(.*mp4\)"/\n<a href="\3">\1 - \2<\/a><br><br>\n/g' -e 's/\\//g' | \
-    grep "^<a" | grep -n "href" | sed 's/^\(.*\):<a/<a id="link\1"/g'
+    grep "^<a" | grep -n "href" | sed 's/^\(.*\):<a/<a id="link\1"/g' | tee "$list_file"
+
+[ "$FORM_autoplay" = "1" ] && head -n1 "$list_file" | sed -e 's/.*href="/<script type="text\/javascript">window.location="/g' -e 's/\.mp4.*/.mp4";<\/script>/g'
 ?>
 
+<br><font size="+4"><a id="link5" href="yavido.cgi?autoplay=1">Play Continuosly</a></font>
 </center></font>
 </body>
 </HTML>

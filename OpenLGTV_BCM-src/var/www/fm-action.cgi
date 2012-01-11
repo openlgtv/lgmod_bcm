@@ -379,7 +379,8 @@ then
 else
     if [ "$action" = "copy" -o "$action" = "move" -o "$action" = "status" ]
     then
-	if [ "$action" = "status" -o "$FORM_onlystatus" = "1" ]
+	#if [ "$action" = "status" -o "$FORM_onlystatus" = "1" ]
+	if [ "$action" = "status" ]
 	then
 	    # TODO TODO TODO TODO
 	    if [ -n "${pid}" ]

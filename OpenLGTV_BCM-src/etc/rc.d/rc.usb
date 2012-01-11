@@ -28,7 +28,6 @@ device="sd"
 
 if [ "$3" = "remove" ]
 then
-    #echo "OpenLGTV_BCM-INFO: device is $2 removed, killing processes and unmounting fs..."
     echo "OpenLGTV_BCM-INFO: device is $2 removed, unmounting fs..."
     for mountpoint in `grep ^/dev/${device} /proc/mounts | cut -d" " -f2 | tac`
     do
@@ -56,7 +55,6 @@ do
     sleep 1
     k=$(($k+1))
     if [ $k -gt 10 ]; then break; fi
-    #if [ $k -gt 30 ]; then break; fi
 done
 for jj in 1 2 3 4
 do
@@ -72,18 +70,10 @@ do
 		LGDTV_upgrade=1
 		echo "OpenLGTV_BCM-WARN: rc.usb: Found LG firmware upgrade epaks: $epaks"
 		echo "OpenLGTV_BCM-WARN: rc.usb: Running in firmware upgrade mode - killing some services to free memory for upgrade"
-		
 		KILL='konfabulator lb4wk GtkLauncher httpd nc udhcpc ntpd tcpsvd ls wget unzip zip djmount msdl'
-		#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl'
-		#KILL='addon_mgr stagecraft konfabulator lb4wk nc udhcpc ntpd tcpsvd ls wget djmount msdl RELEASE'
-			# LG: addon_mgr stagecraft konfabulator lb4wk msdl RELEASE
-			# OpenLGTV BCM: nc udhcpc telnetd httpd ntpd tcpsvd wget [djmount?]
-			# OpenLGTV BCM - processes which might be running at boot: ls wget
-		
 		echo 'OpenLGTV_BCM-WARN: rc.usb: Freeing memory (killing daemons) ...'
 		for prc in $KILL; do pkill $prc && echo "OpenLGTV_BCM-WARN: rc.usb: Stopping $prc ..."; killall $prc 2> /dev/null; done
 		sleep 2
-		
 		# check free ram
 		addfreemem=20480
 		currfreemem=`free | grep -m 1 Mem | awk '{print $4}'`
@@ -92,9 +82,7 @@ do
 		# expect size needed for epk in MB
 		freemem_for_epak=$((($currfreemem - $addfreemem)/1024))
 		#reqavailmem=$((2*$reqfreemem))
-		
 		echo "OpenLGTV_BCM-WARN: rc.usb: Free memory: ${currfreemem}, buffers: ${currbuffmem}, total available: ${curravailmem}"
-		
 		for epak in $epaks
 		do
 		    epk_size="`ls -lh $epak | awk '{print $5}' | sed -e 's/M//g' -e 's/\..*//g'`"
@@ -108,11 +96,9 @@ do
 		    fi
 		done
 	    fi
-	    #break 2
 	fi
     done
 done
-#export LGDTV_USB
 
 if [ "$LGDTV_upgrade" = "1" ]
 then
@@ -237,5 +223,4 @@ else
 fi
 
 echo "OpenLGTV_BCM-INFO: rc.usb removing LOCKDIR: $LOCKDIR..."
-
 rmdir "$LOCKDIR"

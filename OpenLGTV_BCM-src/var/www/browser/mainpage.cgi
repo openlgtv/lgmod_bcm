@@ -29,7 +29,6 @@ document.onkeydown = check;
 var Bookmark = new Array();
 var txtFile = new XMLHttpRequest();
 var ArrLines = new Array();
-	
 
 function CreateBookmark() {
 
@@ -89,25 +88,23 @@ function DeleteBookmark()
 	// delete bookmark replacing bookmarks.inc N row 
 	window.location = 'deletebookmark.cgi?bookmarkId=' + current;
 	}
-	
+
 function SaveBookmark()
 	{
 	// save bookmark replacing bookmarks.inc N row 
 	var URLText = parent.document.forms['URL'].elements['txtURL'].value;
-	
+
 	if (URLText != '')
 		{
 		if (URLText.slice(0,7) != 'http://' && URLText.slice(0,8) != 'file:///')
 			{
 			URLText = 'http://' + URLText;
 			}
-			
 		window.location = 'savebookmark.cgi?bookmarkId=' + current + '&bookmarkURL=' + URLText;
 		}
 	}
-	
 // ***** END BOOKMARKS MANAGEMENT *****
-     
+
 function check(e)
 	{
 	if (!e) var e = window.event;
@@ -178,31 +175,31 @@ function check(e)
 			}
 		}catch(Exception){}
 	}
-		
+
 function ChangeBgColor()
 	{
 	//Change the pages BgColor.
 	document.bgColor = '#D3D3D3';
 	}
-	
+
 function setCurrent(element)
 	{
 	var string = element.id;
 	//cut number after 'link' name
 	current = string.slice(4,string.length);
 	}
-	
+
 function OnLoadSetCurrent()
 	{
 	current = 1;
 	document.links['link1'].focus();
 	//set TD background
 	document.getElementById('td' + current).style.backgroundImage = 'url(Images/EmptyBookmarkFocus.png)';
-	
+
 	//set the focus on keyboard page
 	//SwitchFocusedPage();
-	}	
-	
+	}
+
 	//windows.PostMessage management
 	//it is necessary to bypass browsers block on cross-domain frames communication.
 	window.addEventListener("message", receiveMessage, false);
@@ -218,18 +215,18 @@ function OnLoadSetCurrent()
 			}
 		return;
 		}
-	
+
 	function SwitchFocusedPage()
 	{
 	//Change the pages BgColor.
 	ChangeBgColor();
-	
+
 	//windows.PostMessage
 	//it is necessary to bypass browsers block on cross-domain frames communication.
 	parent.postMessage('FocusToYou', '*');
-	
+
 	}
-	
+
 document.defaultAction = true;
 
 // -->

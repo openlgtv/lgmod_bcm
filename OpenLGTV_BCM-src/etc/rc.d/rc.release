@@ -32,12 +32,9 @@ if [ "$RELEASE_in_tmux" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"
     echo ""
-    #/usr/bin/tmux new-session -n 'RELEASE' '/lg/lgapp/RELEASE 0'
     /usr/bin/tmux new-session -n 'RELEASE' "$RELEASE_cmd"
-    #/bin/sh
 else
     echo "OpenLGTV_BCM-INFO: start RELEASE"
     echo ""
-    #/lg/lgapp/RELEASE 0
     $RELEASE_cmd
 fi
