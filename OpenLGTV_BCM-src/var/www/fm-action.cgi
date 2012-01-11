@@ -46,8 +46,8 @@ Content-type: text/html
 <!--
 
 <?
-log_dir=/tmp/var/log/fm
-log_file="$log_dir/fm.log"
+export log_dir=/tmp/var/log/fm
+export log_file="$log_dir/fm.log"
 play_enum="$log_dir/last_played.info"
 [ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 
@@ -379,7 +379,7 @@ then
 else
     if [ "$action" = "copy" -o "$action" = "move" -o "$action" = "status" ]
     then
-	if [ "$action" = "status" ]
+	if [ "$action" = "status" -o "$FORM_onlystatus" = "1" ]
 	then
 	    # TODO TODO TODO TODO
 	    if [ -n "${pid}" ]
@@ -397,9 +397,11 @@ else
 	    spth="${stats%%\#*}"
 	    stats="${stats#*\#}"
 	    dpth="${stats%%\#*}"
-	    #stats="${stats#*\#}"
-	    #time_start="${stats%%\#*}"
-	    time_start="${stats##*\#}"
+	    stats="${stats#*\#}"
+	    time_start="${stats%%\#*}"
+	    #time_start="${stats##*\#}"
+	    stats="${stats#*\#}"
+	    time_stop="${stats%%\#*}"
 	    # TODO: what to do in this case?
 	    #[ -z "${lpthx}" ] && lpthx="${spth%/*}"
 	    #[ -z "${rpthx}" ] && rpthx="${dpth}"
@@ -416,19 +418,32 @@ else
 	IFS="$SIFS"
 	if [ "$FORM_onlystatus" != "1" ]
 	then
+	    export spth dpth log_dir action
 	    if [ "$action" = "copy" ]
 	    then
 		cp -r "$spth" "$dpth/" > "${log_dir}/${action}.error.log" 2>&1 &
-		pid="$!"
+		export pid="$!"
+		# INFO: lets assume we pids are increased, not randomized to get both output pipe with pid and grab pid number from it
+		#cp -r "$spth" "$dpth/" 2>&1 | tee "${log_dir}/${action}.error.$!.log" &
+		###cp -r "$spth" "$dpth/" > "${log_dir}/${action}.error.$!.log" 2>&1 &
 	    else
 		mv "$spth" "$dpth/" > "${log_dir}/${action}.error.log" 2>&1 &
-		pid="$!"
+		export pid="$!"
+		###mv "$spth" "$dpth/" 2>&1 | tee "${log_dir}/${action}.error.$!.log" &
 	    fi
+	    ###pid_n="${log_dir}/${action}.error"
+	    ###busybox usleep 100
+	    #pid_f=`ls ${pid_n}.* | tail -n1`
+	    ###pid_f="`busybox stat -c \"%z#%n\" ${pid_n}.* | sort | tail -n1`"
+	    ###pid="${pid_f#*error.}"
+	    ###export pid="${pid%.log*}"
 	    time_start="`date +'%s'`"
 	    time_start_status="${time_start}"
-	    echo "${pid}#${action}#${spth}#${dpth}#${time_start}" >> "${log_file}"
+	    echo "${pid}#${action}#${spth}#${dpth}#${time_start}##" >> "${log_file}"
+	    # update time_stop as separate shell process checking if copy/move process is still running in background
+	    (for i in `seq 3000`; do [ -z "`ps | grep \"^ *$pid \"`" ] && time_stop="`date +'%s'`" && sed -i -e "s/^\\(${pid}#.*\\)##\$/\\1#${time_stop}#/g" "${log_file}" && exit 0; sleep 3; done) &
 	else
-	    [ -z "${time_start}" ] && time_start="`grep '${pid}' '${log_file}'`" && time_start="${time_start##*\#}"
+	    [ -z "${time_start}" ] && time_start="`grep '^${pid}#' '${log_file}' | cut -d# -f5`"
 	    time_start_status="`date +'%s'`"
 	fi
 	echo "<div id='status' style='font-size: 30px;'></div>"
@@ -440,13 +455,19 @@ else
 	for i in `seq 2000`
 	do
 	    SIFS="$IFS" IFS=$'\n'
-	    dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}')
+	    dsize=$(for j in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$j"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}')
 	    IFS="$SIFS"
 	    [ "$dsize" = "" ] && dsize=0
 	    percent="$(($dsize * 100 / $ssize))"
-	    time_now="`date +'%s'`"
+	    time_now="$time_stop"
+	    [ -z "$time_stop" ] && time_now="`date +'%s'`"
 	    elapsed=$((${time_now}-${time_start}))
 	    elapsed_status=$((${time_now}-${time_start_status}))
+	    elapsed_f="$elapsed seconds"
+	    [ "$elapsed" -gt 60 ] && elapsed_f="$(($elapsed/60)) min $(($elapsed-(($elapsed/60)*60))) sec"
+	    [ "$elapsed" -gt 3600 ] && elapsed_f="$(($elapsed/3600)) hrs $((($elapsed/60)-(($elapsed/3600)*60))) min $(($elapsed-(($elapsed/60)*60))) sec"
+	    echo "test pid:$pid dsize:$dsize elapsed:$elapsed time_start:$time_start time_now:$time_now"
+	    [ "$elapsed" = "0" ] && elapsed=1 # ugly workaround for divide by 0 error
 	    average_bps=$((${dsize}/${elapsed}))
 	    average_kbps=$((${average_bps}/1024))
 	    if [ "${#dsize}" -lt "4" ]
@@ -496,7 +517,7 @@ else
 		    fi
 		fi
 	    fi
-	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_f / $ssize_f<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed seconds<br/><br/>';</script>"
+	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_f / $ssize_f<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed_f<br/><br/>';</script>"
 	    [ -n "`ps | grep \"^ *$pid \"`" ] && sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
@@ -506,14 +527,18 @@ else
 		if [ "$ssize" -eq "$dsize" ]
 		then
 		    echo "Finished"
+		    #[ -z "`grep '^${pid}#' '${log_file}' | cut -d# -f5`" ] && sed -i -e "s/^\\(${pid}#.*\\)##\$/\\1#${time_now}#/g" "${log_file}"
 		    break
 		else
 		    echo "<font color='red' size='+3'><b>ERROR copying file!</b></font><br/><br/>"
+		    ###if [ -f "${log_dir}/${action}.error.${pid}.log" ]
 		    if [ -f "${log_dir}/${action}.error.log" ]
 		    then
 			echo "<font color='red' size='+2'>"
+			###cat "${log_dir}/${action}.error.${pid}.log"
 			cat "${log_dir}/${action}.error.log"
 			echo "</font>"
+			###rm -f "${log_dir}/${action}.error.${pid}.log"
 		    fi
 		    error=1
 		    break

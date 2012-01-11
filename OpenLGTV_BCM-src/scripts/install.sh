@@ -91,6 +91,7 @@ then
     size=$size2011
     lginit_size=$lginit_size2011
     platform=GP3B
+    no_install=1 # force no_install for GP3B
 fi
 
 cdir=$dir

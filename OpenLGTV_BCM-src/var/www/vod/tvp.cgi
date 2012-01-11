@@ -139,8 +139,6 @@ then
     mkdir -p /var/log/vod/tvp
 fi
 
-#echo "$url $log_file <br/>"
-
 wget -q -U "$useragent" -O - "$url" > $log_file
 
 
@@ -157,27 +155,15 @@ then
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
-    #for content in `egrep -v '^$|version="1.0"' $log_file | sed 's/^\t*//g' | tr '\n' '|' | sed 's/<object/\n<object/g' | sed -e 's/.*url="//g' -e 's/\&amp;/\$/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
     for content in `egrep -v 'version=|^$' $log_file | tr '\n\t' '|' | sed 's/<object/\n<object/g' | sed -e 's/.*url="//g' -e 's/\&amp;/\$/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
     do
 	if [ "$content" != "http://www.tvp.pl;;" ]
 	then
-	    #echo "$content" >> /tmp/content.log
-	    #feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
-	    #feedTitle=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
-	    #feedThumb=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
-	    #feedUrl=`echo $content | cut -d\; -f1 | tr '\?\&' '\@\$'`
-	    #####feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
 	    feedUrl="${content%%\;*}"
 	    content2x="${content#*\;}"
-	    #####feedTitle=`echo $content | cut -d\; -f2 | tr '|' ' '`
 	    feedTitle="${content2x%%\;*}"
 	    content3x="${content2x#*\;}"
-	    #####feedThumb=`echo $content | cut -d\; -f3 | tr '|' ' '`
 	    feedThumb="${content3x%%\;*}"
-	    #echo "$feedUrl"
-	    #####echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>"
-	    ########echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
 	    echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
 	    if [ "$(($item_nr % 4))" = "0" ]
 	    then
@@ -188,7 +174,6 @@ then
     done
     echo '</tr>'
     echo '</table>'
-    #echo "item_nr: $item_nr"
 else
     echo '<font size="+1">'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
@@ -196,23 +181,13 @@ else
     item_nr=1
     if [ "$type" = "category-tvp" ]
     then
-	#for content in `cat $log_file | sed 's/<object/\n<object/g' | grep "VideoView" | sed -e 's#"/><img.*"/>#"/>#g' -e 's/></>|</g' -e 's/.*url="//g' -e 's/\&amp;/\&/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g' -e 's/">;<img/;<img/g'`
 	for content in `cat $log_file | sed 's/<object/\n<object/g' | grep "VideoView" | sed -e 's#"/><img.*"/>#"/>#g' -e 's/></>|</g' -e 's/.*url="//g' -e 's/\&amp;/\$/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g' -e 's/">;<img/;<img/g'`
 	do
-	    #echo "$content" >> /tmp/content.log
-	    #feedUrl=`echo $content | awk -F\; '{print $1}' | tr '\?\&' '\@\$'`
-	    #feedThumb=`echo $content | awk -F\; '{print $2}' | tr '|' ' '`
-	    #feedTitle=`echo $content | awk -F\; '{print $3}' | tr '|' ' '`
-	    #feedUrl=`echo $content | cut -d\; -f1 | tr '\?\&' '\@\$'`
-	    #####feedUrl=`echo $content | cut -d\; -f1 | tr '\?' '\@'`
 	    feedUrl="${content%%\;*}"
 	    content2x="${content#*\;}"
-	    #####feedThumb=`echo $content | cut -d\; -f2 | tr '|' ' '`
 	    feedTitle="${content2x%%\;*}"
 	    content3x="${content2x#*\;}"
-	    #####feedTitle=`echo $content | cut -d\; -f3 | tr '|' ' '`
 	    feedThumb="${content3x%%\;*}"
-	    #####echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>"
 	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>" | tr '|' ' '
 	    if [ "$(($item_nr % 4))" = "0" ]
 	    then
@@ -223,7 +198,6 @@ else
     fi
     echo '</tr>'
     echo '</table>'
-    #echo "item_nr: $item_nr"
 fi
 
 ?>
