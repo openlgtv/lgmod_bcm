@@ -1,4 +1,4 @@
-<content-type: text/plain>
+content-type: text/html
 
 OpenLGTV BCM Changelog
 
