@@ -379,13 +379,12 @@ then
 else
     if [ "$action" = "copy" -o "$action" = "move" -o "$action" = "status" ]
     then
-	#if [ "$action" = "status" -o "$FORM_onlystatus" = "1" ]
-	if [ "$action" = "status" ]
+	if [ "$action" = "status" -o "$FORM_onlystatus" = "1" ]
 	then
 	    # TODO TODO TODO TODO
 	    if [ -n "${pid}" ]
 	    then
-		stats="`grep '^${pid}#' ${log_file}`"
+		stats="`grep \"^${pid}#\" ${log_file}`"
 	    else
 		stats="`tail -n1 ${log_file}`"
 		pid="${stats%%\#*}"
