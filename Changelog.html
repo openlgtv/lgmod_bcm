@@ -8,11 +8,13 @@ OpenLGTV BCM Changelog
     * FIX: FileManager: get rid of 'awk' in free/total space counting and proper handle 'df' multiline output for space info
     * FIX: FileManager: crop full path if it doesn't fit panel width
     * FIX: fallback with NTFS partitions remounting as read-only when remounting read-write wont succeed (problems with filesystem)
+    * FIX: process /etc/profile in chrooted installer
     * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
     * ADD: FileManager: button to view last status of copy/move action after action was detached to background
     * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
     * ADD: /mnt/usb{1,2}/Drive{7,8} and /mnt/usb{1,2}/NetShare mount points
     * ADD: continous playback feature to Yavido alternative
+    * ADD: /mnt/lg/widevine and /mnt/lg/res/cert mount points from SmartTV models to make successful chrooting of installer image on SmartTV models
     * CHANGE: FileManager: last_played.info file is now stored in /tmp instead of played dir location - no need to have write access to mounted shares for slideshow/dir playback
     * CHANGE: FileManager: separate file/dir icons from filenames in table to make better vertical allignment
     * CHANGE: FileManager: coloured (brown) non-local mount points (ie. mounted USB storage partitions, NFS/CIFS network shares)

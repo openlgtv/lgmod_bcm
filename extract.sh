@@ -86,7 +86,7 @@ chmod 755 "${CHR}${base}/install.sh"
 if [ "$1" = "chroot" ]
 then
     echo "Starting shell inside chrooted (virtual) root filesystem environment..."
-    /usr/sbin/chroot "$CHR" /bin/sh
+    /usr/sbin/chroot "$CHR" /bin/sh --login
 else
     echo "Starting installer: $base/install.sh $@"
     /usr/sbin/chroot "$CHR" "$base/install.sh" "$@"
