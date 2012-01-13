@@ -470,6 +470,11 @@ else
 	    [ "$elapsed" = "0" ] && elapsed=1 # ugly workaround for divide by 0 error
 	    average_bps=$((${dsize}/${elapsed}))
 	    average_kbps=$((${average_bps}/1024))
+	    rsize=$((${ssize}-${dsize}))
+	    remain=$((${rsize}/${average_bps}))
+	    remain_f="$remain seconds"
+	    [ "$remain" -gt 60 ] && remain_f="$(($remain/60)) min $(($remain-(($remain/60)*60))) sec"
+	    [ "$remain" -gt 3600 ] && remain_f="$(($remain/3600)) hrs $((($remain/60)-(($remain/3600)*60))) min $(($remain-(($remain/60)*60))) sec"
 	    if [ "${#dsize}" -lt "4" ]
 	    then
 		dsize_f="${dsize} B"
@@ -517,7 +522,7 @@ else
 		    fi
 		fi
 	    fi
-	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_f / $ssize_f<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed_f<br/><br/>';</script>"
+	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_f / $ssize_f<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed_f &nbsp; &nbsp;<font color=\"blue\">Remaining time:</font> $remain_f<br/><br/>';</script>"
 	    [ -n "`ps | grep \"^ *$pid \"`" ] && sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
