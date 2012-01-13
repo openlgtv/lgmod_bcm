@@ -2,10 +2,6 @@
 # OpenLGTV BCM rootfs image creation script by xeros
 # Source code released under GPL License
 
-# TODO: try with bigger block size - multiple of 128KB (131072)
-# for 2010 models best results with 512KB block size (256KB not a much bigger than with 512KB)
-# for 2011 models best results with 1MB block size
-
 size=3145728
 size2011=4194304
 dir=OpenLGTV_BCM-src
@@ -17,7 +13,7 @@ ofile2011=OpenLGTV_BCM-GP3B-v$ver
 ##squashfs_opts="-all-root -noappend -b $((256*1024))"
 #squashfs_opts="-all-root -noappend -b $((512*1024))"
 squashfs_opts="-all-root -noappend -b $((1024*1024))"
-squashfs2011_opts="-all-root -noappend -always-use-fragments -b 1048576"
+squashfs2011_opts="-all-root -noappend -always-use-fragments -b $((1024*1024))"
 sed -i -e "s/^ver=.*/ver=$ver/g" -e "s/OpenLGTV BCM .* installation script/OpenLGTV BCM $ver installation script/g" install.sh extract.sh
 cp -f install.sh $dir/scripts/
 sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd
@@ -87,10 +83,6 @@ else
 fi
 sha1sum $ofile.sqf > $ofile.sha1
 sha1sum $ofile2011.sqf > $ofile2011.sha1
-#zip $ofile.zip $ofile.sqf $ofile.sha1 install.sh
-#zip $ofile2011.zip $ofile2011.sqf $ofile2011.sha1 install.sh
-#cat extract.sh $ofile.zip > $ofile.sh.zip
-#cat extract.sh $ofile2011.zip > $ofile2011.sh.zip
 tar cvf $ofile.tar $ofile.sqf $ofile.sha1 install.sh
 tar cvf $ofile2011.tar $ofile2011.sqf $ofile2011.sha1 install.sh
 
@@ -99,6 +91,5 @@ sed -i -e "s/SKIP_LINES=.*/SKIP_LINES=$SKIP_LINES/g" extract.sh
 
 cat extract.sh $ofile.tar > $ofile.tar.sh
 cat extract.sh $ofile2011.tar > $ofile2011.tar.sh
-#chmod a+rx $ofile.sh.zip $ofile2011.sh.zip
 chmod a+rx $ofile.tar.sh $ofile2011.tar.sh
 rm -rf squashfs-root squashfs-root-2011

@@ -47,30 +47,14 @@ stty brkint
 
 export uver=`cat /mnt/user/etc/ver2`
 
-if [ ! -f "/mnt/flash/data/resolv.conf" ]
-then
-    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/resolv.conf file"
-    touch /mnt/flash/data/resolv.conf
-fi
-
-if [ ! -f "/mnt/flash/data/hosts" ]
-then
-    echo "OpenLGTV_BCM-INFO: creating empty /mnt/flash/data/hosts file"
-    touch /mnt/flash/data/hosts
-fi
-
 #
 # Network parameters
 #
 
-echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data"
-#mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron
-touch /var/run/utmp /var/log/wtmp /var/log/lastlog
-chgrp utmp /var/run/utmp /var/log/wtmp
-chmod 0664 /var/run/utmp /var/log/wtmp
-
 echo "OpenLGTV_BCM-INFO: setting loopback network connection..."
 ifconfig lo 127.0.0.1 netmask 255.0.0.0
+
+source /etc/rc.d/rc.userdirs
 
 source /etc/rc.d/rc.tftpd
 
@@ -82,53 +66,7 @@ echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"
 #ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 ntpd -p pool.ntp.org > /dev/null 2>&1 &
 
-if [ ! -d "/mnt/user/etc" ]
-then
-    echo "OpenLGTV_BCM-WARN: /mnt/user/etc dir does not exist, creating it"
-    mkdir -p /mnt/user/etc || user_readonly=1
-fi
-if [ "$user_readonly" = "1" ]
-then
-    echo "OpenLGTV_BCM-ERROR: /mnt/user not writable??? lets create tmpfs there then to not break boot process"
-    mount -t tmpfs tmpfs /mnt/user
-    mkdir -p /mnt/user/etc
-fi
-
-if [ ! -d "/mnt/user/cfg" ]
-then
-    echo "OpenLGTV_BCM-WARN: OpenLGTV BCM config dir (/mnt/user/cfg) not found, creating it"
-    mkdir -p /mnt/user/cfg
-fi
-if [ ! -d "/mnt/user/lock" ]
-then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/lock dir for one time script exectuting locks..."
-    mkdir -p /mnt/user/lock
-fi
-
-if [ ! -f "/usr/etc/passwd" ]
-then
-    if [ -f "/mnt/user/etc/passwd" ]
-    then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/passwd file"
-	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
-    else
-        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/passwd file based on default one"
-	cp /etc/passwd.org /mnt/user/etc/passwd
-	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
-    fi
-fi
-if [ ! -f "/usr/etc/shadow" ]
-then
-    if [ -f "/mnt/user/etc/shadow" ]
-    then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/shadow file"
-	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
-    else
-        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/shadow file based on default one"
-	cp /etc/shadow.org /mnt/user/etc/shadow
-	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
-    fi
-fi
+source /etc/rc.d/rc.passwd
 
 stage1=`echo ${tdirfull}/stage1/*`
 if [ -f "$stage1" ]
@@ -147,33 +85,7 @@ then
     ${stage1}
 fi
 
-if [ ! -d "/usr/etc/dropbear" ]
-then
-    if [ -d "/mnt/user/etc/dropbear" ]
-    then
-        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys"
-	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
-    else
-        echo "OpenLGTV_BCM-WARN: generating new SSH host keys in /mnt/user/etc/dropear path"
-	mkdir -p /mnt/user/etc/dropbear
-	dropbearkey -t dss -f /mnt/user/etc/dropbear/dropbear_dss_host_key
-	dropbearkey -t rsa -f /mnt/user/etc/dropbear/dropbear_rsa_host_key
-	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
-    fi
-fi
-if [ ! -d "/mnt/user/.ssh" ]
-then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/.ssh dir for storage of user SSH configs and keys"
-    mkdir /mnt/user/.ssh
-fi
-if [ ! -d "/tmp/.ssh" ]
-then
-    echo "OpenLGTV_BCM-INFO: linking /tmp/.ssh to /mnt/user/.ssh dir for storage of user SSH configs and keys"
-    ln -sf /mnt/user/.ssh /tmp/.ssh
-fi
-
 source /etc/rc.d/rc.settings
-
 echo "OpenLGTV_BCM-INFO: starting portmapper..."
 portmap &
 
@@ -183,20 +95,10 @@ then
     telnetd &
 fi
 
-if [ "$alternative_port_for_ssh" != "1" ]
-then
-    echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."
-    dropbear &
-else
-    echo "OpenLGTV_BCM-INFO: starting dropbear SSH server on alternative port (2222)..."
-    dropbear -p 2222 &
-fi
+/etc/rc.d/rc.ssh start
 
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."
 hostname OpenLGTV_BCM
-
-[ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs
-[ ! -d "/mnt/user/modules/lg" ]          && mkdir -p /mnt/user/modules/lg
 
 stage2=`echo ${tdirfull}/stage2/*`
 if [ -f "$stage2" ]
@@ -269,18 +171,6 @@ else
 fi
 
 (sleep $dfbdelay; /etc/rc.d/rc.directfb)&
-
-if [ "$uver" != "$ver" ]
-then
-    echo "OpenLGTV_BCM-INFO: last booted version is different from current, making /mnt/user/etc/ver2 file update"
-    cp -f /etc/ver2 /mnt/user/etc/ver2
-fi
-
-if [ ! -d "/mnt/user/init.d" ]
-then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts"
-    mkdir -p /mnt/user/init.d
-fi
 
 if [ -d "/mnt/user/init.d" ]
 then

@@ -1,0 +1,47 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.userdirs
+# SSH service preparation script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+if [ ! -d "/usr/etc/dropbear" ]
+then
+    if [ -d "/mnt/user/etc/dropbear" ]
+    then
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/dropear path for SSH host keys"
+	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
+    else
+        echo "OpenLGTV_BCM-WARN: generating new SSH host keys in /mnt/user/etc/dropear path"
+	mkdir -p /mnt/user/etc/dropbear
+	dropbearkey -t dss -f /mnt/user/etc/dropbear/dropbear_dss_host_key
+	dropbearkey -t rsa -f /mnt/user/etc/dropbear/dropbear_rsa_host_key
+	ln -sf /mnt/user/etc/dropbear /usr/etc/dropbear
+    fi
+fi
+if [ ! -d "/mnt/user/.ssh" ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/.ssh dir for storage of user SSH configs and keys"
+    mkdir /mnt/user/.ssh
+fi
+if [ ! -d "/tmp/.ssh" ]
+then
+    echo "OpenLGTV_BCM-INFO: linking /tmp/.ssh to /mnt/user/.ssh dir for storage of user SSH configs and keys"
+    ln -sf /mnt/user/.ssh /tmp/.ssh
+fi
+
+if [ "$1" != "start" ]
+then
+    echo "OpenLGTV_BCM-INFO: rc.httpd: stopping httpd service..."
+    killall dropbear 2>&1 > /dev/null
+    sleep 1
+    killall -9 dropbear 2>&1 > /dev/null
+    [ "$1" = "stop" ] && exit 0
+fi
+
+if [ "$alternative_port_for_ssh" != "1" ]
+then
+    echo "OpenLGTV_BCM-INFO: starting dropbear SSH server..."
+    dropbear &
+else
+    echo "OpenLGTV_BCM-INFO: starting dropbear SSH server on alternative port (2222)..."
+    dropbear -p 2222 &
+fi

@@ -9,6 +9,7 @@ OpenLGTV BCM Changelog
     * FIX: FileManager: crop full path if it doesn't fit panel width
     * FIX: fallback with NTFS partitions remounting as read-only when remounting read-write wont succeed (problems with filesystem)
     * FIX: process /etc/profile in chrooted installer
+    * FIX: missing /var/spool symlink for working crontab
     * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
     * ADD: FileManager: button to view last status of copy/move action after action was detached to background
     * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
@@ -19,10 +20,11 @@ OpenLGTV BCM Changelog
     * CHANGE: FileManager: last_played.info file is now stored in /tmp instead of played dir location - no need to have write access to mounted shares for slideshow/dir playback
     * CHANGE: FileManager: separate file/dir icons from filenames in table to make better vertical allignment
     * CHANGE: FileManager: coloured (brown) non-local mount points (ie. mounted USB storage partitions, NFS/CIFS network shares)
-    * CHANGE: FileManager: more user friendly metrics for measurements on copy/move progress - bytes/KB/MB/GB and time (hours/minutes/seconds)
+    * CHANGE: FileManager: more user friendly metrics for measurements on copy/move progress for size (bytes/KB/MB/GB) and time (hours/minutes/seconds)
     * CHANGE: move haserl from /bin to /usr/bin for better CGI portability (compatibility with LGMOD S7)
     * CHANGE: mount options for VFAT/NTFS/EXT3/EXT4 got changed to use at least 'noatime' to make less writes to USB storage and keep permissions on NTFS
     * CHANGE: automount supported by kernel but not RELEASE filesystems on USB storage devices into /mnt/usb{1,2}/Drive{5-8} dirs only to make them visible in media player
+    * CHANGE: split part of rcS code into rc.userdirs, rc.passwd and rc.ssh as preparation for chrooted services usability for installer
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
 
 0.5.0-beta3 [2011.12.24]:

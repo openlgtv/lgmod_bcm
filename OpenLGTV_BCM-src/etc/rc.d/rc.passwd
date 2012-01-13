@@ -1,0 +1,29 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.userdirs
+# Password files preparation script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+if [ ! -f "/usr/etc/passwd" ]
+then
+    if [ -f "/mnt/user/etc/passwd" ]
+    then
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/passwd file"
+	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
+    else
+        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/passwd file based on default one"
+	cp /etc/passwd.org /mnt/user/etc/passwd
+	ln -sf /mnt/user/etc/passwd /usr/etc/passwd
+    fi
+fi
+if [ ! -f "/usr/etc/shadow" ]
+then
+    if [ -f "/mnt/user/etc/shadow" ]
+    then
+        echo "OpenLGTV_BCM-INFO: using /mnt/user/etc/shadow file"
+	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
+    else
+        echo "OpenLGTV_BCM-WARN: creating /mnt/user/etc/shadow file based on default one"
+	cp /etc/shadow.org /mnt/user/etc/shadow
+	ln -sf /mnt/user/etc/shadow /usr/etc/shadow
+    fi
+fi
