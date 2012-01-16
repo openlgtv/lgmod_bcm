@@ -3,6 +3,8 @@
 # (OPEN)RELEASE app starting script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+[ -n "`pgrep RELEASE`" ] && echo "OpenLGTV_BCM-ERROR: refusing to start (OPEN)RELEASE as (OPEN)RELEASE is already running" && exit 1
+
 if [ "$OPENRELEASE" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: setting OPENRELEASE to start"
