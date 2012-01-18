@@ -16,7 +16,6 @@ then
     if [ -z "`grep -m 1 snu.lge.com $hostsfile`" ]
     then
 	echo    "127.0.0.1		snu.lge.com snu.lge.com.usgcac.cdnetworks.net www.lge.co.kr test-btvnu.lge.com" >> $hostsfile
-	#echo     "8.8.8.8		www.lge.com www.lg.com" >> $hostsfile
 	echo "80.93.62.127		www.lge.com www.lg.com" >> $hostsfile
     fi
     list=`grep -h -v '^#' ${firewall_dir1}/lg/*.drop 2>/dev/null`

@@ -9,24 +9,26 @@ dir2011=OpenLGTV_BCM-2011-src
 ver=`cat $dir/etc/ver2`
 ofile=OpenLGTV_BCM-GP2B-v$ver
 ofile2011=OpenLGTV_BCM-GP3B-v$ver
-#squashfs_opts="-all-root -noappend"
-##squashfs_opts="-all-root -noappend -b $((256*1024))"
-#squashfs_opts="-all-root -noappend -b $((512*1024))"
 squashfs_opts="-all-root -noappend -b $((1024*1024))"
 squashfs2011_opts="-all-root -noappend -always-use-fragments -b $((1024*1024))"
+
+echo "OpenLGTV BCM installation image building script"
+echo "Updating version info..."
 sed -i -e "s/^ver=.*/ver=$ver/g" -e "s/OpenLGTV BCM .* installation script/OpenLGTV BCM $ver installation script/g" install.sh extract.sh
 cp -f install.sh $dir/scripts/
 sed -i -e "s/Welcome to OpenLGTV BCM ver.*/Welcome to OpenLGTV BCM ver\. $ver/g" $dir/etc/motd
+echo "Updating file permissions..."
 find $dir -type d -exec chmod 775 '{}' \;
-chmod -R 755 $dir/bin/* $dir/sbin/* $dir/usr/bin/* $dir/usr/sbin/* $dir/etc/init.d/* $dir/etc/rc.d/* \
-	     $dir/scripts/* $dir/var/www/ywe/*.sh \
+chmod -R 755 $dir/bin $dir/sbin $dir/usr/bin $dir/usr/sbin $dir/etc/init.d $dir/etc/rc.d \
+	     $dir/scripts $dir/var/www/ywe/*.sh \
 	     $dir/var/www/*.cgi* $dir/var/www/browser/*.cgi* $dir/var/www/include/*.cgi* \
-	     $dir2011/bin/* $dir2011/sbin/* $dir2011/usr/bin/* $dir2011/usr/sbin/*
+	     $dir2011/bin $dir2011/sbin $dir2011/usr/bin $dir2011/usr/sbin
+echo "Building GP2B image..."
 rm -rf squashfs-root squashfs-root-2011
 cp -r $dir squashfs-root
 cd squashfs-root
-tar xzvf dev.tar.gz
-tar xzvf etc_passwd.tar.gz
+tar xzf dev.tar.gz
+tar xzf etc_passwd.tar.gz
 rm -f dev.tar.gz etc_passwd.tar.gz
 find . -name '.svn' | xargs rm -rf
 cp etc/openrelease/openrelease.cfg etc/default/openrelease/openrelease.cfg.default
@@ -35,10 +37,11 @@ cp ../../../lgmod_s7/trunk/rootfs/home/lgmod/info.sh scripts/
 cd ..
 rm -f $ofile.sqf $ofile.md5 $ofile.sha1 $ofile.zip
 mksquashfs squashfs-root $ofile.sqf $squashfs_opts
+echo "Building GP3B image..."
 cp -r squashfs-root squashfs-root-2011
 cp -r --remove-destination $dir2011/* squashfs-root-2011
 cd squashfs-root-2011
-tar xzvf dev-add.tar.gz
+tar xzf dev-add.tar.gz
 # no modules for 2011 models compile yet, so remove the 2010 models modules
 rm -f dev-add.tar.gz lib/modules/*.ko
 find . -name '.svn' | xargs rm -rf
@@ -81,10 +84,11 @@ else
     fi
     echo "OpenLGTV BCM installation package for GP3B is generated"
 fi
+echo "Updating checksums and building installation images..."
 sha1sum $ofile.sqf > $ofile.sha1
 sha1sum $ofile2011.sqf > $ofile2011.sha1
-tar cvf $ofile.tar $ofile.sqf $ofile.sha1 install.sh
-tar cvf $ofile2011.tar $ofile2011.sqf $ofile2011.sha1 install.sh
+tar cf $ofile.tar $ofile.sqf $ofile.sha1 install.sh
+tar cf $ofile2011.tar $ofile2011.sqf $ofile2011.sha1 install.sh
 
 SKIP_LINES=$((`cat extract.sh | wc -l`+1))
 sed -i -e "s/SKIP_LINES=.*/SKIP_LINES=$SKIP_LINES/g" extract.sh

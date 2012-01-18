@@ -1,10 +1,10 @@
 # /etc/services:
 # $Id: services,v 1.22 2001/07/19 20:13:27 notting Exp $
 # service-name  port/protocol  [aliases ...]   [# comment]
-tcpmux		1/tcp				# TCP port service multiplexer
-tcpmux		1/udp				# TCP port service multiplexer
-rje		5/tcp				# Remote Job Entry
-rje		5/udp				# Remote Job Entry
+tcpmux		1/tcp
+tcpmux		1/udp
+rje		5/tcp
+rje		5/udp
 echo		7/tcp
 echo		7/udp
 discard		9/tcp		sink null
@@ -15,16 +15,16 @@ daytime		13/tcp
 daytime		13/udp
 qotd		17/tcp		quote
 qotd		17/udp		quote
-msp		18/tcp				# message send protocol
-msp		18/udp				# message send protocol
+msp		18/tcp
+msp		18/udp
 chargen		19/tcp		ttytst source
 chargen		19/udp		ttytst source
 ftp-data	20/tcp
 ftp-data	20/udp
 ftp		21/tcp
 ftp		21/udp
-ssh		22/tcp				# SSH Remote Login Protocol
-ssh		22/udp				# SSH Remote Login Protocol
+ssh		22/tcp
+ssh		22/udp
 telnet		23/tcp
 telnet		23/udp
 # 24 - private mail system
@@ -32,210 +32,210 @@ smtp		25/tcp		mail
 smtp		25/udp		mail
 time		37/tcp		timserver
 time		37/udp		timserver
-rlp		39/tcp		resource	# resource location
-rlp		39/udp		resource	# resource location
-nameserver	42/tcp		name		# IEN 116
-nameserver	42/udp		name		# IEN 116
+rlp		39/tcp		resource
+rlp		39/udp		resource
+nameserver	42/tcp		name
+nameserver	42/udp		name
 nicname		43/tcp		whois
 nicname		43/udp		whois
-tacacs		49/tcp				# Login Host Protocol (TACACS)
-tacacs		49/udp				# Login Host Protocol (TACACS)
-re-mail-ck	50/tcp				# Remote Mail Checking Protocol
-re-mail-ck	50/udp				# Remote Mail Checking Protocol
-domain		53/tcp		nameserver	# name-domain server
+tacacs		49/tcp
+tacacs		49/udp
+re-mail-ck	50/tcp
+re-mail-ck	50/udp
+domain		53/tcp		nameserver
 domain		53/udp		nameserver
 whois++		63/tcp
 whois++		63/udp
-bootps		67/tcp				# BOOTP server
+bootps		67/tcp
 bootps		67/udp
-bootpc		68/tcp				# BOOTP client
+bootpc		68/tcp
 bootpc		68/udp
 tftp		69/tcp
 tftp		69/udp
-gopher		70/tcp				# Internet Gopher
+gopher		70/tcp
 gopher		70/udp
-netrjs-1	71/tcp				# Remote Job Service
-netrjs-1	71/udp				# Remote Job Service
-netrjs-2	72/tcp				# Remote Job Service
-netrjs-2	72/udp				# Remote Job Service
-netrjs-3	73/tcp				# Remote Job Service
-netrjs-3	73/udp				# Remote Job Service
-netrjs-4	74/tcp				# Remote Job Service
-netrjs-4	74/udp				# Remote Job Service
+netrjs-1	71/tcp
+netrjs-1	71/udp
+netrjs-2	72/tcp
+netrjs-2	72/udp
+netrjs-3	73/tcp
+netrjs-3	73/udp
+netrjs-4	74/tcp
+netrjs-4	74/udp
 finger		79/tcp
 finger		79/udp
-http		80/tcp		www www-http	# WorldWideWeb HTTP
-http		80/udp		www www-http	# HyperText Transfer Protocol
-kerberos	88/tcp		kerberos5 krb5	# Kerberos v5
-kerberos	88/udp		kerberos5 krb5	# Kerberos v5
+http		80/tcp		www www-http
+http		80/udp		www www-http
+kerberos	88/tcp		kerberos5 krb5
+kerberos	88/udp		kerberos5 krb5
 supdup		95/tcp
 supdup		95/udp
-hostname	101/tcp		hostnames	# usually from sri-nic
-hostname	101/udp		hostnames	# usually from sri-nic
-iso-tsap	102/tcp		tsap		# part of ISODE.
-csnet-ns	105/tcp		cso		# also used by CSO name server
+hostname	101/tcp		hostnames
+hostname	101/udp		hostnames
+iso-tsap	102/tcp		tsap
+csnet-ns	105/tcp		cso
 csnet-ns	105/udp		cso
 #3com-tsmux	106/tcp		poppassd
 #3com-tsmux	106/udp		poppassd
-rtelnet		107/tcp				# Remote Telnet
+rtelnet		107/tcp
 rtelnet		107/udp
-pop2		109/tcp		pop-2	postoffice	# POP version 2
+pop2		109/tcp		pop-2	postoffice
 pop2		109/udp		pop-2
-pop3		110/tcp		pop-3		# POP version 3
+pop3		110/tcp		pop-3
 pop3		110/udp		pop-3
-sunrpc		111/tcp		portmapper	# RPC 4.0 portmapper TCP
-sunrpc		111/udp		portmapper	# RPC 4.0 portmapper UDP
+sunrpc		111/tcp		portmapper
+sunrpc		111/udp		portmapper
 auth		113/tcp		authentication tap ident
 auth		113/udp		authentication tap ident
 sftp		115/tcp
 sftp		115/udp
 uucp-path	117/tcp
 uucp-path	117/udp
-nntp		119/tcp		readnews untp	# USENET News Transfer Protocol
-nntp		119/udp		readnews untp	# USENET News Transfer Protocol
+nntp		119/tcp		readnews untp
+nntp		119/udp		readnews untp
 ntp		123/tcp
-ntp		123/udp				# Network Time Protocol
-netbios-ns	137/tcp				# NETBIOS Name Service
+ntp		123/udp
+netbios-ns	137/tcp
 netbios-ns	137/udp
-netbios-dgm	138/tcp				# NETBIOS Datagram Service
+netbios-dgm	138/tcp
 netbios-dgm	138/udp
-netbios-ssn	139/tcp				# NETBIOS session service
+netbios-ssn	139/tcp
 netbios-ssn	139/udp
-imap		143/tcp		imap2		# Interim Mail Access Proto v2
+imap		143/tcp		imap2
 imap		143/udp		imap2
-snmp		161/tcp				# Simple Net Mgmt Proto
-snmp		161/udp				# Simple Net Mgmt Proto
-snmptrap	162/udp		snmp-trap	# Traps for SNMP
-cmip-man	163/tcp				# ISO mgmt over IP (CMOT)
+snmp		161/tcp
+snmp		161/udp
+snmptrap	162/udp		snmp-trap
+cmip-man	163/tcp
 cmip-man	163/udp
 cmip-agent	164/tcp
 cmip-agent	164/udp
-mailq		174/tcp				# MAILQ
-mailq		174/udp				# MAILQ
-xdmcp		177/tcp				# X Display Mgr. Control Proto
+mailq		174/tcp
+mailq		174/udp
+xdmcp		177/tcp
 xdmcp		177/udp
-nextstep	178/tcp		NeXTStep NextStep	# NeXTStep window
-nextstep	178/udp		NeXTStep NextStep	# server
-bgp		179/tcp				# Border Gateway Proto.
+nextstep	178/tcp		NeXTStep NextStep
+nextstep	178/udp		NeXTStep NextStep
+bgp		179/tcp
 bgp		179/udp
-prospero	191/tcp				# Cliff Neuman's Prospero
+prospero	191/tcp
 prospero	191/udp
-irc		194/tcp				# Internet Relay Chat
+irc		194/tcp
 irc		194/udp
-smux		199/tcp				# SNMP Unix Multiplexer
+smux		199/tcp
 smux		199/udp
-at-rtmp		201/tcp				# AppleTalk routing
+at-rtmp		201/tcp
 at-rtmp		201/udp
-at-nbp		202/tcp				# AppleTalk name binding
+at-nbp		202/tcp
 at-nbp		202/udp
-at-echo		204/tcp				# AppleTalk echo
+at-echo		204/tcp
 at-echo		204/udp
-at-zis		206/tcp				# AppleTalk zone information
+at-zis		206/tcp
 at-zis		206/udp
-qmtp		209/tcp				# Quick Mail Transfer Protocol
-qmtp		209/udp				# Quick Mail Transfer Protocol
-z39.50		210/tcp		z3950 wais	# NISO Z39.50 database 
+qmtp		209/tcp
+qmtp		209/udp
+z39.50		210/tcp		z3950 wais
 z39.50		210/udp		z3950 wais
-ipx		213/tcp				# IPX
+ipx		213/tcp
 ipx		213/udp
-imap3		220/tcp				# Interactive Mail Access
-imap3		220/udp				# Protocol v3
+imap3		220/tcp
+imap3		220/udp
 link		245/tcp		ttylink
 link		245/ucp		ttylink
 rsvp_tunnel	363/tcp
 rsvp_tunnel	363/udp
 rpc2portmap	369/tcp
-rpc2portmap	369/udp				# Coda portmapper
+rpc2portmap	369/udp
 codaauth2	370/tcp
-codaauth2	370/udp				# Coda authentication server
-ulistproc	372/tcp		ulistserv	# UNIX Listserv
+codaauth2	370/udp
+ulistproc	372/tcp		ulistserv
 ulistproc	372/udp		ulistserv
 ldap		389/tcp
 ldap		389/udp
-svrloc          427/tcp				# Server Location Protocl
-svrloc          427/udp				# Server Location Protocl
+svrloc          427/tcp
+svrloc          427/udp
 mobileip-agent	434/tcp
 mobileip-agent	434/udp
 mobilip-mn	435/tcp
 mobilip-mn	435/udp
-https		443/tcp				# MCom
-https		443/udp				# MCom
-snpp		444/tcp				# Simple Network Paging Protocol
-snpp		444/udp				# Simple Network Paging Protocol
+https		443/tcp
+https		443/udp
+snpp		444/tcp
+snpp		444/udp
 microsoft-ds	445/tcp
 microsoft-ds	445/udp
-kpasswd		464/tcp		kpwd		# Kerberos "passwd"
-kpasswd		464/udp		kpwd		# Kerberos "passwd"
+kpasswd		464/tcp		kpwd
+kpasswd		464/udp		kpwd
 photuris	468/tcp
 photuris	468/udp
-saft		487/tcp				# Simple Asynchronous File Transfer
-saft		487/udp				# Simple Asynchronous File Transfer
+saft		487/tcp
+saft		487/udp
 gss-http	488/tcp
 gss-http	488/udp
 pim-rp-disc	496/tcp
 pim-rp-disc	496/udp
 isakmp		500/tcp
 isakmp		500/udp
-gdomap		538/tcp				# GNUstep distributed objects
-gdomap		538/udp				# GNUstep distributed objects
+gdomap		538/tcp
+gdomap		538/udp
 iiop		535/tcp
 iiop		535/udp
 dhcpv6-client	546/tcp
 dhcpv6-client	546/udp
 dhcpv6-server	547/tcp
 dhcpv6-server	547/udp
-rtsp		554/tcp				# Real Time Stream Control Protocol
-rtsp		554/udp				# Real Time Stream Control Protocol
-nntps		563/tcp				# NNTP over SSL
-nntps		563/udp				# NNTP over SSL
+rtsp		554/tcp
+rtsp		554/udp
+nntps		563/tcp
+nntps		563/udp
 whoami		565/tcp
 whoami		565/udp
-submission	587/tcp		msa		# mail message submission
-submission	587/udp		msa		# mail message submission
-npmp-local	610/tcp		dqs313_qmaster	# npmp-local / DQS
-npmp-local	610/udp		dqs313_qmaster	# npmp-local / DQS
-npmp-gui	611/tcp		dqs313_execd	# npmp-gui / DQS
-npmp-gui	611/udp		dqs313_execd	# npmp-gui / DQS
-hmmp-ind	612/tcp		dqs313_intercell # HMMP Indication / DQS
-hmmp-ind	612/udp		dqs313_intercell # HMMP Indication / DQS
-ldaps		636/tcp				# LDAP over SSL
-ldaps		636/udp				# LDAP over SSL
+submission	587/tcp		msa
+submission	587/udp		msa
+npmp-local	610/tcp		dqs313_qmaster
+npmp-local	610/udp		dqs313_qmaster
+npmp-gui	611/tcp		dqs313_execd
+npmp-gui	611/udp		dqs313_execd
+hmmp-ind	612/tcp		dqs313_intercell 
+hmmp-ind	612/udp		dqs313_intercell 
+ldaps		636/tcp
+ldaps		636/udp
 acap		674/tcp
 acap		674/udp
-ha-cluster	694/tcp				# Heartbeat HA-cluster
-ha-cluster	694/udp				# Heartbeat HA-cluster
-kerberos-adm	749/tcp				# Kerberos `kadmin' (v5)
+ha-cluster	694/tcp
+ha-cluster	694/udp
+kerberos-adm	749/tcp
 kerberos-iv	750/udp		kerberos4 kerberos-sec kdc
 kerberos-iv	750/tcp		kerberos4 kerberos-sec kdc
-webster		765/tcp				# Network dictionary
+webster		765/tcp
 webster		765/udp
-phonebook	767/tcp				# Network phonebook
+phonebook	767/tcp
 phonebook	767/udp
-rsync		873/tcp				# rsync
-rsync		873/udp				# rsync
+rsync		873/tcp
+rsync		873/udp
 telnets		992/tcp
 telnets		992/udp
-imaps	 	993/tcp				# IMAP over SSL
-imaps	 	993/udp				# IMAP over SSL
+imaps	 	993/tcp
+imaps	 	993/udp
 ircs		994/tcp
 ircs		994/udp
-pop3s		995/tcp				# POP-3 over SSL
-pop3s		995/udp				# POP-3 over SSL
+pop3s		995/tcp
+pop3s		995/udp
 
 exec		512/tcp
 biff		512/udp		comsat
 login		513/tcp
 who		513/udp		whod
-shell		514/tcp		cmd		# no passwords used
+shell		514/tcp		cmd
 syslog		514/udp
-printer		515/tcp		spooler		# line printer spooler
-printer		515/udp		spooler		# line printer spooler
+printer		515/tcp		spooler
+printer		515/udp		spooler
 talk		517/udp
 ntalk		518/udp
 utime		519/tcp		unixtime
 utime		519/udp		unixtime
 efs		520/tcp
-router		520/udp		route routed	# RIP
+router		520/udp		route routed
 ripng		521/tcp
 ripng		521/udp
 timed		525/tcp		timeserver
@@ -244,34 +244,34 @@ tempo		526/tcp		newdate
 courier		530/tcp		rpc
 conference	531/tcp		chat
 netnews		532/tcp		readnews
-netwall		533/udp				# -for emergency broadcasts
-uucp		540/tcp		uucpd		# uucp daemon
-klogin		543/tcp				# Kerberized `rlogin' (v5)
-kshell		544/tcp		krcmd		# Kerberized `rsh' (v5)
-afpovertcp	548/tcp				# AFP over TCP
-afpovertcp	548/udp				# AFP over TCP
-remotefs	556/tcp		rfs_server rfs	# Brunhoff remote filesystem
+netwall		533/udp
+uucp		540/tcp		uucpd
+klogin		543/tcp
+kshell		544/tcp		krcmd
+afpovertcp	548/tcp
+afpovertcp	548/udp
+remotefs	556/tcp		rfs_server rfs
 
-socks		1080/tcp			# socks proxy server
-socks		1080/udp			# socks proxy server
-h323hostcallsc	1300/tcp			# H323 Host Call Secure
-h323hostcallsc	1300/udp			# H323 Host Call Secure
-ms-sql-s	1433/tcp			# Microsoft-SQL-Server 
-ms-sql-s	1433/udp			# Microsoft-SQL-Server 
-ms-sql-m	1434/tcp			# Microsoft-SQL-Monitor
-ms-sql-m	1434/udp			# Microsoft-SQL-Monitor		 
-ica		1494/tcp			# Citrix ICA Client
-ica		1494/udp			# Citrix ICA Client
-wins		1512/tcp			# Microsoft's Windows Internet Name Service
-wins		1512/udp			# Microsoft's Windows Internet Name Service
+socks		1080/tcp
+socks		1080/udp
+h323hostcallsc	1300/tcp
+h323hostcallsc	1300/udp
+ms-sql-s	1433/tcp
+ms-sql-s	1433/udp
+ms-sql-m	1434/tcp
+ms-sql-m	1434/udp
+ica		1494/tcp
+ica		1494/udp
+wins		1512/tcp
+wins		1512/udp
 ingreslock	1524/tcp
 ingreslock	1524/udp
-prospero-np	1525/tcp			# Prospero non-privileged
+prospero-np	1525/tcp
 prospero-np	1525/udp
-datametrics	1645/tcp	old-radius	# datametrics / old radius entry
-datametrics	1645/udp	old-radius	# datametrics / old radius entry
-sa-msg-port	1646/tcp	old-radacct	# sa-msg-port / old radacct entry
-sa-msg-port	1646/udp	old-radacct	# sa-msg-port / old radacct entry
+datametrics	1645/tcp	old-radius
+datametrics	1645/udp	old-radius
+sa-msg-port	1646/tcp	old-radacct
+sa-msg-port	1646/udp	old-radacct
 kermit		1649/tcp
 kermit		1649/udp
 l2tp		1701/tcp	l2f
@@ -286,82 +286,82 @@ tftp-mcast	1758/tcp
 tftp-mcast	1758/udp
 hello		1789/tcp
 hello		1789/udp
-radius		1812/tcp			# Radius
-radius		1812/udp			# Radius
-radius-acct	1813/tcp	radacct		# Radius Accounting
-radius-acct	1813/udp	radacct		# Radius Accounting
-mtp		1911/tcp			#
-mtp		1911/udp			#
-hsrp		1985/tcp			# Cisco Hot Standby Router Protocol
-hsrp		1985/udp			# Cisco Hot Standby Router Protocol
+radius		1812/tcp
+radius		1812/udp
+radius-acct	1813/tcp	radacct
+radius-acct	1813/udp	radacct
+mtp		1911/tcp
+mtp		1911/udp
+hsrp		1985/tcp
+hsrp		1985/udp
 licensedaemon	1986/tcp
 licensedaemon	1986/udp
-gdp-port	1997/tcp			# Cisco Gateway Discovery Protocol
-gdp-port	1997/udp			# Cisco Gateway Discovery Protocol
+gdp-port	1997/tcp
+gdp-port	1997/udp
 nfs		2049/tcp	nfsd
 nfs		2049/udp	nfsd
-zephyr-srv	2102/tcp			# Zephyr server
-zephyr-srv	2102/udp			# Zephyr server
-zephyr-clt	2103/tcp			# Zephyr serv-hm connection
-zephyr-clt	2103/udp			# Zephyr serv-hm connection
-zephyr-hm	2104/tcp			# Zephyr hostmanager
-zephyr-hm	2104/udp			# Zephyr hostmanager
-cvspserver	2401/tcp			# CVS client/server operations
-cvspserver	2401/udp			# CVS client/server operations
-venus		2430/tcp			# codacon port
-venus		2430/udp			# Venus callback/wbc interface
-venus-se	2431/tcp			# tcp side effects
-venus-se	2431/udp			# udp sftp side effect
-codasrv		2432/tcp			# not used
-codasrv		2432/udp			# server port
-codasrv-se	2433/tcp			# tcp side effects
-codasrv-se	2433/udp			# udp sftp side effectQ
-corbaloc	2809/tcp			# CORBA naming service locator
-icpv2		3130/tcp			# Internet Cache Protocol V2 (Squid)
-icpv2		3130/udp			# Internet Cache Protocol V2 (Squid)
-mysql		3306/tcp			# MySQL
-mysql		3306/udp			# MySQL
-trnsprntproxy   3346/tcp			# Trnsprnt Proxy
-trnsprntproxy   3346/udp			# Trnsprnt Proxy
-rwhois		4321/tcp			# Remote Who Is
-rwhois		4321/udp			# Remote Who Is
-krb524		4444/tcp			# Kerberos 5 to 4 ticket xlator
-krb524		4444/udp			# Kerberos 5 to 4 ticket xlator
-rfe		5002/tcp			# Radio Free Ethernet
-rfe		5002/udp			# Actually uses UDP only
-cfengine	5308/tcp			# CFengine
-cfengine	5308/udp			# CFengine
-cvsup           5999/tcp	CVSup		# CVSup file transfer/John Polstra/FreeBSD
-cvsup           5999/udp	CVSup		# CVSup file transfer/John Polstra/FreeBSD
-x11		6000/tcp	X		# the X Window System
-afs3-fileserver 7000/tcp			# file server itself
-afs3-fileserver 7000/udp			# file server itself
-afs3-callback   7001/tcp			# callbacks to cache managers
-afs3-callback   7001/udp			# callbacks to cache managers
-afs3-prserver   7002/tcp			# users & groups database
-afs3-prserver   7002/udp			# users & groups database
-afs3-vlserver   7003/tcp			# volume location database
-afs3-vlserver   7003/udp			# volume location database
-afs3-kaserver   7004/tcp			# AFS/Kerberos authentication service
-afs3-kaserver   7004/udp			# AFS/Kerberos authentication service
-afs3-volser     7005/tcp			# volume managment server
-afs3-volser     7005/udp			# volume managment server
-afs3-errors     7006/tcp			# error interpretation service
-afs3-errors     7006/udp			# error interpretation service
-afs3-bos        7007/tcp			# basic overseer process
-afs3-bos        7007/udp			# basic overseer process
-afs3-update     7008/tcp			# server-to-server updater
-afs3-update     7008/udp			# server-to-server updater
-afs3-rmtsys     7009/tcp			# remote cache manager service
-afs3-rmtsys     7009/udp			# remote cache manager service
-sd		9876/tcp   			# Session Director
-sd		9876/udp   			# Session Director
-amanda		10080/tcp			# amanda backup services
-amanda		10080/udp			# amanda backup services
-pgpkeyserver	11371/tcp			# PGP/GPG public keyserver
-pgpkeyserver	11371/udp			# PGP/GPG public keyserver
-h323callsigalt	11720/tcp			# H323 Call Signal Alternate
-h323callsigalt	11720/udp			# H323 Call Signal Alternate
+zephyr-srv	2102/tcp
+zephyr-srv	2102/udp
+zephyr-clt	2103/tcp
+zephyr-clt	2103/udp
+zephyr-hm	2104/tcp
+zephyr-hm	2104/udp
+cvspserver	2401/tcp
+cvspserver	2401/udp
+venus		2430/tcp
+venus		2430/udp
+venus-se	2431/tcp
+venus-se	2431/udp
+codasrv		2432/tcp
+codasrv		2432/udp
+codasrv-se	2433/tcp
+codasrv-se	2433/udp
+corbaloc	2809/tcp
+icpv2		3130/tcp
+icpv2		3130/udp
+mysql		3306/tcp
+mysql		3306/udp
+trnsprntproxy   3346/tcp
+trnsprntproxy   3346/udp
+rwhois		4321/tcp
+rwhois		4321/udp
+krb524		4444/tcp
+krb524		4444/udp
+rfe		5002/tcp
+rfe		5002/udp
+cfengine	5308/tcp
+cfengine	5308/udp
+cvsup           5999/tcp	CVSup
+cvsup           5999/udp	CVSup
+x11		6000/tcp	X
+afs3-fileserver 7000/tcp
+afs3-fileserver 7000/udp
+afs3-callback   7001/tcp
+afs3-callback   7001/udp
+afs3-prserver   7002/tcp
+afs3-prserver   7002/udp
+afs3-vlserver   7003/tcp
+afs3-vlserver   7003/udp
+afs3-kaserver   7004/tcp
+afs3-kaserver   7004/udp
+afs3-volser     7005/tcp
+afs3-volser     7005/udp
+afs3-errors     7006/tcp
+afs3-errors     7006/udp
+afs3-bos        7007/tcp
+afs3-bos        7007/udp
+afs3-update     7008/tcp
+afs3-update     7008/udp
+afs3-rmtsys     7009/tcp
+afs3-rmtsys     7009/udp
+sd		9876/tcp   
+sd		9876/udp   
+amanda		10080/tcp
+amanda		10080/udp
+pgpkeyserver	11371/tcp
+pgpkeyserver	11371/udp
+h323callsigalt	11720/tcp
+h323callsigalt	11720/udp
 quake		26000/tcp
 quake		26000/udp
 wnn6-ds		26208/tcp
@@ -369,86 +369,86 @@ wnn6-ds		26208/udp
 traceroute	33434/tcp
 traceroute	33434/udp
 
-rtmp		1/ddp				# Routing Table Maintenance Protocol
-nbp		2/ddp				# Name Binding Protocol
-echo		4/ddp				# AppleTalk Echo Protocol
-zip		6/ddp				# Zone Information Protocol
+rtmp		1/ddp
+nbp		2/ddp
+echo		4/ddp
+zip		6/ddp
 
-kerberos_master	751/udp				# Kerberos authentication
-kerberos_master	751/tcp				# Kerberos authentication
-passwd_server	752/udp				# Kerberos passwd server
-krbupdate	760/tcp		kreg		# Kerberos registration
-kpop		1109/tcp			# Pop with Kerberos
-knetd		2053/tcp			# Kerberos de-multiplexor
+kerberos_master	751/udp
+kerberos_master	751/tcp
+passwd_server	752/udp
+krbupdate	760/tcp		kreg
+kpop		1109/tcp
+knetd		2053/tcp
 
-krb5_prop	754/tcp				# Kerberos slave propagation
-eklogin		2105/tcp			# Kerberos encrypted rlogin
+krb5_prop	754/tcp
+eklogin		2105/tcp
 
-supfilesrv	871/tcp				# SUP server
-supfiledbg	1127/tcp			# SUP debugging
+supfilesrv	871/tcp
+supfiledbg	1127/tcp
 
-netstat		15/tcp				# (was once asssigned, no more)
-fsp		21/udp		fspd		#
-linuxconf	98/tcp				# Linuxconf HTML access
-poppassd	106/tcp				# Eudora
-poppassd	106/udp				# Eudora
-smtps		465/tcp				# SMTP over SSL (TLS)
-gii		616/tcp				# gated interactive interface
-omirr		808/tcp		omirrd		# online mirror
-omirr		808/udp		omirrd		# online mirror
-swat		901/tcp				# Samba Web Administration Tool
-rndc		953/tcp				# rndc control sockets (BIND 9)
-rndc		953/udp				# rndc control sockets (BIND 9)
-skkserv		1178/tcp			# SKK Japanese input method
-rmtcfg		1236/tcp			# Gracilis Packeten remote config server
-xtel		1313/tcp			# french minitel
-support		1529/tcp	prmsd gnatsd	# GNATS, cygnus bug tracker
-cfinger		2003/tcp			# GNU Finger
-ninstall	2150/tcp			# ninstall service
-ninstall	2150/udp			# ninstall service
-afbackup	2988/tcp			# Afbackup system
-afbackup	2988/udp			# Afbackup system
-squid		3128/tcp			# squid web proxy
-prsvp		3455/tcp			# RSVP Port
-prsvp		3455/udp			# RSVP Port
-postgres	5432/tcp			# POSTGRES
-postgres	5432/udp			# POSTGRES
-fax		4557/tcp			# FAX transmission service        (old)
-hylafax		4559/tcp			# HylaFAX client-server protocol  (new)
-sgi-dgl		5232/tcp			# SGI Distributed Graphics
+netstat		15/tcp
+fsp		21/udp		fspd
+linuxconf	98/tcp
+poppassd	106/tcp
+poppassd	106/udp
+smtps		465/tcp
+gii		616/tcp
+omirr		808/tcp		omirrd
+omirr		808/udp		omirrd
+swat		901/tcp
+rndc		953/tcp
+rndc		953/udp
+skkserv		1178/tcp
+rmtcfg		1236/tcp
+xtel		1313/tcp
+support		1529/tcp	prmsd gnatsd
+cfinger		2003/tcp
+ninstall	2150/tcp
+ninstall	2150/udp
+afbackup	2988/tcp
+afbackup	2988/udp
+squid		3128/tcp
+prsvp		3455/tcp
+prsvp		3455/udp
+postgres	5432/tcp
+postgres	5432/udp
+fax		4557/tcp
+hylafax		4559/tcp
+sgi-dgl		5232/tcp
 sgi-dgl		5232/udp
-noclog		5354/tcp			# noclogd with TCP (nocol)
-noclog		5354/udp			# noclogd with UDP (nocol)
-hostmon		5355/tcp			# hostmon uses TCP (nocol)
-hostmon		5355/udp			# hostmon uses TCP (nocol)
-x11-ssh-offset	6010/tcp			# SSH X11 forwarding offset
-ircd		6667/tcp			# Internet Relay Chat
-ircd		6667/udp			# Internet Relay Chat
-xfs		7100/tcp			# X font server
-tircproxy	7666/tcp			# Tircproxy
+noclog		5354/tcp
+noclog		5354/udp
+hostmon		5355/tcp
+hostmon		5355/udp
+x11-ssh-offset	6010/tcp
+ircd		6667/tcp
+ircd		6667/udp
+xfs		7100/tcp
+tircproxy	7666/tcp
 http-alt	8008/tcp
 http-alt	8008/udp
-webcache	8080/tcp			# WWW caching service
-webcache	8080/udp			# WWW caching service
-tproxy		8081/tcp			# Transparent Proxy
-tproxy		8081/udp			# Transparent Proxy
-jetdirect	9100/tcp	laserjet hplj	#
-mandelspawn	9359/udp	mandelbrot	# network mandelbrot
-kamanda		10081/tcp			# amanda backup services (Kerberos)
-kamanda		10081/udp			# amanda backup services (Kerberos)
-amandaidx	10082/tcp			# amanda backup services
-amidxtape	10083/tcp			# amanda backup services
-isdnlog		20011/tcp			# isdn logging system
-isdnlog		20011/udp			# isdn logging system
-vboxd		20012/tcp			# voice box system
-vboxd		20012/udp			# voice box system
-binkp		24554/tcp			# Binkley
-binkp		24554/udp			# Binkley
-asp		27374/tcp			# Address Search Protocol
-asp		27374/udp			# Address Search Protocol
+webcache	8080/tcp
+webcache	8080/udp
+tproxy		8081/tcp
+tproxy		8081/udp
+jetdirect	9100/tcp	laserjet hplj
+mandelspawn	9359/udp	mandelbrot
+kamanda		10081/tcp
+kamanda		10081/udp
+amandaidx	10082/tcp
+amidxtape	10083/tcp
+isdnlog		20011/tcp
+isdnlog		20011/udp
+vboxd		20012/tcp
+vboxd		20012/udp
+binkp		24554/tcp
+binkp		24554/udp
+asp		27374/tcp
+asp		27374/udp
 canna		5680/tcp
-tfido		60177/tcp			# Ifmail
-tfido		60177/udp			# Ifmail
-fido		60179/tcp			# Ifmail
-fido		60179/udp			# Ifmail
+tfido		60177/tcp
+tfido		60177/udp
+fido		60179/tcp
+fido		60179/udp
 # Local services

@@ -111,8 +111,6 @@ then
 		    if [ "$precache" = "1" ]
 		    then
 			echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
-			#$(sleep 10; echo nice -n 20 ls -alR "$full_dst") > /dev/null 2>&1 &
-			#$(sleep 10; echo nice -n 20 ls -aR "$full_dst") > /dev/null 2>&1 &
 			(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
 		    fi
 		else
