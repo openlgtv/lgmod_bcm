@@ -11,7 +11,7 @@ make_nanddump=0
 # Pack data from writable partitions to .tar.gz file
 make_writable_tgz=1
 
-if [ "$1" != "" ]
+if [ -z "$1" ]
 then
     back_dir=$1
 else

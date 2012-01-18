@@ -88,7 +88,7 @@ then
     exit 0
 fi
 
-if [ "$org_cfgxml" != "" ]
+if [ -n "$org_cfgxml" ]
 then
     if [ ! -f "$org_cfgxml" ]; then echo "OpenLGTV_BCM-ERROR: NetCast config generator: $org_cfgxml file not found!"; exit 1; fi
     if [ "$add" = "openlgtv" -o "$del" = "openlgtv" ]
@@ -132,7 +132,7 @@ then
 	rm -f $tmp2_cfgxml
 	mv -f $new_cfgxml $org_cfgxml
     fi
-    if [ "$add" != "" ]
+    if [ -n "$add" ]
     then
 	echo "OpenLGTV_BCM-INFO: NetCast config generator: \"add=$add\" argument passed..."
 	case "$add" in
@@ -156,7 +156,7 @@ then
 			else
 			    echo "OpenLGTV_BCM-INFO: NetCast config generator: \"$id_name\" id already exist in current config.xml: $org_cfgxml config_ver: $config_ver"
 			fi
-			if [ "$org_brw_app_txt" != "" ]
+			if [ -n "$org_brw_app_txt" ]
 			then
 			    if [ ! -f "$org_brw_app_txt" ]; then echo "OpenLGTV_BCM-ERROR: NetCast config generator: $org_brw_app_txt file not found!"; exit 1; fi
 			    is_id_openlgtv="`grep -m 1 ^$id_number $org_brw_app_txt`"
@@ -216,7 +216,7 @@ then
 				ywedir=/mnt/usb1/Drive1/OpenLGTV_BCM/ywe
 				ywe_konfab_sh=/scripts/konfabulator-exec.sh
 			    fi
-			    if [ "$ywe_konfab_sh" = "" ]; then ywe_konfab_sh=$ywedir/bin/konfabulator.sh; fi
+			    if [ -z "$ywe_konfab_sh" ]; then ywe_konfab_sh=$ywedir/bin/konfabulator.sh; fi
 			    if [ "$config_ver" = "2" ]
 			    then
 				cat $org_cfgxml | sed "s#<country code=\(.*\)#<country code=\1\n\t\t\t\t\t<item id=\"$yid_name\" type=\"native\" use_magic=\"true\" check_network=\"true\" resolution=\"960*540\" use_com_ani=\"false\" mini_ver=\"\" >\n\t\t\t\t\t\t\t\t<exec_engine>$ywe_konfab_sh</exec_engine>\n\t\t\t\t\t\t\t\t<option id=\"IDSTR_NETCAST_OPTION_RESTORE_YAHOO\" cmd=\"$ywedir/opt/restore_factory_setting.sh\" processMode=\"MODE_KILL\" fullpath=\"$ywe_konfab_sh\"/>\n\t\t\t\t\t</item>\n#g" > $new_cfgxml
@@ -255,7 +255,7 @@ then
 			;;
 	esac
     fi
-    if [ "$del" != "" ]
+    if [ -n "$del" ]
     then
 	echo "OpenLGTV_BCM-INFO: NetCast config generator: \"del=$del\" argument passed..."
 	if [ -n "`grep -m 1 id=.$del.\  $org_cfgxml`" ]
@@ -286,9 +286,9 @@ then
 	    echo "OpenLGTV_BCM-INFO: NetCast config generator: \"killall lb4wk GtkLauncher\" already exist in current run3556 script: $org_cfgxml"
 	fi
     fi
-    if [ "$org_run3556" != "" ]
+    if [ -n "$org_run3556" ]
     then
-	if [ "$set_proxy" = "1" -a "$org_extra_conf" != "" -a "$proxy_config_txt" != "" ]
+	if [ "$set_proxy" = "1" -a -n "$org_extra_conf" -a -n "$proxy_config_txt" ]
 	then
 	    if [ ! -f "$org_run3556" ];    then echo "OpenLGTV_BCM-ERROR: NetCast config generator: $org_run3556 file not found!"; exit 1; fi
 	    if [ ! -f "$org_extra_conf" ]; then echo "OpenLGTV_BCM-ERROR: NetCast config generator: $org_extra_conf file not found!"; exit 1; fi
@@ -327,7 +327,7 @@ then
 	    fi
 	fi
 	#echo TODO: should it remove files or just disable proxy?
-	if [ "$unset_proxy" = "1" -a "$org_extra_conf" != "" -a "$proxy_config_txt" != "" ]
+	if [ "$unset_proxy" = "1" -a -n "$org_extra_conf" -a -n "$proxy_config_txt" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: NetCast config generator: disabling proxy for all services"
 	    cat $org_cfgxml | sed "s#$run3556_proxy#$org_run3556#g" > $new_cfgxml

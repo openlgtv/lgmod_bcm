@@ -18,7 +18,7 @@ if [ ! -f "/mnt/user/etc/httpd.conf" ]
 then
     echo "OpenLGTV_BCM-INFO: rc.httpd: /mnt/user/etc/httpd.conf not found, creating new config for http network authentication..."
     cat /etc/httpd.conf | sed -e 's/^D:*/A:*/g' -e 's/^I:/#I:/g' > /mnt/user/etc/httpd.conf
-    if [ "`grep -m 1 ^root:x /etc/passwd`" = "" ]
+    if [ -z "`grep -m 1 ^root:x /etc/passwd`" ]
     then
 	echo "OpenLGTV_BCM-WARN: rc.httpd: no password for root has been set in /etc/passwd, adding default user: openlgtv password: openlgtv to /mnt/user/etc/httpd.conf, change it"
 	#echo '/:openlgtv:openlgtv' >> /mnt/user/etc/httpd.conf

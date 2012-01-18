@@ -15,7 +15,7 @@ then
     if [ "$1" = "WebUI_WAKE" ]
     then
 	WebUI_WAKE=1
-	if [ "$2" != "" ]
+	if [ -z "$2" ]
 	then
 	    id="$2"
 	    read_ethwaketab="head -n $id $ethwaketab"

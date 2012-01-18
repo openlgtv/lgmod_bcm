@@ -11,8 +11,8 @@ SERIAL=`echo /mnt/lg/user/serial.*`
 [ -f "$SERIAL" ] && SERIAL="${SERIAL#*serial.}" || SERIAL=''
 export tftproot=/tmp/tftproot
 tdir="$SERIAL"
-[ "$tdir" = "" ] && tdir="$MODEL"
-[ "$tdir" = "" ] && tdir=opnlgtv
+[ -z "$tdir"   ] && tdir="$MODEL"
+[ -z "$tdir"   ] && tdir=opnlgtv
 export tdirfull="$tftproot/$tdir"
 
 for i in 1 2 3

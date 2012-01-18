@@ -3,10 +3,10 @@
 # YWE Configuration Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-[ "$samsung_ywe" = "" -a -f "/mnt/user/cfg/settings" ] && source /mnt/user/cfg/settings
+[ -z "$samsung_ywe" -a -f "/mnt/user/cfg/settings" ] && source /mnt/user/cfg/settings
 
     export ywedir=/mnt/addon/ywe
-    if [ "$OpenLGTV_BCM_USB" = "" ]
+    if [ -z "$OpenLGTV_BCM_USB" ]
     then
 	if [ -f "/tmp/usbdir" ]
 	then

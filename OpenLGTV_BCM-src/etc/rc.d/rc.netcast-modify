@@ -4,26 +4,11 @@
 # Source code released under GPL License
 
 #source /mnt/user/cfg/settings
-if [ "$real_configxml" = "" -a -f "/mnt/user/netcast/config.xml" ]
-then
-    export real_configxml="/mnt/user/netcast/config.xml"
-fi
-if [ "$real_browapptxt" = "" -a -f "/mnt/user/netcast/browser_application.txt" ]
-then
-    export real_browapptxt="/mnt/user/netcast/browser_application.txt"
-fi
-if [ "$real_run3556" = "" -a -f "/mnt/user/netcast/run3556" ]
-then
-    real_run3556="/mnt/user/netcast/run3556"
-fi
-if [ "$real_extra_conf" = "" -a -f "/mnt/user/netcast/extra_conf" ]
-then
-    real_extra_conf="/mnt/user/netcast/extra_conf"
-fi
-if [ "$proxy_config_proxy" = "" ]
-then
-    proxy_config_proxy="/mnt/user/netcast/proxy_config-proxy.txt"
-fi
+[ -z "$real_configxml" -a -f "/mnt/user/netcast/config.xml" ]  && export real_configxml="/mnt/user/netcast/config.xml"
+[ -z "$real_browapptxt" -a -f "/mnt/user/netcast/browser_application.txt" ] && export real_browapptxt="/mnt/user/netcast/browser_application.txt"
+[ -z "$real_run3556" -a -f "/mnt/user/netcast/run3556" ]       && export real_run3556="/mnt/user/netcast/run3556"
+[ -z "$real_extra_conf" -a -f "/mnt/user/netcast/extra_conf" ] && export real_extra_conf="/mnt/user/netcast/extra_conf"
+[ -z "$proxy_config_proxy" ] && export proxy_config_proxy="/mnt/user/netcast/proxy_config-proxy.txt"
 
 if [ -f "$real_configxml" ]
 then

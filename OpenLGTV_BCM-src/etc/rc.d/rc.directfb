@@ -21,7 +21,7 @@ pid=`pgrep RELEASE | tail -n 1`
 
 cursorupdates="no-cursor-updates"
 
-[ "$netcast_mouse_support" = "" -a -f "/mnt/user/cfg/settings" ] && source /mnt/user/cfg/settings
+[ -z "$netcast_mouse_support" -a -f "/mnt/user/cfg/settings" ] && source /mnt/user/cfg/settings
 
 if [ "$netcast_mouse_support" = "1" ]
 then

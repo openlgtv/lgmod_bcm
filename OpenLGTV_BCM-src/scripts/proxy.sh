@@ -69,7 +69,7 @@ do
     if [ "$content" = "" -o -z "$content" ]
     then
 	# After previous content (line) was empty, read number of bytes set of next content in Content-Length
-	if [ "$content_length" != "" ]
+	if [ -n "$content_length" ]
 	then
 	    read -n $content_length content_post
 	fi

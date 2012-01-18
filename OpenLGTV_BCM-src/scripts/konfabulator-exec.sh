@@ -6,7 +6,7 @@
 
 [ -z "$ywedir" ] && ywedir=/mnt/addon/ywe
 
-if [ "$OpenLGTV_BCM_USB" = "" ]
+if [ -z "$OpenLGTV_BCM_USB" ]
 then
 	if [ -f "/tmp/usbdir" ]
 	then

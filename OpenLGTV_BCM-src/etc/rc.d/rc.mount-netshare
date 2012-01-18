@@ -17,7 +17,7 @@ then
     if [ "$1" = "WebUI_MOUNT" ]
     then
 	WebUI_MOUNT=1
-	if [ "$2" != "" ]
+	if [ -z "$2" ]
 	then
 	    id="$2"
 	    read_ndrvtab="head -n $id $ndrvtab"
@@ -56,7 +56,7 @@ then
 		    full_dst="$dst"
 		else
 		    USB_MOUNT_TRY=1
-		    if [ "$USB_DIR" != "" -a -d "$USB_DIR/$dst" ]
+		    if [ -n "$USB_DIR" -a -d "$USB_DIR/$dst" ]
 		    then
 			full_dst="$USB_DIR/$dst"
 		    else

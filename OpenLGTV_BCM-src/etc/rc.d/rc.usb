@@ -24,7 +24,7 @@ fi
 echo "OpenLGTV_BCM-INFO: rc.usb: LOCKDIR: $LOCKDIR created"
 
 device="sd"
-[ "$2" != "" ] && device="$2"
+[ -z "$2" ] && device="$2"
 
 if [ "$3" = "remove" ]
 then
@@ -46,7 +46,7 @@ then
 fi
 
 usbport=usb1
-[ "$4" != "" ] && usbport="$4"
+[ -z "$4" ] && usbport="$4"
 
 sleep 1
 
@@ -129,7 +129,7 @@ then
     cur_dir=`pwd`
     if [ -d "$OpenLGTV_BCM_USB/upgrade" ]
     then
-	[ "$platform" = "" -a -f "/mnt/user/etc/vars" ] && source /mnt/user/etc/vars
+	[ -z "$platform" -a -f "/mnt/user/etc/vars" ] && source /mnt/user/etc/vars
 	echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/upgrade/ dir - trying to run OpenLGTV BCM $platform upgrade..."
 	sqf_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.sqf 2>/dev/null | wc -l`
 	tarsh_file_count=`ls -al $OpenLGTV_BCM_USB/upgrade/OpenLGTV_BCM-$platform-v*.tar.sh 2>/dev/null | wc -l`
