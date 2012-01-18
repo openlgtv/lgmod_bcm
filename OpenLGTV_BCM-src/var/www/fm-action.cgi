@@ -451,24 +451,26 @@ else
 	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
 	counter=0
 	[ -z "$ssize" ] && ssize=1
-	sleep 1
+	[ "$FORM_onlystatus" != "1" ] && sleep 1
 	for i in `seq 2000`
 	do
 	    SIFS="$IFS" IFS=$'\n'
 	    dsize=$(for j in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$j"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}')
 	    IFS="$SIFS"
-	    [ "$dsize" = "" ] && dsize=0
+	    [ -z "$dsize" ] && dsize=0
 	    percent="$(($dsize * 100 / $ssize))"
 	    time_now="$time_stop"
 	    [ -z "$time_stop" ] && time_now="`date +'%s'`"
 	    elapsed=$((${time_now}-${time_start}))
 	    elapsed_status=$((${time_now}-${time_start_status}))
 	    elapsed_f="$elapsed seconds"
+	    [ -z "$elapsed" -o "$elapsed" = "0" ] && elapsed=1 # ugly workaround for divide by 0 error
 	    [ "$elapsed" -gt 60 ] && elapsed_f="$(($elapsed/60)) min $(($elapsed-(($elapsed/60)*60))) sec"
 	    [ "$elapsed" -gt 3600 ] && elapsed_f="$(($elapsed/3600)) hrs $((($elapsed/60)-(($elapsed/3600)*60))) min $(($elapsed-(($elapsed/60)*60))) sec"
-	    echo "test pid:$pid dsize:$dsize elapsed:$elapsed time_start:$time_start time_now:$time_now"
-	    [ "$elapsed" = "0" ] && elapsed=1 # ugly workaround for divide by 0 error
+	    #echo "test pid:$pid dsize:$dsize elapsed:$elapsed time_start:$time_start time_now:$time_now"
 	    average_bps=$((${dsize}/${elapsed}))
+	    [ "$average_bps" = "0" ] && average_bps=1
+	    #echo "test2 pid:$pid dsize:$dsize elapsed:$elapsed time_start:$time_start time_now:$time_now average_bps:$average_bps"
 	    average_kbps=$((${average_bps}/1024))
 	    rsize=$((${ssize}-${dsize}))
 	    remain=$((${rsize}/${average_bps}))
@@ -529,7 +531,7 @@ else
 		SIFS="$IFS" IFS=$'\n'
 		dsize=$(for i in `find "$dpth/$dfile" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}') 
 		IFS="$SIFS"
-		if [ "$ssize" -eq "$dsize" ]
+		if [ "$ssize" = "$dsize" ]
 		then
 		    echo "Finished"
 		    #[ -z "`grep '^${pid}#' '${log_file}' | cut -d# -f5`" ] && sed -i -e "s/^\\(${pid}#.*\\)##\$/\\1#${time_now}#/g" "${log_file}"

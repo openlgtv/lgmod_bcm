@@ -6,9 +6,9 @@
 # works on all TV platforms from Saturn 6 up to SmartTV worldwide models
 # update: modified only for 2010 BCM models for speedup run time
 
-if [ -z "$1" ]
+if [ -n "$1" ]
 then
-    RELEASE=$1
+    RELEASE="$1"
 else
     RELEASE=/lg/lgapp/RELEASE
 fi
