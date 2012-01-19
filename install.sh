@@ -196,7 +196,7 @@ then
 	fi
     done
     mkdir -p /mnt/user/lock > /dev/null 2>&1
-    touch /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock 2>&1 | tee -a $log
+    [ "$backup_error" != "1" ] && touch /mnt/user/lock/backup-first_dump_of_mtd_partitions-done.lock 2>&1 | tee -a $log
     echo "Backup done." | tee -a $log
 fi
 
