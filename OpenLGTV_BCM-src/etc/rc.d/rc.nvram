@@ -30,5 +30,6 @@ done; }
 
 f=RELEASE.cfg; cfg=/mnt/lg/cmn_data/$f; rdir=/mnt/lg/model; rcfg=$rdir/$f; bcfg=/home/backup/$f
 [ -f "$bcfg" ] || cat "$rcfg" > "$bcfg"
+[ -f "$cfg"  ] && [ "`cat ${cfg} | wc -l`" -lt 100 ] && echo "OpenLGTV_BCM-WARN: $cfg too small, cleaning it up" && rm -f "$cfg"
 [ -f "$cfg"  ] || sed -e 's/^\(eDebugMode,\).*$/\1EVENT/' "$rcfg" > "$cfg"
 [ -f "$cfg"  ] && mount -o bind "$cfg" "$rcfg"
