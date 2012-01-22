@@ -17,7 +17,7 @@ then
     if [ "$1" = "WebUI_MOUNT" ]
     then
 	WebUI_MOUNT=1
-	if [ -z "$2" ]
+	if [ -n "$2" ]
 	then
 	    id="$2"
 	    read_ndrvtab="head -n $id $ndrvtab"
