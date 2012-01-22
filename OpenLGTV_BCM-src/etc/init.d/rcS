@@ -190,6 +190,7 @@ fi
 
 echo ""
 
+skip_rel_check="yes"
 source /etc/rc.d/rc.release
 
 #/bin/sh
