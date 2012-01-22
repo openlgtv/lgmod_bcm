@@ -154,6 +154,9 @@ killall udpsvd
 
 source /etc/rc.d/rc.mount3
 
+echo "OpenLGTV_BCM-INFO: creating /tmp/uinput device"
+mknod -m 0666 /tmp/uinput c 10 223
+
 nice -n 20 /etc/rc.d/rc.fwinfo | tee -a /var/log/fwinfo.log &
 
 echo "OpenLGTV_BCM-INFO: setting hotplug wrapper..."

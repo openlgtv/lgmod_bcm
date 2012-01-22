@@ -102,6 +102,11 @@ then
     #	sync
     #	mount -t yaffs2 /dev/mtdblock$mtd_data /mnt/lg/cmn_data -o noatime
     #fi
+    if [ -z "$mtd_user" ]
+    then
+	echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/lg/cmn_data /mnt/user"
+	mount --bind /mnt/lg/cmn_data /mnt/user
+    fi
 fi
 
 echo "OpenLGTV_BCM-INFO: mount-bind - /mnt/lg/cmn_data /mnt/flash/data"
@@ -126,6 +131,12 @@ if [ -n "$mtd_pqldb" ]
 then
     echo "OpenLGTV_BCM-INFO: pqldb      - mtdblock$mtd_pqldb in /mnt/pqldb"
     mount -t squashfs /dev/mtdblock$mtd_pqldb /mnt/pqldb
+fi
+
+if [ -n "$mtd_tplist" ]
+then
+    echo "OpenLGTV_BCM-INFO: tplist     - mtdblock$mtd_tplist in /mnt/tplist"
+    mount -t squashfs /dev/mtdblock$mtd_tplist /mnt/tplist
 fi
 
 if [ -n "$mtd_idfile" ]
