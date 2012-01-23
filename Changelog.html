@@ -32,6 +32,7 @@ OpenLGTV BCM Changelog
     * CHANGE: mount options for VFAT/NTFS/EXT3/EXT4 got changed to use at least 'noatime' to make less writes to USB storage and keep permissions on NTFS
     * CHANGE: automount supported by kernel but not RELEASE filesystems on USB storage devices into /mnt/usb{1,2}/Drive{5-8} dirs only to make them visible in media player
     * CHANGE: split part of rcS code into rc.userdirs, rc.passwd and rc.ssh as preparation for chrooted services usability for installer
+    * CHANGE: replace ntfs-3g binary with lowntfs-3g with FUSE low-level interface instructions
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
     * REMOVE: chrt and chat binaries from SmartTV image for space reason - use BusyBox applets instead
 
