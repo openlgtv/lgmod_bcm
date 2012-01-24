@@ -24,7 +24,7 @@ export TERM=vt100
 mount -t proc proc /proc
 mount -t ramfs tmp /tmp
 
-mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc
+mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/lib/opkg
 
 echo "OpenLGTV_BCM-INFO: OpenLGTV BCM rcS script ver. $ver starting..."               | tee -a $bootlogf
 /bin/date +"OpenLGTV_BCM-TIME: %F %T script: $0"                                      | tee -a $bootlogf

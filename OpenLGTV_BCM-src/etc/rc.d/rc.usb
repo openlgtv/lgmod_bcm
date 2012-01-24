@@ -3,10 +3,13 @@
 # USB Storage Usage Script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-# Wait until connect usb drive
+device="sd"
+usbport=usb1
+[ -n "$2" ] && device="$2"
+[ -n "$4" ] && usbport="$4"
 USB1_DIR=/mnt/usb1/Drive1
 USB2_DIR=/mnt/usb2/Drive1
-LOCKDIR=/var/run/rc.usb.lock
+LOCKDIR="/var/run/rc.usb.lock.$device"
 k=0;
 
 if [ "$1" != "hotplug" ]
@@ -22,9 +25,6 @@ then
 fi
 
 echo "OpenLGTV_BCM-INFO: rc.usb: LOCKDIR: $LOCKDIR created"
-
-device="sd"
-[ -z "$2" ] && device="$2"
 
 if [ "$3" = "remove" ]
 then
@@ -44,9 +44,6 @@ then
     rmdir "$LOCKDIR"
     exit 0
 fi
-
-usbport=usb1
-[ -z "$4" ] && usbport="$4"
 
 sleep 1
 
@@ -122,6 +119,9 @@ export USB_FULLDEV="`grep -m 1 \" $USB_DIR \" /proc/mounts | cut -d\" \" -f 1`" 
 export USB_DEV="${USB_FULLDEV:5:3}"                                             # sda
 export USB_DIR_FS="`grep -m 1 \" $USB_DIR \" /proc/mounts | cut -d\" \" -f 3`"  # ntfs
 
+#echo "rc.usb: parameters called: $@"
+#echo "rc.usb: OpenLGTV_BCM_USB=$OpenLGTV_BCM_USB USB_DIR=$USB_DIR device=$device USB_DEV=$USB_DEV USB_DIR_FS=$USB_DIR_FS"
+
 if [ -d "$OpenLGTV_BCM_USB" -a "$USB_DEV" = "$device" ]
 then
     echo "OpenLGTV_BCM-INFO: found OpenLGTV_BCM dir: $OpenLGTV_BCM_USB on mounted USB storage device in $k seconds..."
@@ -191,6 +191,11 @@ then
         echo "OpenLGTV_BCM-INFO: found extroot dir in $OpenLGTV_BCM_USB/extroot - mounting it to /tmp/extroot"
         mkdir -p /tmp/extroot
         mount --bind "$OpenLGTV_BCM_USB/extroot" /tmp/extroot
+        if [ -d "/tmp/extroot/etc/opkg" ]
+        then
+	    echo "OpenLGTV_BCM-INFO: found opkg config dir in /tmp/extroot/etc/opkg - overmounting it to /etc/opkg"
+	    mount --bind /tmp/extroot/etc/opkg /etc/opkg
+        fi
     fi
     if [ -d "$OpenLGTV_BCM_USB/autorun" ]
     then

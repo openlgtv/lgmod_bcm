@@ -84,6 +84,13 @@ else
     fi
     echo "OpenLGTV BCM installation package for GP3B is generated"
 fi
+echo "Preparing extroot.tar.gz"
+rm -rf extroot.tar.gz extroot
+cp -r addons/extroot .
+find extroot -name '.svn' | xargs rm -rf
+tar czf extroot.tar.gz extroot
+rm -rf extroot
+
 echo "Updating checksums and building installation images..."
 sha1sum $ofile.sqf > $ofile.sha1
 sha1sum $ofile2011.sqf > $ofile2011.sha1

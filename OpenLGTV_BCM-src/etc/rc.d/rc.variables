@@ -30,6 +30,7 @@ export STORE_MASTER=StoreMaster.swf
 export SEARCH_RESULT=/mnt/addon/contents/search/search.swf
 
 export TERMINFO_DIRS=/usr/share/terminfo
+export IPKG_INSTROOT=/tmp/extroot
 
 export ver=`cat /etc/ver2`
 

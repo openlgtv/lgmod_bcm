@@ -14,6 +14,7 @@ OpenLGTV BCM Changelog
     * FIX: prevent from OPENRELEASE executing from shell when (OPEN)RELEASE is already running
     * FIX: don't mark that first backup on install was done when there happened errors during backup
     * FIX: few partition mounts on SmartTV models
+    * FIX: rc.usb make actions on hotplug concurrently on each partitions when multiple partitions get found
     * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
     * ADD: FileManager: button to view last status of copy/move action after action was detached to background
     * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
@@ -22,6 +23,10 @@ OpenLGTV BCM Changelog
     * ADD: /mnt/usb{1,2}/Drive{7,8} and /mnt/usb{1,2}/NetShare mount points
     * ADD: continous playback feature to Yavido alternative
     * ADD: /mnt/lg/widevine and /mnt/lg/res/cert mount points from SmartTV models to make successful chrooting of installer image on SmartTV models
+    * ADD: /usr/libexec/sftp-server (might get removed or moved to extroot if more space will be needed in the future)
+    * ADD: extroot.tar.gz archive with additional tools for use on NTFS/EXT3/JFS formated partition
+    * ADD: experimental opkg packages support on extroot (with default OpenWRT Kamikaze 8.09.2 packages repository until we'll make our own repository)
+    * ADD: get back previously removed tools + few more added (curl, ltrace, strace, tcpdump, top, opkg, msdl, e2fsck, ntfsprogs) into extroot dir in addons
     * UPDATE: OPENRELEASE upgrade to version 2.1.2-15-gf8f2743
     * UPDATE: NTFS-3G upgrade to version 2012.1.15
     * CHANGE: FileManager: last_played.info file is now stored in /tmp instead of played dir location - no need to have write access to mounted shares for slideshow/dir playback

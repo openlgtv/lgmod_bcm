@@ -7,7 +7,7 @@
 [ -z "$device"  ] && device=sd
 [ -z "$usbport" ] && usbport=usb1
 
-echo "OpenLGTV_BCM-INFO: rc.usb-remount starting..."
+echo "OpenLGTV_BCM-INFO: rc.usb-remount starting for device: $device and usbport: $usbport"
 for mnt in `grep ^/dev/$device /proc/mounts | awk '{print $1 "#" $2 "#" $3}'`
 do
     mnt_src="${mnt%%#*}"
@@ -70,4 +70,4 @@ do
 	fi
     fi
 done
-echo "OpenLGTV_BCM-INFO: rc.usb-remount end"
+echo "OpenLGTV_BCM-INFO: rc.usb-remount end for device: $device and usbport: $usbport"
