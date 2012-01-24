@@ -185,6 +185,13 @@ then
     then
         echo "OpenLGTV_BCM-INFO: found extroot package in $OpenLGTV_BCM_USB/extroot.tar.gz - extracting it"
         tar xzvf "$OpenLGTV_BCM_USB/extroot.tar.gz" -C "$OpenLGTV_BCM_USB"
+        if [ "$?" -ne "0" ]
+	then
+	    echo "OpenLGTV_BCM-WARN: unpacking of $OpenLGTV_BCM_USB/extroot.tar.gz haven't succeed"
+	else
+	    echo "OpenLGTV_BCM-INFO: unpacking of $OpenLGTV_BCM_USB/extroot.tar.gz completed, removing archive file"
+	    rm -f "$OpenLGTV_BCM_USB/extroot.tar.gz"
+	fi
     fi
     if [ -d "$OpenLGTV_BCM_USB/extroot" ]
     then

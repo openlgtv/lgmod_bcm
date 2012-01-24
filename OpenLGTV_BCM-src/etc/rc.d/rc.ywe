@@ -30,8 +30,13 @@
 	    cd $OpenLGTV_BCM_USB/
 	    echo "OpenLGTV_BCM-INFO: unpacking $OpenLGTV_BCM_USB/ywe.tar.gz file"
 	    tar xzvf "$OpenLGTV_BCM_USB/ywe.tar.gz" -C "$OpenLGTV_BCM_USB"
-	    echo "OpenLGTV_BCM-INFO: removing $OpenLGTV_BCM_USB/ywe.tar.gz file"
-	    rm -f "$OpenLGTV_BCM_USB/ywe.tar.gz"
+	    if [ "$?" -ne "0" ]
+	    then
+		echo "OpenLGTV_BCM-WARN: unpacking of $OpenLGTV_BCM_USB/ywe.tar.gz haven't succeed"
+	    else
+		echo "OpenLGTV_BCM-INFO: unpacking finished, removing $OpenLGTV_BCM_USB/ywe.tar.gz file"
+		rm -f "$OpenLGTV_BCM_USB/ywe.tar.gz"
+	    fi
 	    cd $curr_dir
 	fi
 	if [ -d "$ywedir_usb" ]
