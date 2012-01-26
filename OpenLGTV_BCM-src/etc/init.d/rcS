@@ -40,6 +40,8 @@ source /etc/rc.d/rc.mount1                                                      
 
 /sbin/bootlogd -p /var/run/bootlogd.pid -l $bootlogf
 
+source /etc/rc.d/rc.platform
+
 source /etc/rc.d/rc.mount2
 
 echo "OpenLGTV_BCM-INFO: enabling possibility to break init script with CTRL+C now"
@@ -60,7 +62,7 @@ source /etc/rc.d/rc.tftpd
 
 source /etc/rc.d/rc.network
 
-source /etc/rc.d/rc.kill-lginit
+/etc/rc.d/rc.kill-lginit &
 
 echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"
 #ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &

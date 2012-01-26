@@ -1,0 +1,41 @@
+#!/bin/sh
+# OpenLGTV BCM script rc.platform
+# Platform detection script for LG Broadcom platform based TVs by xeros
+# Source code released under GPL License
+
+echo "OpenLGTV_BCM-INFO: checking platform..."
+# quite ugly model checks, needs rewrite
+mtd_count="`grep -v erasesize /proc/mtd | wc -l`"
+if [ "$mtd_count" -lt "40" ]
+then
+    if [ -n "`grep -m 1 \"^mtd19.*ywedata\" /proc/mtd`" ]
+    then
+	echo "OpenLGTV_BCM-INFO: setting country_model to US - recognised North American 2010 BCM3549 (GP2B) model"
+	country_model=US
+	platform=GP2B
+    else
+	echo "OpenLGTV_BCM-INFO: setting country_model to KR - recognised Korean 2010 BCM BCM3549 (GP2B) model"
+	country_model=KR
+	platform=GP2B
+    fi
+else
+    if [ "$mtd_count" -gt "49" ]
+    then
+	echo "OpenLGTV_BCM-INFO: setting country_model to SM - recognised 2011 BCM3520 (GP3B) SmartTV model"
+	country_model=SM
+	platform=GP3B
+    else
+	echo "OpenLGTV_BCM-INFO: setting country_model to EU - recognised non-US BCM3556 2010 (GP2B) model"
+	country_model=EU
+	platform=GP2B
+    fi
+fi
+
+if [ ! -f "/mnt/user/etc/vars" ]
+then
+    echo "OpenLGTV_BCM-INFO: setting detected platform variables in /mnt/user/etc/vars"
+    echo "country_model=${country_model}"  > /mnt/user/etc/vars
+    echo "platform=${platform}"           >> /mnt/user/etc/vars
+fi
+
+export country_model platform

@@ -9,33 +9,6 @@ echo "OpenLGTV_BCM-INFO: mtd mounts..."
 grep -v erasesize /proc/mtd | sed -e 's/://g' -e 's/\"//g' -e 's/^mtd//g' | awk '{print "mtd_" $4 "=" $1}' | tac > /tmp/partitions.list
 source /tmp/partitions.list
 
-# quite ugly model checks, needs rewrite
-mtd_count="`grep -v erasesize /proc/mtd | wc -l`"
-if [ "$mtd_count" -lt "40" ]
-then
-    if [ -n "`grep -m 1 \"^mtd19.*ywedata\" /proc/mtd`" ]
-    then
-	echo "OpenLGTV_BCM-INFO: setting country_model to US - recognised North American 2010 BCM3549 (GP2B) model"
-	export country_model=US
-	export platform=GP2B
-    else
-	echo "OpenLGTV_BCM-INFO: setting country_model to KR - recognised Korean 2010 BCM BCM3549 (GP2B) model"
-	export country_model=KR
-	export platform=GP2B
-    fi
-else
-    if [ "$mtd_count" -gt "49" ]
-    then
-	echo "OpenLGTV_BCM-INFO: setting country_model to SM - recognised 2011 BCM3520 (GP3B) SmartTV model"
-	export country_model=SM
-	export platform=GP3B
-    else
-	echo "OpenLGTV_BCM-INFO: setting country_model to EU - recognised non-US BCM3556 2010 (GP2B) model"
-	export country_model=EU
-	export platform=GP2B
-    fi
-fi
-
 echo "OpenLGTV_BCM-INFO: mtdblock partitions mounts..."
 echo "OpenLGTV_BCM-INFO: model      - mtdblock$mtd_model in /mnt/lg/model"
 mount -t squashfs /dev/mtdblock$mtd_model /mnt/lg/model
@@ -238,11 +211,4 @@ then
     mount -t squashfs /dev/mtdblock$mtd_kids /mnt/preloaded/kids
     echo "OpenLGTV_BCM-INFO: story      - mtdblock$mtd_story in /mnt/preloaded/story"
     mount -t squashfs /dev/mtdblock$mtd_story /mnt/preloaded/kids/story
-fi
-
-if [ ! -f "/mnt/user/etc/vars" ]
-then
-    echo "OpenLGTV_BCM-INFO: setting detected platform variables in /mnt/user/etc/vars"
-    echo "country_model=${country_model}"     > /mnt/user/etc/vars
-    echo "platform=${platform}"              >> /mnt/user/etc/vars
 fi

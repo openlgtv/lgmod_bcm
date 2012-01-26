@@ -36,3 +36,5 @@ export IPKG_INSTROOT=/tmp/extroot
 export ver=`cat /etc/ver2`
 
 export bootlogf=/tmp/var/log/OpenLGTV_BCM.log
+
+[ -f "/mnt/user/etc/vars" ] && source /mnt/user/etc/vars
