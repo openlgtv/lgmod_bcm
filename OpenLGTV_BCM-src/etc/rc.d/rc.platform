@@ -34,8 +34,8 @@ fi
 if [ ! -f "/mnt/user/etc/vars" ]
 then
     echo "OpenLGTV_BCM-INFO: setting detected platform variables in /mnt/user/etc/vars"
-    echo "country_model=${country_model}"  > /mnt/user/etc/vars
-    echo "platform=${platform}"           >> /mnt/user/etc/vars
+    echo "country_model=${country_model}" | tee    /mnt/user/etc/vars  > /tmp/platform.vars 2>/dev/null
+    echo "platform=${platform}"           | tee -a /mnt/user/etc/vars >> /tmp/platform.vars 2>/dev/null
 fi
 
 export country_model platform

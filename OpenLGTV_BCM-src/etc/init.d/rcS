@@ -44,6 +44,12 @@ source /etc/rc.d/rc.platform
 
 source /etc/rc.d/rc.mount2
 
+if [ -f "/tmp/platform.vars" ]
+then
+    [ ! -f "/mnt/user/etc/vars" ] && cat /tmp/platform.vars > /mnt/user/etc/vars
+    rm -f /tmp/platform.vars
+fi
+
 echo "OpenLGTV_BCM-INFO: enabling possibility to break init script with CTRL+C now"
 stty brkint
 
