@@ -128,3 +128,15 @@ a.menubutton:hover {
 	overflow:hidden;
 	text-align:center;
 }
+
+.run{
+	overflow: auto;
+	height: 430px;
+	width: 99%;
+	white-space: pre-wrap;                 /* CSS3 browsers  */
+	white-space: -moz-pre-wrap !important; /* 1999+ Mozilla  */
+	white-space: -pre-wrap;                /* Opera 4 thru 6 */
+	white-space: -o-pre-wrap;              /* Opera 7 and up */
+	word-wrap: break-word;                 /* IE 5.5+ and up */
+	z-index: 99;
+}

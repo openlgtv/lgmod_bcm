@@ -68,20 +68,16 @@ var currElementName='txtURL';
 function keypad(num)
 {
   var currFocusedElement = document.forms['URL'].elements[currElementName];
-  if (prevNum!=null && prevNum!=num) 
-	{
-     append=true;
-	}
+  if (prevNum!=null && prevNum!=num) { append=true; }
   if (keys[num].ctr>keys[num].char.length-1) keys[num].ctr=0; //go back to first item in keypad
   if (append) 
 	{
 	keys[num].ctr=0; //go back to first item in keypad
-     str=currFocusedElement.value+keys[num].char[keys[num].ctr]; 
-	 
+	str=currFocusedElement.value+keys[num].char[keys[num].ctr]; 
 	}
   else 
 	{
-     str=(currFocusedElement.value.length==0) ? currFocusedElement.value=keys[num].char[keys[num].ctr]:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+keys[num].char[keys[num].ctr];
+	str=(currFocusedElement.value.length==0) ? currFocusedElement.value=keys[num].char[keys[num].ctr]:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+keys[num].char[keys[num].ctr];
 	}
   currFocusedElement.value=str;
   keys[num].ctr++;
@@ -145,90 +141,70 @@ function check(e)
 			//the 0 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('0');
-			    }
+			    { keypad('0'); }
 			} 
 		else if (key==49) 
 			{
 			//the 1 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('1');
-			    }
+			    { keypad('1'); }
 			}
 		else if (key==50) 
 			{
 			//the 2 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('2');
-			    }
+			    { keypad('2'); }
 			}
 		else if (key==51) 
 			{
 			//the 3 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('3');
-			    }
+			    { keypad('3'); }
 			}
 		else if (key==52) 
 			{
 			//the 4 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('4');
-			    }
+			    { keypad('4'); }
 			}
 		else if (key==53) 
 			{
 			//the 5 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('5');
-			    }
+			    { keypad('5'); }
 			}
 		else if (key==54) 
 			{
 			//the 6 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('6');
-			    }
+			    { keypad('6'); }
 			}
 		else if (key==55) 
 			{
 			//the 7 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('7');
-			    }
+			    { keypad('7'); }
 			}
 		else if (key==56) 
 			{
 			//the 8 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('8');
-			    }
+			    { keypad('8'); }
 			}
 		else if (key==57) 
 			{
 			//the 9 on the remote control have been pressed
 			//use the keypad function
 			if (!elem.focused)
-			    {
-			    keypad('9');
-			    }
+			    { keypad('9'); }
 			}
 		else if (key==403) 
 			{
@@ -287,24 +263,21 @@ function check(e)
 			}
 		}catch(Exception){}
 	}
-	
+
 function DirectWriteKey(key)
 	{
 	//Write the letter on the currFocusedElement field
 	var URLText = document.forms['URL'].elements[currElementName].value;
 	URLText = URLText + key;
 	document.forms['URL'].elements[currElementName].value = URLText;
-	}	
-	
+	}
+
 function GoToNetCastLinks()
 	{
 	<?
-		if [ -n "`pgrep -f run3556-proxy`" -a "$HTTP_HOST" = "127.0.0.1:88" ]
-		then
-		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
-		else
-		    echo "window.location='browser/links.html';"
-		fi
+		links_win_loc="window.location='browser/links.html';"
+		[ "$HTTP_HOST" = "127.0.0.1:88" ] && [ -n "`pgrep -f run3556-proxy`" ] && links_win_loc="window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
+		echo "$links_win_loc"
 	?>
 	}
 function GoToURL()
@@ -318,13 +291,9 @@ function GoToURL()
 		document.getElementById('MainPage').src = 'http://www.nicolaottomano.it/public/lgtv/lg/links.html';
 		}
 	else if (URLText.slice(0,7) == 'http://' || URLText.slice(0,7) == 'file://')
-		{
-		document.getElementById('MainPage').src = URLText;
-		}
+		{ document.getElementById('MainPage').src = URLText; }
 	else
-		{
-		document.getElementById('MainPage').src = 'http://' + URLText;
-		}
+		{ document.getElementById('MainPage').src = 'http://' + URLText; }
 	}
 
 function ChangeBgColor()
@@ -369,17 +338,9 @@ function OnLoadSetCurrent()
 
 	elem=document.forms['URL'].elements[currElementName];
 	elem.focused = false;
-	elem.hasFocus = function()
-	    {
-	    return this.focused;
-	    };
-	elem.onfocus=function()
-	    {
-	    this.focused=true;
-	    };
-	    elem.onblur=function() {
-		this.focused=false;
-	    };
+	elem.hasFocus = function() { return this.focused; };
+	elem.onfocus=function() { this.focused=true; };
+	elem.onblur=function() { this.focused=false; };
 	}
 
 function ResizeIFrame()
@@ -404,7 +365,7 @@ function ShowHideKeyboardTab()
 	{
 	if (iframe_shown==1)
 	    FullIFrame();
-	else
+	else 
 	    ResizeIFrame();
 	}
 
@@ -452,7 +413,10 @@ document.defaultAction = true;
 </head>
 <body bgcolor="#D3D3D3">
 
-<iframe id="MainPage" src="browser/mainpage.cgi" width="80%" height="97%" valign = "top" align="right" frameborder="0">
+<? 
+[ -z "$FORM_txtURL" ] && FORM_txtURL="browser/mainpage.cgi"
+echo "<iframe id='MainPage' src='$FORM_txtURL' width='80%' height='97%' valign = 'top' align='right' frameborder='0'>"
+?>
 	<p>Your browser does not support iframes.</p>
 </iframe>
 <div id="keyboardtab" style="">
@@ -461,7 +425,7 @@ document.defaultAction = true;
 			<font size="+2"><center><b>OpenLGTV BCM<br/>
 			Internet Browser<br/></font><br/>
 			Type URL or Text to Search:</b><br/></center>
-			<input id="txtURL" type="textarea" style="width:263px" value=""/>
+			<input id="txtURL" name="txtURL" type="textarea" style="width:263px" value=""/>
 		</form>
 	</div>	
 	<div style="position: absolute; left: 0px; top: 145px;">

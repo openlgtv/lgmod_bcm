@@ -358,96 +358,86 @@ function check(e)
 				}
 			    }
 			}
+		else if (key==33) 
+			{
+			//CH UP / PG UP
+			if (document.getElementById('run')) document.getElementById('run').scrollTop=document.getElementById('run').scrollTop-400;
+			}
+		else if (key==34) 
+			{
+			//CH DOWN / PG DN
+			if (document.getElementById('run')) document.getElementById('run').scrollTop=document.getElementById('run').scrollTop+400;
+			}
 		else if (key==48) 
 			{
 			//the 0 on the remote control have been pressed
 			//use the keypad function
 			//check if the input field is has focus (dirty fix for typing numbers into textarea input fields from PC keyboard)
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('0');
-			    }
-			} 
+			    { keypad('0'); }
+			}
 		else if (key==49) 
 			{
 			//the 1 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('1');
-			    }
+			    { keypad('1'); }
 			}
 		else if (key==50) 
 			{
 			//the 2 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('2');
-			    }
+			    { keypad('2'); }
 			}
 		else if (key==51) 
 			{
 			//the 3 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('3');
-			    }
+			    { keypad('3'); }
 			}
 		else if (key==52) 
 			{
 			//the 4 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('4');
-			    }
+			    { keypad('4'); }
 			}
 		else if (key==53) 
 			{
 			//the 5 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('5');
-			    }
+			    { keypad('5'); }
 			}
 		else if (key==54) 
 			{
 			//the 6 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('6');
-			    }
+			    { keypad('6'); }
 			}
 		else if (key==55) 
 			{
 			//the 7 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('7');
-			    }
+			    { keypad('7'); }
 			}
 		else if (key==56) 
 			{
 			//the 8 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('8');
-			    }
+			    { keypad('8'); }
 			}
 		else if (key==57) 
 			{
 			//the 9 on the remote control have been pressed
 			//use the keypad function
 			if (!PageElements[currElementIndex].focused)
-			    {
-			    keypad('9');
-			    }
+			    { keypad('9'); }
 			}
 		else if (key==403) 
 			{
@@ -721,6 +711,8 @@ function OnLoadSetCurrent()
 	}
 	updateClock()
 	setInterval('updateClock()', 1000 );
+	//if (document.getElementById('run')) alert(document.getElementById('run').scrollTop);
+	if (document.getElementById('run')) document.getElementById('run').scrollTop=500000;
 }
 function hasFocus(elementIndex)
 {
