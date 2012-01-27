@@ -52,15 +52,16 @@ function GoToNetCastLinks()
 			<!-- execute code from form input - originally from tools.cgi in LGMOD -->
 			<?
 			 if [ "$FORM_run" = "Run" -a "$FORM_qURL" != "" ]; then
-			    echo "<div style=\"background-color: white; position: relative; left: 0px\">"
-			    echo "<font size=\"-1\"><b> Output from:</b> $FORM_qURL"
+			    echo "<div style='background-color: white; position: relative; left: 0px'>"
+			    FORM_qURL_f="`echo $FORM_qURL | sed -e 's/\&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'`"
+			    echo "<font size='-1'><b> Output from:</b> $FORM_qURL_f"
 			    echo "<pre id='run' class='run'>"
 			    echo -n "$FORM_qURL" > /tmp/shell_command.sh
 			    dos2unix /tmp/shell_command.sh
 			    chmod +x /tmp/shell_command.sh
 			    /tmp/shell_command.sh > /tmp/shell_command.out 2>&1
 			    sync
-			    cat /tmp/shell_command.out
+			    cat /tmp/shell_command.out | sed -e 's/\&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
 			    echo "</pre>"
 			    echo "</font>"
 			    echo "</div>"
@@ -127,7 +128,10 @@ function GoToNetCastLinks()
     Select file and press Upload button. &nbsp; [OPTION AVAILABLE ONLY REMOTELY] &nbsp;</center>
 </form>
 </div></div>
-<? [ "$HTTP_HOST" = "127.0.0.1:88" ] && echo " -->" ?>
+<?
+  [ "$HTTP_HOST" = "127.0.0.1:88" ] && echo " -->"
+  echo "$run_cmt_start"
+?>
 	<div id="footer2" class="footer2">
 		<ul>
 			<a onClick="javascript:window.location='home.cgi?qURL=reboot&run=Run';" href="#" style="text-decoration:none; color:white"><li class=""><span><img src="Images/Keyboard/stop_button.png" border="0" /></span>Reboot TV</li></a>

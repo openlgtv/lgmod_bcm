@@ -131,7 +131,7 @@ a.menubutton:hover {
 
 .run{
 	overflow: auto;
-	height: 430px;
+	height: 400; /* height: 430px; */
 	width: 99%;
 	white-space: pre-wrap;                 /* CSS3 browsers  */
 	white-space: -moz-pre-wrap !important; /* 1999+ Mozilla  */

@@ -12,7 +12,7 @@ Content-type: text/html
 <style type="text/css">
     body {
 	font-family:monospace;
-	height: 720px;
+	//height: 720px;
 	//font-family:"TiresiasScreenfont";
     }
     a:link, a:visited {
@@ -38,6 +38,16 @@ Content-type: text/html
     }
     pre{
 	text-align: left;
+	overflow: auto;
+	height: 97%;
+	width: 100%;
+	white-space: pre-wrap;                 /* CSS3 browsers  */
+	white-space: -moz-pre-wrap !important; /* 1999+ Mozilla  */
+	white-space: -pre-wrap;                /* Opera 4 thru 6 */
+	white-space: -o-pre-wrap;              /* Opera 7 and up */
+	word-wrap: break-word;                 /* IE 5.5+ and up */
+	z-index: 99;
+	margin: 1 auto;
     }
 </style>
 <title>CGI FileManager by xeros</title>
@@ -101,6 +111,7 @@ var winHeight = window.innerHeight;
 var imgZoom = 0;
 var h = 0;
 var w = 0;
+var scroll = 0;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
@@ -113,12 +124,12 @@ function check(e)
 		{
 		switch(key)
 			{
-			//case 33: next = (1*current) - 30; break; //ch up
-			//case 34: next = (1*current) + 30; break; //ch down
+			case 33: scroll=-600; break; //ch up
+			case 34: scroll=600; break; //ch up
 			case 37: next = current; nside = 'l'; break; //left
-			//case 38: next = current - col; break; //up
+			case 38: scroll=-30; break; //up
 			case 39: next = current; nside = 'r'; break; //right
-			//case 40: next = (1*current) + col; break; //down
+			case 40: scroll=30; break; //down
 			}
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
@@ -135,10 +146,15 @@ function check(e)
 			}
 			ChangeBgColor();
 			//Move to the next bookmark
-			var code=document.links['link_' + nside + next].name;
-			document.links['link_' + nside + next].focus();
-			current = next;
-			side = nside;
+			if (document.links['link_' + nside + next])
+			{
+			    var code=document.links['link_' + nside + next].name;
+			    document.links['link_' + nside + next].focus();
+			    current = next;
+			    side = nside;
+			} else if (document.getElementById('run')) {
+			    document.getElementById('run').scrollTop=document.getElementById('run').scrollTop+(scroll);
+			}
 			//Prevent scrolling
 			return false;
 			}
@@ -154,7 +170,7 @@ function check(e)
 			}
 		else if (key==32) 
 			{
-			document.getElementById('link_' + side + current).click();
+			if (document.links['link_' + side + current]) document.getElementById('link_' + side + current).click();
 			return false;
 			}
 		else if ((key>47)&(key<60)) { window.refreshTime=(key-48)*2000; return false; }
@@ -185,8 +201,8 @@ function check(e)
 function ChangeBgColor()
 	{
 	//Change the TD element BgColor.
-	document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
-	document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
+	if (document.getElementById('tr_' + side + current)) document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
+	if (document.getElementById('tr_' + nside + next)) document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
 	}
 	
 
@@ -201,7 +217,7 @@ function setCurrent(element)
 function OnLoadSetCurrent(element)
 	{
 	current=1;
-	document.links['link_' + side + current].focus();
+	if (document.links['link_' + side + current]) document.links['link_' + side + current].focus();
 	ChangeBgColor();
 	}
 
@@ -308,7 +324,7 @@ fi
 
 [ "$ftype" != "text" ] && echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
 
-[ "$ftype" != "image" ] && echo '<div style="width:95%; margin:auto; font-size:16px; background-color:white;">'
+[ "$ftype" != "image" ] && echo '<div style="width:99%; margin: 0 auto; font-size:16px; background-color:white;">'
 
 [ "$FORM_pid" != "" ] && pid="$FORM_pid"
 
@@ -340,8 +356,8 @@ then
     [ "$ftype" = "image" ] && echo "<br/><br/><font size='+2' color='yellow'><br/>Loading Image</font>"
     if [ "$ftype" = "text" ]
     then
-	echo "<pre align='left'>"
-	cat "$spth"
+	echo "<pre align='left' class='run' id='run'>"
+	cat "$spth" | sed -e 's/\&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
 	echo "</pre>"
     else
 	if [ "$ftype" = "image" ]
@@ -594,7 +610,7 @@ else
 	echo "</script>"
     fi
 fi
-[ "$ftype" != "image" ] && echo '</div>'
-
+[ "$ftype" != "image" ] && echo -n '</div>'
+[ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width='100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
 ?>
 </BODY></HTML>
