@@ -284,16 +284,20 @@ function GoToURL()
 	{
 	//Load the page addressed by the currFocusedElement field
 	var URLText = document.forms['URL'].elements[currElementName].value;
-
-	if (URLText == '')
-		{
-		//if the URL is empty, goes to the list of all Netcast Services
-		document.getElementById('MainPage').src = 'http://www.nicolaottomano.it/public/lgtv/lg/links.html';
-		}
-	else if (URLText.slice(0,7) == 'http://' || URLText.slice(0,7) == 'file://')
-		{ document.getElementById('MainPage').src = URLText; }
-	else
-		{ document.getElementById('MainPage').src = 'http://' + URLText; }
+	if (URLText == '') //if the URL is empty, goes to the list of all Netcast Services
+		{ URLText = 'http://openlgtv.org.ru/'; }
+	else if (URLText.slice(0,7) != 'http://' && URLText.slice(0,7) != 'file://')
+		{ URLText = 'http://' + URLText; }
+	<?
+	  if [ "$HTTP_HOST" != "127.0.0.1:88" ]
+	  then
+	    web_exec=/mnt/browser/run3556
+	    [ -f "/mnt/user/netcast/run3556-proxy" ] && [ -n "`pgrep -f 'proxy.sh'`" ] && web_exec=/mnt/user/netcast/run3556-proxy
+	    "$web_exec" "http://127.0.0.1:88/browser-real.cgi?txtURL=$FORM_txtURL" > /dev/null 2>&1 &
+	  fi
+	?>
+	alert(URLText);
+	document.getElementById('MainPage').src = URLText;
 	}
 
 function ChangeBgColor()
