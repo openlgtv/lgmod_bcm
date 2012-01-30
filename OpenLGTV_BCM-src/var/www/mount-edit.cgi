@@ -30,6 +30,7 @@ content-type: text/html
 <?
 # 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password] - up to 0.5.0-beta1
 # 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]#[0|1] - changed by 0.5.0-beta2 (added field for dir listing cache)
+# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]#[0|1]#[pings]# - changed by 0.5.0-beta4 (added field with number of pings to try)
 
 id="$FORM_id"
 
@@ -54,14 +55,14 @@ then
 	    # (autowake on boot:0/1)#(hostname)#[ip.address]#(MAC:address)#[pa:ss:wo:rd]#[options]#
 	    echo "$automount#$FORM_qURL#$FORM_qUser#$FORM_qPassw#$qPath##" >> ${input_file}
 	else
-	    echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache" >> ${input_file}
+	    echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache#$FORM_qPin#" >> ${input_file}
 	fi
     else
 	if [ "$FORM_type" = "etherwake" ]
 	then
 	    sed -i -e "$id s?.*?$automount#$FORM_qURL#$FORM_qUser#$FORM_qPassw#$qPath##?" ${input_file}
 	else
-	    sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache?" ${input_file}
+	    sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache#$FORM_qPin#?" ${input_file}
 	fi
     fi
 fi
@@ -76,6 +77,9 @@ then
     ndrv_6="${ndrv_5#*\#}"
     ndrv_7="${ndrv_6#*\#}"
     ndrv_8="${ndrv_7#*\#}"
+    ndrv_9="${ndrv_8#*\#}"
+    # INFO: workaround for old type of config, with less fields
+    [ "$ndrv_9" = "$ndrv_8" ] && ndrv_9=""
     automount="${ndrv%%#*}"
     if [ "$FORM_type" = "etherwake" ]
     then
@@ -98,6 +102,7 @@ then
 	uname="${ndrv_6%%#*}"
 	pass="${ndrv_7%%#*}"
 	precache="${ndrv_8%%#*}"
+	pings="${ndrv_9%%#*}"
     fi
 fi
 
@@ -216,6 +221,16 @@ fi
 				</div>
 			</div>
 			<? [ "$FORM_type" = "etherwake" ] && echo "<!--" ?>
+			<div id="txtPinParent" style="background-color:white;height:40px; font-size:16px;">
+				<div style="position: relative; left: 5px; top: 7px; height:23;">
+					<?
+					    echo "Tries/Pings:"
+					?>
+				</div>
+				<div style="position: relative; left: 100px; top: -22px;">
+					<input id="txtPin" name="qPin" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pings ?>"/>
+				</div>
+			</div>
 			<div id="radio1Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					Network Protocol: 

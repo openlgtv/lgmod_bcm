@@ -4,6 +4,7 @@
 # Source code released under GPL License
 
 ndrvtab=/mnt/user/cfg/ndrvtab
+usbinit_wait_time=15
 
 if [ -f "/tmp/usbdir" ]
 then
@@ -26,8 +27,10 @@ then
 	    exit 0
 	fi
     else
-        read_ndrvtab="cat $ndrvtab"
+        read_ndrvtab="egrep -v ^$|^0 $ndrvtab"
     fi
+    # INFO: sorting to handle full path mounts first + to handle properly subdir mounts, otherwise whole script would trap into delay waiting for USB or might try to mount submounts first
+    # WARN: BusyBox 'sort' works properly but GNU coreutils sort ignores '/' when making default sort
     $read_ndrvtab | if [ "$WebUI_MOUNT" = "1" ]; then tail -n 1; else cat; fi | sort -k4 -t# | while read ndrv
     do
 	automount="${ndrv%%#*}"
@@ -45,8 +48,12 @@ then
 	pass="${ndrv_7%%#*}"
 	ndrv_8="${ndrv_7#*\#}"
 	precache="${ndrv_8%%#*}"
+	ndrv_9="${ndrv_8#*\#}"
+	# INFO: workaround for old type of config, with less fields
+	[ "$ndrv_9" = "$ndrv_8" ] && ndrv_9=""
+	pings="${ndrv_9%%#*}"
 	passHidden="*password*"
-	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden precache=$precache ..."
+	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden precache=$precache pings=$pings..."
 	if [ -z "`grep -m 1 \"^$src \" /proc/mounts`" ]
 	then
 	    if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
@@ -56,19 +63,26 @@ then
 		    full_dst="$dst"
 		else
 		    USB_MOUNT_TRY=1
+		    [ "$WebUI_MOUNT" != "1" -a -z "$USB_waited" ] && sleep "$usbinit_wait_time" && USB_waited=1 # wait for USB init
+		    if [ -z "$USB_DIR" -a -f "/tmp/usbdir" ]
+		    then
+		        export USB_DIR="`cat /tmp/usbdir`"
+		        export OpenLGTV_BCM_USB="$USB_DIR/OpenLGTV_BCM"
+		    fi
+		    # INFO: check for both to ensure that /$dst path wouldn't be searched when no USB_DIR have been set
 		    if [ -n "$USB_DIR" -a -d "$USB_DIR/$dst" ]
 		    then
 			full_dst="$USB_DIR/$dst"
 		    else
-			for jj in 1 2 3 4
+			for jj in 1 2 3 4 5 6 7 8
 			do
 			    for ii in 1 2
 			    do
 				full_dst="/mnt/usb$ii/Drive$jj/$dst"
 				[ -d "$full_dst" ] && break 2
 			    done
-			    full_dst="/mnt/nonexistent"
 			done
+			full_dst="/mnt/nonexistent"
 		    fi
 		fi
 		if [ ! -d "$full_dst" ]
@@ -80,38 +94,36 @@ then
 		fi
 		if [ -d "$full_dst" ]
 		then
-		    echo "OpenLGTV_BCM-DEBUG: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden precache=$precache..."
-		    if [ "$fs_type" = "cifs" ]
+		    fgbg="foreground by WebUI"
+		    bg=""
+		    [ "$WebUI_MOUNT" = "1" ] && bg="&" && fgbg="background at boot"
+		    [ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},nounix,noserverino"
+		    [ "$fs_type" = "nfs" ] && mountcmd="mount -t nfs ${src} ${full_dst} -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus"
+		    [ -z "$pings" ] && pings=10
+		    echo "OpenLGTV_BCM-DEBUG: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden precache=$precache pings=$pings ..."
+		    ip="${src#//}"
+		    ip="${ip%%/*}"
+		    ip="${ip%%:*}"
+		    echo "OpenLGTV_BCM-INFO: mounting $fs_type Network Share in $fgbg..."
+		    if [ -z "$bg" ]
 		    then
-			if [ "$WebUI_MOUNT" = "1" ]
+			"$mountcmd"
+			mount_err_code="$?"
+			if [ "$mount_err_code" -ne "0" ]
 			then
-			    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in foreground by WebUI..."
-			    mount -t cifs "$src" "$full_dst" -o username=$uname,password=$pass,nounix,noserverino
-			    export mount_err_code="$?"
-			else
-			    echo "OpenLGTV_BCM-INFO: mounting CIFS Network Share in background..."
-			    mount -t cifs "$src" "$full_dst" -o username=$uname,password=$pass,nounix,noserverino &
+			    echo "OpenLGTV_BCM-ERROR: mounting network share: $src has not succeeded - check yours share configuration"
+			    exit $mount_err_code
 			fi
 		    else
-			if [ "$WebUI_MOUNT" = "1" ]
-			then
-			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in foreground by WebUI..."
-			    mount -t nfs "$src" "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
-			    export mount_err_code="$?"
-			else
-			    echo "OpenLGTV_BCM-INFO: mounting NFS Network Share in background..."
-			    mount -t nfs "$src" "$full_dst" -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus &
-			fi
-		    fi
-		    if [ "$WebUI_MOUNT" = "1" -a "$mount_err_code" -ne "0" ]
-		    then
-			echo "OpenLGTV_BCM-ERROR: mounting network share has not succeeded - check yours share configuration"
-			exit $mount_err_code
+			export pings ip mountcmd
+			( arping -fqc "$pings" "$ip"; [ "$?" -ne "0" ] && echo "OpenLGTV_BCM-WARN: Host: $ip was not reachable at $pings tries, trying to mount $src regardless that"; "$mountcmd" 2>&1; echo "OpenLGTV_BCM-ERROR: mounting network share: $src has not succeeded - check config" ) &
 		    fi
 		    if [ "$precache" = "1" ]
 		    then
-			echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE..."
-			(sleep 10; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
+			sleeptime="$(($pings+11))"
+			export sleeptime full_dst
+			echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE with ${sleeptime}s delay..."
+			(sleep $sleeptime; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
 		    fi
 		else
 		    echo echo "OpenLGTV_BCM-WARNING: dir $full_dst does not exist, share $src with set mount point $dst not mounted"

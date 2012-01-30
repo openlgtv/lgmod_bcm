@@ -108,6 +108,9 @@ fi
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."
 hostname OpenLGTV_BCM
 
+# WARNING: CIFS needs module loaded by rc.modules, so needs more time than NFS before mounting
+/etc/rc.d/rc.mount-netshare &
+
 stage2=`echo ${tdirfull}/stage2/*`
 if [ -f "$stage2" ]
 then
@@ -197,7 +200,6 @@ then
     fi
 fi
 
-(sleep 10; /etc/rc.d/rc.mount-netshare)&
 
 echo ""
 

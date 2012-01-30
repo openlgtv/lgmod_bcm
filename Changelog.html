@@ -18,6 +18,7 @@ OpenLGTV BCM Changelog
     * FIX: rc.usb make actions on hotplug concurrently on each partitions when multiple partitions get found
     * FIX: file not found (404) error web page to handle possible problems when file accessed on network share is not achievable (common from not enough permissions)
     * FIX: improve 'run' command in WebUI - make it fit the screen, even when output is big, enable scrolling with channel up/down buttons
+    * FIX: navigation to handle up to 10 network shares settings WebUI
     * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
     * ADD: FileManager: button to view last status of copy/move action after action was detached to background
     * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
@@ -30,6 +31,7 @@ OpenLGTV BCM Changelog
     * ADD: extroot.tar.gz archive with additional tools for use on NTFS/EXT3/JFS formated partition
     * ADD: experimental opkg packages support on extroot (with default OpenWRT Kamikaze 8.09.2 packages repository until we'll make our own repository)
     * ADD: get back previously removed tools + few more added (curl, ltrace, strace, tcpdump, top, opkg, msdl, e2fsck, ntfsprogs) into extroot dir in addons
+    * ADD: one more field into ndrvtab/Network Shares config - how many ARP pings should be sent/received before trying to mount NFS/CIFS share
     * UPDATE: OPENRELEASE upgrade to version 2.1.2-15-gf8f2743
     * UPDATE: ntfs-3g upgrade to version 2012.1.15
     * UPDATE: tmux upgrade from 1.5 to 1.6
@@ -43,6 +45,7 @@ OpenLGTV BCM Changelog
     * CHANGE: automount supported by kernel but not RELEASE filesystems on USB storage devices into /mnt/usb{1,2}/Drive{5-8} dirs only to make them visible in media player
     * CHANGE: split part of rcS code into rc.userdirs, rc.passwd and rc.ssh as preparation for chrooted services usability for installer
     * CHANGE: replace ntfs-3g binary with lowntfs-3g with FUSE low-level interface instructions
+    * CHANGE: rc.mount-netshare is called now as early as network and telnet/ssh got started - it now try to get ARP reply first via arping before it try to mount CIFS/NFS share
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
     * REMOVE: chrt and chat binaries from SmartTV image for space reason - use BusyBox applets instead
     * REMOVE: libmagic.so as it wasn't used now since 'file' was removed

@@ -32,6 +32,7 @@ content-type: text/html
 
 # 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password] - up to 0.5.0-beta1
 # 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]#[0|1] - changed by 0.5.0-beta2 (added field for dir listing cache)
+# 0|1#cifs|nfs#[url]#NetShare(mount path on USB stick)#[options]#[username]#[password]#[0|1]#[pings]# - changed by 0.5.0-beta4 (added field with number of pings to try)
 
 echo "<div id='info' style='background-color:white;height:30px;'>"
 if [ "$FORM_type" = "etherwake" ]
