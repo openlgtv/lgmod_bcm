@@ -5,6 +5,7 @@
 
 ndrvtab=/mnt/user/cfg/ndrvtab
 usbinit_wait_time=15
+fscheck_wait_time=1.5
 
 if [ -f "/tmp/usbdir" ]
 then
@@ -14,7 +15,7 @@ fi
 
 if [ -f "$ndrvtab" ]
 then
-    echo "OpenLGTV_BCM-INFO: found Network Share configuration file $ndrvtab and mounted USB stick - parsing config content..."
+    echo "OpenLGTV_BCM-INFO: found Network Share configuration file $ndrvtab - parsing config content..."
     if [ "$1" = "WebUI_MOUNT" ]
     then
 	WebUI_MOUNT=1
@@ -63,7 +64,7 @@ then
 		    full_dst="$dst"
 		else
 		    USB_MOUNT_TRY=1
-		    [ "$WebUI_MOUNT" != "1" -a -z "$USB_waited" ] && sleep "$usbinit_wait_time" && USB_waited=1 # wait for USB init
+		    [ "$WebUI_MOUNT" != "1" -a -z "$USB_waited" -a ! -d "$OpenLGTV_BCM_USB" ] && sleep "$usbinit_wait_time" && USB_waited=1 # wait for USB init
 		    if [ -z "$USB_DIR" -a -f "/tmp/usbdir" ]
 		    then
 		        export USB_DIR="`cat /tmp/usbdir`"
@@ -82,7 +83,7 @@ then
 				[ -d "$full_dst" ] && break 2
 			    done
 			done
-			full_dst="/mnt/nonexistent"
+			full_dst="/mnt/NONEXISTENT/$dst"
 		    fi
 		fi
 		if [ ! -d "$full_dst" ]
@@ -96,7 +97,7 @@ then
 		then
 		    fgbg="foreground by WebUI"
 		    bg=""
-		    [ "$WebUI_MOUNT" = "1" ] && bg="&" && fgbg="background at boot"
+		    [ "$WebUI_MOUNT" != "1" ] && bg="&" && fgbg="background at boot"
 		    [ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},nounix,noserverino"
 		    [ "$fs_type" = "nfs" ] && mountcmd="mount -t nfs ${src} ${full_dst} -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus"
 		    [ -z "$pings" ] && pings=10
@@ -107,7 +108,7 @@ then
 		    echo "OpenLGTV_BCM-INFO: mounting $fs_type Network Share in $fgbg..."
 		    if [ -z "$bg" ]
 		    then
-			"$mountcmd"
+			${mountcmd}
 			mount_err_code="$?"
 			if [ "$mount_err_code" -ne "0" ]
 			then
@@ -115,8 +116,8 @@ then
 			    exit $mount_err_code
 			fi
 		    else
-			export pings ip mountcmd
-			( arping -fqc "$pings" "$ip"; [ "$?" -ne "0" ] && echo "OpenLGTV_BCM-WARN: Host: $ip was not reachable at $pings tries, trying to mount $src regardless that"; "$mountcmd" 2>&1; echo "OpenLGTV_BCM-ERROR: mounting network share: $src has not succeeded - check config" ) &
+			export pings ip mountcmd fs_type fscheck_wait_time
+			( [ -n "$pings" -a "$pings" != "0" ] && arping -fqc "$pings" "$ip"; [ "$?" -ne "0" ] && echo "OpenLGTV_BCM-WARN: Host: $ip was not reachable at $pings tries, trying to mount $src regardless that"; [ -z "`grep ${fs_type} /proc/filesystems`" ] && echo "OpenLGTV_BCM-WARN: $fs_type filesystem is not yet available, waiting ${fscheck_wait_time}s to complete kernel module loading" && sleep ${fscheck_wait_time}; ${mountcmd} 2>&1; [ "$?" -ne "0" ] && echo "OpenLGTV_BCM-ERROR: mounting network share: $src has not succeeded - check config" ) &
 		    fi
 		    if [ "$precache" = "1" ]
 		    then
