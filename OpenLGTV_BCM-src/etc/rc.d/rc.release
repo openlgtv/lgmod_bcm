@@ -3,23 +3,30 @@
 # (OPEN)RELEASE app starting script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
+[ "$1" = "restart" ] && echo "OpenLGTV_BCM-WARN: rc.release: trying to restart (OPEN)RELEASE - TV might reboot" && killall RELEASE && sleep 1.5 && killall -9 RELEASE && sleep 1 && killall -9 RELEASE && sleep 0.5
+
 [ -z "$skip_rel_check" ] && [ -n "`pgrep RELEASE`" ] && echo "OpenLGTV_BCM-ERROR: refusing to start OPENRELEASE as (OPEN?)RELEASE is already running" && exit 1
 
 if [ "$OPENRELEASE" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: setting OPENRELEASE to start"
     RELEASE_cmd="/usr/bin/OPENRELEASE"
-    if [ ! -f "/mnt/user/etc/openrelease/openrelease.cfg" -o ! -f "/mnt/user/etc/openrelease/openrelease_keymap.cfg" ]
+    if [ ! -d "/mnt/user/etc/openrelease" ]
     then
-	echo "OpenLGTV_BCM-WARN: OPENRELEASE configs not found in /mnt/user/etc/openrelease, preparing defaults"
+	echo "OpenLGTV_BCM-WARN: OPENRELEASE custom config dir (/mnt/user/etc/openrelease) not found, creating it"
 	mkdir -p /mnt/user/etc/openrelease
-	cp -f /etc/openrelease/*.cfg /mnt/user/etc/openrelease/
+	# INFO: files shouldn't be copied by default - it's harder to support config file upgrades this way, any other idea?
+	#cp -f /etc/openrelease/*.cfg /mnt/user/etc/openrelease/
     fi
-    if [ -f "/mnt/user/etc/openrelease/openrelease.cfg" -a "/mnt/user/etc/openrelease/openrelease_keymap.cfg" ]
-    then
-	echo "OpenLGTV_BCM-INFO: mount-binding OPENRELEASE configs from /mnt/user/etc/openrelease to /etc/openrelease"
-	mount --bind /mnt/user/etc/openrelease /etc/openrelease
-    fi
+    for opnrelcfg in /mnt/user/etc/openrelease/openrelease.cfg /mnt/user/etc/openrelease/openrelease_keymap.cfg
+    do
+	if [ -f "$opnrelcfg" ]
+	then
+	    dst_opnrelcfg="${opnrelcfg#/mnt/user}"
+	    echo "OpenLGTV_BCM-INFO: mount-binding OPENRELEASE config: $opnrelcfg to $dst_opnrelcfg"
+	    mount --bind "$opnrelcfg" "$dst_opnrelcfg"
+	fi
+    done
     if [ -f "/mnt/user/lib/libopenrelease.so" ]
     then
 	echo "OpenLGTV_BCM-INFO: found /mnt/user/lib/libopenrelease.so, using it for OPENRELEASE"

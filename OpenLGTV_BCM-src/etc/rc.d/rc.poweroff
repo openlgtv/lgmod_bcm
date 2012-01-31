@@ -1,0 +1,29 @@
+#!/bin/sh
+# OpenLGTV BCM rc.poweroff script by xeros
+# Source code released under GPL License
+
+echo "OpenLGTV_BCM-INFO: PowerOFF sequence started..."
+
+if [ -f "/tmp/usbdir" ]
+then
+    export USB_DIR="`cat /tmp/usbdir`"
+    export OpenLGTV_BCM_USB="$USB_DIR/OpenLGTV_BCM"
+fi
+
+[ -d "$OpenLGTV_BCM_USB" -a -d "$OpenLGTV_BCM_USB/etc/poweroff.d" ] && poweroff_usb="$OpenLGTV_BCM_USB/etc/poweroff.d/"
+[ -d "/tmp/extroot/etc/poweroff.d" ] && poweroff_extroot="/tmp/extroot/etc/poweroff.d/"
+[ -d "/mnt/user/etc/poweroff.d" ] && poweroff_user="/mnt/user/etc/poweroff.d/"
+[ -d "/etc/poweroff.d" ] && poweroff_root="/etc/poweroff.d/"
+
+[ -n "${poweroff_usb}${poweroff_extroot}${poweroff_user}${poweroff_root}" ] && scr_files="`find ${poweroff_usb} ${poweroff_extroot} ${poweroff_user} ${poweroff_root} -follow -type f -perm -u=x`"
+if [ -n "$scr_files" ]
+then
+    echo "OpenLGTV_BCM-INFO: executing poweroff scripts:"
+    for scr_file in $scr_files
+    do
+	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
+	echo ${scr_file}
+    done
+fi
+
+echo "OpenLGTV_BCM-INFO: PowerOFF sequence finished..."

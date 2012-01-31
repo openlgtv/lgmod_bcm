@@ -46,10 +46,22 @@ then
     mkdir -p /mnt/user/lock
 fi
 
-if [ ! -d "/mnt/user/init.d" ]
+if [ ! -d "/mnt/user/etc/init.d" ]
 then
-    echo "OpenLGTV_BCM-INFO: creating /mnt/user/init.d dir for custom init scripts"
-    mkdir -p /mnt/user/init.d
+    if [ ! -d "/mnt/user/init.d" ]
+    then
+	echo "OpenLGTV_BCM-INFO: creating /mnt/user/etc/init.d dir for custom init scripts"
+	mkdir -p /mnt/user/etc/init.d
+    else
+	echo "OpenLGTV_BCM-INFO: moving /mnt/user/init.d dir to /mnt/user/etc/init.d for custom init scripts" # move old init.d dir used in previous versions
+	mv /mnt/user/init.d /mnt/user/etc/init.d
+    fi
+fi
+
+if [ ! -d "/mnt/user/etc/poweroff.d" ]
+then
+    echo "OpenLGTV_BCM-INFO: creating /mnt/user/etc/poweroff.d dir for custom poweroff scripts"
+    mkdir -p /mnt/user/etc/poweroff.d
 fi
 
 [ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs

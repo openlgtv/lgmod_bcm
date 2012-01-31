@@ -15,7 +15,7 @@ fi
 
 if [ -f "$ndrvtab" ]
 then
-    echo "OpenLGTV_BCM-INFO: found Network Share configuration file $ndrvtab - parsing config content..."
+    echo "OpenLGTV_BCM-INFO: rc.mount-netshare: found Network Share configuration file $ndrvtab - parsing config content..."
     if [ "$1" = "WebUI_MOUNT" ]
     then
 	WebUI_MOUNT=1
@@ -24,7 +24,7 @@ then
 	    id="$2"
 	    read_ndrvtab="head -n $id $ndrvtab"
 	else
-	    echo "OpenLGTV_BCM-ERROR: found Network Share configuration file $ndrvtab but mounting from WebUI needs Share ID number as argument..."
+	    echo "OpenLGTV_BCM-ERROR: rc.mount-netshare: found Network Share configuration file $ndrvtab but mounting from WebUI needs Share ID number as argument..."
 	    exit 0
 	fi
     else
@@ -54,7 +54,7 @@ then
 	[ "$ndrv_9" = "$ndrv_8" ] && ndrv_9=""
 	pings="${ndrv_9%%#*}"
 	passHidden="*password*"
-	echo "OpenLGTV_BCM-DEBUG: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden precache=$precache pings=$pings..."
+	echo "OpenLGTV_BCM-DEBUG: rc.mount-netshare: Network Share settings: automount=$automount fs_type=$fs_type src=$src dst=$dst opt=$opt uname=$uname pass=$passHidden precache=$precache pings=$pings..."
 	if [ -z "`grep -m 1 \"^$src \" /proc/mounts`" ]
 	then
 	    if [ "$automount" = "1" -o "$WebUI_MOUNT" = "1" ]
@@ -101,18 +101,18 @@ then
 		    [ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},nounix,noserverino"
 		    [ "$fs_type" = "nfs" ] && mountcmd="mount -t nfs ${src} ${full_dst} -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus"
 		    [ -z "$pings" ] && pings=10
-		    echo "OpenLGTV_BCM-DEBUG: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden precache=$precache pings=$pings ..."
+		    echo "OpenLGTV_BCM-DEBUG: rc.mount-netshare: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden precache=$precache pings=$pings ..."
 		    ip="${src#//}"
 		    ip="${ip%%/*}"
 		    ip="${ip%%:*}"
-		    echo "OpenLGTV_BCM-INFO: mounting $fs_type Network Share in $fgbg..."
+		    echo "OpenLGTV_BCM-INFO: rc.mount-netshare: mounting $fs_type Network Share in $fgbg..."
 		    if [ -z "$bg" ]
 		    then
 			${mountcmd}
 			mount_err_code="$?"
 			if [ "$mount_err_code" -ne "0" ]
 			then
-			    echo "OpenLGTV_BCM-ERROR: mounting network share: $src has not succeeded - check yours share configuration"
+			    echo "OpenLGTV_BCM-ERROR: rc.mount-netshare: mounting network share: $src has not succeeded - check yours share configuration"
 			    exit $mount_err_code
 			fi
 		    else
@@ -123,17 +123,17 @@ then
 		    then
 			sleeptime="$(($pings+11))"
 			export sleeptime full_dst
-			echo "OpenLGTV_BCM-INFO: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE with ${sleeptime}s delay..."
+			echo "OpenLGTV_BCM-INFO: rc.mount-netshare: running recursive listing of network share dir in background to have all files and dirs visible by RELEASE with ${sleeptime}s delay..."
 			(sleep $sleeptime; nice -n 20 find "$full_dst" -type d) > /dev/null 2>&1 &
 		    fi
 		else
-		    echo echo "OpenLGTV_BCM-WARNING: dir $full_dst does not exist, share $src with set mount point $dst not mounted"
+		    echo echo "OpenLGTV_BCM-WARNING: rc.mount-netshare: dir $full_dst does not exist, share $src with set mount point $dst not mounted"
 		fi
 	    fi
 	else
-	    echo echo "OpenLGTV_BCM-WARNING: network share $src is already mounted"
+	    echo echo "OpenLGTV_BCM-WARNING: rc.mount-netshare: network share $src is already mounted"
 	fi
     done
 else
-    echo "OpenLGTV_BCM-INFO: NOT found Network Share configuration file $ndrvtab or mounted USB stick with OpenLGTV_BCM dir - skipping network share configuration..."
+    echo "OpenLGTV_BCM-INFO: rc.mount-netshare: NOT found Network Share configuration file $ndrvtab or mounted USB stick with OpenLGTV_BCM dir - skipping network share configuration..."
 fi

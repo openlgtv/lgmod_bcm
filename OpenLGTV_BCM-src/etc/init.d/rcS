@@ -103,13 +103,13 @@ then
     telnetd &
 fi
 
+# WARNING: CIFS needs module loaded by rc.modules, so needs more time than NFS before mounting
+/etc/rc.d/rc.mount-netshare &
+
 /etc/rc.d/rc.ssh start
 
 echo "OpenLGTV_BCM-INFO: setting hostname to OpenLGTV_BCM..."
 hostname OpenLGTV_BCM
-
-# WARNING: CIFS needs module loaded by rc.modules, so needs more time than NFS before mounting
-/etc/rc.d/rc.mount-netshare &
 
 stage2=`echo ${tdirfull}/stage2/*`
 if [ -f "$stage2" ]
@@ -186,20 +186,7 @@ fi
 
 (sleep $dfbdelay; /etc/rc.d/rc.directfb)&
 
-if [ -d "/mnt/user/init.d" ]
-then
-    scr_files="`find /mnt/user/init.d/* -perm -u=x 2>/dev/null`"
-    if [ -n "$scr_files" ]
-    then
-	echo "OpenLGTV_BCM-INFO: executing custom init scripts from /mnt/user/init.d/"
-	for scr_file in $scr_files
-	do
-	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
-	    $scr_file
-	done
-    fi
-fi
-
+source /etc/rc.d/rc.initd
 
 echo ""
 

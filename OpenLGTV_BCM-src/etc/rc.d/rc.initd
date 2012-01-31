@@ -1,0 +1,29 @@
+#!/bin/sh
+# OpenLGTV BCM rc.initd script by xeros
+# Source code released under GPL License
+
+echo "OpenLGTV_BCM-INFO: custom init.d sequence started..."
+
+if [ -f "/tmp/usbdir" ]
+then
+    export USB_DIR="`cat /tmp/usbdir`"
+    export OpenLGTV_BCM_USB="$USB_DIR/OpenLGTV_BCM"
+fi
+
+[ -d "/mnt/user/init.d"        ] && initd_user_old="/mnt/user/init.d/" # DEPRECIATED, will be removed in future versions
+[ -d "/mnt/user/etc/init.d"    ] && initd_user="/mnt/user/etc/init.d/"
+[ -d "/tmp/extroot/etc/init.d" ] && initd_extroot="/tmp/extroot/etc/init.d/"
+[ -d "$OpenLGTV_BCM_USB" -a -d "$OpenLGTV_BCM_USB/etc/init.d" ] && initd_usb="$OpenLGTV_BCM_USB/etc/init.d/" # probably wont be used at all as USB not available at init stage
+
+[ -n "${initd_usb}${initd_extroot}${initd_user}${initd_user_old}" ] && scr_files="`find ${initd_user_old} ${initd_user} ${initd_extroot} ${initd_usb} -follow -type f -perm -u=x`"
+if [ -n "$scr_files" ]
+then
+    echo "OpenLGTV_BCM-INFO: executing init scripts:"
+    for scr_file in $scr_files
+    do
+	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
+	${scr_file}
+    done
+fi
+
+echo "OpenLGTV_BCM-INFO: custom init.d sequence finished..."
