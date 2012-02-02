@@ -81,7 +81,8 @@ document.write('<style type="text/css">td.filename {width:800px;}</style>');
 
 <?
 
-[ -f "/tmp/var/log/fm/last_played.info" ] && rm /tmp/var/log/fm/last_played.info 2>/dev/null &
+[ ! -d "/tmp/var/log/fm" ] && mkdir -p "/tmp/var/log/fm" 2>/dev/null &
+[ -f "/tmp/var/log/fm/last_played.info" ] && rm -f "/tmp/var/log/fm/last_played.info" 2>/dev/null &
 
 if [ "$FORM_side" != "" ]
 then
@@ -141,6 +142,13 @@ then
     fi
 else
     echo "var current=1;"
+fi
+
+if [ "$FORM_movieinforefresh" = "1" ]
+then
+    echo "var movieInfoRefresh=1;"
+else
+    echo "var movieInfoRefresh=0;"
 fi
 
 ?>
@@ -296,6 +304,7 @@ function check(e)
 			return false;
 			}
 		    }
+		//else if (key==220) 
 		else if (key==19|key==220) 
 			{
 			//the PAUSE button on the remote control have been pressed or '\' on keyboard
@@ -305,6 +314,16 @@ function check(e)
 			//Prevent default action
 			return false;
 			}
+		//else if (key==19) 
+		//	{
+		//	if (dialog_displayed==1&movieInfoRefresh==0)
+		//	    movieInfoRefresh=1;
+		//	else
+		//	    movieInfoRefresh=0;
+		//	movieInfo();
+		//	e.preventDefault();
+		//	return false;
+		//	}
 		else if (key==48) 
 			{
 			//the 0 on the remote control have been pressed
@@ -319,10 +338,17 @@ function check(e)
 			{
 			//the 1 on the remote control have been pressed
 			//use the keypad function
-			if (dialog_displayed==1)
+			//if (dialog_displayed==1|dialog_win!='movieinfo')
+			if (dialog_displayed==1&&dialog_win!='movieinfo')
 			    {
 			    keypad('1');
 			    //return false;
+			    } else {
+				if (dialog_displayed==1&&movieInfoRefresh==0)
+				    movieInfoRefresh=1;
+				else
+				    movieInfoRefresh=0;
+				movieInfo();
 			    }
 			}
 		else if (key==50) 
@@ -711,6 +737,16 @@ function dialogRemove()
 	OnLoadSetCurrent();
         }
 
+function movieInfo()
+	{
+	src=cpth + '/' + document.getElementById('link_' + side + current).name;
+	dest='fm.cgi?side=' + side + '&lpth=' + lpth + '&rpth=' + rpth + '&select=' + current + '&action=movieinfo&movieinforefresh=' + movieInfoRefresh + '&file=' + src;
+	if (movieInfoRefresh==1)
+	    window.location.replace(dest);
+	else
+	    window.location=dest;
+	}
+
 function windowResize()
 	{
 	var filenameSize=(window.innerWidth/2)-200;
@@ -769,6 +805,30 @@ fi
 if [ "$FORM_action" = "rename" -a "$cpth" != "" -a "$FORM_txtOldName" != "" -a "$FORM_txtName" != "" ]
 then
     mv "$cpth/$FORM_txtOldName" "$cpth/$FORM_txtName"
+fi
+if [ "$FORM_action" = "movieinfo" -a "$cpth" != "" -a "$FORM_file" != "" ]
+then
+    movieinfo="`dirname "$FORM_file"`/.MovieInfo"
+    mkdir -p "$movieinfo" > /dev/null 2>&1 || movieinfo="/tmp/var/log/fm/.MovieInfo" && mkdir -p "$movieinfo" > /dev/null 2>&1
+    movieinfo_fileimg="$movieinfo/`basename "$FORM_file"`.jpg"
+    echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\"" >> /tmp/var/log/fm/imdb.log
+    [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> /tmp/var/log/fm/imdb.log
+    if [ -f "$movieinfo_fileimg" ]
+    then
+	movieinfo_fileimg="${movieinfo_fileimg//'/\\'}"
+	echo "<script> \
+	    var dialog_win='movieinfo'; \
+	    var newdiv = document.createElement('div'); \
+	    var newdivWidth=window.innerWidth; \
+	    var newdivHeight=window.innerHeight; \
+	    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:0px solid black;'); \
+	    newdiv.id = 'dialogWin'; \
+	    document.body.appendChild(newdiv); \
+	    var kb='<img src=\"root$movieinfo_fileimg\" alt=\"$movieinfo_fileimg\"/>'; \
+	    newdiv.innerHTML = kb; \
+	    dialog_displayed = 1; \
+	</script>"
+    fi
 fi
 
 mountpoints="`egrep -v '^/dev/mtdblock| / |^proc|^tmp|^sysfs|^usbfs|^devpts| /usr/etc |^bt|^lgapp_xip' /proc/mounts | cut -d' ' -f2 | tr '\n' ' '`"
