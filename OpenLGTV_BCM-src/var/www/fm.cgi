@@ -810,25 +810,32 @@ if [ "$FORM_action" = "movieinfo" -a "$cpth" != "" -a "$FORM_file" != "" ]
 then
     movieinfo="`dirname "$FORM_file"`/.MovieInfo"
     mkdir -p "$movieinfo" > /dev/null 2>&1 || movieinfo="/tmp/var/log/fm/.MovieInfo" && mkdir -p "$movieinfo" > /dev/null 2>&1
-    movieinfo_fileimg="$movieinfo/`basename "$FORM_file"`.jpg"
+    movieinfo_file="`basename "$FORM_file"`"
+    movieinfo_fileimg="${movieinfo}/${movieinfo_file}.jpg"
+    echo "<center><b><font size='+4' color='yellow'><br/>Loading movie info for file:<br/><font size='+3'><br/>$movieinfo_file</font></font></b></center>"
     echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\"" >> /tmp/var/log/fm/imdb.log
     [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> /tmp/var/log/fm/imdb.log
+    echo "<script type='text/javascript'> \
+	document.body.innerHTML = '';"
     if [ -f "$movieinfo_fileimg" ]
     then
+	sleep 1
 	movieinfo_fileimg="${movieinfo_fileimg//'/\\'}"
-	echo "<script> \
+	#    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:0px solid black;'); \
+	echo "\
 	    var dialog_win='movieinfo'; \
 	    var newdiv = document.createElement('div'); \
 	    var newdivWidth=window.innerWidth; \
 	    var newdivHeight=window.innerHeight; \
-	    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:0px solid black;'); \
+	    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px;'); \
 	    newdiv.id = 'dialogWin'; \
 	    document.body.appendChild(newdiv); \
-	    var kb='<img src=\"root$movieinfo_fileimg\" alt=\"$movieinfo_fileimg\"/>'; \
+	    var kb='<img src=\"root$movieinfo_fileimg\" alt=\"$movieinfo_fileimg\"/>; \
 	    newdiv.innerHTML = kb; \
-	    dialog_displayed = 1; \
-	</script>"
+	    dialog_displayed = 1;"
     fi
+	#    var kb='<img src=\"root$movieinfo_fileimg\" alt=\"$movieinfo_fileimg\"/><div style='opacity:0.6; filter:alpha(opacity=60); position:absolute; padding:0px 0px 0 0px; top: 400px; left: 400px; width: 110px; height: 30px;'><img src='Images/Keyboard/ok_button.png'/></div>; \
+    echo "</script>"
 fi
 
 mountpoints="`egrep -v '^/dev/mtdblock| / |^proc|^tmp|^sysfs|^usbfs|^devpts| /usr/etc |^bt|^lgapp_xip' /proc/mounts | cut -d' ' -f2 | tr '\n' ' '`"
@@ -968,14 +975,12 @@ mountpoints_length="${#mountpoints}"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"
-    echo '</tbody></table></td></tr></tbody></table>'
-?>
-<center><table border="0" cellpadding="0" width="100%"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> <font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1"> RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1"> SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font> <font color="yellow" size="+1">STATUS</font></span></td></tr></table></center>
+    echo -n '</tbody></table></td></tr></tbody></table>'
+?><center><table border="0" cellpadding="0" width="100%"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> <font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1"> RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1"> SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font> <font color="yellow" size="+1">STATUS</font></span></td></tr></table></center>
 </BODY></HTML>
 <script type='text/javascript'>OnLoadSetCurrent();</script>
 <script type='text/javascript'>
 <?
     echo "document.getElementById('ldf').innerHTML ='`df -h \"$lpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
     echo "document.getElementById('rdf').innerHTML ='`df -h \"$rpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
-?>
-</script>
+?></script>

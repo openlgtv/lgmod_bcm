@@ -48,5 +48,6 @@ else
     echo ""
     $RELEASE_cmd
 fi
+echo "OpenLGTV_BCM-INFO: RELEASE session has quit or detached from terminal"
 
 skip_rel_check=""
