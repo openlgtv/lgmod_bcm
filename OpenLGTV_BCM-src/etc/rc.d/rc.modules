@@ -3,8 +3,7 @@
 # Kernel modules loading script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-#MODULES_ROOTFS_LIST="input-core hid usbhid evdev uinput cifs fuse"
-MODULES_ROOTFS_LIST="cifs input-core hid usbhid evdev uinput fuse jbd2 ext4 hfsplus"
+MODULES_ROOTFS_LIST="cifs input-core hid usbhid hid-sunplus evdev uinput fuse jbd2 ext4 hfsplus"
 MODULES_CUSTOM_LIST_FILE=/mnt/user/etc/modules.custom
 if [ -f "$MODULES_CUSTOM_LIST_FILE" ]
 then
@@ -13,31 +12,34 @@ else
     MODULES_CUSTOM_LIST=""
 fi
 
-MOD_PATH1="/home/modules"
-MOD_PATH2="/mnt/user/modules"
+MOD_PATH1="/tmp/extroot/modules"
+MOD_PATH2="/home/modules"
+MOD_PATH3="/mnt/user/modules"
 MOD_RPATH="/lib/modules"
 
-# load listed modules then custom ones - first check /home/modules, then /mnt/user/modules and as last from /lib/modules
+load_module() {
+	echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
+	insmod "$mod_file"
+}
+
 for mod in $MODULES_ROOTFS_LIST $MODULES_CUSTOM_LIST
 do
     mod_file="$MOD_PATH1/$mod.ko"
-    if [ -f "$mod_file" ]
+    if [ ! -f "$mod_file" ]
     then
-	echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
-	insmod "$mod_file"
-    else
 	mod_file="$MOD_PATH2/$mod.ko"
-	if [ -f "$mod_file" ]
+	if [ ! -f "$mod_file" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
-	    insmod "$mod_file"
-	else
-	    mod_file="$MOD_RPATH/$mod.ko"
-	    if [ -f "$mod_file" ]
+	    mod_file="$MOD_PATH3/$mod.ko"
+	    if [ ! -f "$mod_file" ]
 	    then
-		echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
-		insmod "$mod_file"
+		mod_file="$MOD_RPATH/$mod.ko"
+		if [ ! -f "$mod_file" ]
+		then
+		    continue
+		fi
 	    fi
 	fi
     fi
+    load_module
 done

@@ -9,6 +9,7 @@ OpenLGTV BCM Changelog
     * FIX: FileManager: crop full path if it doesn't fit panel width
     * FIX: FileManager: update free/total space in different JavaScript context to let proper panels scale even when no free/total space info is available yet
     * FIX: FileManager: text files viewer improved
+    * FIX: FileManager: attempt to preload next image into web browser cache in slideshow mode to make image change smoother
     * FIX: fallback with NTFS partitions remounting as read-only when remounting read-write wont succeed (problems with filesystem)
     * FIX: process /etc/profile in chrooted installer
     * FIX: missing /var/spool symlink for working crontab
@@ -39,6 +40,7 @@ OpenLGTV BCM Changelog
     * ADD: support for web content on extroot via /var/www/extroot symlink to /tmp/extroot/var/www
     * ADD: imdb.sh script to generate image with movie info based on IMDB data (will get bound to FileManager soon)
     * ADD: send_key.sh script to pass button key codes to (OPEN)RELEASE, with support for key combinations
+    * ADD: hid-sunplus.ko kernel module for some USB wireless keyboard+mouse combo devices
     * ADD: updxy to handle udp:// streams in extroot
     * UPDATE: OPENRELEASE upgrade to version 2.1.2-15-gf8f2743
     * UPDATE: ntfs-3g upgrade to version 2012.1.15

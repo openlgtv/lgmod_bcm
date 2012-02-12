@@ -286,12 +286,14 @@ then
 	[ "$start_playback" -gt "$file_num_max" ] && echo -e "# $play_enum_comment\n1" > "${play_enum}" && start_playback=1
 	for content in $content_all
 	do
-	    [ "$file_num" = "$start_playback" ] && spth="`echo $content | sed 's/\&nbsp;/ /g'`" && break
+	    #[ "$file_num" = "$start_playback" ] && spth="`echo $content | sed 's/\&nbsp;/ /g'`" && break
+	    [ "$file_num" -eq "$start_playback" ] && spth="`echo $content | sed 's/\&nbsp;/ /g'`"
+	    [ "$file_num" -gt "$start_playback" ] && spth_next="`echo $content | sed 's/\&nbsp;/ /g'`" && break
 	    file_num=$((${file_num}+1))
 	done
     fi
-    ext="${spth##*.}"
-    ext="`echo $ext | tr [:upper:] [:lower:]`"
+    ext="${spth##*.}"; ext="`echo $ext | tr [:upper:] [:lower:]`"
+    [ -n "$spth_next" ] && ext_next="${spth_next##*.}" && ext_next="`echo $ext_next | tr [:upper:] [:lower:]`"
     [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "<script type='text/javascript'>window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
     if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" -o "$ext" = "cfg" -o "$ext" = "conf" ]
     then
@@ -612,5 +614,6 @@ else
 fi
 [ "$ftype" != "image" ] && echo -n '</div>'
 [ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width='100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
+[ "$ext_next" = "jpg" ] && echo -n "<script language='JavaScript'>preload_image_object = new Image(); preload_image_object.src='root$spth_next';</script>"
 ?>
 </BODY></HTML>
