@@ -22,7 +22,7 @@ then
     for scr_file in $scr_files
     do
 	echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
-	echo ${scr_file}
+	${scr_file}
     done
 fi
 
