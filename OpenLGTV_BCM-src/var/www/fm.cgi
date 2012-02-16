@@ -777,7 +777,7 @@ function selectItem()
 
 function play()
 	{
-	var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&timeout=6000';
+	var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&timeout=7000';
 	window.location=dest;
 	}
 
@@ -815,23 +815,23 @@ then
     echo "<center><b><font size='+4' color='yellow'><br/>Loading movie info for file:<br/><font size='+3'><br/>$movieinfo_file</font></font></b></center>"
     echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\"" >> /tmp/var/log/fm/imdb.log
     [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> /tmp/var/log/fm/imdb.log
-    echo "<script type='text/javascript'> \
-	document.body.innerHTML = '';"
+    echo -e "<script type='text/javascript'> \n\
+	    document.body.innerHTML = '';"
     if [ -f "$movieinfo_fileimg" ]
     then
-	sleep 1
+	#sleep 1
 	movieinfo_fileimg="${movieinfo_fileimg//'/\\'}"
-	#    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:0px solid black;'); \
-	echo "\
-	    var dialog_win='movieinfo'; \
-	    var newdiv = document.createElement('div'); \
-	    var newdivWidth=window.innerWidth; \
-	    var newdivHeight=window.innerHeight; \
-	    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px;'); \
-	    newdiv.id = 'dialogWin'; \
-	    document.body.appendChild(newdiv); \
-	    var kb='<img src=\"root$movieinfo_fileimg\" alt=\"$movieinfo_fileimg\"/>; \
-	    newdiv.innerHTML = kb; \
+	#    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:0px solid black;'); \n\
+	echo -e "\
+	    var dialog_win='movieinfo'; \n\
+	    var newdiv = document.createElement('div'); \n\
+	    var newdivWidth=window.innerWidth; \n\
+	    var newdivHeight=window.innerHeight; \n\
+	    newdiv.setAttribute('style', 'background: #000000; position:absolute; padding:0px 0px 0 0px; top: 0px; left: 0px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px;'); \n\
+	    newdiv.id = 'dialogWin'; \n\
+	    document.body.appendChild(newdiv); \n\
+	    var kb='<img src=\"root$movieinfo_fileimg\" alt=\"$movieinfo_fileimg\"/>'; \n\
+	    newdiv.innerHTML = kb; \n\
 	    dialog_displayed = 1;"
     fi
 	#    var kb='<img src=\"root$movieinfo_fileimg\" alt=\"$movieinfo_fileimg\"/><div style='opacity:0.6; filter:alpha(opacity=60); position:absolute; padding:0px 0px 0 0px; top: 400px; left: 400px; width: 110px; height: 30px;'><img src='Images/Keyboard/ok_button.png'/></div>; \

@@ -314,7 +314,8 @@ then
 	    echo "</script>"
 	fi
     fi
-    [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]000/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
+    #[ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]000/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
+    [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]0*/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
 fi
 
 ?>
@@ -364,7 +365,12 @@ then
     else
 	if [ "$ftype" = "image" ]
 	then
-	    echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image',0);\" width='1%' src='root$spth'/></div>"
+	    if [ "$ext_next" = "jpg" ]
+	    then
+		echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image',0); preload_image_object = new Image(); preload_image_object.src='root$spth_next';\" width='1%' src='root$spth'/></div>"
+	    else
+		echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image',0);\" width='1%' src='root$spth'/></div>"
+	    fi
 	else
 	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/><br/></font>"
 	fi
@@ -614,6 +620,6 @@ else
 fi
 [ "$ftype" != "image" ] && echo -n '</div>'
 [ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width='100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
-[ "$ext_next" = "jpg" ] && echo -n "<script language='JavaScript'>preload_image_object = new Image(); preload_image_object.src='root$spth_next';</script>"
+# [ "$ext_next" = "jpg" ] && echo -n "<script language='JavaScript'>preload_image_object = new Image(); preload_image_object.src='root$spth_next';</script>"
 ?>
 </BODY></HTML>
