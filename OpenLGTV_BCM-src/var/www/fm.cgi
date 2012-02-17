@@ -777,7 +777,7 @@ function selectItem()
 
 function play()
 	{
-	var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&timeout=7000';
+	var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&timeout=7000&imgzoom=0';
 	window.location=dest;
 	}
 

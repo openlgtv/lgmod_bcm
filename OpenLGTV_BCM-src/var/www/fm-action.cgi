@@ -91,12 +91,15 @@ else
 fi
 [ "$lpthx" = "/" -o "$lpthx" = "." ] && export lpthx=""
 [ "$rpthx" = "/" -o "$rpthx" = "." ] && export rpthx=""
+[ -z "$FORM_timeout" ] && FORM_timeout=7000
+[ -z "$FORM_imgzoom" ] && FORM_imgzoom=0
 
 echo "var side = '$side';"
 echo "var lpth = '$lpth';"
 echo "var rpth = '$rpth';"
 echo "var xselect = '$xselect';"
 echo "var refreshTime = '$FORM_timeout';"
+echo "var imgZoom = $FORM_imgzoom;"
 
 ?>
 
@@ -108,10 +111,14 @@ var side = 'r';
 var nside = side;
 var winWidth = window.innerWidth;
 var winHeight = window.innerHeight;
-var imgZoom = 0;
+//var imgZoom = 0;
 var h = 0;
 var w = 0;
 var scroll = 0;
+var regexpTimeout=/timeout=[0-9]+/gim;
+var regexpImgZoom=/imgzoom=[0-9]+/gim;
+var winLoc=window.location.href;
+var currentImage;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
@@ -160,11 +167,11 @@ function check(e)
 			}
 		else if (key==13) 
 			{
-			switch(imgZoom)
+			switch(window.imgZoom)
 				{
-				case 0: resizeImage('image',imgZoom); imgZoom=1; break;
-				case 1: resizeImage('image',imgZoom); imgZoom=2; break
-				case 2: resizeImage('image',imgZoom); imgZoom=0; break;
+				case 0: window.imgZoom=1; resizeImage('image',window.imgZoom); break;
+				case 1: window.imgZoom=2; resizeImage('image',window.imgZoom); break;
+				case 2: window.imgZoom=0; resizeImage('image',window.imgZoom); break;
 				}
 			return false;
 			}
@@ -241,8 +248,21 @@ function resizeImage(imgId,zoomType)
 		{
 		case 0: if (picAR < winAR) { pic.height = winHeight; pic.width=winHeight*picAR; } else { pic.width = winWidth; pic.height=winWidth/picAR; }; break; //fullscreen respect aspect ratio
 		case 1: pic.width = winWidth; pic.height = winHeight; break; // stretch to fit the screen regardless aspect ratio
-		case 2: pic.width = w*100; pic.height = h*100; break; // original image size
+		case 2: pic.width = w; pic.height = h; break; // original image size
 		}
+		//case 2: pic.width = w*100; pic.height = h*100; break; // original image size
+	}
+
+function adjustURL()
+	{
+	winLoc=winLoc.replace(window.regexpTimeout, 'timeout='+window.refreshTime);
+	winLoc=winLoc.replace(window.regexpImgZoom, 'imgzoom='+window.imgZoom);
+	window.location.replace(winLoc);
+	}
+
+function setRefresh()
+	{
+	setTimeout(adjustURL, window.refreshTime);
 	}
 
 document.defaultAction = true;
@@ -267,7 +287,8 @@ then
 	file_num=1
 	if [ "$ftype" = "directory" ]
 	then
-	    content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
+	    #content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
+	    content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
 	else
 	    spthd="${spth%/*}"
 	    content_all=`grep -v "#" "$spth" | awk -F\n -v spthd="$spthd" '{print spthd "/" $1}' | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
@@ -314,8 +335,7 @@ then
 	    echo "</script>"
 	fi
     fi
-    #[ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]000/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
-    [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]0*/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
+    ############[ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]*/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
 fi
 
 ?>
@@ -367,9 +387,26 @@ then
 	then
 	    if [ "$ext_next" = "jpg" ]
 	    then
-		echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image',0); preload_image_object = new Image(); preload_image_object.src='root$spth_next';\" width='1%' src='root$spth'/></div>"
+		# INFO: DOES IT REALLY MAKE SENSE TO DO SUCH PRELOADING? MAYBE WHOLE CODE SHOULD GET REWRITTEN WITH JAVASCRIPT AND GET RID OF PAGE REFRESHING?
+		#echo -e "<div id='divImage' style='width:100%; height:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
+		echo -e "<div id='divImage' style='width:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
+			 <script>function preloadNextImage() { window.currentImage.style.display='inline'; resizeImage('image',window.imgZoom); preloadImageObject = new Image(); preloadImageObject.src='root$spth_next'; preloadImageObject.style.visibility='hidden'; preloadImageObject.style.display='none'; preloadImageObject.onload=setRefresh; document.getElementById('divImage').appendChild(preloadImageObject); };\n\
+			  currentImage = new Image(); currentImage.id = 'image'; currentImage.style.display='none'; currentImage.src = 'root$spth'; currentImage.onload = preloadNextImage; document.getElementById('divImage').appendChild(currentImage);\n\
+			 </script>\n\
+			 </div>"
+		#echo -e "<div id='divImage' style='width:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
+		#	 <script>function preloadNextImage() { window.currentImage.style.display='inline'; resizeImage('image',window.imgZoom); setRefresh(); };\n\
+		#	  currentImage = new Image(); currentImage.id = 'image'; currentImage.style.display='none'; currentImage.src = 'root$spth'; currentImage.onload = preloadNextImage; document.getElementById('divImage').appendChild(currentImage);\n\
+		#	 </script>\n\
+		#	 </div>"
 	    else
-		echo "<div style='width:100%; height=100%; background-color:black; position:absolute; left:0px; top:0px; align=center; text-align=center;'><img id='image' onload=\"resizeImage('image',0);\" width='1%' src='root$spth'/></div>"
+		#echo "<div style='width:100%; height:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'><img id='image' onload=\"resizeImage('image',0);\" width='1%' src='root$spth'/></div>"
+		#echo -e "<div id='divImage' style='width:100%; height:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
+		echo -e "<div id='divImage' style='width:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
+			 <script>function preloadNextImage() { window.currentImage.style.display='inline'; resizeImage('image',window.imgZoom); setRefresh(); };\n\
+			  currentImage = new Image(); currentImage.id = 'image'; currentImage.style.display='none'; currentImage.src = 'root$spth'; currentImage.onload = preloadNextImage; document.getElementById('divImage').appendChild(currentImage);\n\
+			 </script>\n\
+			 </div>"
 	    fi
 	else
 	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/><br/></font>"
@@ -619,7 +656,6 @@ else
     fi
 fi
 [ "$ftype" != "image" ] && echo -n '</div>'
-[ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width='100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
-# [ "$ext_next" = "jpg" ] && echo -n "<script language='JavaScript'>preload_image_object = new Image(); preload_image_object.src='root$spth_next';</script>"
+[ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width:'100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
 ?>
 </BODY></HTML>
