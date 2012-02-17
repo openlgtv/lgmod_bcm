@@ -2,6 +2,13 @@
 
 OpenLGTV BCM Changelog
 
+TODO:
+    * FileManager: make slideshow completely smooth
+    * FileManager: handle Movie Info under OK button or find other button for it
+    * add Network Shares options field in WebUI to tune performance and compatibility
+    * update and test scripts chrooted on SmartTV models
+    * prepare some useful packages (any propositions?) in repository and disable OpenWRT repository by default
+
 0.5.0-beta4 [NOT RELEASED YET]:
     * FIX: FileManager: copy/move/erase actions when mouse was used for file/dir navigation
     * FIX: FileManager: better handling of dirs with special characters
@@ -21,6 +28,7 @@ OpenLGTV BCM Changelog
     * FIX: improve 'run' command in WebUI - make it fit the screen, even when output is big, enable scrolling with channel up/down buttons
     * FIX: navigation to handle up to 10 network shares settings WebUI
     * FIX: follow symlinks when searching for executable scripts in /mnt/user/etc/init.d/
+    * FIX: handling USB storage devices without any partitions
     * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
     * ADD: FileManager: button to view last status of copy/move action after action was detached to background
     * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
@@ -58,6 +66,7 @@ OpenLGTV BCM Changelog
     * CHANGE: rc.mount-netshare is called now as early as network and telnet/ssh got started - it now try to get ARP reply first via arping before it try to mount CIFS/NFS share
     * CHANGE: /mnt/user/init.d is moved to /mnt/user/etc/init.d now
     * CHANGE: mounted shares are now highlighted on Network Shares list in WebUI
+    * CHANGE: remove 'nounix' parameter from CIFS mount command to handle symlinks and permissions
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
     * REMOVE: chrt and chat binaries from SmartTV image for space reason - use BusyBox applets instead
     * REMOVE: libmagic.so as it wasn't used now since 'file' was removed

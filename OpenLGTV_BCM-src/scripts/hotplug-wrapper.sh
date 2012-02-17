@@ -56,7 +56,7 @@ then
     [ "$ACTION" = "remove" ] && (date; rmdir "$USBHID_CONNECTED_DIR" 2>/dev/null;      /etc/rc.d/rc.directfb hotplug $ACTION)     >> /var/log/OpenLGTV_BCM.log &
 fi
 
-if [ "$SUBSYSTEM" = "block" -a "$DEVTYPE" = "disk" ]
+if [ "$SUBSYSTEM" = "block" -a "$DEVTYPE" = "disk" -a "${DEVNAME:0:2}" = "sd" ]
 then
     /etc/rc.d/rc.usb hotplug "$DEVNAME" "$ACTION" "usb${PHYSDEVPATH:43:1}" >> /var/log/OpenLGTV_BCM.log &
     # example: .../rc.usb hotplug sda add usb1

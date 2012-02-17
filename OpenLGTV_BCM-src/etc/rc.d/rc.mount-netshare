@@ -5,7 +5,8 @@
 
 ndrvtab=/mnt/user/cfg/ndrvtab
 usbinit_wait_time=15
-fscheck_wait_time=1.5
+#fscheck_wait_time=1.5
+fscheck_wait_time=2
 
 if [ -f "/tmp/usbdir" ]
 then
@@ -98,7 +99,8 @@ then
 		    fgbg="foreground by WebUI"
 		    bg=""
 		    [ "$WebUI_MOUNT" != "1" ] && bg="&" && fgbg="background at boot"
-		    [ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},nounix,noserverino"
+		    #[ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},nounix,noserverino"
+		    [ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},noserverino"
 		    [ "$fs_type" = "nfs" ] && mountcmd="mount -t nfs ${src} ${full_dst} -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus"
 		    [ -z "$pings" ] && pings=10
 		    echo "OpenLGTV_BCM-DEBUG: rc.mount-netshare: Trying to mount Network Share: automount=$automount fs_type=$fs_type src=$src full_dst=$full_dst opt=$opt uname=$uname pass=$passHidden precache=$precache pings=$pings ..."

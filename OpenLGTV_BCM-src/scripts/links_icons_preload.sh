@@ -2,25 +2,18 @@
 # links_images_preload.sh script by xeros
 # Source code released under GPL License
 
-#TODO: make some logging and make local links in html file without need of sed, remove comments
-#TODO: make running this script only when version changes or no icons_dir/file, not on each boot ?
-
 echo "OpenLGTV_BCM-INFO: links_icons_preload.sh: running..."
 
 icons_dir="/home/netcast_icons/www"
-
-#ilink1="http://smarttv.net46.net/smarttv_logos.zip" # unavailable
 ilink1="http://dl.dropbox.com/u/43758310/smarttv_logos.zip"
-ilink2="http://dl.dropbox.com/u/43758310/smarttv_logos.zip"
-ilink3="http://smarttv.awardspace.info/smarttv_logos.xxx"
-
+ilink2="http://smarttv.awardspace.info/smarttv_logos.xxx"
+ilink3=""
 imd5="a3f458d48113421c5a3a131bc5b44864"
+useragent="Mozilla/5.0 (X11; Linux x86; rv:10.0.1) Gecko/20100101 Firefox/10.0.1"
+#ilinks_count=3
+ilinks_count=2
 
-useragent="Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
-
-ilinks_count=3
-
-if [ ! -d "$icons_dir" -o "$uver" != "$ver" ]
+if [ ! -d "$icons_dir" -o "$uver" != "$ver" -o ! -f "$icons_dir/unknown.png" ]
 then
     echo "OpenLGTV_BCM-INFO: links_icons_preload.sh: OpenLGTV BCM upgrade/downgrade detected - downloading currently supported icons..."
     while [ -z "$PING_OK" ]
@@ -39,10 +32,9 @@ then
 	# ugly workaround for disabled pings on dl.dropbox.com
 	[ "$ihost" = "dl.dropbox.com" ] && ihost="dropbox.com"
 	echo "OpenLGTV_BCM-INFO: links_icons_preload.sh: trying to use download link: $ilink"
-	PING_OK="`ping -4 -c 1 $ihost 2>/dev/null | grep '64 bytes from'`"
+	[ -n "$ihost" ] && PING_OK="`ping -4 -c 1 $ihost 2>/dev/null | grep '64 bytes from'`"
 	sleep 3
     done
-
     cur_dir=`pwd`
     mkdir -p "$icons_dir"
     cd "$icons_dir"
@@ -59,7 +51,5 @@ then
 	rm /tmp/icons.zip
     fi
 fi
-
 cd $cur_dir
-
 echo "OpenLGTV_BCM-INFO: links_icons_preload.sh: exit"

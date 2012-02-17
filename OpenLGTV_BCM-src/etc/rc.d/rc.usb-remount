@@ -15,6 +15,7 @@ do
     mnt_dst="${mnt_dst#*\#}"
     mnt_fs="${mnt##*\#}"
     echo "OpenLGTV_BCM-DEBUG: mnt_src: $mnt_src mnt_dst: $mnt_dst mnt_fs: $mnt_fs"
+    [ "$mnt_src" = "/dev/$device" ] && no_partition=1
     if [ "$mnt_fs" = "ntfs" ]
     then
 	echo "OpenLGTV_BCM-INFO: unmounting NTFS partition: $mnt_src mounted in $mnt_dst"
@@ -30,12 +31,14 @@ do
     fi
 done
 
-for partdev in `fdisk -l | grep ^/dev/$device | grep -v Extended | cut -d" " -f1`
+#for partdev in `fdisk -l | grep ^/dev/$device | egrep -v "Extended|Unknown" | cut -d" " -f1`
+[ -z "$no_partition" ] && for partdev in `fdisk -l | grep ^/dev/$device | egrep "Extended" | cut -d" " -f1`
 do
     mnt_dst=""
     if [ -z `grep "^$partdev" /proc/mounts` ]
     then
 	export fstype=`blkid "$partdev" | grep "^${partdev}" | sed -e 's/^.*TYPE="//g' -e 's/".*//g'` # just in case
+	[ -z "$fstype" ] && export fstype="unknown"
 	echo "OpenLGTV_BCM-INFO: found not mounted USB partition: \"$partdev\", fstype: \"$fstype\""
 	if [ -n "`grep $fstype /proc/filesystems`" ]
 	then
@@ -70,4 +73,5 @@ do
 	fi
     fi
 done
+no_partition=""
 echo "OpenLGTV_BCM-INFO: rc.usb-remount end for device: $device and usbport: $usbport"
