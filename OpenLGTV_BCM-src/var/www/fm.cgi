@@ -814,7 +814,7 @@ then
     movieinfo_fileimg="${movieinfo}/${movieinfo_file}.jpg"
     echo "<center><b><font size='+4' color='yellow'><br/>Loading movie info for file:<br/><font size='+3'><br/>$movieinfo_file</font></font></b></center>"
     echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\"" >> /tmp/var/log/fm/imdb.log
-    [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> /tmp/var/log/fm/imdb.log
+    [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> /tmp/var/log/fm/imdb.log && sleep 0.5
     echo -e "<script type='text/javascript'> \n\
 	    document.body.innerHTML = '';"
     if [ -f "$movieinfo_fileimg" ]
