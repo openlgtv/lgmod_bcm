@@ -6,13 +6,7 @@
 
 [ -z "$ywedir" ] && ywedir=/mnt/addon/ywe
 
-if [ -z "$OpenLGTV_BCM_USB" ]
-then
-	if [ -f "/tmp/usbdir" ]
-	then
-	    export OpenLGTV_BCM_USB="`cat /tmp/usbdir`/OpenLGTV_BCM"
-	fi
-fi
+[ -z "$OpenLGTV_BCM_USB" ] && [ -f "/tmp/usbdir" ] && export OpenLGTV_BCM_USB="`cat /tmp/usbdir`/OpenLGTV_BCM"
 ywedir_old="$ywedir"
 [ -d "$OpenLGTV_BCM_USB/ywe" ] && ywedir="$OpenLGTV_BCM_USB/ywe"
 if [ "$ywedir" != "$ywedir_old" ]

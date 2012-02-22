@@ -127,7 +127,7 @@ then
     wget -q -U "$useragent" -O - "$url" > $log_file
     echo '<BODY bgcolor="black">'
     echo '<font size="+3" color="green">'
-    echo '<center><!-- img src="http://www.ipla.tv/images/logo.png"/ --><font size="+3">NetPlayer<br/>alternative</font><br/>by xeros<br/><br/>'
+    echo '<center><font size="+3">NetPlayer<br/>alternative</font><br/>by xeros<br/><br/>'
     echo '<Table id="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
@@ -139,10 +139,7 @@ then
 	feedUrl=`echo $feedEnclosure | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	feedType=`echo $feedEnclosure | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
-	if [ "$(($item_nr % 2))" = "0" ]
-	then
-	    echo "</tr><tr>"
-	fi
+	[ "$(($item_nr % 2))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
     done
     echo '</tr>'

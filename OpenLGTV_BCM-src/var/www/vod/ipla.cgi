@@ -32,19 +32,19 @@ Content-type: text/html
 <?
 useragent="tv_samsung/4"
 menuLoc="http://getmedia.redefine.pl/tv/menu.json?login=common_user&passwdmd5="
+log_dir="/var/log/vod/ipla"
 if [ "$FORM_url" != "" ]
 then
     url="$FORM_url"
     type="$FORM_type"
-    log_file=/var/log/vod/ipla/$type.log
     echo "var col = 3; //number of 'cells' in a row"
 else
     url="$menuLoc"
     type=menu
-    log_file=/var/log/vod/ipla/$type.log
     echo "var col = 1; //number of 'cells' in a row"
 fi
-[ ! -d "/var/log/vod/ipla" ] && mkdir -p /var/log/vod/ipla
+log_file="$log_dir/$type.log"
+[ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 ?>
 
 var current;
@@ -138,12 +138,9 @@ then
 	[ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\",*}"
 	contentTitle="${content#*\"feedTitle\":\"}"
 	[ "$contentTitle" != "$content" ] && feedTitle="${contentTitle%%\"*}"
-	if [ "${feedUrl#*/category/}" != "${feedUrl}" ]
-	then
-	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=category&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
-	else
-	    echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=related&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
-	fi
+	next_type=related
+	[ "${feedUrl#*/category/}" != "${feedUrl}" ] && next_type=category
+	echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=${next_type}&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
 	item_nr=$(($item_nr+1))
     done
 else
@@ -162,10 +159,7 @@ else
 	    contentUrl="${content#*\"url\":\"}"
 	    [ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\",*}"
 	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=http://$feedUrl\" target=\"_parent\"><img src=\"http://$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>" | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/\\//g'
-	    if [ "$(($item_nr % 3))" = "0" ]
-	    then
-		echo "</tr><tr>"
-	    fi
+	    [ "$(($item_nr % 3))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	done
     else
@@ -204,19 +198,13 @@ else
 		[ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\"*}"
 		if [ "$feedVideo" != "" ]
 		then
-		    if [ "$hd" = "1" ]
-		    then
-			echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate HD!<br/>$feedTitle</b></a></center></td>" | sed -e 's#http//#http://#g' -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/u2\(...\)/\&\#x2\1\;/g' -e 's/\\//g'
-		    else
-			echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate<br/>$feedTitle</b></a></center></td>" | sed -e 's#http//#http://#g' -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/u2\(...\)/\&\#x2\1\;/g' -e 's/\\//g'
-		    fi
+		    hd_str=""
+		    [ "$hd" = "1" ] && hd_str=" HD!"
+		    echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"$feedVideo\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>${feedDate}${hd_str}<br/>$feedTitle</b></a></center></td>" | sed -e 's#http//#http://#g' -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/u2\(...\)/\&\#x2\1\;/g' -e 's/\\//g'
 		else
 		    echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate<br/>$feedTitle</b></a></center></td>" | sed -e 's#http//#http://#g' -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/u2\(...\)/\&\#x2\1\;/g' -e 's/\\//g'
 		fi
-		if [ "$(($item_nr % 3))" = "0" ]
-		then
-		    echo "</tr><tr>"
-		fi
+		[ "$(($item_nr % 3))" = "0" ] && echo "</tr><tr>"
 		item_nr=$(($item_nr+1))
 	    done
     fi

@@ -155,10 +155,7 @@ then
 	if [ "$content" != "" ]
 	then
 	    echo "$content" | sed -e "s#<a href=\"/#<a id=\"link$item_nr\" href=\"tvn.cgi\?type=$new_type\&url=http://tvnplayer.pl/#g" -e 's/QQQXXQQQ//g'
-	    if [ "$(($item_nr % 3))" = "0" ]
-	    then
-		echo "</tr><tr>"
-	    fi
+	    if [ "$(($item_nr % 3))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	fi
     done

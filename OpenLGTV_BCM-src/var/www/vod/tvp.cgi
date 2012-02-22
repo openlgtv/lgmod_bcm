@@ -110,22 +110,19 @@ document.defaultAction = true;
 useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"
 
 menuLoc="http://www.tvp.pl/pub/stat/websitelisting?object_id=2919829&child_mode=SIMPLE&rec_count=32&with_subdirs=true&link_as_copy=true&xslt=internet-tv/samsung/websites_listing.xslt&q=&samsungwidget=1&v=2&5"
+log_dir="/var/log/vod/tvp"
 
 if [ "$FORM_url" != "" ]
 then
     url=`echo "$FORM_url" | tr '@$' '?&'`
     type="$FORM_type"
-    log_file=/var/log/vod/tvp/$type.log
 else
     url="$menuLoc"
     type=menu-tvp
-    log_file=/var/log/vod/tvp/$type.log
 fi
+log_file="$log_dir/$type.log"
 
-if [ ! -d "/var/log/vod/tvp" ]
-then
-    mkdir -p /var/log/vod/tvp
-fi
+[ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 
 wget -q -U "$useragent" -O - "$url" > $log_file
 
@@ -153,10 +150,7 @@ then
 	    content3x="${content2x#*\;}"
 	    feedThumb="${content3x%%\;*}"
 	    echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
-	    if [ "$(($item_nr % 4))" = "0" ]
-	    then
-		echo "</tr><tr>"
-	    fi
+	    if [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	fi
     done
@@ -177,10 +171,7 @@ else
 	    content3x="${content2x#*\;}"
 	    feedThumb="${content3x%%\;*}"
 	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>" | tr '|' ' '
-	    if [ "$(($item_nr % 4))" = "0" ]
-	    then
-		echo "</tr><tr>"
-	    fi
+	    if [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	done
     fi

@@ -66,7 +66,7 @@ line=`echo "$filename" | \
 	    -e 's/\([+-]\)[a-uw-z][a-uw-z]\([+-]\)/\1\2/gI' \
 	    -e 's/\([+-]\)XY\([io]n\)XY\([+-]\)/\1\2\3/gI' \
 	    -e 's/\([+-]\)side[+-]*side/\1/gI' \
-	    -e 's/\+[am][vkp][iv4]$//gI' \
+	    -e 's/\+[am][vkp][iv34]$//gI' \
 	    -e 's/\([+-]\)m2ts/\1/gI' \
 	    -e 's/\([+-]\)ts$/\1/gI' \
 	    -e 's/\([+-]\)ps3/\1/gI' \
@@ -118,12 +118,13 @@ echo "TRY: $try"
 count=1
 #exit 0
 rm -f "${filename}.jpg"
+[ -n "${outdir}" ] && mkdir -p "${outdir}" || outdir=.
 for name in ${try//-/+}
 do
     name="${name:2}"
-    url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=yes${lang}&name=${name}"
+    #url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=yes${lang}&name=${name}"
+    url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=y&box=dvd&font=tahoma&genres=y&post=y&tagline=y&time=hours${lang}&name=${name}"
     #echo "URL: $url"
-    [ -n "${outdir}" ] && mkdir -p "${outdir}" || outdir=.
     wget -q "$url" -O "${outdir}/${filename}.jpg"
     size=`stat -c '%s' "${outdir}/${filename}.jpg" 2>/dev/null || echo 0`
     [ "$size" -gt "50000" ] && echo "Succeed: filename: \"$filename\" name: \"$name\" trycount: $count outimage: \"${outdir}/${filename}.jpg\"" && break
