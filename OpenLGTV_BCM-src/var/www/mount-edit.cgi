@@ -12,9 +12,11 @@ content-type: text/html
 			    then
 				input_file=/mnt/user/cfg/ethwaketab
 				export pagename="Ether Wake"
+				log_info="$pagename"
 			    else
 				input_file=/mnt/user/cfg/ndrvtab
 				export pagename="Network Shares"
+				log_info="NetShare mounts"
 			    fi
 			    include/header_links.cgi.inc
 			?>
@@ -34,8 +36,7 @@ content-type: text/html
 
 id="$FORM_id"
 
-#if [ "$FORM_qURL" != "" -a "$FORM_radio1" != "" -a "$id" != "" ]
-if [ "$FORM_qURL" != "" -a "$FORM_action" != "" -a "$id" != "" ]
+if [ -n "$FORM_qURL" -a -n "$FORM_action" -a -n "$id" ]
 then
     automount=0
     precache=0
@@ -47,6 +48,13 @@ then
 	qPath="$FORM_qPath"
     else
 	[ "$FORM_type" != "etherwake" ] && qPath="NetShare"
+    fi
+    if [ "$FORM_type" = "etherwake" -a -z "$FORM_qPassw" ]
+    then
+	# try to resolve MAC from IP or hostname if MAC was not specified
+	[ -n "$FORM_qUser" ] && FORM_qPassw=`arping -fc 3 "$FORM_qUser" | grep -m1 Unicast | cut -d" " -f5 | tr -d '[]'`
+	[ -z "$FORM_qPassw" ] && IP_MAC=`arping -fc 3 "$FORM_qURL" | grep -m1 Unicast | awk '{print $4 "|" $5}' | tr -d '[]'` && FORM_qPassw="${IP_MAC#*|}"
+	[ -z "$FORM_qUser" -a -n "$IP_MAC" ] && FORM_qUser="${IP_MAC%|*}"
     fi
     if [ "`cat ${input_file} | wc -l`" -lt "$id" ]
     then
@@ -277,7 +285,7 @@ fi
 				    <?
 					if [ "$FORM_save" = "1" ]
 					then
-					    echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts file: ${input_file} changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
+					    echo "OpenLGTV_BCM-INFO: WebUI: $log_info file: ${input_file} changed by WebUI..." >> /var/log/OpenLGTV_BCM.log
 					    echo '<center><font size="+3" color="red"><b><span id="spanSAVED">SETTINGS SAVED !!!</span></b></font></center>'
 					else
 					    if [ "$mounting_error" = "1" ]

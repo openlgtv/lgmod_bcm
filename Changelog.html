@@ -7,7 +7,7 @@ TODO:
     * FileManager: handle Movie Info under OK button or find other button for it
     * FileManager: make option to save and restore last panel paths and selection
     * add Network Shares options field in WebUI to tune performance and compatibility
-    * make IP to MAC resolving in Ether Wake in WebUI
+    * add upper/lower case switching button in WebUI, Internet Browser and FileManager
     * poweroff scripts to 1. kill all processes, 2. security check, 3. save history/append log, 4. unmount/remount still mounted writable partitions
     * update and test scripts chrooted on SmartTV models
     * enable YWE in North American models outside of USA
@@ -74,6 +74,7 @@ TODO:
     * CHANGE: /mnt/user/init.d is moved to /mnt/user/etc/init.d now
     * CHANGE: mounted shares are now highlighted on Network Shares list in WebUI
     * CHANGE: remove 'nounix' parameter from CIFS mount command to handle symlinks and permissions
+    * CHANGE: make hostname/IP to MAC resolving in Ether Wake in WebUI after pressing Save button if MAC was not specified
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
     * REMOVE: chrt and chat binaries from SmartTV image for space reason - use BusyBox applets instead
     * REMOVE: libmagic.so as it wasn't used now since 'file' was removed
