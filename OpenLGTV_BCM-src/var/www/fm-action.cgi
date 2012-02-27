@@ -291,9 +291,8 @@ then
 	    content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
 	else
 	    spthd="${spth%/*}"
-	    # TODO TODO TODO
-	    content_all=`grep -v "#" "$spth" | if [ "${1:0:1}" = "/" ]; then awk -F'\n' -v spthd="$spthd" '{print spthd "/" $1}'; else awk -F'\n' -v spthd="$spthd" '{print spthd "/" $1}'; fi | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
-	    #content_all=`grep -v "#" "$spth" | awk -F'\n' -v spthd="$spthd" '{print spthd "/" $1 "X" $2 "Y" $3}'`
+	    playlist=1
+	    content_all=`egrep -v "#|^$" "$spth" | awk -F'No_FiElD_DeLiM' -v spthd="$spthd" '{if (match($0,/^\//)) {print "root" $1} else {if (match($0,/:\/\//)) {print $1} else {print "root" spthd "/" $1}}}' | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
 	    echo "$content_all" > /tmp/content_all.log
 	    #play_enum="${spth}.info"
 	    spth="${spthd}"
@@ -319,6 +318,9 @@ then
     ext="${spth##*.}"; ext="`echo $ext | tr [:upper:] [:lower:]`"
     [ -n "$spth_next" ] && ext_next="${spth_next##*.}" && ext_next="`echo $ext_next | tr [:upper:] [:lower:]`"
     [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "<script type='text/javascript'>window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
+    full_spth="$spth"
+    full_spth_next="$spth_next"
+    [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"    
     if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" -o "$ext" = "cfg" -o "$ext" = "conf" ]
     then
 	ftype=text
@@ -330,9 +332,9 @@ then
 	    echo "<script type='text/javascript'>"
 	    if [ "$refresh" = "1" ]
 	    then
-		echo "setTimeout(\"window.location='root$spth'\",2000);"
+		echo "setTimeout(\"window.location='$full_spth'\",2000);"
 	    else
-		echo "setTimeout(\"window.location.replace('root$spth')\",2000);"
+		echo "setTimeout(\"window.location.replace('$full_spth')\",2000);"
 	    fi
 	    echo "setTimeout(\"window.location.replace(window.location.href)\",4000);"
 	    echo "</script>"
@@ -393,8 +395,8 @@ then
 		# INFO: DOES IT REALLY MAKE SENSE TO DO SUCH PRELOADING? MAYBE WHOLE CODE SHOULD GET REWRITTEN WITH JAVASCRIPT AND GET RID OF PAGE REFRESHING?
 		#echo -e "<div id='divImage' style='width:100%; height:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
 		echo -e "<div id='divImage' style='width:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
-			 <script>function preloadNextImage() { window.currentImage.style.display='inline'; resizeImage('image',window.imgZoom); preloadImageObject = new Image(); preloadImageObject.src='root$spth_next'; preloadImageObject.style.visibility='hidden'; preloadImageObject.style.display='none'; preloadImageObject.onload=setRefresh; document.getElementById('divImage').appendChild(preloadImageObject); };\n\
-			  currentImage = new Image(); currentImage.id = 'image'; currentImage.style.display='none'; currentImage.src = 'root$spth'; currentImage.onload = preloadNextImage; document.getElementById('divImage').appendChild(currentImage);\n\
+			 <script>function preloadNextImage() { window.currentImage.style.display='inline'; resizeImage('image',window.imgZoom); preloadImageObject = new Image(); preloadImageObject.src='$full_spth_next'; preloadImageObject.style.visibility='hidden'; preloadImageObject.style.display='none'; preloadImageObject.onload=setRefresh; document.getElementById('divImage').appendChild(preloadImageObject); };\n\
+			  currentImage = new Image(); currentImage.id = 'image'; currentImage.style.display='none'; currentImage.src = '$full_spth'; currentImage.onload = preloadNextImage; document.getElementById('divImage').appendChild(currentImage);\n\
 			 </script>\n\
 			 </div>"
 		#echo -e "<div id='divImage' style='width:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
@@ -407,7 +409,7 @@ then
 		#echo -e "<div id='divImage' style='width:100%; height:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
 		echo -e "<div id='divImage' style='width:100%; background-color:black; position:absolute; left:0px; top:0px; align:center; text-align:center;'>\n\
 			 <script>function preloadNextImage() { window.currentImage.style.display='inline'; resizeImage('image',window.imgZoom); setRefresh(); };\n\
-			  currentImage = new Image(); currentImage.id = 'image'; currentImage.style.display='none'; currentImage.src = 'root$spth'; currentImage.onload = preloadNextImage; document.getElementById('divImage').appendChild(currentImage);\n\
+			  currentImage = new Image(); currentImage.id = 'image'; currentImage.style.display='none'; currentImage.src = '$full_spth'; currentImage.onload = preloadNextImage; document.getElementById('divImage').appendChild(currentImage);\n\
 			 </script>\n\
 			 </div>"
 	    fi

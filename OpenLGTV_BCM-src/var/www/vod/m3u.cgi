@@ -3,7 +3,7 @@ Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
-<HEAD>
+<head>
 
 <!-- m3u.cgi by xeros -->
 <!-- Source code released under GPL License -->
@@ -94,7 +94,6 @@ document.defaultAction = true;
 </head>
 <body>
 
-<!-- center><img src="http://...png"/><font size="+3"><br/>parser</font><br/>by xeros<br/></center><br/><br/ -->
 <center><font size="+3">M3U playlist parser</font><br/>by xeros<br/></center><br/>
 <font size="+2">
 <center>
@@ -107,27 +106,37 @@ useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.
 echo "Playlist loaded from: $FORM_url<br/>"
 
 menuLoc="$FORM_url"
+listDir="${menuLoc%/*}"
 log_file=/var/log/vod/m3u.log.m3u
 [ ! -d "/var/log/vod" ] && mkdir -p /var/log/vod
 
 rm -f $log_file $log_file.html > /dev/null 2>&1
 
-wget -q -U "$useragent" "$menuLoc" -O - | sed -e 's/\r//g' -e 's/.*EXTM3U.*//g' -e 's/#EXTINF:/<br>/g' | grep -v "^$" > $log_file
+if [ "${menuLoc:0:1}" = "/" ]
+then
+    [ -f "$menuLoc" ] && cat "$menuLoc"
+else
+    #[ "${menuLoc#*://}" = "$menuLoc" ] # test for :// URL - would it be useful?
+    wget -q -U "$useragent" "$menuLoc" -O -
+fi | sed -e 's/\r//g' -e 's/.*EXTM3U.*//g' | grep -v "^$" > $log_file
+
 cp -f $log_file $log_file.html
 
 item_nr=1
 
-for ulink in `grep "://" $log_file`
+#for ulink in `grep "://" $log_file`
+SIFS="$IFS"
+IFS=$'\n'
+for ulink in `grep -v "#EXTINF:" $log_file`
 do
-    sed -i -e "s#^\($ulink\)#<a id=\"link$item_nr\" href=\"\1\">\1</a>#g" $log_file.html
+    ulink2="$ulink"
+    [ "${ulink:0:1}" != "/" -a "${ulink#*://}" = "$ulink" ] && ulink2="$listDir/$ulink"
+    sed -i -e "s#^\($ulink\)#<a id=\"link$item_nr\" href=\"$ulink2\">\1</a><br/>#g" $log_file.html
     item_nr=$(($item_nr+1))
 done
+IFS="$SIFS"
 
-cat $log_file.html
-
-#wget -q -U "$useragent" "$menuLoc" -O - | \
-#    sed -e 's/\r//g' -e 's/.*EXTM3U.*//g' -e 's/#EXTINF:/<br>/g' -e 's#\(.*://.*\)#<a href="\1">\1</a>#g' | \
-#    grep -v "^$"
+cat $log_file.html | sed -e 's/#EXTINF://g' -e 's#\(href=\"\)/#\1/root/#g'
 ?>
 
 </center></font>

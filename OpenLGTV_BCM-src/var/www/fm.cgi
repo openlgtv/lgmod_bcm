@@ -138,7 +138,7 @@ if [ -f "$cpth" ]
 then
     echo "var cpth = '$cpth';"
     echo "var dest='fm-action.cgi?action=play&side=$side&${side}pth=$cpth&${oside}pth=$opth&select=${selected}';"
-    sleep 1
+    #sleep 1
     echo "window.location.replace(dest);"
 fi
 
@@ -906,15 +906,16 @@ mountpoints_length="${#mountpoints}"
 	    else
 		limage="generic.gif"
 	    fi
-	    #if [ "${lfilename_ext}" != "" ]
-	    #then
-		#case "${lfilename_ext}" in
+	    if [ "${lfilename_ext}" != "" ]
+	    then
 		#    avi ) dlink="fm-action.cgi?action=play&side=$side&lpath=$lpth/$lfilename_space&rpath=$rpth&link=$lpth/$lfilename_space";;
-		#    *) dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth";;
-		#esac
-	    #else
+		case "${lfilename_ext}" in
+		    m3u) dlink="vod/m3u.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth&url=$lpth/$lfilename_space";;
+		    *) dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth";;
+		esac
+	    else
 		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
-	    #fi
+	    fi
 	fi
 	# TODO?: check if file/dir is mountpoint - all methods are slow - paradoxally grep is fastest when the list is long
 	# string length comparision is good for not too long strings matchings - few mount points
