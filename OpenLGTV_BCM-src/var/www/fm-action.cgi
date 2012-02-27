@@ -291,7 +291,10 @@ then
 	    content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
 	else
 	    spthd="${spth%/*}"
-	    content_all=`grep -v "#" "$spth" | awk -F\n -v spthd="$spthd" '{print spthd "/" $1}' | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
+	    # TODO TODO TODO
+	    content_all=`grep -v "#" "$spth" | if [ "${1:0:1}" = "/" ]; then awk -F'\n' -v spthd="$spthd" '{print spthd "/" $1}'; else awk -F'\n' -v spthd="$spthd" '{print spthd "/" $1}'; fi | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
+	    #content_all=`grep -v "#" "$spth" | awk -F'\n' -v spthd="$spthd" '{print spthd "/" $1 "X" $2 "Y" $3}'`
+	    echo "$content_all" > /tmp/content_all.log
 	    #play_enum="${spth}.info"
 	    spth="${spthd}"
 	fi
