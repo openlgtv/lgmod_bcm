@@ -81,8 +81,18 @@ document.write('<style type="text/css">td.filename {width:800px;}</style>');
 
 <?
 
-[ ! -d "/tmp/var/log/fm" ] && mkdir -p "/tmp/var/log/fm" 2>/dev/null &
-[ -f "/tmp/var/log/fm/last_played.info" ] && rm -f "/tmp/var/log/fm/last_played.info" 2>/dev/null &
+log_dir=/var/log/fm
+
+[ ! -d "$log_dir" ] && mkdir -p "$log_dir" 2>/dev/null &
+[ -f "$log_dir/last_played.info" ] && rm -f "$log_dir/last_played.info" 2>/dev/null &
+paths_file="$log_dir/last_paths.log"
+
+if [ "$FORM_type" = "restore_last" ]
+then
+    [ -f "$paths_file" ] && source "$paths_file"
+else
+    echo -e "FORM_side=\"${FORM_side}\"\nFORM_lpth=\"${FORM_lpth}\"\nFORM_rpth=\"${FORM_rpth}\"\nFORM_select=\"${FORM_select}\"\nFORM_lselected=\"${FORM_lselected}\"\nFORM_rselected=\"${FORM_rselected}\"\n" > "$paths_file" &
+fi
 
 if [ "$FORM_side" != "" ]
 then
@@ -808,12 +818,12 @@ fi
 if [ "$FORM_action" = "movieinfo" -a "$cpth" != "" -a "$FORM_file" != "" ]
 then
     movieinfo="`dirname "$FORM_file"`/.MovieInfo"
-    mkdir -p "$movieinfo" > /dev/null 2>&1 || movieinfo="/tmp/var/log/fm/.MovieInfo" && mkdir -p "$movieinfo" > /dev/null 2>&1
+    mkdir -p "$movieinfo" > /dev/null 2>&1 || movieinfo="$log_dir/.MovieInfo" && mkdir -p "$movieinfo" > /dev/null 2>&1
     movieinfo_file="`basename "$FORM_file"`"
     movieinfo_fileimg="${movieinfo}/${movieinfo_file}.jpg"
     echo "<center><b><font size='+4' color='yellow'><br/>Loading movie info for file:<br/><font size='+3'><br/>$movieinfo_file</font></font></b></center>"
-    echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\"" >> /tmp/var/log/fm/imdb.log
-    [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> /tmp/var/log/fm/imdb.log && sleep 0.5
+    echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\"" >> "$log_dir/imdb.log"
+    [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> "$log_dir/imdb.log" && sleep 0.5
     echo -e "<script type='text/javascript'> \n\
 	    document.body.innerHTML = '';"
     if [ -f "$movieinfo_fileimg" ]
