@@ -60,6 +60,8 @@ keys['9'].ctr = 0;
 keys['9'].char = ['w','x','y','z','9'];
 
 var append=false;
+var upper=false;
+var key_char='';
 var str='';
 var timer;
 var prevNum=null;
@@ -68,17 +70,13 @@ var currElementName='txtURL';
 function keypad(num)
 {
   var currFocusedElement = document.forms['URL'].elements[currElementName];
-  if (prevNum!=null && prevNum!=num) { append=true; }
-  if (keys[num].ctr>keys[num].char.length-1) keys[num].ctr=0; //go back to first item in keypad
-  if (append) 
-	{
-	keys[num].ctr=0; //go back to first item in keypad
-	str=currFocusedElement.value+keys[num].char[keys[num].ctr]; 
-	}
-  else 
-	{
-	str=(currFocusedElement.value.length==0) ? currFocusedElement.value=keys[num].char[keys[num].ctr]:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+keys[num].char[keys[num].ctr];
-	}
+  if (prevNum!=null && prevNum!=num) append=true;
+  if (keys[num].ctr>keys[num].char.length-1 || append) keys[num].ctr=0; //go back to first item in keypad
+  if (upper) key_char=keys[num].char[keys[num].ctr].toUpperCase(); else key_char=keys[num].char[keys[num].ctr];
+  if (append)
+	str=currFocusedElement.value+key_char;
+  else
+	str=(currFocusedElement.value.length==0) ? currFocusedElement.value=key_char:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+key_char;
   currFocusedElement.value=str;
   keys[num].ctr++;
   prevNum=num;
@@ -132,7 +130,9 @@ function check(e)
 				{
 				//Write the letter on the currFocusedElement field
 				var URLText = document.forms['URL'].elements[currElementName].value;
-				URLText = URLText + document.links['c' + next].name;
+				var key_write=document.links['c' + next].name;
+				if (upper) key_write=key_write.toUpperCase();
+				URLText = URLText + key_write;
 				document.forms['URL'].elements[currElementName].value = URLText;
 				}
 			}
@@ -206,6 +206,14 @@ function check(e)
 			if (!elem.focused)
 			    { keypad('9'); }
 			}
+		else if (key==19|key==220) 
+			{
+			//the PAUSE button on the remote control have been pressed or '\' on keyboard
+			if (upper) upper=false; else upper=true;
+			//Prevent default action
+			e.preventDefault();
+			return false;
+			}
 		else if (key==403) 
 			{
 			//the red button on the remote control have been pressed
@@ -237,9 +245,10 @@ function check(e)
 			ShowHideKeyboardTab();
 			return false;
 			}
-		else if (key==457|key==19) 
+		//else if (key==457|key==19) // INFO or PAUSE
+		else if (key==457|key==413) 
 			{
-			//the info or pause button on the remote control have been pressed
+			//the INFO or STOP button on the remote control have been pressed
 			//window.location='links.html';
 			GoToNetCastLinks();
 			}
@@ -268,7 +277,9 @@ function DirectWriteKey(key)
 	{
 	//Write the letter on the currFocusedElement field
 	var URLText = document.forms['URL'].elements[currElementName].value;
-	URLText = URLText + key;
+	var key_write=key;
+	if (upper) key_write=key_write.toUpperCase();
+	URLText = URLText + key_write;
 	document.forms['URL'].elements[currElementName].value = URLText;
 	}
 

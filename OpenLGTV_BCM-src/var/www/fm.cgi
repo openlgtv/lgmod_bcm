@@ -216,6 +216,8 @@ keys['9'].ctr = 0;
 keys['9'].char = ['w','x','y','z','9'];
 
 var append=false;
+var upper=false;
+var key_char='';
 var str='';
 var timer;
 var prevNum=null;
@@ -225,21 +227,13 @@ var dialog_win;
 function keypad(num)
 {
   var currFocusedElement = document.forms['text'].elements[currElementName];
-  if (prevNum!=null && prevNum!=num) 
-	{
-     append=true;
-	}
-  if (keys[num].ctr>keys[num].char.length-1) keys[num].ctr=0; //go back to first item in keypad
-  if (append) 
-	{
-	keys[num].ctr=0; //go back to first item in keypad
-     str=currFocusedElement.value+keys[num].char[keys[num].ctr]; 
-	 
-	}
-  else 
-	{
-     str=(currFocusedElement.value.length==0) ? currFocusedElement.value=keys[num].char[keys[num].ctr]:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+keys[num].char[keys[num].ctr];
-	}
+  if (prevNum!=null && prevNum!=num) append=true;
+  if (keys[num].ctr>keys[num].char.length-1 || append) keys[num].ctr=0; //go back to first item in keypad
+  if (upper) key_char=keys[num].char[keys[num].ctr].toUpperCase(); else key_char=keys[num].char[keys[num].ctr];
+  if (append)
+	str=currFocusedElement.value+key_char;
+  else
+	str=(currFocusedElement.value.length==0) ? currFocusedElement.value=key_char:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+key_char;
   currFocusedElement.value=str;
   keys[num].ctr++;
   prevNum=num;
@@ -314,14 +308,19 @@ function check(e)
 			return false;
 			}
 		    }
-		//else if (key==220) 
 		else if (key==19|key==220) 
 			{
 			//the PAUSE button on the remote control have been pressed or '\' on keyboard
-			//Set the same panel location path as current on other panel
-			var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;
-			window.location=dest;
+			if (dialog_displayed==1&&dialog_win!='movieinfo')
+			    if (upper) upper=false; else upper=true;
+			else 
+			    {
+			    //Set the same panel location path as current on other panel
+			    var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;
+			    window.location=dest;
+			    }
 			//Prevent default action
+			e.preventDefault();
 			return false;
 			}
 		//else if (key==19) 

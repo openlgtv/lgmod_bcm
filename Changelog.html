@@ -4,8 +4,8 @@ OpenLGTV BCM Changelog
 
 TODO:
     * FileManager: make slideshow completely smooth, allow pause and back+forward actions
+    * insert characters in cursor position in WebUI, Internet Browser and FileManager dialogs, not always at the end of string
     * add Network Shares options field in WebUI to tune performance and compatibility
-    * add upper/lower case switching button in WebUI, Internet Browser and FileManager
     * poweroff scripts to 1. kill all processes, 2. security check, 3. save history/append log, 4. unmount/remount still mounted writable partitions
     * udpxy integration for udp:// and rtp:// links
     * update and test scripts chrooted on SmartTV models
@@ -60,6 +60,7 @@ TODO:
     * ADD: send_key.sh script to pass button key codes to (OPEN)RELEASE, with support for key combinations
     * ADD: hid-sunplus.ko kernel module for some USB wireless keyboard+mouse combo devices
     * ADD: updxy to handle udp:// streams in extroot
+    * ADD: upper/lower case switch in WebUI, Internet Browser and FileManager on Pause button press
     * UPDATE: OPENRELEASE upgrade to version 2.1.2-15-gf8f2743
     * UPDATE: ntfs-3g upgrade to version 2012.1.15
     * UPDATE: tmux upgrade from 1.5 to 1.6
@@ -78,6 +79,7 @@ TODO:
     * CHANGE: mounted shares are now highlighted on Network Shares list in WebUI
     * CHANGE: remove 'nounix' parameter from CIFS mount command to handle symlinks and permissions
     * CHANGE: make hostname/IP to MAC resolving in Ether Wake in WebUI after pressing Save button if MAC was not specified
+    * CHANGE: change Pause button action to Stop button in Internet Browser for NetCast links
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
     * REMOVE: chrt and chat binaries from SmartTV image for space reason - use BusyBox applets instead
     * REMOVE: libmagic.so as it wasn't used now since 'file' was removed

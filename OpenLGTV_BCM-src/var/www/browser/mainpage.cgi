@@ -33,7 +33,6 @@ var ArrLines = new Array();
 function CreateBookmark() {
 
 	txtFile.open("GET", "http://<?= $HTTP_HOST ?>/user/bookmarks.inc?T="+new Date().valueOf(), false);
-	// v- onreadystatechange does not work on FireFox < 4.0
 	txtFile.onreadystatechange = function()
 		{	
 		//alert(txtFile.readyState);
@@ -97,9 +96,7 @@ function SaveBookmark()
 	if (URLText != '')
 		{
 		if (URLText.slice(0,7) != 'http://' && URLText.slice(0,8) != 'file:///')
-			{
 			URLText = 'http://' + URLText;
-			}
 		window.location = 'savebookmark.cgi?bookmarkId=' + current + '&bookmarkURL=' + URLText;
 		}
 	}
@@ -153,9 +150,9 @@ function check(e)
 			//Delete the selected bookmark
 			DeleteBookmark();
 			}
-		else if (key==457|key==19) 
+		else if (key==457|key==413) 
 			{
-			//the info or pause button on the remote control have been pressed
+			//the INFO or STOP button on the remote control have been pressed
 			//window.location='links.html';
 			GoToNetCastLinks();
 			}
@@ -200,23 +197,23 @@ function OnLoadSetCurrent()
 	//SwitchFocusedPage();
 	}
 
-	//windows.PostMessage management
-	//it is necessary to bypass browsers block on cross-domain frames communication.
-	window.addEventListener("message", receiveMessage, false);
+//windows.PostMessage management
+//it is necessary to bypass browsers block on cross-domain frames communication.
+window.addEventListener("message", receiveMessage, false);
 
-	function receiveMessage(event)
+function receiveMessage(event)
+	{
+	if (event.data == 'FocusToYou')
 		{
-		if (event.data == 'FocusToYou')
-			{
-			//Change the page's BgColor.
-			document.bgColor = '#FFFFFF';
-			//set focus on current document
-			document.links['link1'].focus();
-			}
-		return;
+		//Change the page's BgColor.
+		document.bgColor = '#FFFFFF';
+		//set focus on current document
+		document.links['link1'].focus();
 		}
+	return;
+	}
 
-	function SwitchFocusedPage()
+function SwitchFocusedPage()
 	{
 	//Change the pages BgColor.
 	ChangeBgColor();
@@ -331,7 +328,7 @@ document.defaultAction = true;
 		<Table Border=0 cellspacing=0>
 			<tr>
 				<td colspan=2>
-					<a onClick="javascript:GoToNetCastLinks();" href="#"><img src="Images/Keyboard/info_button.png" align="middle" Border="0" /><b>/</b><img src="Images/Keyboard/pause_button.png" align="middle" Border="0" /></a>
+					<a onClick="javascript:GoToNetCastLinks();" href="#"><img src="Images/Keyboard/info_button.png" align="middle" Border="0" /><b>/</b><img src="Images/Keyboard/stop_button.png" align="middle" Border="0" /></a>
 					<b>NetCast services</b>
 				</td>
 				<td colspan=2>

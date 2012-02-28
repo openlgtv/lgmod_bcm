@@ -47,7 +47,9 @@ keys['9'].ctr = 0;
 keys['9'].char = ['w','x','y','z','9'];
 
 var append=false;
+var upper=false;
 var str='';
+var key_char='';
 var timer;
 var prevNum=null;
 var txt_edit=0;
@@ -57,25 +59,16 @@ function keypad(num)
 	var currFocusedElement = document.forms['URL'].elements[currElementName];
 
 	if (PageElements[currElementIndex].type == 'num')
-		{
-			str=currFocusedElement.value+num;
-		}
+		str=currFocusedElement.value+num;
 	else
 		{
-		if (prevNum!=null && prevNum!=num) 
-			{
-		append=true;
-			}
-		if (keys[num].ctr>keys[num].char.length-1) keys[num].ctr=0; //go back to first item in keypad
+		if (prevNum!=null && prevNum!=num) append=true;
+		if (keys[num].ctr>keys[num].char.length-1 || append) keys[num].ctr=0; //go back to first item in keypad
+		if (upper) key_char=keys[num].char[keys[num].ctr].toUpperCase(); else key_char=keys[num].char[keys[num].ctr];
 		if (append)
-			{
-			keys[num].ctr=0; //go back to first item in keypad
-			str=currFocusedElement.value+keys[num].char[keys[num].ctr]; 
-			}
+			str=currFocusedElement.value+key_char;
 		else
-			{
-			str=(currFocusedElement.value.length==0) ? currFocusedElement.value=keys[num].char[keys[num].ctr]:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+keys[num].char[keys[num].ctr];
-			}
+			str=(currFocusedElement.value.length==0) ? currFocusedElement.value=key_char:currFocusedElement.value.substring(0,currFocusedElement.value.length-1)+key_char;
 		}
 	currFocusedElement.value=str;
 	keys[num].ctr++;
@@ -341,7 +334,9 @@ function check(e)
 				{
 				    //Write the letter on the currFocusedElement field
 				    var URLText = document.forms['URL'].elements[currElementName].value;
-				    URLText = URLText + document.links['c' + next].name;
+				    var key_write=document.links['c' + next].name;
+				    if (upper) key_write=key_write.toUpperCase();
+				    URLText = URLText + key_write;
 				    document.forms['URL'].elements[currElementName].value = URLText;
 				}
 			else if (PageElements[currElementIndex].type == 'txt' & txt_edit == '0')
@@ -373,7 +368,9 @@ function check(e)
 				} else { 
 				    //Write the letter on the currFocusedElement field
 				    var URLText = document.forms['URL'].elements[currElementName].value;
-				    URLText = URLText + document.links['c' + next].name;
+				    var key_write=document.links['c' + next].name;
+				    if (upper) key_write=key_write.toUpperCase();
+				    URLText = URLText + key_write;
 				    document.forms['URL'].elements[currElementName].value = URLText;
 				}
 			    }
@@ -459,18 +456,21 @@ function check(e)
 			if (!PageElements[currElementIndex].focused)
 			    { keypad('9'); }
 			}
+		else if (key==19) 
+			{
+			//the PAUSE button on the remote control have been pressed
+			//switch letters upper/lower case
+			if (upper) upper=false; else upper=true;
+			return false;
+			}
 		else if (key==403) 
 			{
 			//the red button on the remote control have been pressed
 			//go to NetCast links
 			if(typeof GoToNetCastLinks == 'function')
-			    {
 				GoToNetCastLinks();
-			    }
 			else
-			    {
 				window.location='browser/links.html';
-			    }
 			return false;
 			}
 		else if (key==404) 
@@ -503,13 +503,9 @@ function check(e)
 			//the info button on the remote control have been pressed
 			//go to NetCast links
 			    if(typeof GoToNetCastLinks == 'function')
-			    {
 				GoToNetCastLinks();
-			    }
 			    else
-			    {
 				window.location='browser/links.html';
-			    }
 			}
 		else if (key==461|key==27) 
 			{
@@ -539,14 +535,16 @@ function check(e)
 			}
 		}catch(Exception){}
 	}
-	
+
 function DirectWriteKey(key)
 	{
 	//Write the letter on the currFocusedElement field
 	if (PageElements[currElementIndex].type == 'txt')
 		{
 		var URLText = document.forms['URL'].elements[currElementName].value;
-		URLText = URLText + key;
+		var key_write=key;
+		if (upper) key_write=key_write.toUpperCase();
+		URLText = URLText + key_write;
 		document.forms['URL'].elements[currElementName].value = URLText;
 		}
 	}
@@ -575,13 +573,9 @@ function BackSpace()
 			if (currentId>0)
 				{
 				if (window.location.toString().match('type=etherwake'))
-					{
 					window.location='mount.cgi?action=remove&type=etherwake&id=' + currentId;
-					}
 				else
-					{
 					window.location='mount.cgi?action=remove&id=' + currentId;
-					}
 				}
 			}
 		}
