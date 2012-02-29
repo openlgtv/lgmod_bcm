@@ -61,9 +61,18 @@ function CreateBookmark() {
 		if (Bookmark['a' + i].Address.length != 0) 
 			{ 
 			var imageSrc = "http://open.thumbshots.org/image.aspx?url=" + Bookmark['a' + i].Address;
+			// TODO: try to get rid of few document.getElementById() method calls
 			document.getElementById('img' + i).src = imageSrc;
 			var linkURL = Bookmark['a' + i].Address;
-			document.getElementById('link' + i).href = linkURL;
+			<?
+			  if [ "$HTTP_HOST" != "127.0.0.1:88" ]
+			  then
+			    echo "document.getElementById('link' + i).href = 'http://$HTTP_HOST/browser-real.cgi?txtURL='+linkURL;"
+			    echo "document.getElementById('link' + i).target = '_top';"
+			  else
+			    echo "document.getElementById('link' + i).href = linkURL;"
+			  fi
+			?>
 			}
 		}     
 	//Set the focus on the 1st bookmark
