@@ -17,6 +17,19 @@ echo "OpenLGTV_BCM-INFO: Unmount script: matched input \"$what_pre\" as \"$what\
 
 for dst in `grep "$what" /proc/mounts | cut -d" " -f2 | tac`
 do
-    echo "OpenLGTV_BCM-INFO: Unmount script: unmounting $dst"
+    if [ "${what_pre:0:7}" = "/dev/sd" ]
+    then
+	echo "OpenLGTV_BCM-INFO: Unmount script: killing processes that use \"$what_pre\" devices in mountpoint: \"$dst\""
+	# simplier would be with 'fuser -k' but first need to check if RELEASE or other essential process is not using it
+	for prc in `fuser -m "$dst"`
+	do
+	    prc_line=`ps www | grep "^ $prc "`
+	    echo "OpenLGTV_BCM-INFO: Unmount script: killing process: \"$prc_line\""
+	    echo kill "$prc"
+	done
+    fi
+    echo "OpenLGTV_BCM-INFO: Unmount script: unmounting \"$dst\""
     umount -r "$dst"
 done
+
+sync
