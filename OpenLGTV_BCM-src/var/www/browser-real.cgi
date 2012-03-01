@@ -302,6 +302,7 @@ function GoToURL()
 	<?
 	  if [ "$HTTP_HOST" != "127.0.0.1:88" -a -n "$FORM_txtURL" ]
 	  then
+	    [ "$FORM_txtURL" = "${FORM_txtURL#*://}" ] && FORM_txtURL="http://$FORM_txtURL"
 	    echo "if (URLText != '$FORM_txtURL') window.location='http://$HTTP_HOST/browser-real.cgi?txtURL='+URLText;"
 	    web_exec=/mnt/browser/run3556
 	    [ -f "/mnt/user/netcast/run3556-proxy" ] && [ -n "`pgrep -f 'proxy.sh'`" ] && web_exec=/mnt/user/netcast/run3556-proxy
