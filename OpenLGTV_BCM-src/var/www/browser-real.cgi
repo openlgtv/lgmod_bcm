@@ -300,14 +300,14 @@ function GoToURL()
 	else if (URLText.slice(0,7) != 'http://' && URLText.slice(0,7) != 'file://')
 		{ URLText = 'http://' + URLText; }
 	<?
-	  if [ "$HTTP_HOST" != "127.0.0.1:88" ]
+	  if [ "$HTTP_HOST" != "127.0.0.1:88" -a -n "$FORM_txtURL" ]
 	  then
+	    echo "if (URLText != '$FORM_txtURL') window.location='http://$HTTP_HOST/browser-real.cgi?txtURL='+URLText;"
 	    web_exec=/mnt/browser/run3556
 	    [ -f "/mnt/user/netcast/run3556-proxy" ] && [ -n "`pgrep -f 'proxy.sh'`" ] && web_exec=/mnt/user/netcast/run3556-proxy
 	    "$web_exec" "http://127.0.0.1:88/browser-real.cgi?txtURL=$FORM_txtURL" > /dev/null 2>&1 &
 	  fi
 	?>
-	alert(URLText);
 	document.getElementById('MainPage').src = URLText;
 	}
 
@@ -330,7 +330,14 @@ function SearchOnGoogle()
 	//Google makes problems with automated search now - redirects to https to prove that the page is browsed by human
 	//var URLText = 'http://www.google.com/search?q=' + document.forms['URL'].elements[currElementName].value;
 	var URLText = 'http://www.bing.com/search?q=' + document.forms['URL'].elements[currElementName].value;
-	document.getElementById('MainPage').src = URLText;
+	<?
+	  if [ "$HTTP_HOST" != "127.0.0.1:88" ]
+	  then
+	    echo "window.location = 'http://$HTTP_HOST/browser-real.cgi?txtURL='+URLText;"
+	  else
+	    echo "document.getElementById('MainPage').src = URLText;"
+	  fi
+	?>
 	}
 
 function setCurrent(element)
