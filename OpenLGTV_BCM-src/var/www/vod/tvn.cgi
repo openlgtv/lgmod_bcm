@@ -8,6 +8,8 @@ Content-type: text/html
 <!-- tvn.cgi by xeros -->
 <!-- Source code released under GPL License -->
 
+<!-- NOT FINISHED -->
+
 <style type="text/css">
     body {
 	font-family:"TiresiasScreenfont";
@@ -29,16 +31,16 @@ useragent="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/
 
 menuLoc="http://tvnplayer.pl"
 
-if [ "$FORM_url" != "" ]
+if [ -n "$FORM_url" ]
 then
-    url="$FORM_url"
-    type="$FORM_type"
-    log_file=/var/log/vod/tvn/$type.log
+    export url="$FORM_url"
+    export type="$FORM_type"
+    export log_file=/var/log/vod/tvn/$type.log
     echo "var col = 3; //number of 'cells' in a row"
 else
-    url="$menuLoc"
-    type=menu
-    log_file=/var/log/vod/tvn/$type.log
+    export url="$menuLoc"
+    export type=menu
+    export log_file=/var/log/vod/tvn/$type.log
     echo "var col = 1; //number of 'cells' in a row"
 fi
 
@@ -108,7 +110,7 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	document.links['link1'].focus();
+	if (document.links['link1']) document.links['link1'].focus();
 	}
 	
 document.defaultAction = true;
@@ -116,8 +118,6 @@ document.defaultAction = true;
 
 // -->
 </script>
-
-
 
 <?
 
@@ -131,11 +131,11 @@ fi
 
 if [ "$type" = "menu" ]
 then
-    echo "<tr><td><center><font size='+3'><b><a id=\"link1\" href=\"tvn.cgi?type=category&url=$url/seriale.html\" target=\"_parent\">Seriale</a></b></font></center><br/></td></tr>"
-    echo "<tr><td><center><font size='+3'><b><a id=\"link2\" href=\"tvn.cgi?type=category&url=$url/programy.html\" target=\"_parent\">Programy</a></b></font></center><br/></td></tr>"
-    echo "<tr><td><center><font size='+3'><b><a id=\"link3\" href=\"tvn.cgi?type=category&url=$url/filmy.html\" target=\"_parent\">Filmy</a></b></font></center><br/></td></tr>"
-    echo "<tr><td><center><font size='+3'><b><a id=\"link4\" href=\"tvn.cgi?type=category&url=$url/dla-dzieci.html\" target=\"_parent\">Dla dzieci</a></b></font></center><br/></td></tr>"
-    echo "<tr><td><center><font size='+3'><b><a id=\"link5\" href=\"tvn.cgi?type=category&url=$url/ostatni-dzwonek.html\" target=\"_parent\">Ostatni dzwonek</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link1\" href=\"tvn.cgi?type=category&url=$url/seriale-online/\" target=\"_parent\">Seriale</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link2\" href=\"tvn.cgi?type=category&url=$url/programy-online/\" target=\"_parent\">Programy</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link3\" href=\"tvn.cgi?type=category&url=$url/filmy-online/\" target=\"_parent\">Filmy</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link4\" href=\"tvn.cgi?type=category&url=$url/dla-dzieci-online/\" target=\"_parent\">Dla dzieci</a></b></font></center><br/></td></tr>"
+    echo "<tr><td><center><font size='+3'><b><a id=\"link5\" href=\"tvn.cgi?type=category&url=$url/ostatni-dzwonek/\" target=\"_parent\">Ostatni dzwonek</a></b></font></center><br/></td></tr>"
     echo "</table></body></html>"
     exit 0
 fi
@@ -144,18 +144,17 @@ if [ "$type" = "category" -o "$type" = "category2" ]
 then
     new_type=category2
     [ "$type" = "category2" ] && new_type=playlist
-    #wget -q -U "$useragent" -O - "$url" > $log_file
-    wget -q -U "$useragent" "$url" -O $log_file
+    wget -q -U "$useragent" "$url" -O "$log_file"
     item_nr=1
     #IFS=$(/bin/echo -e '\n')
     IFS=QQQXXQQQ
     echo "<tr>"
-    for content in `grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n#g' | sed -e s'#alt="tvn .layer -\(.*\)".*#alt="\1" /><br/>\1</td></a>QQQXXQQQ#g' -e 's/^\t*//g' -e 's/^ */<td><center>/g' | grep -v "^<td><center>$"`
+    for content in `grep -A3 '<div class="photoContainer">' $log_file | grep -v "^--$" | tr -d '\n' | sed -e 's#<div class="photoContainer">#\n#g' | sed -e s'#alt="tvn .layer - \(.*\)".*#alt="\1" /><br/>\1</td></a>QQQXXQQQ#g' -e 's/^\t*//g' -e 's/^ */<td><center>/g' | grep -v "^<td><center>$"`
     do
 	if [ "$content" != "" ]
 	then
 	    echo "$content" | sed -e "s#<a href=\"/#<a id=\"link$item_nr\" href=\"tvn.cgi\?type=$new_type\&url=http://tvnplayer.pl/#g" -e 's/QQQXXQQQ//g'
-	    if [ "$(($item_nr % 3))" = "0" ] && echo "</tr><tr>"
+	    [ "$(($item_nr % 3))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	fi
     done
@@ -166,10 +165,21 @@ fi
 if [ "$type" = "playlist" -o "$type" = "video" ]
 then
     new_type=video
-    wget -q -U "$useragent" "$url" -O $log_file
-    if [ "$type" = "playlist"
+    wget -q -U "$useragent" "$url" -O "$log_file"
+    if [ "$type" = "playlist" ]
     then
-	echo "`grep -i playlist $log_file | sed -e 's#.*playlist=#<meta HTTP-EQUIV=\"REFRESH\" content=\"1; url=tvp.cgi\?type=video\&url=http://tvnplayer.pl#g' -e 's/\.xml.*/\.xml\">/g'`"
+	echo "`grep -i playlist $log_file | sed -e 's#.*playlist=#<meta HTTP-EQUIV=\"REFRESH\" content=\"1; url=tvn.cgi\?type=video\&url=http://tvnplayer.pl#g' -e 's/\.xml.*/\.xml\">/g'`"
+    else
+	#grep http "$log_file" | sed -e 's/\(<movie>\)/\n\1/g' -e 's/.*<title><!\[CDATA\[//g' -e 's#\]\]></title><episode_name><!\[CDATA\[#|#g' -e 's#\]\]></episode_name><episode>#|#g' -e 's#</episode><season>#|#g' -e 's#</season>.*<splash_screen><url><!\[CDATA\[#|#g' -e 's#\]\]></url>.*<url><!\[CDATA\[#|#g' -e 's/\]\].*//g'
+	grep http "$log_file" | sed -e 's#.*<url><!\[CDATA\[#<meta HTTP-EQUIV="REFRESH" content="1; url=#g' -e 's/\]\].*/">/g'
+	# TODO: generate urls and join chunks for continous stream
+	# http://dcs-34-55-222-43.atmcdn.pl/ss/o2/tvnplayer/vod/12_300_12350_0004/SMOOTH_HD/5d25b78e-e355-3b65-4389-5f375429335d/Manifest.ism/manifest
+	# -v-
+	# http://dcs-34-55-222-43.atmcdn.pl/ss/o2/tvnplayer/vod/12_300_12350_0004/Manifest.ism/QualityLevels(128000)/Fragments(audio=0)
+	# http://dcs-34-55-222-43.atmcdn.pl/ss/o2/tvnplayer/vod/12_300_12350_0004/Manifest.ism/QualityLevels(128000)/Fragments(video=1200000)
+	# and continue updating audio and video values
+	# QualityLevels and Fragments values are in manifest file
+
     fi
 fi
 
