@@ -7,14 +7,13 @@ TODO:
     * FileManager: add subtitles loading and audio tracks change possibility in played videos
     * insert characters in cursor position in WebUI, Internet Browser and FileManager dialogs, not always at the end of string
     * add Network Shares options field in WebUI to tune performance and compatibility - besides new field handling, needs to move some code from rc.mount-netshare to WebUI
-    * poweroff scripts to 1. kill all processes, 2. security check, 3. save history/append log, 4. unmount/remount still mounted writable partitions
     * update BusyBox to 1.19.4 (or newer) and backport few fixes from master, like "httpd: make byte ranges which start at 0 work too. Closes 4766" and "httpd: fix sendfile of files larger than 2 Gb. Closes 4754"
     * udpxy integration for udp:// and rtp:// links
     * update mime-types in httpd.conf for support of more media file extensions
     * update and test scripts chrooted on SmartTV models
     * enable YWE in North American models outside of USA
     * add some more NetCast services
-    * prepare some useful packages (any propositions?) in repository and disable OpenWRT repository by default
+    * compile gpgme, add public key, prepare some useful (signed) packages (any propositions?) in repository and disable OpenWRT repository by default
     * bring back real e2fsck?
     * upgrade uClibc?
     * ?
@@ -66,6 +65,9 @@ TODO:
     * ADD: updxy to handle udp:// streams in extroot
     * ADD: upper/lower case switch in WebUI, Internet Browser and FileManager on Pause button press
     * ADD: Internet Browser accessed remotely now calls builtin web browser to show search results, written URL or choosen bookmark on TV screen together with web browser running remotely
+    * ADD: poweroff scripts to 1. kill all processes that are using USB storage devices, 2. unmount/remount read-only USB storage devices with all used mountpoints, 3. ...
+    * ADD: support for gzipped kernel modules
+    * ADD: support for custom kernel modules list and additional modules to be loaded from extroot or USB storage
     * UPDATE: OPENRELEASE upgrade to version 2.1.2-15-gf8f2743
     * UPDATE: ntfs-3g upgrade to version 2012.1.15
     * UPDATE: tmux upgrade from 1.5 to 1.6
@@ -85,6 +87,7 @@ TODO:
     * CHANGE: remove 'nounix' parameter from CIFS mount command to handle symlinks and permissions
     * CHANGE: make hostname/IP to MAC resolving in Ether Wake in WebUI after pressing Save button if MAC was not specified
     * CHANGE: change Pause button action to Stop button in Internet Browser for NetCast links
+    * CHANGE: modules.custom file name has changed to modules.list now
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
     * REMOVE: chrt and chat binaries from SmartTV image for space reason - use BusyBox applets instead
     * REMOVE: libmagic.so as it wasn't used now since 'file' was removed

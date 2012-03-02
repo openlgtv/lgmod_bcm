@@ -25,11 +25,11 @@ do
 	do
 	    prc_line=`ps www | grep "^ $prc "`
 	    echo "OpenLGTV_BCM-INFO: Unmount script: killing process: \"$prc_line\""
-	    echo kill "$prc"
+	    kill "$prc"
 	done
     fi
     echo "OpenLGTV_BCM-INFO: Unmount script: unmounting \"$dst\""
-    umount -r "$dst"
+    umount -f -r "$dst"
 done
 
 sync

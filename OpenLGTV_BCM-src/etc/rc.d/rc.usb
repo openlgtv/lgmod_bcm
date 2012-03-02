@@ -198,20 +198,22 @@ then
         echo "OpenLGTV_BCM-INFO: found extroot dir in $OpenLGTV_BCM_USB/extroot - mounting it to /tmp/extroot"
         mkdir -p /tmp/extroot
         mount --bind "$OpenLGTV_BCM_USB/extroot" /tmp/extroot
-        if [ -d "/tmp/extroot/etc/opkg" ]
-        then
-	    echo "OpenLGTV_BCM-INFO: found opkg config dir in /tmp/extroot/etc/opkg - overmounting it to /etc/opkg"
-	    mount --bind /tmp/extroot/etc/opkg /etc/opkg
-        fi
     fi
     if [ -d "$OpenLGTV_BCM_USB/autorun" ]
     then
         echo "OpenLGTV_BCM-INFO: executing custom autorun scripts from $OpenLGTV_BCM_USB/autorun/"
 	for scr_autorun in $OpenLGTV_BCM_USB/autorun/*
 	do
-	    echo "OpenLGTV_BCM-INFO: executing $scr_file ..."
+	    [ ! -f "$scr_autorun" ] && continue
+	    echo "OpenLGTV_BCM-INFO: executing $scr_autorun ..."
 	    $scr_autorun
 	done
+    fi
+    if [ -f "$OpenLGTV_BCM_USB/modules/modules.list" -o -f "/tmp/extroot/modules/modules.list" ]
+    then
+        echo "OpenLGTV_BCM-INFO: loading custom kernel modules from $OpenLGTV_BCM_USB/modules/"
+        /etc/rc.d/rc.modules
+        modules_loaded=1
     fi
     if [ -d "$OpenLGTV_BCM_USB/WebUI-devel" ]
     then
@@ -221,6 +223,13 @@ then
     fi
 fi
 /etc/rc.d/rc.mount-netshare
+if [ -d "/tmp/extroot/etc/opkg" ]
+then
+    echo "OpenLGTV_BCM-INFO: found opkg config dir in /tmp/extroot/etc/opkg - overmounting it to /etc/opkg"
+    mount --bind /tmp/extroot/etc/opkg /etc/opkg
+fi
+# /tmp/extroot might have been mounted from netshare so check modules again
+[ -z "$modules_loaded" ] && [ -f "/tmp/extroot/modules/modules.list" ] && /etc/rc.d/rc.modules
 if [ -d "$OpenLGTV_BCM_USB" ]
 then
     if [ ! -f "$OpenLGTV_BCM_USB/OpenLGTV_BCM-firstboot.log" ]

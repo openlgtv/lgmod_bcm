@@ -3,43 +3,37 @@
 # Kernel modules loading script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-MODULES_ROOTFS_LIST="cifs input-core hid usbhid hid-sunplus evdev uinput fuse jbd2 ext4 hfsplus"
-MODULES_CUSTOM_LIST_FILE=/mnt/user/etc/modules.custom
-if [ -f "$MODULES_CUSTOM_LIST_FILE" ]
-then
-    MODULES_CUSTOM_LIST="`cat $MODULES_CUSTOM_LIST_FILE`"
-else
-    MODULES_CUSTOM_LIST=""
-fi
+# TODO: shorten rootfs modules list and automate modules copying from USB stick + modules.custom updates
+MODULES_ROOTFS_LIST="cifs input-core hid usbhid hid-sunplus hid-logitech evdev uinput fuse jbd2 ext4 hfsplus"
+MODULES_CUSTOM_LIST_FILE=/mnt/user/etc/modules.list
+[ -f "$MODULES_CUSTOM_LIST_FILE" ] && MODULES_CUSTOM_LIST="`cat \"$MODULES_CUSTOM_LIST_FILE\"`"
 
 MOD_PATH1="/tmp/extroot/modules"
 MOD_PATH2="/home/modules"
 MOD_PATH3="/mnt/user/modules"
 MOD_RPATH="/lib/modules"
 
+if [ -n "$OpenLGTV_BCM_USB" ]
+then
+    [ -f "$OpenLGTV_BCM_USB/modules/modules.list" ] && MODULES_ROOTFS_LIST="`cat \"$OpenLGTV_BCM_USB/modules/modules.list\"`"
+    MOD_RPATH="$OpenLGTV_BCM_USB/modules"
+fi
+
 load_module() {
-	echo "OpenLGTV_BCM-INFO: loading kernel module: $mod_file..."
-	insmod "$mod_file"
+	if [ -z "`grep \"^$mod \" /proc/modules`" ]
+	then
+	    echo "OpenLGTV_BCM-INFO: loading kernel module: \"$mod_file\"..."
+	    insmod "$mod_file"
+	else
+	    echo "OpenLGTV_BCM-INFO: module \"$mod\" is already loaded, skipping \"$mod_file\""
+	fi
 }
 
 for mod in $MODULES_ROOTFS_LIST $MODULES_CUSTOM_LIST
 do
-    mod_file="$MOD_PATH1/$mod.ko"
-    if [ ! -f "$mod_file" ]
-    then
-	mod_file="$MOD_PATH2/$mod.ko"
-	if [ ! -f "$mod_file" ]
-	then
-	    mod_file="$MOD_PATH3/$mod.ko"
-	    if [ ! -f "$mod_file" ]
-	    then
-		mod_file="$MOD_RPATH/$mod.ko"
-		if [ ! -f "$mod_file" ]
-		then
-		    continue
-		fi
-	    fi
-	fi
-    fi
-    load_module
+    for mpath in $MOD_PATH1 $MOD_PATH2 $MOD_PATH3 $MOD_RPATH
+    do
+	[ -f "$mpath/$mod.ko" ] && mod_file="$mpath/$mod.ko" || mod_file="$mpath/$mod.ko.gz"
+	[ -f "$mod_file" ] && load_module && continue 2
+    done
 done

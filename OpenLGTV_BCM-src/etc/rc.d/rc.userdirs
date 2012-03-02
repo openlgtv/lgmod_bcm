@@ -66,6 +66,7 @@ fi
 
 [ ! -d "/mnt/user/spool/cron/crontabs" ] && mkdir -p /mnt/user/spool/cron/crontabs
 [ ! -d "/mnt/user/modules/lg" ]          && mkdir -p /mnt/user/modules/lg
+[ ! -d "/home/modules/lg" ]              && mkdir -p /home/modules/lg
 
 if [ "$uver" != "$ver" ]
 then
