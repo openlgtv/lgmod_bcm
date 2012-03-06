@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-SVN20120302 installation script v.1.95 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.95 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -26,7 +26,7 @@ fi
 # forced rebooting option disabled for manual upgrade/installations
 #rebooting=0
 
-ver=0.5.0-SVN20120302
+ver=0.5.0-devel
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
@@ -158,7 +158,7 @@ sleep 1
 
 echo "" | tee -a $log
 date 2>&1 | tee -a $log
-echo "OpenLGTV BCM 0.5.0-SVN20120302 installation script for $platform platform by xeros" | tee -a $log
+echo "OpenLGTV BCM 0.5.0-devel installation script for $platform platform by xeros" | tee -a $log
 
 if [ "autoupgrade" = "1" ]
 then

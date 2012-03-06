@@ -209,4 +209,4 @@ then
 fi
 
 echo "OpenLGTV_BCM-INFO: running NetCast links icons preloading script with 10s delay ..."
-(sleep 10; /scripts/links_icons_preload.sh) &
+(sleep 10; /scripts/icons_download.sh) &
