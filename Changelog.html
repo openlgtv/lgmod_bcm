@@ -5,6 +5,7 @@ OpenLGTV BCM Changelog
 TODO:
     * FileManager: make slideshow completely smooth, allow pause and back+forward actions
     * FileManager: add subtitles loading and audio tracks change possibility in played videos
+    * FileManager: workaround the problem with pages loaded twice at the same time! - maybe with encoding url/action/query string and comparing it or processes check
     * insert characters in cursor position in WebUI, Internet Browser and FileManager dialogs, not always at the end of string
     * add Network Shares options field in WebUI to tune performance and compatibility - besides new field handling, needs to move some code from rc.mount-netshare to WebUI
     * update BusyBox to 1.19.4 (or newer) and backport few fixes from master, like "httpd: make byte ranges which start at 0 work too. Closes 4766" and "httpd: fix sendfile of files larger than 2 Gb. Closes 4754"

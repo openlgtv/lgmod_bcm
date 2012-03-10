@@ -9,7 +9,7 @@ Content-type: text/html
 <!-- fm.cgi script for directory tree navigation and invoking operations on fm-action.cgi -->
 <!-- Source code released under GPL License -->
 
-<!-- tested on builtin GTK Browser, Firefox 5-9, Chromium 14 and reKonq 0.7.90 (problems with F5 on reKonq) -->
+<!-- tested on builtin GTK Browser, Firefox 5-10, Chromium 14 and reKonq 0.7.90 (problems with F5 on reKonq) -->
 
 <? killall df 2>/dev/null & ?>
 
