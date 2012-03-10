@@ -485,7 +485,10 @@ else
 	if [ "$FORM_onlystatus" != "1" ]
 	then
 	    export spth dpth log_dir action
-	    if [ "$action" = "copy" ]
+	    #pattern=`echo "$spth $dpth/" | sed -e 's/\[/\\\[/g' -e 's/\]/\\\]/g' -e 's/\'/\\\'/g' -e 's/\"/\\\"/g' -e 's/\./\\\./g'`
+	    pattern=`echo "$spth $dpth/" | sed -e 's/\[/\\\[/g' -e 's/\]/\\\]/g' -e 's/\"/\\\"/g' -e 's/\./\\\./g'`
+	    running_pid="`pgrep -f " $pattern " | tail -n 1`"
+	    [ -z "$running_pid" ] && if [ "$action" = "copy" ]
 	    then
 		cp -r "$spth" "$dpth/" > "${log_dir}/${action}.error.log" 2>&1 &
 		export pid="$!"
@@ -497,6 +500,7 @@ else
 		export pid="$!"
 		###mv "$spth" "$dpth/" 2>&1 | tee "${log_dir}/${action}.error.$!.log" &
 	    fi
+	    [ -z "$pid" -a -n "$running_pid" ] && pid="$running_pid"
 	    ###pid_n="${log_dir}/${action}.error"
 	    ###busybox usleep 100
 	    #pid_f=`ls ${pid_n}.* | tail -n1`

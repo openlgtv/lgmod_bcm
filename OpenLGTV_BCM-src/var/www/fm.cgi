@@ -11,7 +11,7 @@ Content-type: text/html
 
 <!-- tested on builtin GTK Browser, Firefox 5-10, Chromium 14 and reKonq 0.7.90 (problems with F5 on reKonq) -->
 
-<? killall df 2>/dev/null & ?>
+<? killall df stat 2>/dev/null & ?>
 
 <style type="text/css">
     body {
@@ -868,7 +868,7 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for lcontent in `busybox stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
+    for lcontent in `stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
     do
 	ltype="${lcontent%%@*}"
 	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
@@ -939,7 +939,7 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for rcontent in `busybox stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
+    for rcontent in `stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
     do
 	rtype="${rcontent%%@*}"
 	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
