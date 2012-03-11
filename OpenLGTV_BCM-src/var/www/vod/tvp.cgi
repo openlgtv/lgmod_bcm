@@ -159,6 +159,9 @@ then
     echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=http://www.tvp.pl/pub/sess/samsungvideolistingwrapper?object_id=1364\$play_mode=VOD\$sort_by=RELEASE_DATE\$rec_count=128\$with_subdirs=true\$child_mode=SIMPLE\$xslt=internet-tv/samsung/website_details_wrapper.xslt\"><img src='http://s.v3.tvp.pl/images/a/c/a/uid_aca3c8ed7aec531f184a405e72605dbb1286707333195_width_141.jpg'><br/><font size='+2'>Maklowicz w podrozy</font></a></center></td>"
     [ "$(($item_nr % 4))" = "0" ] && echo '</tr><tr>'
     item_nr=$(($item_nr+1))
+    echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=http://www.tvp.pl/pub/sess/samsungvideolistingwrapper?object_id=118\$play_mode=VOD\$sort_by=RELEASE_DATE\$rec_count=128\$with_subdirs=true\$child_mode=SIMPLE\$xslt=internet-tv/samsung/website_details_wrapper.xslt\"><img src='http://s.v3.tvp.pl/images/9/2/7/uid_9279843b4042afeaaa9edb7302ad85101256650178480_width_141.jpg'><br/><font size='+2'>Jedynkowe Przedszkole</font></a></center></td>"
+    [ "$(($item_nr % 4))" = "0" ] && echo '</tr><tr>'
+    item_nr=$(($item_nr+1))
     echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=http://www.tvp.pl/pub/sess/samsungvideolistingwrapper?object_id=1885\$play_mode=VOD\$sort_by=RELEASE_DATE\$rec_count=128\$with_subdirs=true\$child_mode=SIMPLE\$xslt=internet-tv/samsung/website_details_wrapper.xslt\">?<br/><br/><font size='+2'>Przegapiles?</font></a></center></td>"
     echo '</tr>'
     echo '</table>'
