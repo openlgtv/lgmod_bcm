@@ -140,7 +140,8 @@ then
 	[ "$contentTitle" != "$content" ] && feedTitle="${contentTitle%%\"*}"
 	next_type=related
 	[ "${feedUrl#*/category/}" != "${feedUrl}" ] && next_type=category
-	echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=${next_type}&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
+	#echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=${next_type}&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
+	echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=${next_type}&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center></td></tr>" | sed 's/\#\#/ /g'
 	item_nr=$(($item_nr+1))
     done
 else

@@ -109,7 +109,8 @@ document.defaultAction = true;
 
 useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"
 
-menuLoc="http://www.tvp.pl/pub/stat/websitelisting?object_id=2919829&child_mode=SIMPLE&rec_count=32&with_subdirs=true&link_as_copy=true&xslt=internet-tv/samsung/websites_listing.xslt&q=&samsungwidget=1&v=2&5"
+#menuLoc="http://www.tvp.pl/pub/stat/websitelisting?object_id=2919829&child_mode=SIMPLE&rec_count=32&with_subdirs=true&link_as_copy=true&xslt=internet-tv/samsung/websites_listing.xslt&q=&samsungwidget=1&v=2&5"
+menuLoc="http://www.tvp.pl/pub/stat/websitelisting?object_id=2919829&child_mode=SIMPLE&rec_count=64&with_subdirs=true&link_as_copy=true&xslt=internet-tv/samsung/websites_listing.xslt&q=&samsungwidget=1&v=2&5"
 log_dir="/var/log/vod/tvp"
 
 if [ "$FORM_url" != "" ]
@@ -145,15 +146,20 @@ then
 	if [ "$content" != "http://www.tvp.pl;;" ]
 	then
 	    feedUrl="${content%%\;*}"
+	    #feedUrl="${feedUrl/\$sort_by=RELEASE_DATE/}"
 	    content2x="${content#*\;}"
 	    feedTitle="${content2x%%\;*}"
 	    content3x="${content2x#*\;}"
 	    feedThumb="${content3x%%\;*}"
 	    echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
-	    if [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
+	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	fi
     done
+    echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=http://www.tvp.pl/pub/sess/samsungvideolistingwrapper?object_id=1364\$play_mode=VOD\$sort_by=RELEASE_DATE\$rec_count=128\$with_subdirs=true\$child_mode=SIMPLE\$xslt=internet-tv/samsung/website_details_wrapper.xslt\"><img src='http://s.v3.tvp.pl/images/a/c/a/uid_aca3c8ed7aec531f184a405e72605dbb1286707333195_width_141.jpg'><br/><font size='+2'>Maklowicz w podrozy</font></a></center></td>"
+    [ "$(($item_nr % 4))" = "0" ] && echo '</tr><tr>'
+    item_nr=$(($item_nr+1))
+    echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category-tvp&url=http://www.tvp.pl/pub/sess/samsungvideolistingwrapper?object_id=1885\$play_mode=VOD\$sort_by=RELEASE_DATE\$rec_count=128\$with_subdirs=true\$child_mode=SIMPLE\$xslt=internet-tv/samsung/website_details_wrapper.xslt\">?<br/><br/><font size='+2'>Przegapiles?</font></a></center></td>"
     echo '</tr>'
     echo '</table>'
 else
@@ -171,7 +177,7 @@ else
 	    content3x="${content2x#*\;}"
 	    feedThumb="${content3x%%\;*}"
 	    echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>" | tr '|' ' '
-	    if [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
+	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	done
     fi
