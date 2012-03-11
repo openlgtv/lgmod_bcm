@@ -2,6 +2,7 @@
 # links_images_preload.sh script by xeros
 # Source code released under GPL License
 
+# TODO: store last properly downloaded and unpacked icons archive hash
 echo "OpenLGTV_BCM-INFO: icons_download.sh: running..."
 
 icons_dir="/home/netcast_icons/www"
@@ -18,14 +19,14 @@ ilinks_count=2
 unpacked_ok=0
 try_count=0
 
-if [ ! -d "$icons_dir" -o "$uver" != "$ver" -o ! -f "$icons_dir/unknown.png" ]
+if [ "$uver" != "$ver" -o ! -f "$icons_dir/unknown.png" ]
 then
     echo "OpenLGTV_BCM-INFO: icons_download.sh: OpenLGTV BCM upgrade/downgrade detected - downloading currently supported icons..."
     # TODO: check logic
-    while [ "$unpacked_ok" -eq 0 -o "$try_count" -lt 10 ]
+    while [ "$unpacked_ok" -eq 0 -a "$try_count" -lt 10 ]
     do
 	PING_OK=""
-	while [ -z "$PING_OK" -o "$try_count" -lt 10 ]
+	while [ -z "$PING_OK" -a "$try_count" -lt 10 ]
 	do
 	    try_count=$((${try_count}+1))
 	    rnd=$RANDOM
@@ -56,7 +57,7 @@ then
 	    #exit 1
 	else
 	    echo "OpenLGTV_BCM-INFO: icons_download.sh: icons downloaded and checksum is OK, unzipping..."
-	    unzip -n /tmp/icons.zip && unpacked_ok=1 || echo "OpenLGTV_BCM-ERROR: icons_download.sh: unzipping failed, retrying to download again..."
+	    unzip -o /tmp/icons.zip && unpacked_ok=1 || echo "OpenLGTV_BCM-ERROR: icons_download.sh: unzipping failed, retrying to download again..."
 	fi
 	rm -f /tmp/icons.zip
     done

@@ -128,7 +128,7 @@ wget -q -U "$useragent" -O - "$url" > $log_file
 
 if [ "$type" = "menu" ]
 then
-    echo '<br/><center><img src="../Images/tmp/iplapl.png"/><font size="+3"><br/>alternative</font><br/>by xeros<br/><br/>'
+    echo '<center><img src="../Images/tmp/iplapl.png"/><font size="+2"><br/>alternative</font><br/>by xeros<br/><br/>'
     echo '<font size="+3">'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     item_nr=1
