@@ -10,19 +10,18 @@ icons_dir="/home/netcast_icons/www"
 #ilink2="http://smarttv.awardspace.info/smarttv_logos.xxx"
 ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons.zip"
 ilink2="http://addon.vpscript.com/icons.zip"
-ilink3=""
+ilink3="http://smarttv.net46.net/icons.zip"
+ilink4="http://dl.dropbox.com/u/43758310/icons.zip"
 #imd5="a3f458d48113421c5a3a131bc5b44864"
 imd5="7c19bece3f7b27cdf9196b07868026f2"
 useragent="Mozilla/5.0 (X11; Linux x86; rv:10.0.2) Gecko/20100101 Firefox/10.0.2"
-#ilinks_count=3
-ilinks_count=2
+ilinks_count=4
 unpacked_ok=0
 try_count=0
 
 if [ "$uver" != "$ver" -o ! -f "$icons_dir/unknown.png" ]
 then
     echo "OpenLGTV_BCM-INFO: icons_download.sh: OpenLGTV BCM upgrade/downgrade detected - downloading currently supported icons..."
-    # TODO: check logic
     while [ "$unpacked_ok" -eq 0 -a "$try_count" -lt 10 ]
     do
 	PING_OK=""
@@ -32,12 +31,10 @@ then
 	    rnd=$RANDOM
 	    let "rnd %= $ilinks_count"
 	    case $rnd in
-	    0)
-		ilink="$ilink1";;
-	    1)
-		ilink="$ilink2";;
-	    *)
-		ilink="$ilink3";;
+		0) ilink="$ilink1";;
+		1) ilink="$ilink2";;
+		2) ilink="$ilink3";;
+		*) ilink="$ilink4";;
 	    esac
 	    ihost="`echo $ilink | awk -F/ '{print $3}'`"
 	    # ugly workaround for disabled pings on dl.dropbox.com
