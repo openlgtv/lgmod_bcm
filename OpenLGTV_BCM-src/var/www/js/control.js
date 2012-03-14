@@ -191,78 +191,83 @@ PageElements[24].type = ['num'];
 PageElements[24].focused=false;
 
 PageElements[25] = new Object();
-PageElements[25].value = ['radio1'];
-PageElements[25].type = ['radio'];
+PageElements[25].value = ['txtOpts'];
+PageElements[25].type = ['txt'];
+PageElements[25].focused=false;
 
 PageElements[26] = new Object();
-PageElements[26].value = ['check1'];
-PageElements[26].type = ['checkbox'];
+PageElements[26].value = ['radio1'];
+PageElements[26].type = ['radio'];
 
 PageElements[27] = new Object();
-PageElements[27].value = ['check2'];
+PageElements[27].value = ['check1'];
 PageElements[27].type = ['checkbox'];
 
 PageElements[28] = new Object();
-PageElements[28].value = ['check3'];
+PageElements[28].value = ['check2'];
 PageElements[28].type = ['checkbox'];
 
 PageElements[29] = new Object();
-PageElements[29].value = ['check4'];
+PageElements[29].value = ['check3'];
 PageElements[29].type = ['checkbox'];
 
 PageElements[30] = new Object();
-PageElements[30].value = ['check5'];
+PageElements[30].value = ['check4'];
 PageElements[30].type = ['checkbox'];
 
 PageElements[31] = new Object();
-PageElements[31].value = ['check6'];
+PageElements[31].value = ['check5'];
 PageElements[31].type = ['checkbox'];
 
 PageElements[32] = new Object();
-PageElements[32].value = ['check7'];
+PageElements[32].value = ['check6'];
 PageElements[32].type = ['checkbox'];
 
 PageElements[33] = new Object();
-PageElements[33].value = ['check8'];
+PageElements[33].value = ['check7'];
 PageElements[33].type = ['checkbox'];
 
 PageElements[34] = new Object();
-PageElements[34].value = ['check9'];
+PageElements[34].value = ['check8'];
 PageElements[34].type = ['checkbox'];
 
 PageElements[35] = new Object();
-PageElements[35].value = ['check10'];
+PageElements[35].value = ['check9'];
 PageElements[35].type = ['checkbox'];
 
 PageElements[36] = new Object();
-PageElements[36].value = ['check11'];
+PageElements[36].value = ['check10'];
 PageElements[36].type = ['checkbox'];
 
 PageElements[37] = new Object();
-PageElements[37].value = ['check12'];
+PageElements[37].value = ['check11'];
 PageElements[37].type = ['checkbox'];
 
 PageElements[38] = new Object();
-PageElements[38].value = ['check13'];
+PageElements[38].value = ['check12'];
 PageElements[38].type = ['checkbox'];
 
 PageElements[39] = new Object();
-PageElements[39].value = ['check14'];
+PageElements[39].value = ['check13'];
 PageElements[39].type = ['checkbox'];
 
 PageElements[40] = new Object();
-PageElements[40].value = ['check15'];
+PageElements[40].value = ['check14'];
 PageElements[40].type = ['checkbox'];
 
 PageElements[41] = new Object();
-PageElements[41].value = ['check16'];
+PageElements[41].value = ['check15'];
 PageElements[41].type = ['checkbox'];
 
 PageElements[42] = new Object();
-PageElements[42].value = ['check17'];
+PageElements[42].value = ['check16'];
 PageElements[42].type = ['checkbox'];
 
-var PageElementsCount=43;
+PageElements[43] = new Object();
+PageElements[43].value = ['check17'];
+PageElements[43].type = ['checkbox'];
+
+var PageElementsCount=44;
 var currElementIndex;
 var currElementName;
 
@@ -460,7 +465,14 @@ function check(e)
 			{
 			//the PAUSE button on the remote control have been pressed
 			//switch letters upper/lower case
-			if (upper) upper=false; else upper=true;
+			if (upper) {
+			    upper=false;
+			    //if (document.getElementById('caps')) document.getElementById('caps').style.color='white';
+			    if (document.getElementById('caps')) document.getElementById('caps').style.color='black';
+			} else {
+			    upper=true;
+			    if (document.getElementById('caps')) document.getElementById('caps').style.color='red';
+			}
 			return false;
 			}
 		else if (key==403) 

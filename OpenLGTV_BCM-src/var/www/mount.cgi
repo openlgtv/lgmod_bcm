@@ -84,7 +84,8 @@ then
 	    dst="${ndrv_4%%#*}"
 	    uname="${ndrv_6%%#*}"
 	    #mntstat=`mount | grep "$src.*$dst"`
-	    [ -n "`grep "^${src} " /proc/mounts`" ] && edit_style="background-color:yellow" || edit_style=""
+	    #[ -n "`grep "^${src} " /proc/mounts`" ] && edit_style="background-color:yellow" || edit_style=""
+	    [ -n "`egrep "^[^ ]* $dst " /proc/mounts`" ] && edit_style="background-color:yellow" || edit_style=""
 	    echo "<table width='100%' border='1'><tr><td class='mountsrc'>$src</td><td class='mountdst'>$dst</td><td class='mountfstype'>$fs_type</td><td class='mountuname'>$uname</td><td class='mountauto'>$automount</td>"
 	    echo -n "<td class='mountedit' style='$edit_style'><input type=\"button\" name=\"\" id=\"link${link_id}\" onKeyPress=\"javascript:window.location='mount-edit.cgi?id=${share_id}';\" onClick=\"javascript:window.location='mount-edit.cgi?id=${share_id}';\" value=\"Edit\"/></td>"
 	fi

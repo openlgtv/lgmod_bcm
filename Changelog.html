@@ -9,7 +9,6 @@ TODO:
     * FileManager: add check mark to select multiple files/dirs and handle that in copy/move/delete/play (?)
     * FileManager: add command line or command window (?)
     * insert characters in cursor position in WebUI, Internet Browser and FileManager dialogs, not always at the end of string
-    * add Network Shares options field in WebUI to tune performance and compatibility - besides new field handling, needs to move some code from rc.mount-netshare to WebUI
     * update BusyBox to 1.19.4 (or newer) and backport few fixes from master, like "httpd: make byte ranges which start at 0 work too. Closes 4766" and "httpd: fix sendfile of files larger than 2 Gb. Closes 4754"
     * udpxy integration for udp:// and rtp:// links
     * update mime-types in httpd.conf for support of more media file extensions
@@ -46,6 +45,7 @@ TODO:
     * FIX: follow symlinks when searching for executable scripts in /mnt/user/etc/init.d/
     * FIX: handling USB storage devices without any partitions
     * FIX: M3U parser now supports both local (absolute and related) paths and network links
+    * FIX: WebUI -> 'Network Shares' -> 'Add Share' doesn't fill fields with previous item
     * ADD: FileManager: image zooming/resizing using 'OK' button (or Enter on PC)
     * ADD: FileManager: button to view last status of copy/move action after action was detached to background
     * ADD: FileManager: color dir names when they are not local mount points (mounted USB storage partitions or NFS/CIFS network shares)
@@ -66,7 +66,7 @@ TODO:
     * ADD: support for etc/init.d and etc/poweroff.d dirs on extroot with scripts to be executed at init and poweroff
     * ADD: support for extroot on NFS and CIFS shares - just need to use /tmp/extroot as mountpoint
     * ADD: support for web content on extroot via /var/www/extroot symlink to /tmp/extroot/var/www
-    * ADD: imdb.sh script to generate image with movie info based on IMDB data (will get bound to FileManager soon)
+    * ADD: imdb.sh script to generate image with movie info based on IMDB data
     * ADD: send_key.sh script to pass button key codes to (OPEN)RELEASE, with support for key combinations
     * ADD: hid-sunplus.ko kernel module for some USB wireless keyboard+mouse combo devices
     * ADD: updxy to handle udp:// streams in extroot
@@ -77,6 +77,7 @@ TODO:
     * ADD: support for custom kernel modules list and additional modules to be loaded from extroot or USB storage
     * ADD: additional NetCast services and updated links
     * ADD: improvements to vod services
+    * ADD: 'Options' field in WebUI -> Network Shares to tune performance/compatibility
     * UPDATE: OPENRELEASE upgrade to version 2.1.2-15-gf8f2743
     * UPDATE: ntfs-3g upgrade to version 2012.1.15
     * UPDATE: tmux upgrade from 1.5 to 1.6

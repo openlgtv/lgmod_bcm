@@ -40,8 +40,9 @@ if [ -n "$FORM_qURL" -a -n "$FORM_action" -a -n "$id" ]
 then
     automount=0
     precache=0
+    fs_type="$FORM_radio1"
     [ "$FORM_check1" = "automount" ] && automount=1
-    [ "$FORM_check2" = "precache" ]  && precache=1
+    [ "$FORM_check2" = "precache"  ] && precache=1
     cp -f ${input_file} ${input_file}.bck
     if [ "$FORM_qPath" != "" ]
     then
@@ -52,10 +53,13 @@ then
     if [ "$FORM_type" = "etherwake" -a -z "$FORM_qPassw" ]
     then
 	# try to resolve MAC from IP or hostname if MAC was not specified
-	[ -n "$FORM_qUser" ] && FORM_qPassw=`arping -fc 3 "$FORM_qUser" | grep -m1 Unicast | cut -d" " -f5 | tr -d '[]'`
+	[ -n "$FORM_qUser"  ] && FORM_qPassw=`arping -fc 3 "$FORM_qUser" | grep -m1 Unicast | cut -d" " -f5 | tr -d '[]'`
 	[ -z "$FORM_qPassw" ] && IP_MAC=`arping -fc 3 "$FORM_qURL" | grep -m1 Unicast | awk '{print $4 "|" $5}' | tr -d '[]'` && FORM_qPassw="${IP_MAC#*|}"
 	[ -z "$FORM_qUser" -a -n "$IP_MAC" ] && FORM_qUser="${IP_MAC%|*}"
     fi
+    [ "$fs_type" = "nfs"  -a "${FORM_qOpts:0:4}" = "user"   ] && FORM_qOpts="" # workaround for changing fs_type without changing options
+    [ "$fs_type" = "cifs" -a "${FORM_qOpts:0:6}" = "nolock" ] && FORM_qOpts=""
+    [ -z "$FORM_qOpts" -a "$FORM_type" != "etherwake" ] && FORM_qOpts=`grep "$fs_type" /etc/default/mountopts | cut -d\| -f2`
     if [ "`cat ${input_file} | wc -l`" -lt "$id" ]
     then
 	if [ "$FORM_type" = "etherwake" ]
@@ -63,21 +67,21 @@ then
 	    # (autowake on boot:0/1)#(hostname)#[ip.address]#(MAC:address)#[pa:ss:wo:rd]#[options]#
 	    echo "$automount#$FORM_qURL#$FORM_qUser#$FORM_qPassw#$qPath##" >> ${input_file}
 	else
-	    echo "$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache#$FORM_qPin#" >> ${input_file}
+	    echo "$automount#$fs_type#$FORM_qURL#$qPath#$FORM_qOpts#$FORM_qUser#$FORM_qPassw#$precache#$FORM_qPin#" >> ${input_file}
 	fi
     else
 	if [ "$FORM_type" = "etherwake" ]
 	then
 	    sed -i -e "$id s?.*?$automount#$FORM_qURL#$FORM_qUser#$FORM_qPassw#$qPath##?" ${input_file}
 	else
-	    sed -i -e "$id s?.*?$automount#$FORM_radio1#$FORM_qURL#$qPath##$FORM_qUser#$FORM_qPassw#$precache#$FORM_qPin#?" ${input_file}
+	    sed -i -e "$id s?.*?$automount#$fs_type#$FORM_qURL#$qPath#$FORM_qOpts#$FORM_qUser#$FORM_qPassw#$precache#$FORM_qPin#?" ${input_file}
 	fi
     fi
 fi
 
 if [ -f "${input_file}" -a "$id" != "" ]
 then
-    ndrv="`head -n $FORM_id ${input_file} | tail -n 1`"
+    [ "$id" -le "`cat ${input_file} | wc -l`" ] && ndrv="`head -n $FORM_id ${input_file} | tail -n 1`"
     ndrv_2="${ndrv#*\#}"
     ndrv_3="${ndrv_2#*\#}"
     ndrv_4="${ndrv_3#*\#}"
@@ -130,11 +134,7 @@ then
     export mount_err_code="$?"
 fi
 
-if [ "$mount_err_code" -ne "0" ]
-then
-    export mounting_error=1
-fi
-
+[ "$mount_err_code" -ne "0" ] && export mounting_error=1
 [ "$dst" = "" -a "$FORM_type" != "etherwake" ] && dst="NetShare"
 
 if [ "$FORM_umount" = "1" ]
@@ -151,7 +151,7 @@ fi
 			    <div id="link11Parent" style="background-color:white;height:40px;">
 				<?
 				    action=mount
-				    if [ -z "`grep "$dst " /proc/mounts`" ]
+				    if [ -z "`egrep "^[^ ]* $dst " /proc/mounts`" ]
 				    then
 					if [ -f "${input_file}" ]
 					then
@@ -170,108 +170,80 @@ fi
 			</center>
 			<div id="txtURLParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					<?
-					    if [ "$FORM_type" = "etherwake" ]
-					    then
-						echo "Name:"
-					    else
-						echo "URL:"
-					    fi
-					?>
+					<? [ "$FORM_type" = "etherwake" ] && echo "Name:" || echo "URL:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-				    <input id="txtURL" name="qURL" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $src ?>"/>
+				    <input id="txtURL" name="qURL" type="textarea" style="width:750px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $src ?>"/>
 				</div>
 			</div>
 			<div id="txtUserParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					<?
-					    if [ "$FORM_type" = "etherwake" ]
-					    then
-						echo "IP address:"
-					    else
-						echo "Username:"
-					    fi
-					?>
+					<? [ "$FORM_type" = "etherwake" ] && echo "IP address:" || echo "Username:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtUser" name="qUser" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $uname ?>"/>
+					<input id="txtUser" name="qUser" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $uname ?>"/>
 				</div>
 			</div>
 			<div id="txtPasswParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					<?
-					    if [ "$FORM_type" = "etherwake" ]
-					    then
-						echo "MAC:"
-					    else
-						echo "Password:"
-					    fi
-					?>
+					<? [ "$FORM_type" = "etherwake" ] && echo "MAC:" || echo "Password:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtPassw" name="qPassw" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pass ?>"/>
+					<input id="txtPassw" name="qPassw" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pass ?>"/>
 				</div>
 			</div>
 			<div id="txtPathParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					<?
-					    if [ "$FORM_type" = "etherwake" ]
-					    then
-						echo "Password:"
-					    else
-						echo "Mount path:"
-					    fi
-					?>
+					<? [ "$FORM_type" = "etherwake" ] && echo "Password:" || echo "Mount path:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtPath" name="qPath" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $dst ?>"/>
+					<input id="txtPath" name="qPath" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $dst ?>"/>
 				</div>
 			</div>
 			<? [ "$FORM_type" = "etherwake" ] && echo "<!--" ?>
 			<div id="txtPinParent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 7px; height:23;">
-					<?
-					    echo "Tries/Pings:"
-					?>
+					<? echo "Tries/Pings:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtPin" name="qPin" type="textarea" style="width:400px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pings ?>"/>
+					<input id="txtPin" name="qPin" type="textarea" style="width:50px; text-align: center;" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pings ?>"/>
+				</div>
+			</div>
+			<div id="txtOptsParent" style="background-color:white;height:40px; font-size:16px;">
+				<div style="position: relative; left: 5px; top: 7px; height:23;">
+					<? echo "Options:" ?>
+				</div>
+				<div style="position: relative; left: 100px; top: -22px;">
+					<input id="txtOpts" name="qOpts" type="textarea" style="width:750px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $opt ?>"/>
 				</div>
 			</div>
 			<div id="radio1Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 					Network Protocol: 
-					<? if [ "$fs_type" = "cifs" ]
-					   then
-					       echo '<input type="radio" name="radio1" value="cifs" checked> CIFS'
-					       echo '<input type="radio" name="radio1" value="nfs"> NFS'
-					   else
-					       echo '<input type="radio" name="radio1" value="cifs"> CIFS'
-					       echo '<input type="radio" name="radio1" value="nfs" checked> NFS'
-					   fi ?>
+					<?
+					    [ "$fs_type" = "cifs" ] && cifs_ck="checked" || nfs_ck="checked"
+					    echo "<input type='radio' name='radio1' value='cifs' $cifs_ck> CIFS"
+					    echo "<input type='radio' name='radio1' value='nfs' $nfs_ck> NFS"
+					?>
+					&nbsp; [ 'Options' field is only for tuning mount options! ]
 				</div>
 			</div>
 			<? [ "$FORM_type" = "etherwake" ] && echo "-->" ?>
 			<div id="check1Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
-				<? if [ "$automount" = "1" ]
-				   then
-					echo "<input type='checkbox' name='check1' value='automount' checked> $automntname"
-				   else
-					echo "<input type='checkbox' name='check1' value='automount'> $automntname"
-				   fi ?>
+				<?
+				    [ "$automount" = "1" ] && amnt_ck="checked"
+				    echo "<input type='checkbox' name='check1' value='automount' $amnt_ck> $automntname"
+				?>
 				</div>
 			</div>
 			<? [ "$FORM_type" = "etherwake" ] && echo "<!--" ?>
 			<div id="check2Parent" style="background-color:white;height:40px; font-size:16px;">
 				<div style="position: relative; left: 5px; top: 5px;">
-				<? if [ "$precache" = "1" ]
-				   then
-					echo '<input type="checkbox" name="check2" value="precache" checked> Precache directory listing for media player (do not enable when there is no invisible dirs problem)'
-				   else
-					echo '<input type="checkbox" name="check2" value="precache"> Precache directory listing for media player (do not enable when there is no invisible dirs problem)'
-				   fi ?>
+				<?
+				    [ "$precache" = "1" ] && pcache_ck="checked"
+				    echo "<input type='checkbox' name='check2' value='precache' $pcache_ck> Precache directory listing for media player (do not enable when there is no invisible dirs problem)"
+				?>
 				</div>
 			</div>
 			<? 
@@ -280,7 +252,8 @@ fi
 			?>
 			<input type="hidden" name="save" value="1">
 			<? echo "<input type='hidden' name='id' value='$id'>" ?>
-			<div id="textOnly" style="background-color:white;height:64px;">
+			<!-- div id="textOnly" style="background-color:white;height:64px;" -->
+			<div id="textOnly" style="background-color:white;height:44px;">
 				<div style="position: relative; left: 5px; top: 5px;">
 				    <?
 					if [ "$FORM_save" = "1" ]
@@ -290,13 +263,19 @@ fi
 					else
 					    if [ "$mounting_error" = "1" ]
 					    then
-						echo "<center><font size=\"+2\" color=\"red\"><b>Mounting ERROR with error code: $mount_err_code !!!<br />Check your logs and settings!</b></font></center>"
+						echo "<center><font size=\"+2\" color=\"red\"><b>Mounting ERROR with error code: $mount_err_code !!!</b></font></center>"
 					    else
-						echo '<br /><center><font size="+2" color="red"><b>Remember to save settings before trying to use mount button</b></font></center>'
+						echo '<center><font size="+2" color="red"><b>Remember to save settings before trying to use mount button</b></font></center>'
 					    fi
 					fi
 				    ?>
 				</div>
+			</div>
+			<!-- div id="legendParent" style="position: absolute; left: 620px; top: 290px; width: 230px; height: 110px; background-color: #434343;" -->
+			<div id="legendParent" style="position: absolute; left: 620px; top: 290px; width: 230px; height: 40px; background-color: white">
+			    <div id="legend" style="position: relative; left: 25px; top: 5px;">
+				<img src="Images/Keyboard/pause_button.png" align="top"><font size="+2" style="color: black;" id="caps"><b> CapsLock</b></font>
+			    </div>
 			</div>
 		</form>
 	</div>	

@@ -1,0 +1,2 @@
+cifs|user=$uname,pass=$pass,noserverino
+nfs|nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus
