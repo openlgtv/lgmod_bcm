@@ -114,10 +114,10 @@ menus=" \
 2919829#menu#Seriale \
 1649945#menu#Seriale_komediowe \
 4190002#category#Filmy_fabularne \
-1381#category#Boso_przez_swiat \
-1364#category#Maklowicz_w_podrozy \
+1381#category#Boso_przez_świat \
+1364#category#Makłowicz_w_podróży \
 1358#category#Rok_w_ogrodzie \
-1885#category#Przegapiles"
+1885#category#Przegapiłes"
 
 # Styl Zycia:
 # 1352#menu#Styl_Zycia \
@@ -200,7 +200,7 @@ fi
 
 echo '</HEAD><BODY bgcolor="lightblue">'
 
-[ "$type" = "video-tvp" ] && echo "<font size='+3'><br/><br/><b><center>Wczytywanie wideo...</center></b></font>"
+[ "$type" = "video-tvp" ] && echo "<center><img src='../Images/tmp/tvppl.png'/><font size='+2'><br/>alternative</font><br/>by xeros<br/></center><br/><font size='+3'><b><center>Wczytywanie wideo...</center></b></font>"
 
 if [ "$type" = "mainmenu" ]
 then
@@ -217,7 +217,6 @@ then
 	m_txt="${m_txt//_/ }"
 	if [ "$m_type" = "menu" ]
 	then
-	    #feedUrl="http://www.$prv.pl/pub/stat/websitelisting@object_id=${m_obj_id}\$child_mode=SIMPLE\$rec_count=64\$with_subdirs=true\$link_as_copy=true\$xslt=internet-tv/samsung/websites_listing.xslt\$q=\$samsungwidget=1\$v=2\$5\$with_video=true"
 	    feedUrl="http://www.$prv.pl/pub/stat/websitelisting@object_id=${m_obj_id}\$child_mode=SIMPLE\$rec_count=64\$with_subdirs=true\$link_as_copy=true\$xslt=internet-tv/samsung/websites_listing.xslt\$q=\$samsungwidget=1\$v=2\$5"
 	else
 	    feedUrl="http://www.$prv.pl/pub/sess/samsungvideolistingwrapper@object_id=${m_obj_id}\$play_mode=VOD\$sort_by=RELEASE_DATE\$rec_count=128\$with_subdirs=true\$child_mode=SIMPLE\$xslt=internet-tv/samsung/website_details_wrapper.xslt\$with_video=true"
@@ -225,8 +224,7 @@ then
 	feedTitle="$m_txt"
 	feedType="$m_type"
 	feedThumb=""
-	#echo "<td><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=${feedType}&url=${feedUrl}\">${feedThumb}<br/><font size='+2'>${feedTitle}</font></a></center></td>" | tr '|' ' '
-	echo "<td><center><a id=\"link${item_nr}\" href=\"tvp.cgi?type=${feedType}&title=${feedTitle}&url=${feedUrl}\">${feedThumb}<font size='+2'><b>${feedTitle}</b></font></a></center><br/></td>"
+	echo "<td style='vertical-align:top;' valign='top'><center><a id=\"link${item_nr}\" href=\"tvp.cgi?type=${feedType}&title=${feedTitle}&url=${feedUrl}\">${feedThumb}<font size='+3' style='font-weight: 900;'><b>${feedTitle}</b></font></a></center><br/></td>"
 	#[ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
@@ -237,8 +235,8 @@ fi
 
 if [ "$type" = "menu" ]
 then
-    echo '<center><img src="../Images/tmp/tvppl.png"/><font size="+2"><br/>alternative</font><br/>by xeros<br/></center>'
-    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
+    echo '<center><img src="../Images/tmp/tvppl.png" width="50" height="20" /><br/><font size="-1">alternative</font><br/></center>'
+    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=4 width="100%">'
     echo '<tr>'
     item_nr=1
     for content in `egrep -v 'version=|^$' $log_file | tr '\n\t' '|' | sed 's/<object/\n<object/g' | sed -e 's/.*url="//g' -e 's/\&amp;/\$/g' | awk -F\| '{print "http://www.tvp.pl" $1 ";" $2 ";" $3}' | sed -e 's/" view="ProgramView">;<title>/;/g' -e 's#</title>##g' -e 's/ /|/g'`
@@ -251,7 +249,7 @@ then
 	    feedTitle="${content2x%%\;*}"
 	    content3x="${content2x#*\;}"
 	    feedThumb="${content3x%%\;*}"
-	    echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category&title=${feedTitle}&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
+	    echo "<td width='25%' style='vertical-align:top;'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category&title=${feedTitle}&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
 	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	fi
@@ -261,8 +259,7 @@ then
 else
     #pageTitle=`grep '<object' $log_file | sed 's/<object/\n<object/g' | grep -m1 'type="website"' | sed -e 's/.*<title>//' -e 's#</title>.*##'`
     echo "<center><font size='+2'><b>$pageTitle</b></font><br/></center>"
-    echo '<font size="+1">'
-    echo '<Table id="items" name="items" class="items" Border=0 cellspacing=8 width="100%">'
+    echo '<Table id="items" name="items" class="items" style="border-spacing: 10px 4px;" Border="0" width="100%">'
     echo '<tr>'
     item_nr=1
     if [ "$type" = "category" ]
@@ -275,9 +272,8 @@ else
 	    feedThumb="${content2x%%\;*}"
 	    content3x="${content2x#*\;}"
 	    feedTitle="${content3x%%\;*}"
-	    #echo "<td width='25%'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\">$feedThumb</a></center></td><td>$feedTitle</td>" | tr '|' ' '
-	    echo "<td width='140px'><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\"><center>$feedThumb</center></td><td width='25%'><b>$feedTitle</b></td></a>" | tr '|' ' '
-	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
+	    echo "<td width='140px'><center>$feedThumb</center></td><td width='25%'><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\"><b><font size=\"+1\">$feedTitle</font></b></a></td>" | tr '|' ' '
+	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr cellpadding='10'>"
 	    item_nr=$(($item_nr+1))
 	done
     fi

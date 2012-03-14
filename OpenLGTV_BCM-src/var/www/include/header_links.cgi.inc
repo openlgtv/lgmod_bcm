@@ -20,5 +20,5 @@
 			</div><div id="link6Parent" class="menuitem" style="width:170px">
 				<a id="link6" class="menubutton" href="browser.cgi">Internet Browser</a>
 			</div><div id="link7Parent" class="menuitem" style="width:120px">
-				<a id="link7" class="menubutton" href="fm.cgi?side=l&lpth=/mnt/usb1&rpth=/mnt/usb2">FileManager</a>
+				<a id="link7" class="menubutton" href="fm.cgi?type=restore_last&side=l&lpth=/mnt/usb1&rpth=/mnt/usb2">FileManager</a>
 			</div>

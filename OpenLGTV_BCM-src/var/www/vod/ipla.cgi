@@ -129,7 +129,6 @@ wget -q -U "$useragent" -O - "$url" > $log_file
 if [ "$type" = "menu" ]
 then
     echo '<center><img src="../Images/tmp/iplapl.png"/><font size="+2"><br/>alternative</font><br/>by xeros<br/><br/>'
-    echo '<font size="+3">'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     item_nr=1
     for content in `cat $log_file | tr '\n' ' ' | tr '{}' '\n' | grep feed | sed -e 's/  */ /g' -e 's/ \"/\"/g' -e 's#http://##g' -e 's/ /\#\#/g'`
@@ -138,14 +137,18 @@ then
 	[ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\",*}"
 	contentTitle="${content#*\"feedTitle\":\"}"
 	[ "$contentTitle" != "$content" ] && feedTitle="${contentTitle%%\"*}"
+	feedTitle="${feedTitle/SERIAL/SERIALE}"
+	feedTitle="${feedTitle/SHOW/ROZRYWKA}"
+	feedTitle="${feedTitle/NEWS/WIADOMOŚCI}"
+	feedTitle="${feedTitle/MUSIC/MUZYKA}"
+	feedTitle="${feedTitle/GAMER/GRACZ}"
+	feedTitle="${feedTitle/KIDS/DLA DZIECI}"
 	next_type=related
 	[ "${feedUrl#*/category/}" != "${feedUrl}" ] && next_type=category
-	#echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=${next_type}&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center><br/></td></tr>" | sed 's/\#\#/ /g'
 	echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=${next_type}&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center></td></tr>" | sed 's/\#\#/ /g'
 	item_nr=$(($item_nr+1))
     done
 else
-    echo '<font size="+1">'
     echo '<Table id="items" name="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
@@ -214,5 +217,5 @@ else
 fi
 
 ?>
-</font></center>
+</center>
 </BODY></HTML>
