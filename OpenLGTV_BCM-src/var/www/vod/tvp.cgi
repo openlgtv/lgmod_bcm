@@ -184,6 +184,7 @@ fi
 log_file="$log_dir/$type.log"
 
 pageTitle="$FORM_title"
+img="$FORM_img"
 
 [ "$type" = "mainmenu" ] && echo "col = 1;"
 
@@ -249,7 +250,9 @@ then
 	    feedTitle="${content2x%%\;*}"
 	    content3x="${content2x#*\;}"
 	    feedThumb="${content3x%%\;*}"
-	    echo "<td width='25%' style='vertical-align:top;'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category&title=${feedTitle}&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
+	    img="${feedThumb/*http/http}"
+	    img="${img/\"*/}"
+	    echo "<td width='25%' style='vertical-align:top;'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category&img=${img}&title=${feedTitle}&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
 	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	fi
@@ -275,6 +278,35 @@ else
 	    echo "<td width='140px'><center>$feedThumb</center></td><td width='25%'><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\"><b><font size=\"+1\">$feedTitle</font></b></a></td>" | tr '|' ' '
 	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr cellpadding='10'>"
 	    item_nr=$(($item_nr+1))
+	done
+	url="`echo $url | sed -e 's/sess\/samsungvideolistingwrapper/stat\/videolisting/' -e 's/xslt=internet-tv\/samsung\/website_details_wrapper.xslt/object_type=video/' | tr '?&' '@$'`"
+	if [ "$item_nr" = 1 ]
+	then
+	    echo "<td width='100%' style='text-align: center;'><br/><font size='+3'>Brak udostępnianych materiałów wideo w tej kategorii!<br/></font><font size='+2'>Za chwilę nastąpi próba dostępu do materiałów w innym formacie...</font></td>"
+	    echo "<script>setTimeout(window.location.replace('tvp.cgi?type=category2&title=$pageTitle&img=$img&url=$url'),3);</script>"
+	else
+	    echo "<td width='140px'><center><img src="$img"></center></td><td width='25%'><a id=\"link$item_nr\" href=\"tvp.cgi?type=category2&img=$img&url=$url\" target=\"_parent\"><b><font size=\"+1\">Materiały w innym formacie</font></b></a></td>" | tr '|' ' '
+	fi
+	#echo "$content" > "$log_file.txt"
+    else
+	# category2
+	for content in `cat "$log_file" | sed 's/\(<video\)/\n\1/g' | grep "<video" | \
+	    sed -e 's/<\(video\) .*zone_restriction_id="."><title>/|\1|/g' -e 's#</title><original_title.*"\([0-9a-z]*.jpg\)".*#|\1|#g' \
+		-e 's#</title><original_title.*#|#g' -e 's/<video_format.*temp_sdt_url="//g' -e 's/" unique_id=.*"\([0-9a-f]*.jpg\)".*/|\1/g' \
+		-e 's/" unique_id=.*//g' -e 's/^\(http:.*\)|\(.*\)/\2|\1/g' | grep -v "^<" | tr -d '\n' | \
+	    sed -e 's/\(|video\)/\n\1/g' | sed -e 's/\([0-9a-f]*\.jpg\)[|0-9a-f]*\.jpg/\1/g' -e 's/http:.*\(http:[^|]*\)/\1/g' \
+		-e 's/^\(|[^|]*|[^|]*|\)\(http\)/\1|\2/g' -e 's/^|video|//g' | grep -v '^$' | tr ' ' '#'`
+	do
+	    feedTitle="${content%%\|*}"
+	    content2x="${content#*\|}"
+	    feedThumb="${content2x%%\|*}"
+	    [ -n "$feedThumb" ] && feedThumb="<img src='http://s.v3.$prv.pl/images/${feedThumb:0:1}/${feedThumb:1:1}/${feedThumb:2:1}/uid_${feedThumb/.jpg/}_width_141.jpg'>" || feedThumb="<img src='$img'>"
+	    content3x="${content2x#*\|}"
+	    feedUrl="${content3x%%\|*}"
+	    echo "<td width='140px'><center>$feedThumb</center></td><td width='25%'><a id=\"link$item_nr\" href=\"$feedUrl\" target=\"_parent\"><b><font size=\"+1\">$feedTitle</font></b></a></td>" | tr '#' ' '
+	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr cellpadding='10'>"
+	    item_nr=$(($item_nr+1))
+	    #echo "$content" >> "$log_file.txt"
 	done
     fi
     echo '</tr>'
