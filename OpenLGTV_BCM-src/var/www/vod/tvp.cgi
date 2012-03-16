@@ -275,6 +275,8 @@ else
 	    feedThumb="${content2x%%\;*}"
 	    content3x="${content2x#*\;}"
 	    feedTitle="${content3x%%\;*}"
+	    [ -z "$img" ] && img="/Images/tmp/unknown.png"
+	    [ -z "$feedThumb" ] && feedThumb="<img src='$img' width='141px' height='106px'>"
 	    echo "<td width='140px'><center>$feedThumb</center></td><td width='25%'><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\"><b><font size=\"+1\">$feedTitle</font></b></a></td>" | tr '|' ' '
 	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr cellpadding='10'>"
 	    item_nr=$(($item_nr+1))
@@ -283,9 +285,10 @@ else
 	if [ "$item_nr" = 1 ]
 	then
 	    echo "<td width='100%' style='text-align: center;'><br/><font size='+3'>Brak udostępnianych materiałów wideo w tej kategorii!<br/></font><font size='+2'>Za chwilę nastąpi próba dostępu do materiałów w innym formacie...</font></td>"
-	    echo "<script>setTimeout(window.location.replace('tvp.cgi?type=category2&title=$pageTitle&img=$img&url=$url'),3);</script>"
+	    #echo "<script>setTimeout(window.location.replace('tvp.cgi?type=category2&title=$pageTitle&img=$img&url=$url'),3);</script>"
+	    echo "<script>window.location.replace('tvp.cgi?type=category2&title=$pageTitle&img=$img&url=$url');</script>"
 	else
-	    echo "<td width='140px'><center><img src="$img"></center></td><td width='25%'><a id=\"link$item_nr\" href=\"tvp.cgi?type=category2&img=$img&url=$url\" target=\"_parent\"><b><font size=\"+1\">Materiały w innym formacie</font></b></a></td>" | tr '|' ' '
+	    echo "<td width='140px'><center><img src='$img' width='141px' height='106px'></center></td><td width='25%'><a id=\"link$item_nr\" href=\"tvp.cgi?type=category2&title=$FORM_title&img=$img&url=$url\" target=\"_parent\"><b><font size=\"+1\">Materiały w innym formacie</font></b></a></td>" | tr '|' ' '
 	fi
 	#echo "$content" > "$log_file.txt"
     else
@@ -300,7 +303,13 @@ else
 	    feedTitle="${content%%\|*}"
 	    content2x="${content#*\|}"
 	    feedThumb="${content2x%%\|*}"
-	    [ -n "$feedThumb" ] && feedThumb="<img src='http://s.v3.$prv.pl/images/${feedThumb:0:1}/${feedThumb:1:1}/${feedThumb:2:1}/uid_${feedThumb/.jpg/}_width_141.jpg'>" || feedThumb="<img src='$img'>"
+	    [ -z "$img" ] && img="/Images/tmp/unknown.png"
+	    # images suffixes:
+	    # width_100_play_0_pos_3_gs_0 width_130_play_0_pos_0_gs_0_height_74 width_141 width_147_play_6_pos_5_gs_0 width_171_play_0_pos_0_gs_0_height_70 width_180_play_0_pos_3_gs_0 width_195_play_6_pos_5_gs_0_height_110 width_250_play_0_pos_0_gs_0_height_141 width_260_play_0_pos_0_gs_0_height_174
+	    # play - cursor type (1 - white triangle on blue rectangle, 2 - flashblock style, 3 - hd, 4 - white triangle on green rectangle, 5 - white triangle on lightblue rectangle, 6 -  white triangle on red circle)
+	    # pos - cursor position (0 & 3 - center, 1,2,4,5 - corners, 5 - right bottom corner)
+	    # gs - black&white (0 - color, 1 - bw)
+	    [ -n "$feedThumb" ] && feedThumb="<img src='http://s.v3.$prv.pl/images/${feedThumb:0:1}/${feedThumb:1:1}/${feedThumb:2:1}/uid_${feedThumb/.jpg/}_width_141_play_6_pos_5_gs_0.jpg'>" || feedThumb="<img src='$img' width='141px' height='106px'>"
 	    content3x="${content2x#*\|}"
 	    feedUrl="${content3x%%\|*}"
 	    echo "<td width='140px'><center>$feedThumb</center></td><td width='25%'><a id=\"link$item_nr\" href=\"$feedUrl\" target=\"_parent\"><b><font size=\"+1\">$feedTitle</font></b></a></td>" | tr '#' ' '
