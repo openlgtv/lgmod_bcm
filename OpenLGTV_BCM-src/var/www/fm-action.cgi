@@ -275,7 +275,9 @@ document.defaultAction = true;
 <?
 if [ "$action" = "play" ]
 then
-    ftype="`busybox stat -c '%F' "${spth}"`"
+    # ugly workaround for getting script runned twice - simply kill previous stat command
+    killall stat > /dev/null 2>&1 &
+    ftype="`stat -c '%F' "${spth}"`"
     ext="${spth##*.}"
     [ -n "$ext" ] && ext="`echo $ext | tr [:upper:] [:lower:]`"
     #play_enum="${spth}/last_played.info"
@@ -288,7 +290,7 @@ then
 	if [ "$ftype" = "directory" ]
 	then
 	    #content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
-	    content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
+	    content_all=`stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
 	else
 	    spthd="${spth%/*}"
 	    playlist=1

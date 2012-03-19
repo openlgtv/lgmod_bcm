@@ -101,50 +101,63 @@ document.defaultAction = true;
 <?
 
 useragent="tv_samsung/4"
-menuLoc="http://tvwidget.pl/xml/linki.xml"
+#menuLoc="http://tvwidget.pl/xml/linki.xml"
+#menuLoc="http://tvwidget.pl/xml/lista.xml"
+menuLoc="http://files.samsung-tv.webnode.sk/200000160-9d71c9e7e8/pl-tematapodkast.xml"
 
-if [ "$FORM_url" != "" ]
-then
-    url="$FORM_url"
-else
-    url="$menuLoc"
-fi
+[ "$FORM_url" != ""  ] && url="$FORM_url"   || url="$menuLoc"
+[ "$FORM_type" != "" ] && type="$FORM_type" || type="text/xml"
 
-if [ "$FORM_type" != "" ]
-then
-    type="$FORM_type"
-else
-    type=text/xml
-fi
+type2="${type#*/}"
+log_dir="/var/log/vod/netplayer"
+log_file="$log_dir/$type2.log"
 
-type2=`echo $type | awk -F/ '{print $2}'`
-log_file=/var/log/vod/netplayer/$type2.log
-
-[ ! -d "/var/log/vod/netplayer" ] && mkdir -p /var/log/vod/netplayer
+[ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 
 if [ "$type" = "text/xml" ]
 then
-    wget -q -U "$useragent" -O - "$url" > $log_file
+    wget -q -U "$useragent" "$url" -O "$log_file"
     echo '<BODY bgcolor="black">'
-    echo '<font size="+3" color="green">'
-    echo '<center><font size="+3">NetPlayer<br/>alternative</font><br/>by xeros<br/><br/>'
+    echo '<center><font size="+3" color="yellow">NetPlayer<br/></font><font size="+1" color="yellow">alternative<br/><font size="0" color="grey">by xeros<br/><br/></font>'
     echo '<Table id="items" class="items" Border=0 cellspacing=0 width="100%">'
     echo '<tr>'
     item_nr=1
-    for content in `cat $log_file | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}'`
+    for content in `cat "$log_file" | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}'`
     do
-	feedTitle=`echo $content | awk -F"</*title>" '{print $2}' | sed 's/|/ /g' | tr -d '\"'`
-	feedDescription=`echo $content | awk -F"</*description>" '{print $2}' | sed -e 's/|/ /g' -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's#>#><br/>#g'`
-	feedEnclosure=`echo $content | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}'`
-	feedUrl=`echo $feedEnclosure | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
-	feedType=`echo $feedEnclosure | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
-	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>"
+	#feedTitle=`echo "$content" | awk -F"</*title>" '{print $2}' | sed 's/|/ /g' | tr -d '\"'`
+	feedTitle="${content#*<title>}"
+	feedTitle="${feedTitle%%</title>*}"
+	feedTitle="${feedTitle//|/ }"
+	feedTitle="${feedTitle//\"/}"
+	#feedDescription=`echo "$content" | awk -F"</*description>" '{print $2}' | sed -e 's/|/ /g' -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's#>#><br/>#g'`
+	feedDescription="${content#*<description>}"
+	feedDescription="${feedDescription%%</description>*}"
+	feedDescription="${feedDescription//|/ }"
+	feedDescription="${feedDescription//  / }"
+	feedDescription="${feedDescription//\&lt\;/<}"
+	feedDescription="${feedDescription//\&gt\;/>}"
+	feedDescription="${feedDescription//>/><br/>}"
+	#feedEnclosure=`echo "$content" | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}'`
+	feedEnclosure="${content#*<enclosure|}"
+	feedEnclosure="${content%|/>*}"
+	#feedEnclosure="${feedEnclosure//|/ }"
+	#feedEnclosure="${feedEnclosure//||/|}"
+	#feedUrl=`echo "$feedEnclosure" | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
+	feedUrl="${feedEnclosure#*url=\"}"
+	feedUrl="${feedUrl%\"|*}"
+	feedUrl="${feedUrl//\"/}"
+	#feedType=`echo "$feedEnclosure" | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
+	feedType="${feedEnclosure#*type=\"}"
+	feedType="${feedType%\"|*}"
+	feedType="${feedType//\"/}"
+	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>" | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/g' -e 's/<img /<img style="max-width:300px;" /g' -e 's/ type=[A-Za-z0-9/]*//g'
 	[ "$(($item_nr % 2))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
+	echo "$content" >> /tmp/log.log
     done
     echo '</tr>'
     echo '</table>'
-    echo '</center></font>'
+    echo '</center>'
     echo '</BODY>'
 else
     echo "<meta HTTP-EQUIV='REFRESH' content=\"1; url=$url\">"
