@@ -20,6 +20,20 @@ Content-type: text/html
 	color:yellow;
 	text-decoration:bold;
     }
+    img {
+	max-width:300px;
+    }
+    font,p {
+	color: white;
+    }
+    a:hover,
+    a:focus,
+    a:active,
+    font:hover,
+    font:focus,
+    font:active {
+	color: #FF6633;
+    }
 </style>
 <title>NetPlayer alternative by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -118,11 +132,11 @@ if [ "$type" = "text/xml" ]
 then
     wget -q -U "$useragent" "$url" -O "$log_file"
     echo '<BODY bgcolor="black">'
-    echo '<center><font size="+3" color="yellow">NetPlayer<br/></font><font size="+1" color="yellow">alternative<br/><font size="0" color="grey">by xeros<br/><br/></font>'
-    echo '<Table id="items" class="items" Border=0 cellspacing=0 width="100%">'
+    echo '<center><font size="+3" style="color:yellow;">NetPlayer<br/></font><font size="+1" style="color:yellow;">alternative<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
+    echo '<Table id="items" class="items" Border="0" cellspacing="10" cellpadding="1" width="100%">'
     echo '<tr>'
     item_nr=1
-    for content in `cat "$log_file" | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}'`
+    for content in `cat "$log_file" | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}' | grep "<enclosure"`
     do
 	#feedTitle=`echo "$content" | awk -F"</*title>" '{print $2}' | sed 's/|/ /g' | tr -d '\"'`
 	feedTitle="${content#*<title>}"
@@ -136,24 +150,26 @@ then
 	feedDescription="${feedDescription//  / }"
 	feedDescription="${feedDescription//\&lt\;/<}"
 	feedDescription="${feedDescription//\&gt\;/>}"
-	feedDescription="${feedDescription//>/><br/>}"
+	feedDescription="${feedDescription//>/><br>}"
+	feedDescription="${feedDescription//p><br>/p>}"
+	feedDescription="${feedDescription//a><br>/a>}"
 	#feedEnclosure=`echo "$content" | awk -F"<enclosure\|" '{print $2}' | awk -F"\|/>" '{print $1}'`
-	feedEnclosure="${content#*<enclosure|}"
-	feedEnclosure="${content%|/>*}"
+	feedEnclosure="${content##*<enclosure|}"
+	feedEnclosure="${feedEnclosure%|/>*}"
 	#feedEnclosure="${feedEnclosure//|/ }"
 	#feedEnclosure="${feedEnclosure//||/|}"
 	#feedUrl=`echo "$feedEnclosure" | awk -F"url=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	feedUrl="${feedEnclosure#*url=\"}"
-	feedUrl="${feedUrl%\"|*}"
+	feedUrl="${feedUrl%%\"|*}"
 	feedUrl="${feedUrl//\"/}"
 	#feedType=`echo "$feedEnclosure" | awk -F"type=\"" '{print $2}' | awk -F"\"\|" '{print $1}' | tr -d '\"'`
 	feedType="${feedEnclosure#*type=\"}"
-	feedType="${feedType%\"|*}"
+	feedType="${feedType%%\"|*}"
 	feedType="${feedType//\"/}"
-	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/><br/></center></td>" | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/g' -e 's/<img /<img style="max-width:300px;" /g' -e 's/ type=[A-Za-z0-9/]*//g'
+	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>" | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/g' -e 's/ type=[A-Za-z0-9/]*//g' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#g' -e 's/\(&\)amp;#/\1#/g'
 	[ "$(($item_nr % 2))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
-	echo "$content" >> /tmp/log.log
+	#echo "$content" >> /tmp/log.log
     done
     echo '</tr>'
     echo '</table>'
@@ -163,7 +179,7 @@ else
     echo "<meta HTTP-EQUIV='REFRESH' content=\"1; url=$url\">"
     echo '<BODY bgcolor="black">'
     echo "Loading URL: $url ..."
-    echo '</center></font>'
+    echo '</center>'
     echo '</BODY>'
 fi
 
