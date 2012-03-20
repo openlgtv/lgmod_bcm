@@ -56,22 +56,20 @@ Content-type: text/html
 <!--
 
 <?
-export log_dir=/tmp/var/log/fm
+export log_dir="/tmp/var/log/fm"
 export log_file="$log_dir/fm.log"
 play_enum="$log_dir/last_played.info"
-[ ! -d "$log_dir" ] && mkdir -p "$log_dir"
+[ ! -d "$log_dir"    ] && mkdir -p "$log_dir"
 
-if [ -n "$FORM_side" ]
-then
-    export side="$FORM_side"
-else
-    export side="l"
-fi
+[ -n "$FORM_side"    ] && export side="$FORM_side" || export side="l"
+[ -n "$FORM_skip"    ] && export skip="$FORM_skip" || export skip="next"
+[ -n "$FORM_lpth"    ] && export lpth="$FORM_lpth"
+[ -n "$FORM_rpth"    ] && export rpth="$FORM_rpth"
+[ -n "$FORM_action"  ] && export action="$FORM_action"
+[ -n "$FORM_link"    ] && export link="$FORM_link"
 
-[ -n "$FORM_lpth" ]   && export lpth="$FORM_lpth"
-[ -n "$FORM_rpth" ]   && export rpth="$FORM_rpth"
-[ -n "$FORM_action" ] && export action="$FORM_action"
-[ -n "$FORM_link" ]   && export link="$FORM_link"
+[ -z "$FORM_timeout" ] && FORM_timeout=7000
+[ -z "$FORM_imgzoom" ] && FORM_imgzoom=0
 
 if [ "$side" = "l" ]
 then
@@ -91,9 +89,9 @@ else
 fi
 [ "$lpthx" = "/" -o "$lpthx" = "." ] && export lpthx=""
 [ "$rpthx" = "/" -o "$rpthx" = "." ] && export rpthx=""
-[ -z "$FORM_timeout" ] && FORM_timeout=7000
-[ -z "$FORM_imgzoom" ] && FORM_imgzoom=0
 
+echo "var action = '$action';"
+echo "var skip = '$skip';"
 echo "var side = '$side';"
 echo "var lpth = '$lpth';"
 echo "var rpth = '$rpth';"
@@ -117,8 +115,10 @@ var w = 0;
 var scroll = 0;
 var regexpTimeout=/timeout=[0-9]+/gim;
 var regexpImgZoom=/imgzoom=[0-9]+/gim;
+var regexpSkip=/skip=[a-z]+/gim;
 var winLoc=window.location.href;
 var currentImage;
+var refresh = 0;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
@@ -139,6 +139,7 @@ function check(e)
 			case 40: scroll=30; break; //down
 			}
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
+			# TODO: check for refresh=1 & action=play, then bind actions to left+right to update skip=prev/next, and adjustUrl;
 			{
 			if (next==0)
 			    {
@@ -169,10 +170,11 @@ function check(e)
 			{
 			switch(window.imgZoom)
 				{
-				case 0: window.imgZoom=1; resizeImage('image',window.imgZoom); break;
-				case 1: window.imgZoom=2; resizeImage('image',window.imgZoom); break;
-				case 2: window.imgZoom=0; resizeImage('image',window.imgZoom); break;
+				case 0: window.imgZoom=1; break;
+				case 1: window.imgZoom=2; break;
+				case 2: window.imgZoom=0; break;
 				}
+			resizeImage('image',window.imgZoom);
 			return false;
 			}
 		else if (key==32) 
@@ -257,6 +259,7 @@ function adjustURL()
 	{
 	winLoc=winLoc.replace(window.regexpTimeout, 'timeout='+window.refreshTime);
 	winLoc=winLoc.replace(window.regexpImgZoom, 'imgzoom='+window.imgZoom);
+	winLoc=winLoc.replace(window.regexpSkip, 'skip='+window.skip);
 	window.location.replace(winLoc);
 	}
 
@@ -268,9 +271,6 @@ function setRefresh()
 document.defaultAction = true;
 
 <? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${xselect}'); }" ?>
-
-// -->
-</script>
 
 <?
 if [ "$action" = "play" ]
@@ -287,6 +287,7 @@ then
     then
 	refresh=1
 	file_num=1
+	echo "refresh = 1;"
 	if [ "$ftype" = "directory" ]
 	then
 	    #content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
@@ -295,7 +296,7 @@ then
 	    spthd="${spth%/*}"
 	    playlist=1
 	    content_all=`egrep -v "#|^$" "$spth" | awk -F'No_FiElD_DeLiM' -v spthd="$spthd" '{if (match($0,/^\//)) {print "root" $1} else {if (match($0,/:\/\//)) {print $1} else {print "root" spthd "/" $1}}}' | sed -e 's# #\&nbsp;#g' -e 's/\r//g'`
-	    echo "$content_all" > /tmp/content_all.log
+	    #echo "$content_all" > /tmp/content_all.log
 	    #play_enum="${spth}.info"
 	    spth="${spthd}"
 	fi
@@ -304,7 +305,11 @@ then
 	    echo -e "# $play_enum_comment\n1" > "${play_enum}"
 	    start_playback=1
 	else
-	    start_playback=$((`grep -v "#" "${play_enum}"`+1))
+	    #start_playback=$((`grep -v "#" "${play_enum}"`+1))
+	    start_playback=`grep -v "#" "${play_enum}"`
+	    [ "$skip" = "prev" ] && dif="(-1)" || dif="1" # TODO: skip=random handling
+	    start_playback="$((${start_playback}+${dif}))"
+	    [ "$start_playback" -lt "1" ] && start_playback=1
 	    echo -e "# $play_enum_comment\n$start_playback" > "${play_enum}"
 	fi
 	file_num_max="`echo $content_all | wc -w`"
@@ -319,7 +324,8 @@ then
     fi
     ext="${spth##*.}"; ext="`echo $ext | tr [:upper:] [:lower:]`"
     [ -n "$spth_next" ] && ext_next="${spth_next##*.}" && ext_next="`echo $ext_next | tr [:upper:] [:lower:]`"
-    [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "<script type='text/javascript'>window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
+    #[ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "<script type='text/javascript'>window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
+    [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
     full_spth="$spth"
     full_spth_next="$spth_next"
     [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"    
@@ -331,7 +337,7 @@ then
 	then
 	    ftype=image
 	else
-	    echo "<script type='text/javascript'>"
+	    #echo "<script type='text/javascript'>"
 	    if [ "$refresh" = "1" ]
 	    then
 		echo "setTimeout(\"window.location='$full_spth'\",2000);"
@@ -339,13 +345,16 @@ then
 		echo "setTimeout(\"window.location.replace('$full_spth')\",2000);"
 	    fi
 	    echo "setTimeout(\"window.location.replace(window.location.href)\",4000);"
-	    echo "</script>"
+	    #echo "</script>"
 	fi
     fi
     ############[ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]*/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
 fi
 
 ?>
+
+// -->
+</script>
 
 </HEAD>
 <BODY bgcolor="black">
