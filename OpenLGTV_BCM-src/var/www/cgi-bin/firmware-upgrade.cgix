@@ -24,26 +24,19 @@ content-type: text/html
 
 	    USB1_DIR=/mnt/usb1/Drive1
 	    USB2_DIR=/mnt/usb2/Drive1
-	    
 	    if [ -f "/tmp/usbdir" ]
 	    then
 		USB_DIR="`cat /tmp/usbdir`"
 	    else
-		if [ -d "$USB2_DIR/OpenLGTV_BCM" ]
-		then
-		    export USB_DIR=$USB2_DIR
-		else
-		    export USB_DIR=$USB1_DIR
-		fi
+		[ -d "$USB2_DIR/OpenLGTV_BCM" ] && export USB_DIR=$USB2_DIR || export USB_DIR=$USB1_DIR
 	    fi
 	    export OpenLGTV_BCM_USB=$USB_DIR/OpenLGTV_BCM
-
 	    export file_ext=`basename $FORM_uploadfile_name | sed 's/.*\.//g' | tr [:upper:] [:lower:]`
 	    export file_name=`basename $FORM_uploadfile_name | sed 's/\.*//g' | tr [:upper:] [:lower:]`
 	    echo "$FORM_uploadfile_name" > /tmp/file.txt
 	    if [ "$file_ext" = "epk" ]
 	    then
-		upload_dir=$USB_DIR/LG_DTV
+		upload_dir="$USB_DIR/LG_DTV"
 		file_ok=1
 	    else
 		# TODO whats there - 'tar.sh' or 'sh'?
@@ -60,13 +53,13 @@ content-type: text/html
 		    file_ok=0
 		fi
 	    fi
-	    if [ ! -d "$upload_dir" -a "$file_ok" = "1" ]; then
-		mkdir -p "$upload_dir"
-	    fi
-	    if [ -d "$upload_dir" -a "$file_ok" = "1" ]; then
+	    [ ! -d "$upload_dir" -a "$file_ok" = "1" ] && mkdir -p "$upload_dir"
+	    if [ -d "$upload_dir" -a "$file_ok" = "1" ]
+	    then
 		cp -f $HASERL_uploadfile_path $upload_dir/$FORM_uploadfile_name
 		sync
-		if [ -f $upload_dir/$FORM_uploadfile_name ]; then
+		if [ -f $upload_dir/$FORM_uploadfile_name ]
+		then
 		    echo "<style> body { background-color: green; } </style>"
 		    echo "File <b>$FORM_uploadfile_name</b> is uploaded to:<br/><b>$upload_dir</b> dir on USB drive.<br/><br/>"
 		    echo "At next TV boot you should get firmware upgrade."
@@ -83,7 +76,7 @@ content-type: text/html
 	    echo "<style> body { background-color: red; } </style>"
 	    echo "Select file and press Upload button. &nbsp;[OPTION AVAILABLE ONLY REMOTELY] &nbsp; [DOESN'T WORK YET]"
 	fi
-	echo "<br/><br/></font><font size="+1">Going back to previous page...<br/>"
+	echo '<br/><br/></font><font size="+1"Going back to previous page...<br/>'
 	echo '<meta HTTP-EQUIV="REFRESH" content="8; url=../home.cgi">'
 	?>
 	</center></font>

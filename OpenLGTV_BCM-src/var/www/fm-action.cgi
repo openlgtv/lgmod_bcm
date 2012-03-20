@@ -56,6 +56,9 @@ Content-type: text/html
 <!--
 
 <?
+
+#echo "START:`date`" > /tmp/log.log
+
 export log_dir="/tmp/var/log/fm"
 export log_file="$log_dir/fm.log"
 play_enum="$log_dir/last_played.info"
@@ -119,6 +122,7 @@ var regexpSkip=/skip=[a-z]+/gim;
 var winLoc=window.location.href;
 var currentImage;
 var refresh = 0;
+var timer;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
@@ -133,39 +137,43 @@ function check(e)
 			{
 			case 33: scroll=-600; break; //ch up
 			case 34: scroll=600; break; //ch up
-			case 37: next = current; nside = 'l'; break; //left
+			case 37: next = current; nside = 'l'; skip='prev'; break; //left
 			case 38: scroll=-30; break; //up
-			case 39: next = current; nside = 'r'; break; //right
+			case 39: next = current; nside = 'r'; skip='next'; break; //right
 			case 40: scroll=30; break; //down
 			}
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
-			# TODO: check for refresh=1 & action=play, then bind actions to left+right to update skip=prev/next, and adjustUrl;
+		{
+		    if (imgZoom!=2)
+		    {
+			if (next==0) next = 1;
+			if (action=='play' && refresh==1 && (key==37|key==39))
 			{
-			if (next==0)
+			    adjustURL();
+			} else {
+			    //Check if new link exists, if not then go to previous one until finds the one that exists
+			    if (!document.links['link_' + nside + next])
 			    {
-				next = 1;
-			    }
-			//Check if new link exists, if not then go to previous one until finds the one that exists
-			if (!document.links['link_' + nside + next])
-			{
 			    do {
 				next = next - 1;
 			    } while ((!document.links['link_' + nside + next])&&(next >= 1));
-			}
-			ChangeBgColor();
-			//Move to the next bookmark
-			if (document.links['link_' + nside + next])
-			{
-			    var code=document.links['link_' + nside + next].name;
-			    document.links['link_' + nside + next].focus();
-			    current = next;
-			    side = nside;
-			} else if (document.getElementById('run')) {
-			    document.getElementById('run').scrollTop=document.getElementById('run').scrollTop+(scroll);
+			    }
+			    ChangeBgColor();
+			    //Move to the next bookmark
+			    if (document.links['link_' + nside + next])
+			    {
+				var code=document.links['link_' + nside + next].name;
+				document.links['link_' + nside + next].focus();
+				current = next;
+				side = nside;
+			    } else if (document.getElementById('run')) {
+				document.getElementById('run').scrollTop=document.getElementById('run').scrollTop+(scroll);
+			    }
 			}
 			//Prevent scrolling
 			return false;
-			}
+		    }
+		}
 		else if (key==13) 
 			{
 			switch(window.imgZoom)
@@ -177,26 +185,35 @@ function check(e)
 			resizeImage('image',window.imgZoom);
 			return false;
 			}
+		else if (key==19) 
+			{
+			// PAUSE - pause slideshow
+			if (action == 'play') clearTimeout(window.timer);
+			return false;
+			}
 		else if (key==32) 
 			{
 			if (document.links['link_' + side + current]) document.getElementById('link_' + side + current).click();
+			if (action == 'play') clearTimeout(window.timer);
 			return false;
 			}
 		else if ((key>47)&(key<60)) { window.refreshTime=(key-48)*2000; return false; }
+		else if (key==415) 
+			{
+			// PLAY - resume slideshow
+			if (action=='play' && refresh==1)
+			    {
+			    skip='next';
+			    adjustURL();
+			    }
+			}
 		else if (key==461|key==27) 
 			{
 			//the back button on the remote control or ESC have been pressed
 			//NetCastBack API
 			//window.NetCastBack();
 			//lets get back to WebUI instead of closing NetCast service
-			<? 
-			if [ "$action" != "play" ]
-			then
-			    echo "history.go(-1);"
-			else
-			    echo "backToFM();"
-			fi
-			?>
+			<? [ "$action" != "play" ] && echo "history.go(-1);" || echo "backToFM();" ?>
 			}
 		else if (key==1001) 
 			{
@@ -213,7 +230,6 @@ function ChangeBgColor()
 	if (document.getElementById('tr_' + side + current)) document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
 	if (document.getElementById('tr_' + nside + next)) document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
 	}
-	
 
 function setCurrent(element)
 	{
@@ -221,7 +237,6 @@ function setCurrent(element)
 	//cut number after 'link' name
 	current = string.slice(4,string.length);
 	}
-	
 
 function OnLoadSetCurrent(element)
 	{
@@ -264,15 +279,14 @@ function adjustURL()
 	}
 
 function setRefresh()
-	{
-	setTimeout(adjustURL, window.refreshTime);
-	}
+	{ window.timer = setTimeout(adjustURL, window.refreshTime); }
 
 document.defaultAction = true;
 
-<? echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${xselect}'); }" ?>
-
 <?
+
+echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${xselect}'); }"
+
 if [ "$action" = "play" ]
 then
     # ugly workaround for getting script runned twice - simply kill previous stat command
@@ -340,10 +354,11 @@ then
 	    #echo "<script type='text/javascript'>"
 	    if [ "$refresh" = "1" ]
 	    then
-		echo "setTimeout(\"window.location='$full_spth'\",2000);"
+		echo "window.timer = setTimeout(\"window.location='$full_spth'\",2000);"
 	    else
-		echo "setTimeout(\"window.location.replace('$full_spth')\",2000);"
+		echo "window.timer = setTimeout(\"window.location.replace('$full_spth')\",2000);"
 	    fi
+	    # TODO: heh, what's that for???
 	    echo "setTimeout(\"window.location.replace(window.location.href)\",4000);"
 	    #echo "</script>"
 	fi
@@ -351,18 +366,11 @@ then
     ############[ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]*/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
 fi
 
-?>
+#echo "RUNNING:`date`" >> /tmp/log.log
 
-// -->
-</script>
-
-</HEAD>
-<BODY bgcolor="black">
-
-<?
+echo "</script></HEAD><BODY bgcolor='black'>"
 
 [ "$ftype" != "text" ] && echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
-
 [ "$ftype" != "image" ] && echo '<div style="width:99%; margin: 0 auto; font-size:16px; background-color:white;">'
 
 [ "$FORM_pid" != "" ] && pid="$FORM_pid"
@@ -383,7 +391,7 @@ then
     fi
     timeout=1000
     echo "<script type=\"text/javascript\">"
-    echo "setTimeout(\"backToFM()\",$timeout);"
+    echo "window.timer = setTimeout(\"backToFM()\",$timeout);"
     echo "</script>"
     echo "</font></div></center></body></head></html>"
     exit 0
@@ -446,7 +454,7 @@ then
 		echo "Are you sure you want to ${action}?<br/><font size='+2' color='black'><br/>$spth</font>"
 	    else
 		echo "No copy/move actions have been executed yet!<br/><br/>"
-		echo '<script type="text/javascript">setTimeout("history.go(-1)",3000);</script>'
+		echo '<script type="text/javascript">window.timer = setTimeout("history.go(-1)",3000);</script>'
 		exit 0
 	    fi
 	fi
@@ -671,11 +679,14 @@ else
     then
 	echo "<script type=\"text/javascript\">"
 	echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }"
-	echo "setTimeout(\"backToFM()\",$timeout);"
+	echo "window.timer = setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
     fi
 fi
 [ "$ftype" != "image" ] && echo -n '</div>'
 [ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width:'100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
+
+#echo "STOP:`date`" >> /tmp/log.log
+
 ?>
 </BODY></HTML>
