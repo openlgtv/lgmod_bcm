@@ -283,6 +283,9 @@ function setRefresh()
 
 document.defaultAction = true;
 
+// break JS code for two contexts to make keyevent actions more responsive - to make them work even when rest part was not yet completed
+</script><script>
+
 <?
 
 echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${xselect}'); }"

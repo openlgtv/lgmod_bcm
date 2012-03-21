@@ -117,7 +117,8 @@ document.defaultAction = true;
 useragent="tv_samsung/4"
 #menuLoc="http://tvwidget.pl/xml/linki.xml"
 #menuLoc="http://tvwidget.pl/xml/lista.xml"
-menuLoc="http://files.samsung-tv.webnode.sk/200000160-9d71c9e7e8/pl-tematapodkast.xml"
+#menuLoc="http://files.samsung-tv.webnode.sk/200000160-9d71c9e7e8/pl-tematapodkast.xml"
+menuLoc="http://bit.ly/interpodcast"
 
 [ "$FORM_url" != ""  ] && url="$FORM_url"   || url="$menuLoc"
 [ "$FORM_type" != "" ] && type="$FORM_type" || type="text/xml"
@@ -166,11 +167,13 @@ then
 	feedType="${feedEnclosure#*type=\"}"
 	feedType="${feedType%%\"|*}"
 	feedType="${feedType//\"/}"
-	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>" | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/g' -e 's/ type=[A-Za-z0-9/]*//g' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#g' -e 's/\(&\)amp;#/\1#/g'
+	#echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>" | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/g' -e 's/ type=[A-Za-z0-9/]*//g' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#g' -e 's/\(&\)amp;#/\1#/g'
+	echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"netplayer.cgi?type=$feedType&amp;url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
+	[ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	[ "$(($item_nr % 2))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
 	#echo "$content" >> /tmp/log.log
-    done
+    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/g' -e 's/ type=[A-Za-z0-9/]*//g' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#g' -e 's/\(&\)amp;#/\1#/g'
     echo '</tr>'
     echo '</table>'
     echo '</center>'
