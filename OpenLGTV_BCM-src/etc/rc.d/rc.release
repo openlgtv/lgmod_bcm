@@ -3,13 +3,29 @@
 # (OPEN)RELEASE app starting script for LG Broadcom platform based TVs by xeros
 # Source code released under GPL License
 
-[ "$1" = "restart" ] && echo "OpenLGTV_BCM-WARN: rc.release: trying to restart (OPEN)RELEASE - TV might reboot" && killall RELEASE && sleep 1.5 && killall -9 RELEASE && sleep 1 && killall -9 RELEASE && sleep 0.5
+olockfile="/mnt/user/lock/openrelease-try.lock"
+olockfile_prepare="/mnt/user/lock/openrelease-try-prepare.lock"
+
+if [ "$1" = "restart" ]
+then
+    echo "OpenLGTV_BCM-WARN: rc.release: trying to restart (OPEN)RELEASE - TV might reboot"
+    killall RELEASE && sleep 1.5 && killall -9 RELEASE && sleep 1 && killall -9 RELEASE && sleep 0.5
+    [ -f "$olockfile" ] && rm -f "$olockfile"
+fi
 
 [ -z "$skip_rel_check" ] && [ -n "`pgrep RELEASE`" ] && echo "OpenLGTV_BCM-ERROR: refusing to start OPENRELEASE as (OPEN?)RELEASE is already running" && exit 1
+
+if [ "$OPENRELEASE" = "1" -a -f "$olockfile" ]
+then
+    echo "OpenLGTV_BCM-ERROR: last boot with OPENRELEASE was unclean - it has probably crashed as lockfile ($olockfile) exists. Disabling OPENRELEASE!"
+    export OPENRELEASE=0
+    sed -i -e 's/\(OPENRELEASE\)=1/\1=0/g' /mnt/user/cfg/settings && rm -f "$olockfile"
+fi
 
 if [ "$OPENRELEASE" = "1" ]
 then
     echo "OpenLGTV_BCM-INFO: setting OPENRELEASE to start"
+    rname="OPENRELEASE"
     RELEASE_cmd="/usr/bin/OPENRELEASE"
     if [ ! -d "/mnt/user/etc/openrelease" ]
     then
@@ -32,22 +48,29 @@ then
 	echo "OpenLGTV_BCM-INFO: found /mnt/user/lib/libopenrelease.so, using it for OPENRELEASE"
 	mount --bind /mnt/user/lib/libopenrelease.so /usr/lib/libopenrelease.so
     fi
+    if [ "$uver" != "$ver" -o -f "$olockfile_prepare" ]
+    then
+	echo "OpenLGTV_BCM-INFO: upgrade detected or OPENRELEASE has got enabled recently, creating lockfile ($olockfile) to check if OPENRELEASE wont crash"
+	touch "$olockfile"
+	[ -f "$olockfile_prepare" -a -f "$olockfile" ] && rm -f "$olockfile_prepare"
+    fi
 else
     echo "OpenLGTV_BCM-INFO: setting RELEASE to start"
+    rname="RELEASE"
     RELEASE_cmd="/lg/lgapp/RELEASE 0"
     skip_rel_check=""
 fi
 
 if [ "$RELEASE_in_tmux" = "1" ]
 then
-    echo "OpenLGTV_BCM-INFO: start RELEASE in tmux"
+    echo "OpenLGTV_BCM-INFO: start $rname in tmux"
     echo ""
     /usr/bin/tmux new-session -n 'RELEASE' "$RELEASE_cmd"
 else
-    echo "OpenLGTV_BCM-INFO: start RELEASE"
+    echo "OpenLGTV_BCM-INFO: start $rname"
     echo ""
     $RELEASE_cmd
 fi
-echo "OpenLGTV_BCM-INFO: RELEASE session has quit or detached from terminal"
+echo "OpenLGTV_BCM-INFO: $rname session has quit or detached from terminal"
 
 skip_rel_check=""

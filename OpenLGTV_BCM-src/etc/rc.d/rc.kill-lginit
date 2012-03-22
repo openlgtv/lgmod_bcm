@@ -11,10 +11,10 @@ magic_clean=377377377377
 
 [ -f "/mnt/user/etc/vars" ] && source /mnt/user/etc/vars
 [ -z "$country_model" -o -z "$platform" ] && source /etc/rc.d/rc.platform
-[ -z "$country_model" -o "$platform" != "GP2B" ] && echo "OpenLGTV_BCM-WARN: detected platform: ${platform}, country_model: ${country_model}, not touching lginit" && exit 1
 
 if [ -n "`grep -m 1 '^mtd4:.*lginit' /proc/mtd`" ]
 then
+    [ -z "$country_model" -o "$platform" != "GP2B" ] && echo "OpenLGTV_BCM-WARN: detected platform: ${platform}, country_model: ${country_model}, not touching lginit" && exit 1
     # TODO: improve check code with maybe hexdump?
     if [ "`head -c4 /dev/mtd4 | od -c | head -n1 | awk '{print $2 $3 $4 $5}'`" != "$magic_clean" ]
     then

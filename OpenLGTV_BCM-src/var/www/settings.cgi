@@ -33,6 +33,7 @@ content-type: text/html
 				    opt_val=0
 				fi
 				echo "$opt_name=$opt_val" >> /tmp/settings.save
+				[ "$opt_name" = "OPENRELEASE" -a "$opt_val" = "1" ] && touch "/mnt/user/lock/openrelease-try-prepare.lock"
 			    else
 				opt_val="${i#*=}"
 			    fi

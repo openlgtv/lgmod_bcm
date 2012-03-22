@@ -14,9 +14,9 @@ alias dir="ls -al"
 alias vim="vi"
 alias screen="tmux"
 alias scr="tmux"
+alias tma='tmux attach-session'
 
 alias dropc='echo 3 > /proc/sys/vm/drop_caches; free'
-alias tma='tmux attach-session'
 
 #alias unmount="for i in /mnt/usb*/*; do /bin/busybox2 umount $i 2>&1 | grep -v 'Invalid argument'; done"
 #alias unmount="hush -c \"echo umount /mnt/usb{1,2}/Drive{1,2,3,4} 2>&1 | grep -v 'Invalid argument'\""
@@ -25,9 +25,9 @@ alias unmount='umount -r $(grep -n "^/dev/sd" /proc/mounts | sort -rn | cut -d" 
 #alias unmountall='umount -r $(grep -nv "^lgapp_xip /mnt/lg/lgapp cramfs" /proc/mounts | grep -v "^rootfs" | sort -rn | cut -d" " -f2)'
 alias unmountall='umount -r $(grep -nv " cramfs " /proc/mounts | sort -rn | cut -d" " -f2)'
 
-alias reboot="unmountall; sync; sleep 1; /sbin/reboot"
+#alias reboot="unmountall; sync; sleep 1; /sbin/reboot"
+alias reboot="/etc/rc.d/rc.poweroff; sync; sleep 1; /sbin/reboot"
 
-if [ -f /mnt/user/etc/profile ]
-then
-    source /mnt/user/etc/profile
-fi
+alias poweroff='[ -f "/tmp/openrelease.out" ] && echo "ka 01 00" >> /tmp/openrelease.out || /sbin/poweroff'
+
+[ -f /mnt/user/etc/profile ] && source /mnt/user/etc/profile

@@ -1,0 +1,21 @@
+#!/bin/sh
+sname=`basename $0`
+olockfile="/mnt/user/lock/openrelease-try.lock"
+echo "${sname}: checking for OPENRELEASE olockfile"
+if [ -f "$olockfile" ]
+then
+    echo "${sname}: OPENRELEASE olockfile (${olockfile}) found, checking run time"
+    fdate=`stat -c '%Y' "$olockfile"`
+    cdate=`date +'%s'`
+    timediff="$((${cdate}-${fdate}))"
+    if [ "$timediff" -ge "60" ]
+    then
+	echo "${sname}: OPENRELEASE is running for more than a minute, removing olockfile (${olockfile})"
+	rm -f "$olockfile"
+    else
+	echo "${sname}: Crash detection: OPENRELEASE is running for less than a minute!!! It will get disabled on next boot!"
+    fi
+else
+    echo "${sname}: OPENRELEASE olockfile (${olockfile}) not found, assuming it's working properly"
+fi
+echo "${sname}: finished"
