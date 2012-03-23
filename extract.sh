@@ -1,32 +1,34 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.95 by xeros
+# OpenLGTV BCM 0.5.0-devel installation script v.1.99 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
 SKIP_LINES=98
 
-echo "OpenLGTV BCM installator"
+echo "[ OpenLGTV BCM installer ]"
 
 if [ "$1" = "--help" -o "$1" = "-help" -o "$1" = "-h" -o "$1" = "help" ]
 then
     echo "Usage: $0 [option]"
     echo "Where [option] can be one of the following:"
-    echo " extract     - just extracts image to /tmp"
-    echo " chroot      - extracts, mounts, chroots into new rootfs with /bin/sh only, no installation"
-    echo " info        - gathers much useful info for development into info.log file"
-    echo " noinstall   - as above but checks for prerequestities and makes backup if running on LG firmware then exits just before flashing"
+    echo " extract     - just extract image to /tmp"
+    echo " chroot      - extract+mount+chroot into new rootfs with shell, no install"
+    echo " info        - gather much useful info for development into info.log file"
+    echo " info paste  - as above + paste into pastebin.org and return url to logs"
+    echo " noinstall   - check for prerequestities and make backup, no install"
     echo " install     - makes real installation"
     echo " nobackup    - skip doing backup before installation"
-    echo " drop_caches - drop caches during installation to free more memory (unstable)"
+    echo " backup      - force making backup, even if it's already done"
+    echo " drop_caches - drop caches during installation to free memory (unstable)"
     echo " help        - this usage information"
     exit 0
 fi
 
-#echo 'Extracting ...'; export base="/tmp/`basename ${0%.sh.zip}`"; export file_sqf="`basename ${0%.sh.zip}`.sqf"
+export file_tarsh="$0"
 export base="/tmp/`basename ${0%.tar.sh}`"
 export file_sqf="`basename ${0%.tar.sh}`.sqf"
-
-echo "Extracting $0 into $base ..."
+#export separator="----------------------------------------------------------------"
+export separator="------------------------------------------------------------------------------"
 
 [ -d "$base" ] && rm -rf $base
 
@@ -38,13 +40,18 @@ then
 fi
 mkdir -p "$base"
 
+echo "Extracting $0 into ${base}:"
+echo "$separator"
+
 #tail -n +51 "$0" | unzip -o - -d "$base" || { echo "Error: Extraction failed."; exit 1; }; sync #no unzip in orig fw
 tail -n +$SKIP_LINES "$0" | tar xv -C "$base" || { echo "Error: Extraction failed."; exit 1; }; sync
-echo "OpenLGTV BCM installation image has been extracted."
+echo "$separator"
+echo "OpenLGTV BCM installation image has been extracted successfully."
+echo "$separator"
 
 [ "$1" = "extract" ] && exit 0
 
-[ "`cat /proc/mtd 2>/dev/null | wc -l`" -lt "30" ] && echo "This is OpenLGTV BCM firmware installation file, do not run it on PC or Saturn platform based TVs" && exit 1
+[ "`cat /proc/mtd 2>/dev/null | wc -l`" -lt "30" ] && echo "This installer is for Broadcom based LG TVs, do not run it on PC or Saturn platform based TVs" && exit 1
 
 # enforce variables from settings file and export them for install.sh
 if [ -f "/mnt/user/cfg/settings" ]
@@ -57,10 +64,7 @@ fi
 export current_rootfs_ver="`cat /etc/ver | awk -F, '{print $1}'`"
 export ver_installed="`cat /etc/ver2 2>/dev/null`"
 dir="`dirname $0`"
-if [ -z "$dir" -o "$dir" = "." ]
-then
-    dir="`pwd`"
-fi
+[ -z "$dir" -o "$dir" = "." ] && dir="`pwd`"
 export dir
 export chrooted=1
 
@@ -86,12 +90,15 @@ chmod 755 "${CHR}${base}/install.sh"
 if [ "$1" = "chroot" ]
 then
     echo "Starting shell inside chrooted (virtual) root filesystem environment..."
+    echo "$separator"
     /usr/sbin/chroot "$CHR" /bin/sh --login
 else
-    echo "Starting installer: $base/install.sh $@"
+    echo "Starting second part of installer: $base/install.sh $@"
+    echo "$separator"
     /usr/sbin/chroot "$CHR" "$base/install.sh" "$@"
 fi
 #TODO: umount,...
-for i in `grep " $CHR" /proc/mounts | awk '{print $2}' | tac`; do umount ${i}; done
+tac=`which tac`; [ -z "$tac" ] && tac="$CHR/usr/bin/tac" # on LG rootfs there's no 'tac'
+for i in `grep " $CHR" /proc/mounts | awk '{print $2}' | $tac`; do umount ${i}; done
 
 exit;

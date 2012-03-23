@@ -19,7 +19,7 @@ for dst in `grep "$what" /proc/mounts | cut -d" " -f2 | tac`
 do
     if [ "${what_pre:0:7}" = "/dev/sd" ]
     then
-	echo "OpenLGTV_BCM-INFO: Unmount script: killing processes that use \"$what_pre\" devices in mountpoint: \"$dst\""
+	echo "OpenLGTV_BCM-INFO: Unmount script: checking processes that use \"$what_pre\" devices in mountpoint: \"$dst\""
 	# simplier would be with 'fuser -k' but first need to check if RELEASE or other essential process is not using it
 	for prc in `fuser -m "$dst"`
 	do

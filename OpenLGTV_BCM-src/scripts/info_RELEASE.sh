@@ -26,8 +26,7 @@ fi
 # set first read only the part of RELEASE which should fit all (most?) BCM 2010 2D and 3D firmwares
 read="dd bs=20000 skip=640 count=200 if=$RELEASE"
 
-rel_info="`$read 2>/dev/null | strings | grep -m1 -B1 -A4 swfarm | grep -v '^0.\..*\..*' | \
-    head -n 5 | sed \"s/^'//g\"`"
+rel_info="`$read 2>/dev/null | strings | grep -m1 -B1 -A4 swfarm | grep -v '^0.\..*\..*' | head -n 5 | sed \"s/^'//g\"`"
 # lets compare if the data got is right - not less than 7 words, not more than 100 characters
 if [ "`echo $rel_info | wc -w`" -lt "7" -o "`echo $rel_info | wc -w`" -gt "100" ]
 then
