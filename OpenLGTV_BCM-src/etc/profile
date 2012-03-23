@@ -29,5 +29,6 @@ alias unmountall='umount -r $(grep -nv " cramfs " /proc/mounts | sort -rn | cut 
 alias reboot="/etc/rc.d/rc.poweroff; sync; sleep 1; /sbin/reboot"
 
 alias poweroff='[ -e "/tmp/openrelease.in" ] && echo "ka 01 00" >> /tmp/openrelease.in || /sbin/poweroff'
+alias halt='[ -e "/tmp/openrelease.in" ] && echo "ka 01 00" >> /tmp/openrelease.in || /sbin/poweroff'
 
 [ -f /mnt/user/etc/profile ] && source /mnt/user/etc/profile
