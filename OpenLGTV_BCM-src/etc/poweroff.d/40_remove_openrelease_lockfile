@@ -10,7 +10,7 @@ then
     timediff="$((${cdate}-${fdate}))"
     if [ "$timediff" -ge "60" ]
     then
-	echo "${sname}: OPENRELEASE is running for more than a minute, removing lockfile (${olockfile})"
+	echo "${sname}: OPENRELEASE is running for more than a minute ($timediff seconds), removing lockfile (${olockfile})"
 	rm -f "$olockfile"
     else
 	echo "${sname}: Crash detection: OPENRELEASE is running for less than a minute!!! It will get disabled on next boot!"

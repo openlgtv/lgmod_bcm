@@ -179,16 +179,28 @@ then
     back_dir="$OpenLGTV_BCM_USB/backup"
     echo "OpenLGTV BCM installation is being run first time or backup was forced" | tee -a $log
     echo "Making backup of current firmware to $back_dir" | tee -a $log
+    [ -n "`which nanddump`" ] && nanddmp=1
     mkdir -p "$back_dir" 2>&1 | tee -a $log
     for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/' -e 's/://g'`
     do
 	echo "Making backup of partition: $i ..." | tee -a $log
-	cat /dev/`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'` > $back_dir/$i 2>$log
-	if [ "$?" -ne "0" ]
+	partname=`echo $i | sed -e 's/^mtd[0-9]*_//g'`
+	partno=`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'`
+	if [ "$partname" != "total" -o "$nanddmp" != "1" ]
 	then
-	    echo "ERROR: Problem making backup of /dev/`echo $i | sed -e 's/_.*//g' -e 's/mtd0/mtd/g'` to $back_dir/$i" 2>&1 | tee -a $log
-	    backup_error=1
-	fi
+	    cat "/dev/$partno" > "$back_dir/$i" 2>$log
+	    if [ "$?" -ne "0" ]
+	    then
+		echo "ERROR: Problem making backup of /dev/$partno to $back_dir/$i" 2>&1 | tee -a $log
+		backup_error=1
+	    fi
+	else
+	    nanddump -f "$back_dir/$i" "/dev/$partno" 2>$log
+	    if [ "$?" -ne "0" ]
+	    then
+		echo "ERROR: Problem making nanddump backup of /dev/$partno to $back_dir/$i,nand" 2>&1 | tee -a $log
+		backup_error=1
+	    fi
     done
     for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}' | sed -e 's#^/##g'`
     do

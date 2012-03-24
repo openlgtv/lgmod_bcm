@@ -3,7 +3,7 @@
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
-SKIP_LINES=105
+SKIP_LINES=108
 
 echo "[ OpenLGTV BCM installer ]"
 
@@ -25,8 +25,11 @@ then
 fi
 
 export file_tarsh="$0"
-export base="/tmp/`basename ${0%.tar.sh}`"
-export file_sqf="`basename ${0%.tar.sh}`.sqf"
+# basename not available on 2009 BCM models
+#export base="/tmp/`basename ${0%.tar.sh}`"
+basef="${0##*/}"
+export base="/tmp/${basef%.tar.sh}"
+export file_sqf="${basef%.tar.sh}.sqf"
 #export separator="----------------------------------------------------------------"
 export separator="------------------------------------------------------------------------------"
 
