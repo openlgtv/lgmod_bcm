@@ -127,18 +127,24 @@ echo "// --></script></HEAD>"
 type2="${type#*/}"
 log_dir="/var/log/vod/rss"
 log_file="$log_dir/$type2.log"
+rm -f "$log_file" 2>/dev/null
 
 [ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 
+echo q1
+
 if [ "$type" = "text/xml" ]
 then
+    echo q2
     wget -q -U "$useragent" "$url" -O "$log_file"
+    echo q3
     echo '<BODY bgcolor="black">'
-    echo '<center><font size="+3" style="color:yellow;">RSS<br/></font><font size="+1" style="color:yellow;">parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
+    #echo '<center><font size="+3" style="color:yellow;">RSS<br/></font><font size="+1" style="color:yellow;">parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
+    echo '<center><font size="+1" style="color:yellow;">RSS parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
     echo '<Table id="items" class="items" Border="0" cellspacing="10" cellpadding="1" width="100%">'
     echo '<tr>'
     item_nr=1
-    rm -f /tmp/log.log /tmp/log2.log
+    rm -f /tmp/log.log /tmp/log2.log 2>/dev/null
     for content in `cat "$log_file" | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}' | egrep "<enclosure|<link"`
     do
 	feedTitle="${content#*<title>}"
