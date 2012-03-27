@@ -11,6 +11,7 @@ Content-type: text/html
 <style type="text/css">
     body {
 	font-family:"TiresiasScreenfont";
+	background-color:black;
     }
     a:link {
 	color:white;
@@ -118,6 +119,7 @@ menuLoc="http://bit.ly/interpodcast"
 [ -n "$FORM_url"  ] && url="$FORM_url"   || url="$menuLoc"
 [ -n "$FORM_type" ] && type="$FORM_type" || type="text/xml"
 [ -z "$FORM_url" -a -z "$FORM_col" ] && col=4 && nextcol=2 || nextcol="$col" # let's set 4 columns for index site
+
 maxwidth="$((1270/$col))"
 
 echo "var col = $col; //number of 'cells' in a row"
@@ -138,7 +140,7 @@ then
     echo q2
     wget -q -U "$useragent" "$url" -O "$log_file"
     echo q3
-    echo '<BODY bgcolor="black">'
+    echo '<BODY>'
     #echo '<center><font size="+3" style="color:yellow;">RSS<br/></font><font size="+1" style="color:yellow;">parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
     echo '<center><font size="+1" style="color:yellow;">RSS parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
     echo '<Table id="items" class="items" Border="0" cellspacing="10" cellpadding="1" width="100%">'
@@ -211,7 +213,9 @@ then
 	[ "$(($item_nr % $col))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
 	echo "$content" >> /tmp/log.log
-    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI'
+    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g'
+    # TODO: work on sed code above
+
     echo '</tr>'
     echo '</table>'
     echo '</center>'
