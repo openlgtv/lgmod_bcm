@@ -99,7 +99,7 @@ function setCurrent(element)
 function OnLoadSetCurrent(element)
 	{
 	current=1;
-	document.links['link1'].focus();
+	if (document.links['link1']) document.links['link1'].focus();
 	}
 
 document.defaultAction = true;
@@ -120,11 +120,12 @@ menuLoc="http://bit.ly/interpodcast"
 [ -n "$FORM_type" ] && type="$FORM_type" || type="text/xml"
 [ -z "$FORM_url" -a -z "$FORM_col" ] && col=4 && nextcol=2 || nextcol="$col" # let's set 4 columns for index site
 
-maxwidth="$((1270/$col))"
+maxwidth="$((1200/$col))"
 
 echo "var col = $col; //number of 'cells' in a row"
 
-echo "// --></script></HEAD>"
+echo "// -->"
+echo "</script></HEAD>"
 
 type2="${type#*/}"
 log_dir="/var/log/vod/rss"
@@ -133,13 +134,9 @@ rm -f "$log_file" 2>/dev/null
 
 [ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 
-echo q1
-
 if [ "$type" = "text/xml" ]
 then
-    echo q2
     wget -q -U "$useragent" "$url" -O "$log_file"
-    echo q3
     echo '<BODY>'
     #echo '<center><font size="+3" style="color:yellow;">RSS<br/></font><font size="+1" style="color:yellow;">parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
     echo '<center><font size="+1" style="color:yellow;">RSS parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
@@ -205,7 +202,8 @@ then
 	fi
 	if [ -z "$feedThumbnail" ]
 	then
-	    echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
+	    echo "<td><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
+	    #echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	else
 	    echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><img src='$feedThumbnail'><br/><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	fi
