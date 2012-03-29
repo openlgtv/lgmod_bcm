@@ -13,6 +13,7 @@
 <!--
 
 var col = 6; //number of 'cells' in a row
+var row = 6; //number of rows to jump with channel up/down
 var current;
 var next;
 document.onkeydown = check;
@@ -26,8 +27,8 @@ function check(e)
 		{
 			switch(key)
 			{
-			case 33: next = (1*current) - (6*col); break; //ch up
-			case 34: next = (1*current) + (6*col); break; //ch down
+			case 33: next = (1*current) - (row*col); break; //ch up
+			case 34: next = (1*current) + (row*col); break; //ch down
 			case 37: next = current - 1; break; //left
 			case 38: next = current - col; break; //up
 			case 39: next = (1*current) + 1; break; //right
@@ -36,17 +37,26 @@ function check(e)
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
 			//Move to the next key on the keyboard
-			var code=document.links['c' + next].name;
-			document.links['c' + next].focus();
+			//Check if new link exists, if not then go to previous one until finds the one that exists
+			if (next<=0)
+			{
+			    do {
+				next = next + row;
+			    } while (next<=0);
+			}
+			currentLink=document.links['c' + next];
+			if (!currentLink)
+			{
+			    do {
+				next = next - row;
+				currentLink=document.links['c' + next];
+			    } while ((!currentLink)&&(next >= 1));
+			}
+			var code=currentLink.name;
+			currentLink.focus();
 			current = next;
 			//Prevent scrolling
 			return false;
-			}
-		else if (key==404) 
-			{
-			//the green button on the remote control have been pressed
-			//Switch to the Keyboard
-			top.frames["Keyboard"].focus();
 			}
 		else if (key==461) 
 			{
@@ -106,13 +116,13 @@ document.defaultAction = true;
 <center>
 <table border=0>
 <tr>
-	<td align="center"><a id="c1" onKeyPress="javascript:setCurrent(this);return false" href='../vod/ipla.cgi' target='_parent'><img src="Images/tmp/iplapl.png" border=3></a></td>
-	<td align="center"><a id="c2" onKeyPress="javascript:setCurrent(this);return false" href='../vod/tvp.cgi' target='_parent'><img src="Images/tmp/tvppl.png" border=3></a></td>
-	<td align="center"><a id="c3" onKeyPress="javascript:setCurrent(this);return false" href='../vod/yavido.cgi' target='_parent'><img src="Images/tmp/yavido.png" border=3></a></td>
-	<td align="center"><a id="c4" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi' target='_parent'><font size="+2">NetPlayer alternative</font></a></td>
+	<td align="center"><a id="c1" onKeyPress="javascript:setCurrent(this);return false" href='http://youtube.com/leanbacklite' target='_parent'><img src="Images/tmp/youtube.png" border=3></a></td>
+	<td align="center"><a id="c2" onKeyPress="javascript:setCurrent(this);return false" href='../vod/ipla.cgi' target='_parent'><img src="Images/tmp/iplapl.png" border=3></a></td>
+	<td align="center"><a id="c3" onKeyPress="javascript:setCurrent(this);return false" href='../vod/tvp.cgi' target='_parent'><img src="Images/tmp/tvppl.png" width="200" border=3></a></td>
+	<td align="center"><a id="c4" onKeyPress="javascript:setCurrent(this);return false" href='../vod/yavido.cgi' target='_parent'><img src="Images/tmp/yavido.png" border=3></a></td>
+	<td align="center"><a id="c5" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi' target='_parent'><font size="+2">NetPlayer<br/>alternative</font></a></td>
 	<!-- td align="center"><a id="c4" onKeyPress="javascript:setCurrent(this);return false" href='../browser.cgi' target='_parent'><font size="+2" color='#FFFFFF'>Internet Browser</font></a></td -->
-	<td align="center"><a id="c5" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi?type=text/xml&col=5&url=http://playon.unixstorm.org/PLIMS/iptak.rss' target='_parent'><font size="+2">iPtak</font></a></td>
-	<td align="center"><a id="c6" onKeyPress="javascript:setCurrent(this);return false" href='http://youtube.com/leanbacklite' target='_parent'><img src="Images/tmp/youtube.png" border=3></a></td>
+	<td align="center"><a id="c6" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi?type=text/xml&col=5&url=http://playon.unixstorm.org/PLIMS/iptak.rss' target='_parent'><div style='width: 200px; height: 56px; overflow: hidden;'><img src="http://iptak.pl/dodatki/img/logo2.png" width="200" border=1></div></a></td>
 </tr>
 <tr>
 	<td align="center"><a id="c7" onKeyPress="javascript:setCurrent(this);return false" href='http://netcast.app.uol.com.br/' target='_parent'><img src="Images/tmp/uol.jpg" border=3></a></td>
@@ -120,23 +130,23 @@ document.defaultAction = true;
 	<td align="center"><a id="c9" onKeyPress="javascript:setCurrent(this);return false" href='http://bbtv.bazuca.com/' target='_parent'><img src="Images/tmp/bazuca.png" border=3></a></td>
 	<td align="center"><a id="c10" onKeyPress="javascript:setCurrent(this);return false" href='http://www.emol.com/LG/' target='_parent'><img src="Images/tmp/emol.png" border=3></a></td>
 	<td align="center"><a id="c11" onKeyPress="javascript:setCurrent(this);return false" href='http://terratvlg.terra.cl/' target='_parent'><img src="Images/tmp/terracl.png" border=3></a></td>
-	<td align="center"><a id="c12" onKeyPress="javascript:setCurrent(this);return false" href='http://lge.ntom.co.kr/' target='_parent'><img src="Images/tmp/ntom.png" border=3></a></td>
+	<td align="center"><a id="c12" onKeyPress="javascript:setCurrent(this);return false" href='http://c-tv.orange.pl/' target='_parent'><img src="Images/tmp/orangepl.png" border=3></a></td>
 </tr>
 <tr>
 	<td align="center"><a id="c13" onKeyPress="javascript:setCurrent(this);return false" href='http://sports.ntom.co.kr/' target='_parent'><img src="Images/tmp/ntom.png" border=3></a></td>
 	<td align="center"><a id="c14" onKeyPress="javascript:setCurrent(this);return false" href='http://lg.tv.sapo.pt' target='_parent'><img src="Images/tmp/sapo.png" border=3></a></td>
 	<td align="center"><a id="c15" onKeyPress="javascript:setCurrent(this);return false" href='http://lg.meo.tv.sapo.pt' target='_parent'><img src="Images/tmp/meo.png" border=3></a></td>
 	<td align="center"><a id="c16" onKeyPress="javascript:setCurrent(this);return false" href='https://nettv.sfanytime.com/' target='_parent'><img src="Images/tmp/sfanytime.png" border=3></a></td>
-	<td align="center"><a id="c17" onKeyPress="javascript:setCurrent(this);return false" href='http://www.tagesschau.de/cetv/' target='_parent'><img src="Images/tmp/tagesschau.png" border=3></a></td>
-	<td align="center"><a id="c18" onKeyPress="javascript:setCurrent(this);return false" href='http://tv-html.irt.de/' target='_parent'><img src="Images/tmp/irt.png" border=3></a></td>
+	<td align="center"><a id="c17" onKeyPress="javascript:setCurrent(this);return false" href='http://facebook.lg.funspot.tv/index.php' target='_parent'><img src="Images/tmp/facebook.png" border=3></a></td>
+	<td align="center"><a id="c18" onKeyPress="javascript:setCurrent(this);return false" href='http://twitter.lg.funspot.tv/index.php' target='_parent'><img src="Images/tmp/twitter.png" border=3></a></td>
 </tr>
 <tr>
-	<td align="center"><a id="c19" onKeyPress="javascript:setCurrent(this);return false" href='http://c-tv.orange.pl/' target='_parent'><img src="Images/tmp/orangepl.png" border=3></a></td>
+	<td align="center"><a id="c19" onKeyPress="javascript:setCurrent(this);return false" href='http://lge.ntom.co.kr/' target='_parent'><img src="Images/tmp/ntom.png" border=3></a></td>
 	<td align="center"><a id="c20" onKeyPress="javascript:setCurrent(this);return false" href='http://idcp.iplaydev.extdev.bbc.co.uk/iplayer/bigscreen?avui=tv&avvp=ssl&avkb=mc,B:461' target='_parent'><img src="Images/tmp/bbc.png" border=3></a></td>
 	<td align="center"><a id="c21" onKeyPress="javascript:setCurrent(this);return false" href='http://www.bbc.co.uk/iplayer/bigscreen?avui=tv&avvp=ssl&avkb=mc,B:461' target='_parent'><img src="Images/tmp/bbc.png" border=3></a></td>
 	<td align="center"><a id="c22" onKeyPress="javascript:setCurrent(this);return false" href='file:///mnt/addon/browser/contents/GoogleMap/GoogleMap.html' target='_parent'><img src="Images/tmp/gmaps.gif" border=3></a></td>
-	<td align="center"><a id="c23" onKeyPress="javascript:setCurrent(this);return false" href='http://facebook.lg.funspot.tv/index.php' target='_parent'><img src="Images/tmp/facebook.png" border=3></a></td>
-	<td align="center"><a id="c24" onKeyPress="javascript:setCurrent(this);return false" href='http://twitter.lg.funspot.tv/index.php' target='_parent'><img src="Images/tmp/twitter.png" border=3></a></td>
+	<td align="center"><a id="c23" onKeyPress="javascript:setCurrent(this);return false" href='http://www.tagesschau.de/cetv/' target='_parent'><img src="Images/tmp/tagesschau.png" border=3></a></td>
+	<td align="center"><a id="c24" onKeyPress="javascript:setCurrent(this);return false" href='http://tv-html.irt.de/' target='_parent'><img src="Images/tmp/irt.png" border=3></a></td>
 </tr>
 <tr>
 	<td align="center"><a id="c25" onKeyPress="javascript:setCurrent(this);return false" href='http://cdn.lge.funspot.tv/index.html' target='_parent'><img src="Images/tmp/funspot.png" border=3></a></td>

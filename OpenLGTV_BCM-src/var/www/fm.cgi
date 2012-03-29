@@ -298,10 +298,6 @@ function check(e)
 		    {
 		    if (dialog_displayed==0)
 			{
-			if (next<=0)
-			    {
-				next = 1;
-			    }
 			selectItem();
 			//Prevent default action (ie. scrolling)
 			e.preventDefault();
@@ -768,6 +764,16 @@ function windowResize()
 function selectItem()
 	{
 	//Check if new link exists, if not then go to previous one until finds the one that exists
+	if (next<=0) next = 1;
+	currentLink=document.links['link_' + nside + next];
+	if (!currentLink)
+	{
+	    do {
+		next = next - 1;
+		currentLink=document.links['link_' + nside + next];
+	    } while ((!currentLink)&&(next >= 1));
+	}
+
 	currentLink=document.links['link_' + nside + next];
 	if (!currentLink)
 	{

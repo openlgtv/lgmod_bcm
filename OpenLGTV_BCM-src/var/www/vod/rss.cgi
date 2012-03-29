@@ -47,7 +47,7 @@ var next;
 var rows=3;
 
 document.onkeydown = check;
-window.onload = OnLoadSetCurrent;
+//window.onload = OnLoadSetCurrent;
 
 function check(e)
 	{
@@ -205,13 +205,13 @@ then
 	    echo "<td><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	    #echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	else
-	    echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><img src='$feedThumbnail'><br/><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
+	    echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumbnail\"><br/><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	fi
-	[ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
+	[ "$item_nr" = "1" ] && echo '<script type="text/javascript">OnLoadSetCurrent();</script>'
 	[ "$(($item_nr % $col))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
 	echo "$content" >> /tmp/log.log
-    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g'
+    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(/.*jpg"\)#\1 width="150" height="200"#g'
     # TODO: work on sed code above
 
     echo '</tr>'
