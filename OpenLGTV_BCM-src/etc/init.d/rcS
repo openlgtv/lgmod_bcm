@@ -72,7 +72,8 @@ source /etc/rc.d/rc.network
 
 echo "OpenLGTV_BCM-INFO: setting time via NTP server pool"
 #ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
-ntpd -p pool.ntp.org > /dev/null 2>&1 &
+#ntpd -p pool.ntp.org > /dev/null 2>&1 &
+/scripts/timeset.sh &
 
 source /etc/rc.d/rc.passwd
 
