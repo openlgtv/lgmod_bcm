@@ -207,7 +207,7 @@ then
 	else
 	    echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumbnail\"><br/><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	fi
-	[ "$item_nr" = "1" ] && echo '<script type="text/javascript">OnLoadSetCurrent();</script>'
+	[ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	[ "$(($item_nr % $col))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
 	echo "$content" >> /tmp/log.log
