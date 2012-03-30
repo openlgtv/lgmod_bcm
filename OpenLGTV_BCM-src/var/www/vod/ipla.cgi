@@ -49,9 +49,10 @@ log_file="$log_dir/$type.log"
 
 var current;
 var next;
+var rows = 5;
 
 document.onkeydown = check;
-window.onload = OnLoadSetCurrent;
+//window.onload = OnLoadSetCurrent;
 
 function check(e)
 	{
@@ -61,8 +62,8 @@ function check(e)
 		{
 		switch(key)
 			{
-			case 33: next = (1*current) - (5*col); break; //ch up
-			case 34: next = (1*current) + (5*col); break; //ch down
+			case 33: next = (1*current) - (rows*col); break; //ch up
+			case 34: next = (1*current) + (rows*col); break; //ch down
 			case 37: next = current - 1; break; //left
 			case 38: next = current - col; break; //up
 			case 39: next = (1*current) + 1; break; //right
@@ -70,9 +71,24 @@ function check(e)
 			}
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
-			//Move to the next bookmark
-			var code=document.links['link' + next].name;
-			document.links['link' + next].focus();
+			//Move to the next item
+			//Check if new link exists, if not then go to previous one until finds the one that exists
+			if (next<=0)
+			{
+			    do {
+				next = next + col;
+			    } while (next<=0);
+			}
+			currentLink=document.links['link' + next];
+			if (!currentLink)
+			{
+			    do {
+				next = next - col;
+				currentLink=document.links['link' + next];
+			    } while ((!currentLink)&&(next >= 1));
+			}
+			var code=currentLink.name;
+			currentLink.focus();
 			current = next;
 			//Prevent scrolling
 			return false;
@@ -111,7 +127,7 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	document.links['link1'].focus();
+	if (document.links['link1']) document.links['link1'].focus();
 	}
 
 document.defaultAction = true;
@@ -146,6 +162,7 @@ then
 	next_type=related
 	[ "${feedUrl#*/category/}" != "${feedUrl}" ] && next_type=category
 	echo "<tr><td><center><font size='+3'><b><a id=\"link$item_nr\" href=\"ipla.cgi?type=${next_type}&url=http://$feedUrl\" target=\"_parent\">$feedTitle</a></b></font></center></td></tr>" | sed 's/\#\#/ /g'
+	[ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	item_nr=$(($item_nr+1))
     done
 else
@@ -163,6 +180,7 @@ else
 	    contentUrl="${content#*\"url\":\"}"
 	    [ "$contentUrl" != "$content" ] && feedUrl="${contentUrl%%\",*}"
 	    echo "<td width='110px'><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=http://$feedUrl\" target=\"_parent\"><img src=\"http://$feedThumb\"/></td><td width='33%'><b>$feedTitle</b></a></td>" | sed -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/\\//g'
+	    [ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	    [ "$(($item_nr % 3))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	done
@@ -208,6 +226,7 @@ else
 		else
 		    echo "<td width='33%'><center><a id=\"link$item_nr\" href=\"ipla.cgi?type=category2&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumb\"/><br/><b>$feedDate<br/>$feedTitle</b></a></center></td>" | sed -e 's#http//#http://#g' -e 's/\#\#/ /g' -e 's/u0\(...\)/\&\#x0\1\;/g' -e 's/u2\(...\)/\&\#x2\1\;/g' -e 's/\\//g'
 		fi
+		[ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 		[ "$(($item_nr % 3))" = "0" ] && echo "</tr><tr>"
 		item_nr=$(($item_nr+1))
 	    done

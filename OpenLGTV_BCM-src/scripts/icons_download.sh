@@ -59,5 +59,7 @@ then
 	rm -f /tmp/icons.zip
     done
 fi
+# That one is not in archive
+[ ! -f "$icons_dir/iptak.png" ] && wget "http://iptak.pl/dodatki/img/logo2.png" -q -c -U "$useragent" -O "$icons_dir/iptak.png"
 cd $cur_dir
 echo "OpenLGTV_BCM-INFO: icons_download.sh: exit"

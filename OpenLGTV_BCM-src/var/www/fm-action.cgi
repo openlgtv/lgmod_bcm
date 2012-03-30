@@ -51,7 +51,7 @@ Content-type: text/html
     }
 </style>
 <title>CGI FileManager by xeros</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script type="text/javascript">
 <!--
 
@@ -213,7 +213,7 @@ function check(e)
 			//NetCastBack API
 			//window.NetCastBack();
 			//lets get back to WebUI instead of closing NetCast service
-			<? [ "$action" != "play" ] && echo "history.go(-1);" || echo "backToFM();" ?>
+			<? [ "$action" != "play" -o "${spth:0:7}" = "http://" ] && echo "history.go(-1);" || echo "backToFM();" ?>
 			}
 		else if (key==1001) 
 			{
@@ -284,11 +284,12 @@ function setRefresh()
 document.defaultAction = true;
 
 // break JS code for two contexts to make keyevent actions more responsive - to make them work even when rest part was not yet completed
-</script><script>
+// -->
+</script><script type="text/javascript">
 
 <?
 
-echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${xselect}'); }"
+echo "function backToFM(){ window.location.replace('fm.cgi?type=related&amp;side=${side}&amp;lpth=${lpthx}&amp;rpth=${rpthx}&amp;select=${xselect}'); }"
 
 if [ "$action" = "play" ]
 then
@@ -345,7 +346,9 @@ then
     [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
     full_spth="$spth"
     full_spth_next="$spth_next"
-    [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"    
+    [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"
+    [ "${full_spth:0:8}" = "roothttp" ] && full_spth="${full_spth:4}"
+    [ "${full_spth_next:0:8}" = "roothttp" ] && full_spth_next="${full_spth_next:4}"
     if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" -o "$ext" = "cfg" -o "$ext" = "conf" ]
     then
 	ftype=text
@@ -373,7 +376,7 @@ fi
 
 echo "</script></HEAD><BODY bgcolor='black'>"
 
-[ "$ftype" != "text" ] && echo '<br/><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br/><font size="+3" color="yellow">by xeros<br/><br/></font>'
+[ "$ftype" != "text" ] && echo '<br><center><font size="+4" color="yellow"><b>OpenLGTV BCM FileManager</b></font><br><font size="+3" color="yellow">by xeros<br><br></font>'
 [ "$ftype" != "image" ] && echo '<div style="width:99%; margin: 0 auto; font-size:16px; background-color:white;">'
 
 [ "$FORM_pid" != "" ] && pid="$FORM_pid"
@@ -383,7 +386,7 @@ then
     process="`ps | grep \"^ *$pid \"`"
     if [ -n "$process" ]
     then
-	echo "<font size='+3' color='red'><br/><b>Cancelling process:</b></font><font size='+3' color='black'><br/><br/>$process<br/><br/>"
+	echo "<font size='+3' color='red'><br><b>Cancelling process:</b></font><font size='+3' color='black'><br><br>$process<br><br>"
 	kill "$pid" 2>&1
 	sleep 1
 	process="`ps | grep \"^ *$pid \"`"
@@ -396,14 +399,14 @@ then
     echo "<script type=\"text/javascript\">"
     echo "window.timer = setTimeout(\"backToFM()\",$timeout);"
     echo "</script>"
-    echo "</font></div></center></body></head></html>"
+    echo "</font></div></center></body></html>"
     exit 0
 fi
 
 if [ "$action" = "play" ]
 then
     [ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo '<font color="green" size="+2"><b><script>document.write("Refresh time set to: ", window.refreshTime/1000, " second[s] (use number buttons to change it [x2])");</script></b></font>'
-    [ "$ftype" = "image" ] && echo "<br/><br/><font size='+2' color='yellow'><br/>Loading Image</font>"
+    [ "$ftype" = "image" ] && echo "<br><br><font size='+2' color='yellow'><br>Loading Image</font>"
     if [ "$ftype" = "text" ]
     then
 	echo "<pre align='left' class='run' id='run'>"
@@ -436,7 +439,7 @@ then
 			 </div>"
 	    fi
 	else
-	    echo "<center><font size='+4' color='brown'><br/><b>Starting playback of: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/><br/></font>"
+	    echo "<center><font size='+4' color='brown'><br><b>Starting playback of: </font><br><br><font size='+3' color='blue'>$spth<br><br>...<br><br></font>"
 	fi
     fi
 fi
@@ -447,22 +450,22 @@ if [ "$FORM_confirm" != "yes" ]
 then
     if [ "$action" != "play" ]
     then
-	echo "<center><font size='+4' color='brown'><br/><b>"
+	echo "<center><font size='+4' color='brown'><br><b>"
 	if [ "$action" = "copy" -o "$action" = "move" ]
 	then
-	    echo "Are you sure you want to ${action}?<br/><font size='+3' color='blue'><br/>$spth<br/><br/><font color='black' size='+3'>to</font><font size='+3' color='blue'><br/><br/>$dpth/</font>"
+	    echo "Are you sure you want to ${action}?<br><font size='+3' color='blue'><br>$spth<br><br><font color='black' size='+3'>to</font><font size='+3' color='blue'><br><br>$dpth/</font>"
 	else
 	    if [ "$action" = "delete" ]
 	    then
-		echo "Are you sure you want to ${action}?<br/><font size='+2' color='black'><br/>$spth</font>"
+		echo "Are you sure you want to ${action}?<br><font size='+2' color='black'><br>$spth</font>"
 	    else
-		echo "No copy/move actions have been executed yet!<br/><br/>"
+		echo "No copy/move actions have been executed yet!<br><br>"
 		echo '<script type="text/javascript">window.timer = setTimeout("history.go(-1)",3000);</script>'
 		exit 0
 	    fi
 	fi
-	echo "</b><br/><br/></font>"
-	echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br/><br/>"
+	echo "</b><br><br></font>"
+	echo "<table><tr><td id='tr_l1' width='200px' align='center'><b><a id='link_l1' href='${REQUEST_URI}&amp;confirm=yes'><font size='+4'>Yes</font></a></b></td><td id='tr_r1' width='200px' align='center'><b><a id='link_r1' href='javascript:history.go(-1);'><font size='+4'>No</font></a></b></td></tr></table></center><br><br>"
     fi
 else
     if [ "$action" = "copy" -o "$action" = "move" -o "$action" = "status" ]
@@ -495,12 +498,12 @@ else
 	    #[ -z "${rpthx}" ] && rpthx="${dpth}"
 	    [ -z "${side}"  ] && side="l"
 	fi
-	echo "<font size='+5' color='brown' style='text-transform: uppercase;'><b>$action in progress</b></font><br/><br/>"
+	echo "<font size='+5' color='brown' style='text-transform: uppercase;'><b>$action in progress</b></font><br><br>"
 	echo "<table>"
 	echo "<tr><td><font size='+3' color='green'>Source: </font></td><td><font size='+3' color='black'>$spth</font><td></tr>"
 	echo "<tr><td><font size='+3' color='green'>Target: </font></td><td><font size='+3' color='black'>$dpth/</font><td></tr>"
-	echo "</table><br/>"
-	echo "<br/>"
+	echo "</table><br>"
+	echo "<br>"
 	SIFS="$IFS" IFS=$'\n'
 	ssize=$(for i in `find "$spth" ! -type d`; do stat -c "%s" "$i"; done | awk '{sum += $1} END{OFMT = "%.0f"; print sum}') # could have been done with '-printf "%s\n"' or '-exec stat -c "%s" {}' as find arguments but busybox find does not support properly both of them
 	IFS="$SIFS"
@@ -538,9 +541,14 @@ else
 	    [ -z "${time_start}" ] && time_start="`grep '^${pid}#' '${log_file}' | cut -d# -f5`"
 	    time_start_status="`date +'%s'`"
 	fi
-	echo "<div id='status' style='font-size: 30px;'></div>"
+	echo "<div id='status' style='font-size: 30px;'><font color=\"blue\">Copied:</font> 0 / ???<br><br><font color=\"blue\">Progress:</font> 0% &nbsp; <font color=\"blue\">Average speed:</font> ??? KB/s<br><br><font color=\"blue\">Elapsed time:</font> 0 seconds &nbsp; &nbsp;<font color=\"blue\">Remaining time:</font> ???<br><br></div>"
 	dfile="`basename "$spth"`"
-	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br/><br/>"
+	####echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&pid=${pid}&cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table></center><br><br>"
+	echo "<table><tr><td id='tr_l1' width='500px' align='center'><b><a id='link_l1' href='fm.cgi?type=related&amp;side=${side}&amp;lpth=${lpthx}&amp;rpth=${rpthx}&amp;select=${FORM_select}'><font size='+4'>Continue in background</font></a></b></td><td id='tr_r1' width='300px' align='center'><b><a id='link_r1' href='${REQUEST_URI}&amp;pid=${pid}&amp;cancel=1'><font size='+4'>Cancel</font></a></b></td></tr></table><br><br>"
+	echo "<div id='result'></div>"
+	# TODO TODO TODO: end HTML code here, later create just new sub elements
+	####echo "</div>"
+	echo "</div></center></body></html>"
 	counter=0
 	[ -z "$ssize" ] && ssize=1
 	[ "$FORM_onlystatus" != "1" ] && sleep 1
@@ -616,7 +624,7 @@ else
 		    fi
 		fi
 	    fi
-	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_f / $ssize_f<br/><br/><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br/><br/><font color=\"blue\">Elapsed time:</font> $elapsed_f &nbsp; &nbsp;<font color=\"blue\">Remaining time:</font> $remain_f<br/><br/>';</script>"
+	    echo "<script type='text/javascript'>document.getElementById('status').innerHTML ='<font color=\"blue\">Copied:</font> $dsize_f / $ssize_f<br><br><font color=\"blue\">Progress:</font> $percent% &nbsp; <font color=\"blue\">Average speed:</font> $average_kbps KB/s<br><br><font color=\"blue\">Elapsed time:</font> $elapsed_f &nbsp; &nbsp;<font color=\"blue\">Remaining time:</font> $remain_f<br><br>';</script>"
 	    [ -n "`ps | grep \"^ *$pid \"`" ] && sleep 2
 	    if [ -z "`ps | grep \"^ *$pid \"`" ]
 	    then
@@ -625,31 +633,38 @@ else
 		IFS="$SIFS"
 		if [ "$ssize" = "$dsize" ]
 		then
-		    echo "Finished"
+		    echo "<script type='text/javascript'>document.getElementById('result').innerHTML ='Finished';</script>"
 		    #[ -z "`grep '^${pid}#' '${log_file}' | cut -d# -f5`" ] && sed -i -e "s/^\\(${pid}#.*\\)##\$/\\1#${time_now}#/g" "${log_file}"
 		    break
 		else
-		    echo "<font color='red' size='+3'><b>ERROR copying file!</b></font><br/><br/>"
+		    ####echo "<font color='red' size='+3'><b>ERROR copying file!</b></font><br><br>"
+		    msg="<font color=\"red\" size=\"+3\"><b>ERROR copying file!</b></font><br><br>"
 		    ###if [ -f "${log_dir}/${action}.error.${pid}.log" ]
 		    if [ -f "${log_dir}/${action}.error.log" ]
 		    then
-			echo "<font color='red' size='+2'>"
+			####echo "<font color='red' size='+2'>"
+			msg="$msg<font color=\"red\" size=\"+2\">"
 			###cat "${log_dir}/${action}.error.${pid}.log"
-			cat "${log_dir}/${action}.error.log"
-			echo "</font>"
+			####cat "${log_dir}/${action}.error.log"
+			msg="$msg`cat ${log_dir}/${action}.error.log`"
+			####echo "</font>"
+			msg="$msg</font>"
 			###rm -f "${log_dir}/${action}.error.${pid}.log"
 		    fi
+		    [ -n "$msg" ] && echo "<script type='text/javascript'>document.getElementById('result').innerHTML ='$msg';</script>"
 		    error=1
 		    break
 		fi
 		# TODO: need to rethink that as other processes might have started in meantime
 		#rm -f "${log_dir}/${action}.error.log" "${log_dir}/${action}.log" "${log_file}"
 	    fi
+	    #[ -n "$msg" ] && echo "<script type='text/javascript'>document.getElementById('result').innerHTML ='$msg';</script>"
+	    #sleep 15
 	    if [ "${elapsed_status}" -gt "120" ]
 	    then
 		if [ "$pid" != "" ]
 		then
-		    echo "<script type='text/javascript'>window.location='${REQUEST_URI}&onlystatus=1&pid=${pid}';</script>"
+		    echo "<script type='text/javascript'>window.location='${REQUEST_URI}&amp;onlystatus=1&amp;pid=${pid}';</script>"
 		else
 		    echo "<script type='text/javascript'>window.location='${REQUEST_URI}';</script>"
 		fi
@@ -662,18 +677,18 @@ else
     then
 	if [ "$spth" != "" -a "$spth" != "/" ]
 	then
-	    echo "<center><font size='+4' color='brown'><br/><b>Removing: </font><br/><br/><font size='+3' color='blue'>$spth<br/><br/>...<br/></font>"
+	    echo "<center><font size='+4' color='brown'><br><b>Removing: </font><br><br><font size='+3' color='blue'>$spth<br><br>...<br></font>"
 	    rm -r "$spth" 2>&1
 	    if [ "$?" -ne "0" ]
 	    then
-		echo "<br/><br/><font color='red' size='+4'><b>ERROR</b></font><br/>"
+		echo "<br><br><font color='red' size='+4'><b>ERROR</b></font><br>"
 		error=1
 	    fi
 	fi
     fi
     if [ "$error" != "1" ]
     then
-	echo "<br/><br/><center><font color='green' size='+4'><b>DONE</b></font></center>"
+	echo "<br><br><center><font color='green' size='+4'><b>DONE</b></font></center>"
 	timeout=2000
     else
 	timeout=8000
@@ -681,15 +696,18 @@ else
     if [ "$action" != "play" ]
     then
 	echo "<script type=\"text/javascript\">"
-	echo "function backToFM(){ window.location.replace('fm.cgi?type=related&side=${side}&lpth=${lpthx}&rpth=${rpthx}&select=${FORM_select}'); }"
+	echo "function backToFM(){ window.location.replace('fm.cgi?type=related&amp;side=${side}&amp;lpth=${lpthx}&amp;rpth=${rpthx}&amp;select=${FORM_select}'); }"
 	echo "window.timer = setTimeout(\"backToFM()\",$timeout);"
 	echo "</script>"
     fi
 fi
-[ "$ftype" != "image" ] && echo -n '</div>'
-[ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width:'100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
 
+if [ "$action" != "copy" -a "$action" != "move" -a "$action" != "status" ]
+then
+    [ "$ftype" != "image" ] && echo -n '</div>'
+    [ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width:'100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
+    echo "</BODY></HTML>"
+fi
 #echo "STOP:`date`" >> /tmp/log.log
 
 ?>
-</BODY></HTML>

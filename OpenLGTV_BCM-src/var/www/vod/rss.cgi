@@ -23,6 +23,7 @@ Content-type: text/html
     }
     img {
 	max-width:300px;
+	max-height:200px;
     }
     font,p {
 	color: white;
@@ -68,10 +69,28 @@ function check(e)
 			}
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
-			//Move to the next bookmark
-			var code=document.links['link' + next].name;
-			document.links['link' + next].focus();
+			//Move to the next item
+			//Check if new link exists, if not then go to previous one until finds the one that exists
+			if (next<=0)
+			{
+			    do {
+				next = next + col;
+			    } while (next<=0);
+			}
+			currentLink=document.links['link' + next];
+			if (!currentLink)
+			{
+			    do {
+				next = next - col;
+				currentLink=document.links['link' + next];
+			    } while ((!currentLink)&&(next >= 1));
+			}
+			var code=currentLink.name;
+			currentLink.focus();
 			current = next;
+			//Prevent scrolling
+			// makes problem with iPtak
+			//return false;
 			}
 		else if (key==461) 
 			{
@@ -202,12 +221,14 @@ then
 	    #feedType="unknown"
 	    feedType="text/xml"
 	fi
+	fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl"
+	[ "${feedUrl%.jpg}" != "${feedUrl}" -o  "${feedUrl%.png}" != "${feedUrl}" -o "${feedUrl%.gif}" != "${feedUrl}" ] && fullUrl="../fm-action.cgi?action=play&side=l&lpth=$feedUrl" # view JPEG/PNG/GIF using FileManager
 	if [ -z "$feedThumbnail" ]
 	then
-	    echo "<td><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
+	    echo "<td><center><a id=\"link$item_nr\" href=\"$fullUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	    #echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	else
-	    echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl\" target=\"_parent\"><img src=\"$feedThumbnail\"><br/><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
+	    echo "<td style='vertical-align:top; max-width:${maxwidth}px' valign='top'><center><a id=\"link$item_nr\" href=\"$fullUrl\" target=\"_parent\"><img src=\"$feedThumbnail\"><br/><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
 	fi
 	[ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	[ "$(($item_nr % $col))" = "0" ] && echo "</tr><tr>"

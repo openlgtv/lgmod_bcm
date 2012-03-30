@@ -31,12 +31,13 @@ Content-type: text/html
 <script type="text/javascript">
 <!--
 
-var col = 4; //number of 'cells' in a row
+var col  = 4; //number of 'cells' in a row
+var rows = 5; //number of rows to jump on ch up/down
 var current;
 var next;
 
 document.onkeydown = check;
-window.onload = OnLoadSetCurrent;
+//window.onload = OnLoadSetCurrent;
      
 function check(e)
 	{
@@ -46,8 +47,8 @@ function check(e)
 		{
 		switch(key)
 			{
-			case 33: next = (1*current) - (5*col); break; //ch up
-			case 34: next = (1*current) + (5*col); break; //ch down
+			case 33: next = (1*current) - (rows*col); break; //ch up
+			case 34: next = (1*current) + (rows*col); break; //ch down
 			case 37: next = current - 1; break; //left
 			case 38: next = current - col; break; //up
 			case 39: next = (1*current) + 1; break; //right
@@ -55,9 +56,24 @@ function check(e)
 			}
 		if (key==33|key==34|key==37|key==38|key==39|key==40)
 			{
-			//Move to the next bookmark
-			var code=document.links['link' + next].name;
-			document.links['link' + next].focus();
+			//Move to the next item
+			//Check if new link exists, if not then go to previous one until finds the one that exists
+			if (next<=0)
+			{
+			    do {
+				next = next + col;
+			    } while (next<=0);
+			}
+			currentLink=document.links['link' + next];
+			if (!currentLink)
+			{
+			    do {
+				next = next - col;
+				currentLink=document.links['link' + next];
+			    } while ((!currentLink)&&(next >= 1));
+			}
+			var code=currentLink.name;
+			currentLink.focus();
 			current = next;
 			//Prevent scrolling
 			return false;
@@ -103,7 +119,7 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	document.links['link1'].focus();
+	if (document.links['link1']) document.links['link1'].focus();
 	}
 	
 document.defaultAction = true;
@@ -235,6 +251,7 @@ then
 	echo "<td style='vertical-align:top;' valign='top'><center><a id=\"link${item_nr}\" href=\"tvp.cgi?type=${feedType}&title=${feedTitle}&url=${feedUrl}\">${feedThumb}<font size='+3' style='font-weight: 900;'><b>${feedTitle}</b></font></a></center><br/></td>"
 	#[ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	echo "</tr><tr>"
+	[ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	item_nr=$(($item_nr+1))
     done
     echo '</tr>'
@@ -260,6 +277,7 @@ then
 	    img="${feedThumb/*http/http}"
 	    img="${img/\"*/}"
 	    echo "<td width='25%' style='vertical-align:top;'><center><a id=\"link$item_nr\" href=\"tvp.cgi?type=category&img=${img}&title=${feedTitle}&url=$feedUrl\">$feedThumb<br/><font size='+2'>$feedTitle</font></a></center></td>" | tr '|' ' '
+	    [ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr>"
 	    item_nr=$(($item_nr+1))
 	fi
@@ -285,6 +303,7 @@ else
 	    [ -z "$img" ] && img="/Images/tmp/unknown.png"
 	    [ -z "$feedThumb" ] && feedThumb="<img src='$img' width='141px' height='106px'>"
 	    echo "<td width='140px'><center>$feedThumb</center></td><td width='25%'><a id=\"link$item_nr\" href=\"tvp.cgi?type=video-tvp&url=$feedUrl\" target=\"_parent\"><b><font size=\"+1\">$feedTitle</font></b></a></td>" | tr '|' ' '
+	    [ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr cellpadding='10'>"
 	    item_nr=$(($item_nr+1))
 	done
@@ -320,6 +339,7 @@ else
 	    content3x="${content2x#*\|}"
 	    feedUrl="${content3x%%\|*}"
 	    echo "<td width='140px'><center>$feedThumb</center></td><td width='25%'><a id=\"link$item_nr\" href=\"$feedUrl\" target=\"_parent\"><b><font size=\"+1\">$feedTitle</font></b></a></td>" | tr '#' ' '
+	    [ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
 	    [ "$(($item_nr % 4))" = "0" ] && echo "</tr><tr cellpadding='10'>"
 	    item_nr=$(($item_nr+1))
 	    #echo "$content" >> "$log_file.txt"

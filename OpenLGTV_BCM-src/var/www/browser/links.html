@@ -17,7 +17,7 @@ var row = 6; //number of rows to jump with channel up/down
 var current;
 var next;
 document.onkeydown = check;
-window.onload = OnLoadSetCurrent;
+//window.onload = OnLoadSetCurrent;
 
 function check(e)
 	{
@@ -41,14 +41,14 @@ function check(e)
 			if (next<=0)
 			{
 			    do {
-				next = next + row;
+				next = next + col;
 			    } while (next<=0);
 			}
 			currentLink=document.links['c' + next];
 			if (!currentLink)
 			{
 			    do {
-				next = next - row;
+				next = next - col;
 				currentLink=document.links['c' + next];
 			    } while ((!currentLink)&&(next >= 1));
 			}
@@ -117,12 +117,13 @@ document.defaultAction = true;
 <table border=0>
 <tr>
 	<td align="center"><a id="c1" onKeyPress="javascript:setCurrent(this);return false" href='http://youtube.com/leanbacklite' target='_parent'><img src="Images/tmp/youtube.png" border=3></a></td>
+	<script type="text/javascript">OnLoadSetCurrent();</script>
 	<td align="center"><a id="c2" onKeyPress="javascript:setCurrent(this);return false" href='../vod/ipla.cgi' target='_parent'><img src="Images/tmp/iplapl.png" border=3></a></td>
 	<td align="center"><a id="c3" onKeyPress="javascript:setCurrent(this);return false" href='../vod/tvp.cgi' target='_parent'><img src="Images/tmp/tvppl.png" width="200" border=3></a></td>
 	<td align="center"><a id="c4" onKeyPress="javascript:setCurrent(this);return false" href='../vod/yavido.cgi' target='_parent'><img src="Images/tmp/yavido.png" border=3></a></td>
 	<td align="center"><a id="c5" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi' target='_parent'><font size="+2">NetPlayer<br/>alternative</font></a></td>
 	<!-- td align="center"><a id="c4" onKeyPress="javascript:setCurrent(this);return false" href='../browser.cgi' target='_parent'><font size="+2" color='#FFFFFF'>Internet Browser</font></a></td -->
-	<td align="center"><a id="c6" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi?type=text/xml&col=5&url=http://playon.unixstorm.org/PLIMS/iptak.rss' target='_parent'><div style='width: 200px; height: 56px; overflow: hidden;'><img src="http://iptak.pl/dodatki/img/logo2.png" width="200" border=1></div></a></td>
+	<td align="center"><a id="c6" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi?type=text/xml&col=5&url=http://playon.unixstorm.org/PLIMS/iptak.rss' target='_parent'><div style='width: 200px; height: 56px; overflow: hidden;'><img src="Images/tmp/iptak.png" width="200" border=1></div></a></td>
 </tr>
 <tr>
 	<td align="center"><a id="c7" onKeyPress="javascript:setCurrent(this);return false" href='http://netcast.app.uol.com.br/' target='_parent'><img src="Images/tmp/uol.jpg" border=3></a></td>

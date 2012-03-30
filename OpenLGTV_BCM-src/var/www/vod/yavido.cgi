@@ -69,7 +69,7 @@ function check(e)
 
 	function OnLoadSetCurrent(element)
 	{
-	document.links['link1'].focus();
+	if (document.links['link1']) document.links['link1'].focus();
 	}
 	
 document.defaultAction = true;

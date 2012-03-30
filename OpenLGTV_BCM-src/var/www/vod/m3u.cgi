@@ -83,9 +83,9 @@ function setCurrent(element)
 	function OnLoadSetCurrent(element)
 	{
 	current=1;
-	document.links['link1'].focus();
+	if (document.links['link1']) document.links['link1'].focus();
 	}
-	
+
 document.defaultAction = true;
 
 

@@ -124,7 +124,7 @@ echo "var opth  = '$opth';"
 if [ -f "$cpth" ]
 then
     echo "var cpth = '$cpth';"
-    echo "var dest='fm-action.cgi?action=play&side=$side&${side}pth=$cpth&${oside}pth=$opth&select=${selected}';"
+    echo "var dest='fm-action.cgi?action=play&amp;side=$side&amp;${side}pth=$cpth&amp;${oside}pth=$opth&amp;select=${selected}';"
     #sleep 1
     echo "window.location.replace(dest);"
 fi
@@ -289,7 +289,7 @@ function check(e)
 			else 
 			    {
 			    //Set the same panel location path as current on other panel
-			    var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;
+			    var dest='fm.cgi?amp;type=related&amp;side=' + side + '&amp;lpth=' + opth + '&amp;rpth=' + opth;
 			    window.location=dest;
 			    }
 			//Prevent default action
@@ -417,7 +417,7 @@ function check(e)
 			//the RED button on the remote control or F8 have been pressed
 			//Delete file or directory
 			// lpath and rpath variables are wrong - but the right ones lpth and rpth are gathered from link
-			var dest='fm-action.cgi?action=delete' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
+			var dest='fm-action.cgi?amp;action=delete' + '&amp;side=' + side + '&amp;link=' + document.getElementById('link_' + side + current).href;
 			deleteDialog();
 			//Prevent default action
 			e.preventDefault();
@@ -427,7 +427,7 @@ function check(e)
 			{
 			//the GREEN button on the remote control or F5 have been pressed
 			//Copy file or directory
-			var dest='fm-action.cgi?action=copy' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
+			var dest='fm-action.cgi?action=copy' + '&amp;side=' + side + '&amp;link=' + document.getElementById('link_' + side + current).href;
 			copyDialog();
 			//Prevent default action
 			e.preventDefault();
@@ -437,7 +437,7 @@ function check(e)
 			{
 			//the YELLOW button on the remote control or F6 have been pressed
 			//Move file or directory
-			var dest='fm-action.cgi?action=move' + '&side=' + side + '&link=' + document.getElementById('link_' + side + current).href;
+			var dest='fm-action.cgi?action=move' + '&amp;side=' + side + '&amp;link=' + document.getElementById('link_' + side + current).href;
 			moveDialog();
 			//Prevent default action
 			e.preventDefault();
@@ -721,7 +721,7 @@ function dialogRemove()
 function movieInfo()
 	{
 	src=cpth + '/' + document.getElementById('link_' + side + current).name;
-	dest='fm.cgi?side=' + side + '&lpth=' + lpth + '&rpth=' + rpth + '&select=' + current + '&action=movieinfo&movieinforefresh=' + movieInfoRefresh + '&file=' + src;
+	dest='fm.cgi?side=' + side + '&amp;lpth=' + lpth + '&amp;rpth=' + rpth + '&amp;select=' + current + '&amp;action=movieinfo&amp;movieinforefresh=' + movieInfoRefresh + '&amp;file=' + src;
 	if (movieInfoRefresh==1)
 	    window.location.replace(dest);
 	else
@@ -768,13 +768,13 @@ function selectItem()
 
 function play()
 	{
-	var dest='fm-action.cgi?action=play' + '&side=' + side + '&lpath=' + lpth + '&rpath=' + rpth + '&link=' + document.getElementById('link_' + side + current).href + '&skip=next&imgzoom=0&timeout=7000';
+	var dest='fm-action.cgi?action=play' + '&amp;side=' + side + '&amp;lpath=' + lpth + '&amp;rpath=' + rpth + '&amp;link=' + document.getElementById('link_' + side + current).href + '&amp;skip=next&amp;imgzoom=0&amp;timeout=7000';
 	window.location=dest;
 	}
 
 function status()
 	{
-	<? echo "var dest='fm-action.cgi?action=status&side=' + side + '&lpth=${lpth}&rpth=${rpth}&select=' + current;" ?>
+	<? echo "var dest='fm-action.cgi?action=status&amp;side=' + side + '&amp;lpth=${lpth}&amp;rpth=${rpth}&amp;select=' + current;" ?>
 	window.location=dest;
 	}
 
@@ -844,7 +844,7 @@ mountpoints_length="${#mountpoints}"
     if [ "$lpth" != "" ]
     then
 	lpth_up="${lpth%/*}"
-	echo "<tr id=\"tr_l1\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_l1\" href=\"fm.cgi?type=related&side=l&lpth=$lpth_up&rpth=$rpth&select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_l1\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_l1\" href=\"fm.cgi?type=related&amp;side=l&amp;lpth=$lpth_up&amp;rpth=$rpth&amp;select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	litem_nr=2
     else
 	litem_nr=1
@@ -880,7 +880,7 @@ mountpoints_length="${#mountpoints}"
 	if [ "$ltype" = "directory" ]
 	then
 	    limage="dir.png"
-	    dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
+	    dlink="fm.cgi?type=related&amp;side=l&amp;lpth=$lpth/$lfilename_space&amp;rpth=$rpth"
 	else
 	    if [ "$ltype" = "symbolic&nbsp;link" ]
 	    then
@@ -892,11 +892,11 @@ mountpoints_length="${#mountpoints}"
 	    then
 		#    avi ) dlink="fm-action.cgi?action=play&side=$side&lpath=$lpth/$lfilename_space&rpath=$rpth&link=$lpth/$lfilename_space";;
 		case "${lfilename_ext}" in
-		    m3u) dlink="vod/m3u.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth&url=$lpth/$lfilename_space";;
-		    *) dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth";;
+		    m3u) dlink="vod/m3u.cgi?type=related&amp;side=l&amp;lpth=$lpth/$lfilename_space&amp;rpth=$rpth&amp;url=$lpth/$lfilename_space";;
+		    *) dlink="fm.cgi?type=related&amp;side=l&amp;lpth=$lpth/$lfilename_space&amp;rpth=$rpth";;
 		esac
 	    else
-		dlink="fm.cgi?type=related&side=l&lpth=$lpth/$lfilename_space&rpth=$rpth"
+		dlink="fm.cgi?type=related&amp;side=l&amp;lpth=$lpth/$lfilename_space&amp;rpth=$rpth"
 	    fi
 	fi
 	# TODO?: check if file/dir is mountpoint - all methods are slow - paradoxally grep is fastest when the list is long
@@ -906,7 +906,7 @@ mountpoints_length="${#mountpoints}"
 	#if [ -n "`grep \" $lpth/$lfilename \" /proc/mounts`" ]
 	file_color=black
 	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
-	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$limage\"/></td><td class='filename'><a id=\"link_l${litem_nr}\" href=\"${dlink}&lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
+	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$limage\"/></td><td class='filename'><a id=\"link_l${litem_nr}\" href=\"${dlink}&amp;lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -915,7 +915,7 @@ mountpoints_length="${#mountpoints}"
     if [ "$rpth" != "" ]
     then
 	rpth_up="${rpth%/*}"
-	echo "<tr id=\"tr_r1\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_r1\" href=\"fm.cgi?type=related&side=r&rpth=$rpth_up&lpth=$lpth&select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
+	echo "<tr id=\"tr_r1\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_r1\" href=\"fm.cgi?type=related&amp;side=r&amp;rpth=$rpth_up&amp;lpth=$lpth&amp;select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
 	ritem_nr=2
     else
 	ritem_nr=1
@@ -959,19 +959,19 @@ mountpoints_length="${#mountpoints}"
 		rimage="generic.gif"
 	    fi
 	fi
-	dlink="fm.cgi?type=related&side=r&rpth=$rpth/$rfilename_space&lpth=$lpth"
+	dlink="fm.cgi?type=related&amp;side=r&amp;rpth=$rpth/$rfilename_space&amp;lpth=$lpth"
 	file_color=black
 	check_mountpoints="${mountpoints#*$rpth/$rfilename }"
 	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
-	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$rimage\"/></td><td class='filename'><a id=\"link_r${ritem_nr}\" href=\"${dlink}&rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
+	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$rimage\"/></td><td class='filename'><a id=\"link_r${ritem_nr}\" href=\"${dlink}&amp;rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"
     echo -n '</tbody></table></td></tr></tbody></table>'
 ?>
-<!-- center><table border="0" cellpadding="0" width="100%"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font><font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:movieInfo();"><font color="white" size="+1">[<img src="/Images/Keyboard/info_button.png" width="22" height="12" border="0" />/1]</font><font size="+1" color="yellow">IMDB</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1">RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8]ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5]COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6]MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7]MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1">SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font><font color="yellow" size="+1">COPY STATUS</font></span></td></tr></table></center -->
-<center><table border="0" cellpadding="0" width="100%" style="letter-spacing: -0.2px;"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> <font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:movieInfo();"><font color="white" size="+1">[<img src="/Images/Keyboard/info_button.png" width="22" height="12" border="0" />/1]</font> <font size="+1" color="yellow">IMDB</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1"> RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1"> SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font> <font color="yellow" size="+1">COPY STATUS</font></span></td></tr></table></center>
-<!-- center><table border="0" cellpadding="0" width="100%" style="word-spacing:-5px;"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> <font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:movieInfo();"><font color="white" size="+1">[<img src="/Images/Keyboard/info_button.png" width="22" height="12" border="0" />/1]</font> <font size="+1" color="yellow">IMDB</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1"> RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&side=' + side + '&lpth=' + opth + '&rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1"> SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font> <font color="yellow" size="+1">COPY STATUS</font></span></td></tr></table></center -->
+<!-- center><table border="0" cellpadding="0" width="100%"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font><font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:movieInfo();"><font color="white" size="+1">[<img src="/Images/Keyboard/info_button.png" width="22" height="12" border="0" />/1]</font><font size="+1" color="yellow">IMDB</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1">RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8]ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5]COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6]MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7]MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&amp;side=' + side + '&amp;lpth=' + opth + '&amp;rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1">SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font><font color="yellow" size="+1">COPY STATUS</font></span></td></tr></table></center -->
+<center><table border="0" cellpadding="0" width="100%" style="letter-spacing: -0.2px;"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> <font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:movieInfo();"><font color="white" size="+1">[<img src="/Images/Keyboard/info_button.png" width="22" height="12" border="0" />/1]</font> <font size="+1" color="yellow">IMDB</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1"> RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&amp;side=' + side + '&amp;lpth=' + opth + '&amp;rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1"> SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font> <font color="yellow" size="+1">COPY STATUS</font></span></td></tr></table></center>
+<!-- center><table border="0" cellpadding="0" width="100%" style="word-spacing:-5px;"><tr align="center"><td><span onClick="javascript:play();"><font color="white" size="+1">[<img src="/Images/Keyboard/play_button.png" width="22" height="12" border="0" />/OK]</font> <font size="+1" color="yellow">PLAY</font></span></td><td><span onClick="javascript:movieInfo();"><font color="white" size="+1">[<img src="/Images/Keyboard/info_button.png" width="22" height="12" border="0" />/1]</font> <font size="+1" color="yellow">IMDB</font></span></td><td><span onClick="javascript:renameDialog();"><font color="white" size="+1">[<img src="/Images/Keyboard/stop_button.png" width="22" height="12" border="0" />/F9]</font><font color="yellow" size="+1"> RENAME</font></span></td><td><span onClick="javascript:deleteDialog();"><font color="FF3333" size="+1">[<img src="/Images/Keyboard/red_button.png" width="22" height="12" border="0" />/F8] ERASE</font></span></td><td><span onClick="javascript:copyDialog();"><font color="#00FF00" size="+1">[<img src="/Images/Keyboard/green_button.png" width="22" height="12" border="0" />/F5] COPY</font></span></td><td><font color="yellow" size="+1"><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td><span onClick="javascript:moveDialog();"><font color="yellow" size="+1">[<img src="/Images/Keyboard/yellow_button.png" width="22" height="12" border="0" />/F6] MOVE</font></span></td><td><span onClick="javascript:mkdirDialog();"><font color="lightblue" size="+1">[<img src="/Images/Keyboard/blue_button.png" width="22" height="12" border="0" />/F7] MKDIR</font></span></td><td><font color="white" size="+1"><span onClick="javascript:var dest='fm.cgi?type=related&amp;side=' + side + '&amp;lpth=' + opth + '&amp;rpth=' + opth;window.location=dest;">[<img src="/Images/Keyboard/pause_button.png" width="22" height="12" border="0" />/"\"]</font><font color="yellow" size="+1"> SAME PATH</font></span></td><td><span onClick="javascript:status();"><font color="white" size="+1">[0]</font> <font color="yellow" size="+1">COPY STATUS</font></span></td></tr></table></center -->
 
 </BODY></HTML>
 <script type='text/javascript'>OnLoadSetCurrent();</script>

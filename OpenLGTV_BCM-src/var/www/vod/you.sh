@@ -47,7 +47,7 @@ var col=1;
 var rows=1;
 
 document.onkeydown = check;
-window.onload = OnLoadSetCurrent;
+//window.onload = OnLoadSetCurrent;
 
 function check(e)
 	{
@@ -118,6 +118,7 @@ useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.
 generateLink()
 {
     echo "<tr><td><a id='link$item_nr' href='$6'>$3</a></td></tr>"
+    [ "$item_nr" = "1" ] && echo "<script>OnLoadSetCurrent();</script>"
     item_nr=$(($item_nr+1))
 }
 
