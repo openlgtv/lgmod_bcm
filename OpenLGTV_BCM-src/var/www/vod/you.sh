@@ -167,7 +167,8 @@ echo "<center><img src='../Images/tmp/youtube.png'/><br/><br/><font size='+3'>"
 
 wget -q -O "$log_file" 'http://www.youtube.com/get_video_info?&video_id='$QUERY_STRING'&el=vevo&ps=default&eurl=' --user-agent="$useragent"
 
-FORMATS="5 x-flv FLV-240p 240 flv/34 x-flv FLV-360p 360 flv/35 x-flv FLV-480p 480 flv/18 mp4 MP4-360p 360 mp4/22 mp4 MP4-720p 720 mp4/37 mp4 MP4-1080p 1080 mp4"
+#FORMATS="5 x-flv FLV-240p 240 flv/34 x-flv FLV-360p 360 flv/35 x-flv FLV-480p 480 flv/18 mp4 MP4-360p 360 mp4/22 mp4 MP4-720p 720 mp4/37 mp4 MP4-1080p 1080 mp4"
+FORMATS="mp4 1080 MP4-1080p mp4 mp4/37 720 MP4-720p mp4 mp4/22 360 MP4-360p mp4 flv/18 480 FLV-480p x-flv flv/35 360 FLV-360p x-flv flv/34 240 FLV-240p x-flv 5"
 
 if [ ! -e "$log_file" ] || [ "`stat -c %s "$log_file"`" -le "100" ] || [ "`grep "status=fail" "$log_file" 2>/dev/null`" ]
 then
@@ -193,7 +194,8 @@ echo "Select source:<br/><br/><table>"
 s=1
 if [ -n `echo "$fmt_url_map" | grep -qs ",url="` ]; 
 then
-    for TYP in 5 34 35 18 22 37
+    #for TYP in 5 34 35 18 22 37
+    for TYP in 37 22 18 35 34 5
     do
 	stream_url=`echo "$fmt_url_map"  | awk 'BEGIN{RS=",url="} /itag='$TYP'/{print $0}' | sed 's/;.*//' | sed "s/\&itag\=$TYP//2"`
 	if [ -n "$stream_url" ]
@@ -204,7 +206,8 @@ then
 	let s=$s+1
     done
 else
-    for TYP in 5 34 35 18 22 37
+    #for TYP in 5 34 35 18 22 37
+    for TYP in 37 22 18 35 34 5
     do
 	stream_url=`echo $fmt_url_map | awk '{match($0,/.*'$TYP'\|([^,]+),?/,arr);print arr[1]}'`
 	if [ -n "$stream_url" ]

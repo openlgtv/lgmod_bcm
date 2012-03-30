@@ -3,7 +3,7 @@
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
-SKIP_LINES=108
+SKIP_LINES=110
 
 echo "[ OpenLGTV BCM installer ]"
 
@@ -43,7 +43,8 @@ then
 fi
 mkdir -p "$base"
 
-echo "Extracting $0 into ${base}:"
+echo "Extracting $0"
+echo "to ${base}:"
 echo "$separator"
 
 #tail -n +51 "$0" | unzip -o - -d "$base" || { echo "Error: Extraction failed."; exit 1; }; sync #no unzip in orig fw
@@ -96,7 +97,8 @@ then
     echo "$separator"
     /usr/sbin/chroot "$CHR" /bin/sh --login
 else
-    echo "Starting second part of installer: $base/install.sh $@"
+    echo "Running second part of installer:"
+    echo "$base/install.sh $@"
     echo "$separator"
     /usr/sbin/chroot "$CHR" "$base/install.sh" "$@"
 fi

@@ -36,6 +36,8 @@ Content-type: text/html
 	color: #FF6633;
     }
 </style>
+<? [ "${FORM_url/iptak/}" != "$FORM_url" ] && echo '<link href="http://iptak.pl/dodatki/css/menuBTN.css" rel="stylesheet" type="text/css" />' ?>
+
 <title>RSS parser by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript">
@@ -139,7 +141,7 @@ then
     wget -q -U "$useragent" "$url" -O "$log_file"
     echo '<BODY>'
     #echo '<center><font size="+3" style="color:yellow;">RSS<br/></font><font size="+1" style="color:yellow;">parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
-    echo '<center><font size="+1" style="color:yellow;">RSS parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
+    echo '<center><font size="+1" style="color:yellow;">RSS parser<font size="0" style="color:grey;"><br/>by xeros<br/></font>'
     echo '<Table id="items" class="items" Border="0" cellspacing="10" cellpadding="1" width="100%">'
     echo '<tr>'
     item_nr=1
@@ -211,7 +213,9 @@ then
 	[ "$(($item_nr % $col))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
 	echo "$content" >> /tmp/log.log
-    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(/.*jpg"\)#\1 width="150" height="200"#g'
+    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#<img src="/home/scripts/PLIMS/image/\(.*\).jpg">#<div id="menuBTN" class="\1"></div>#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
+    #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
+    #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(/.*jpg"\)#\1 width="150" height="200"#g'
     # TODO: work on sed code above
 
     echo '</tr>'

@@ -91,25 +91,12 @@ if [ "$FORM_type" = "restore_last" ]
 then
     [ -f "$paths_file" ] && source "$paths_file"
 else
-    echo -e "FORM_side=\"${FORM_side}\"\nFORM_lpth=\"${FORM_lpth}\"\nFORM_rpth=\"${FORM_rpth}\"\nFORM_select=\"${FORM_select}\"\nFORM_lselected=\"${FORM_lselected}\"\nFORM_rselected=\"${FORM_rselected}\"\n" > "$paths_file" &
+    echo -e "FORM_side='${FORM_side}'\nFORM_lpth='${FORM_lpth}'\nFORM_rpth='${FORM_rpth}'\nFORM_select='${FORM_select}'\nFORM_lselected='${FORM_lselected}'\nFORM_rselected='${FORM_rselected}'\n" > "$paths_file" &
 fi
 
-if [ "$FORM_side" != "" ]
-then
-    export side="$FORM_side"
-else
-    export side="l"
-fi
-
-if [ "$FORM_lpth" != "" ]
-then
-    export lpth="$FORM_lpth"
-fi
-
-if [ "$FORM_rpth" != "" ]
-then
-    export rpth="$FORM_rpth"
-fi
+[ "$FORM_side" != "" ] && export side="$FORM_side" || export side="l"
+[ "$FORM_lpth" != "" ] && export lpth="$FORM_lpth"
+[ "$FORM_rpth" != "" ] && export rpth="$FORM_rpth"
 
 if [ "$side" = "l" -a "$lpth" != "" ]
 then
@@ -144,22 +131,12 @@ fi
 
 if [ -n "$FORM_select" ]
 then
-    if [ "$FORM_select" -gt 0 ]
-    then
-	echo "var current=${FORM_select};"
-    else
-	echo "var current=1;"
-    fi
+    [ "$FORM_select" -gt 0 ] && echo "var current=${FORM_select};" || echo "var current=1;"
 else
     echo "var current=1;"
 fi
 
-if [ "$FORM_movieinforefresh" = "1" ]
-then
-    echo "var movieInfoRefresh=1;"
-else
-    echo "var movieInfoRefresh=0;"
-fi
+[ "$FORM_movieinforefresh" = "1" ] && echo "var movieInfoRefresh=1;" || echo "var movieInfoRefresh=0;"
 
 ?>
 

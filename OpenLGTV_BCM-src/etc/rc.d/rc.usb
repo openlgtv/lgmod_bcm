@@ -24,6 +24,8 @@ then
     exit 0
 fi
 
+/etc/rc.d/rc.variables
+
 echo "OpenLGTV_BCM-INFO: rc.usb: LOCKDIR: $LOCKDIR created"
 
 if [ "$3" = "remove" ]

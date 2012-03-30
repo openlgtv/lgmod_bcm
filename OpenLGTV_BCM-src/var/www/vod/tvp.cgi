@@ -68,6 +68,13 @@ function check(e)
 			//Switch to the Keyboard
 			top.frames["Keyboard"].focus();
 			}
+		else if (key==415) 
+			{
+			//the play button on the remote control have been pressed
+			//Try to play stream using MSDL
+			var dest='../tools/msdl.sh?' + document.getElementById('link' + current).href;
+			window.location=dest;
+			}
 		else if (key==461) 
 			{
 			//the back button on the remote control have been pressed

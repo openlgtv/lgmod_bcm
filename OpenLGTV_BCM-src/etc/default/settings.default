@@ -9,5 +9,5 @@ netcast_config_enable_all=0           #Rewrite NetCast conf, enable all availabl
 netcast_mouse_support=0               #Support for USB mouse (no keyboard yet) in NetCast
 netcast_webproxy=1                    #Inject navigation controls to Internet sites on WWW icon
 samsung_ywe=1                         #Copy YWE configs to use Yahoo Widgets as Samsung
-OPENRELEASE=0                         #Use OPENRELEASE instead of RELEASE
+OPENRELEASE=1                         #Use OPENRELEASE instead of RELEASE
 RELEASE_in_tmux=1                     #Run (OPEN)RELEASE in tmux virtual terminal

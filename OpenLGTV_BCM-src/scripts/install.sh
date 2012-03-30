@@ -72,6 +72,8 @@ size2011=4194304
 lginit_size=262144
 lginit_size2011=524288
 platform=GP2B
+bck_time=20
+bck_space=1.5GB
 
 proxy_lock_file=/var/run/proxy.lock
 KILL='addon_mgr stagecraft konfabulator lb4wk GtkLauncher nc udhcpc ntpd tcpsvd ls wget djmount msdl'
@@ -86,6 +88,8 @@ then
     size="$size2011"
     lginit_size="$lginit_size2011"
     platform=GP3B
+    bck_time=40
+    bck_space=3GB
     no_install=1 # force no_install for GP3B
 fi
 
@@ -178,6 +182,7 @@ backup_error=0
 then
     back_dir="$OpenLGTV_BCM_USB/backup"
     echo "OpenLGTV BCM installation is being run first time or backup was forced" | tee -a $log
+    echo "Backup will take up to $bck_time minutes and use up to $bck_space space" | tee -a $log
     echo "Making backup of current firmware to $back_dir" | tee -a $log
     [ -n "`which nanddump`" ] && nanddmp=1
     mkdir -p "$back_dir" 2>&1 | tee -a $log
@@ -195,12 +200,13 @@ then
 		backup_error=1
 	    fi
 	else
-	    nanddump -f "$back_dir/$i" "/dev/$partno" 2>$log
+	    nanddump -f "$back_dir/$i.nand" "/dev/$partno" 2>$log
 	    if [ "$?" -ne "0" ]
 	    then
-		echo "ERROR: Problem making nanddump backup of /dev/$partno to $back_dir/$i,nand" 2>&1 | tee -a $log
+		echo "ERROR: Problem making nanddump backup of /dev/$partno to $back_dir/$i.nand" 2>&1 | tee -a $log
 		backup_error=1
 	    fi
+	fi
     done
     for mount_path in `cat /proc/mounts | egrep "yaffs|jffs2" | awk '{print $2}' | sed -e 's#^/##g'`
     do
@@ -479,7 +485,8 @@ then
     sync
 fi
 
-echo "Making backup from /dev/mtd$mtd_rootfs to $dir/$file-$rootfs_backup.sqf" | tee -a $log
+echo "Backup of /dev/mtd$mtd_rootfs ..." | tee -a $log
+echo "to $dir/$file-$rootfs_backup.sqf" | tee -a $log
 sh -c "cat /dev/mtd3 > $dir/$file-$rootfs_backup.sqf" > $tmpout 2>&1
 if [ "$?" -ne "0" ]
 then
@@ -518,8 +525,9 @@ fi
 
 if [ "$no_install" = "1" ]
 then
-    echo "WARNING: To install OpenLGTV BCM you need to use \"$installer install\" command."
-    echo "More usage info: \"$installer --help\""
+    echo "WARNING: To install OpenLGTV BCM you need to use this command:"
+    echo "$installer install"
+    echo "More usage info: $installer --help"
     exit 0
 fi
 
