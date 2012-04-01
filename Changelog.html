@@ -1,8 +1,26 @@
 <HTML><BODY><PRE>
 
 OpenLGTV BCM Changelog
+Not resolved (yet) issues: (status as for 0.5.0-beta4):
+    * once per around 10-15 times TV may boot without (OPEN)RELEASE - reboot/switch off/on fixes problem (I don't know where's the source of problem, yet)
+    * NetPlayer alternative (rss.cgi) can be slow on bigger RSS/XML links or slow sites,
+    * some TS/M2TS (or other malformed videos) files can crash RELEASE when played through FileManager,
+    * YWE is not being enabled in other North American countries than US - but can be enabled with netcast_enable_all WebUI option,
+    * iPtak service needs extroot to show movie covers (non-JFIF JPEGs are not supported without conversion through jpegtrans from extroot),
+    * some packages from OpenWRT repositories may not work (mostly because of differences in uClibc libs),
+    * YWE needs to be run from USB stick/disk on non-US models,
+    * there was no space for real e2fsck, so full error checks on ext3 partitions should be done on disk/stick connected to PC (but basic (journal) recovery at mount time is being performed)
+    * when heavy disk I/O operations where previously performed (like manually done full backup) and then installer gets run there might be not enough memory to perform installation (reboot or switch off/on is required)
+    * Flash elements on Internet sites can meaningfully drop performance in Internet Browser
+    * Flash elements written for Flash 9 and up don't work at all or don't work properly
+    * new 'YouTube in TV' interace is a bit sluggish (but videos are being played at the right framerate, including 1080p videos), starts slowly and exit takes around 10 seconds,
+    * 'YouTube in TV' interace sometimes can crash addon_mgr when trying to exit by too many back/exit/other combo button presses
+    * Some USB mouses or keyboard+mouse combo need to copy additional kernel modules - most modules binaries are in addons in SVN and are supported
+    * USB keyboards are not supported in web browser
+    * Bluetooth HID devices are not supported
+    * SmartTV (GP3B) builds were not tested
 
-TODO:
+TODO (not everything to be done for 0.5.0):
     * FileManager: add upload button (on remote access only) to make it possible to upload files via http to any paths
     * FileManager: add subtitles loading and audio tracks change possibility in played videos (?)
     * FileManager: add check mark to select multiple files/dirs and handle that in copy/move/delete/play (?)
@@ -10,7 +28,6 @@ TODO:
     * insert characters in cursor position in WebUI, Internet Browser and FileManager dialogs, not always at the end of string
     * update BusyBox to 1.19.4 (or newer) and backport few fixes from master, like "httpd: make byte ranges which start at 0 work too. Closes 4766" and "httpd: fix sendfile of files larger than 2 Gb. Closes 4754"
     * udpxy integration for udp:// and rtp:// links
-    * update mime-types in httpd.conf for support of more media file extensions
     * update and test scripts chrooted on SmartTV models
     * enable YWE in North American models outside of USA (Canada, Mexico)
     * find a way for OPENRELEASE configs upgrade when currently used ones were already customized
@@ -81,7 +98,7 @@ TODO:
     * ADD: improvements to vod services
     * ADD: 'Options' field in WebUI -> Network Shares to tune performance/compatibility
     * ADD: OPENRELEASE crash detection - it will get disabled on next boot (after upgrade or enabling it) if unclean shutdown will be detected
-    * ADD: 'YouTube in TV' (Leanback v3) interface - with playlists support and HD playback
+    * ADD: 'YouTube in TV' (Leanback v3) interface - with channels, playlists, friends, voting, etc support and HD playback
     * ADD: web tools: jpeg.sh (support for unsuported by web browser non-JFIF JPEGs) and msdl.sh (support for additional streamed media protocols) - both need extroot
     * ADD: free space for backup check in installer
     * UPDATE: OPENRELEASE upgrade to version 2.1.2-16-g5414057

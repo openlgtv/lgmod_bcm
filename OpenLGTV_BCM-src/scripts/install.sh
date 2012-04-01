@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-devel installation script v.1.99 by xeros
+# OpenLGTV BCM 0.5.0-beta4 installation script v.1.99 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -28,7 +28,7 @@ installer="$0"
 # forced rebooting option disabled for manual upgrade/installations
 #rebooting=0
 
-ver=0.5.0-devel
+ver=0.5.0-beta4
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
@@ -74,6 +74,7 @@ lginit_size2011=524288
 platform=GP2B
 bck_time=20
 bck_space=1.5GB
+bck_space_m=1536
 
 proxy_lock_file=/var/run/proxy.lock
 KILL='addon_mgr stagecraft konfabulator lb4wk GtkLauncher nc udhcpc ntpd tcpsvd ls wget djmount msdl'
@@ -90,6 +91,7 @@ then
     platform=GP3B
     bck_time=40
     bck_space=3GB
+    bck_space_m=3072
     no_install=1 # force no_install for GP3B
 fi
 
@@ -160,7 +162,7 @@ then
     fi
 fi
 
-echo "OpenLGTV BCM 0.5.0-devel installation script for $platform platform by xeros" | tee -a $log
+echo "OpenLGTV BCM 0.5.0-beta4 installation script for $platform platform by xeros" | tee -a $log
 
 ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 sleep 1
@@ -183,9 +185,16 @@ then
     back_dir="$OpenLGTV_BCM_USB/backup"
     echo "OpenLGTV BCM installation is being run first time or backup was forced" | tee -a $log
     echo "Backup will take up to $bck_time minutes and use up to $bck_space space" | tee -a $log
+    mkdir -p "$back_dir" 2>&1 | tee -a $log
+    free_space_m=`df -m "$back_dir" | tail -n 1 | awk '{print $4}'`
+    if [ "$free_space_m" -lt "$bck_space_m" ]
+    then
+	echo "ERROR: You don't have enough free space for backup on USB stick/disk!" | tee -a $log
+	echo "Please free at least $((${bck_space_m}-${free_space_m}))MB and try again." | tee -a $log
+	exit 1
+    fi
     echo "Making backup of current firmware to $back_dir" | tee -a $log
     [ -n "`which nanddump`" ] && nanddmp=1
-    mkdir -p "$back_dir" 2>&1 | tee -a $log
     for i in `cat /proc/mtd | grep -v erasesize | awk '{print $1 "_" $4}' | sed -e 's/\"//g' -e 's/mtd\(.\):/mtd0\1/' -e 's/://g'`
     do
 	echo "Making backup of partition: $i ..." | tee -a $log
