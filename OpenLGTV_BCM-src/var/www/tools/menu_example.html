@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<!-- Simple custom network services 4x2 menu example -->
+<!-- Code for OpenLGTV by Nicola Ottomano -->
+<!-- Modified by xeros -->
+<!-- Source code released under GPL License -->
+
+<title>Simple menu example</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+<!--
+
+var col = 4; //number of 'cells' in a row
+var current;
+var next;
+document.onkeydown = check;
+window.onload = OnLoadSetCurrent;
+
+function check(e)
+	{
+	if (!e) var e = window.event;
+	(e.keyCode) ? key = e.keyCode : key = e.which;
+	try
+		{
+			switch(key)
+			{
+			case 33: next = (1*current) - (6*col); break; //ch up
+			case 34: next = (1*current) + (6*col); break; //ch down
+			case 37: next = current - 1; break; //left
+			case 38: next = current - col; break; //up
+			case 39: next = (1*current) + 1; break; //right
+			case 40: next = (1*current) + col; break; //down
+			}
+		if (key==33|key==34|key==37|key==38|key==39|key==40)
+			{
+			//Move to the next key on the keyboard
+			var code=document.links['c' + next].name;
+			document.links['c' + next].focus();
+			current = next;
+			//Prevent scrolling
+			return false;
+			}
+		else if (key==461) 
+			{
+			//the back button on the remote control have been pressed
+			//NetCastBack API
+			//window.NetCastBack();
+			history.go(-1);
+			}
+		else if (key==1001) 
+			{
+			//the exit button on the remote control have been pressed
+			//NetCastExit API
+			window.NetCastExit();
+			}
+		}catch(Exception){}
+	}
+
+	function setCurrent(element)
+	{
+	var string = element.id;
+	current = string.slice(1,string.length);
+	}
+
+function OnLoadSetCurrent()
+	{
+	current = 1;
+	if (document.links['link1']) document.links['c1'].focus();
+	}
+
+document.defaultAction = true;
+
+
+// -->
+</script>
+
+<style type="text/css">
+    a:link,
+    a:visited {
+    color: #000000;
+    background-color: #000000;
+    }
+    a:hover,
+    a:focus,
+    a:active {
+    color: #FFFF00;
+    background-color: #000000;
+    }
+
+</style>
+
+</head>
+
+<body bgcolor="#000000">
+<br/>
+<br/>
+<center>
+<table border=0 align='center' valign='center' cellspacing='20'>
+<tr>
+	<td align="center"><a id="c1" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/1' target='_parent'><img src="item1.jpg" width="285" height="285" border=2></a></td>
+	<td align="center"><a id="c2" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/2' target='_parent'><img src="item2.png" width="285" height="285" border=2></a></td>
+	<td align="center"><a id="c3" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/3' target='_parent'><img src="item3.gif" width="285" height="285" border=2></a></td>
+	<td align="center"><a id="c4" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/4' target='_parent'><img src="item4.jpg" width="285" height="285" border=2></a></td>
+</tr>
+<tr>
+	<td align="center"><a id="c5" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/5' target='_parent'><img src="item5.jpg" width="285" height="285" border=2></a></td>
+	<td align="center"><a id="c6" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/6' target='_parent'><img src="item6.jpg" width="285" height="285" border=2></a></td>
+	<td align="center"><a id="c7" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/7' target='_parent'><img src="item7.jpg" width="285" height="285" border=2></a></td>
+	<td align="center"><a id="c8" onKeyPress="javascript:setCurrent(this);return false" href='msdl.sh?rtsp://url.to.live.stream/8' target='_parent'><img src="item8.jpg" width="285" height="285" border=2></a></td>
+</tr>
+</table>
+</center>
+</body>
+</html>
