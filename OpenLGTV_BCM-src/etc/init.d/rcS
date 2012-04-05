@@ -51,7 +51,7 @@ then
 fi
 
 echo "OpenLGTV_BCM-INFO: enabling possibility to break init script with CTRL+C now"
-stty brkint
+stty -F /dev/ttyS0 brkint
 
 export uver=`cat /mnt/user/etc/ver2`
 
