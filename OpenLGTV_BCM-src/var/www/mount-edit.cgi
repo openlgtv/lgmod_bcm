@@ -139,7 +139,8 @@ fi
 
 if [ "$FORM_umount" = "1" ]
 then
-    share_path="`grep -m 1 "$dst " /proc/mounts | cut -d' ' -f2`"
+    #share_path="`grep -m 1 "$dst " /proc/mounts | cut -d' ' -f2`"
+    share_path="`cat /proc/mounts | cut -d' ' -f2 | grep -m 1 "$dst\$"`"
     echo "OpenLGTV_BCM-INFO: WebUI: NetShare mounts - trying to unmount NetShare: $share_path id: $id by WebUI..." >> /var/log/OpenLGTV_BCM.log
     umount "$share_path" >> /var/log/OpenLGTV_BCM.log 2>&1
 fi
@@ -151,7 +152,8 @@ fi
 			    <div id="link11Parent" style="background-color:white;height:40px;">
 				<?
 				    action=mount
-				    if [ -z "`egrep "^[^ ]* $dst " /proc/mounts`" ]
+				    #if [ -z "`egrep "^[^ ]* $dst " /proc/mounts`" ]
+				    if [ -z "`cat /proc/mounts | cut -d' ' -f2 | grep -m 1 "$dst\$"`" ]
 				    then
 					if [ -f "${input_file}" ]
 					then
