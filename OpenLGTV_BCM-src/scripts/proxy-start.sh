@@ -34,12 +34,14 @@
 [ -z "$proxy_adblock_flt" ]               && proxy_adblock_flt='doubleclick\.net|emediate\.eu|googleadservices\.com|/adserver\.|/googleads\.|://ads\.|/www/delivery/|media\.richrelevance.com/rrserver/js/|/advertising/|yieldmanager\.com|pagead2\.googlesyndication\.com|hit\.gemius\.pl'
 [ -z "$proxy_useragent" ]                 && proxy_useragent="Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0" # useragent string used for connections
 
+[ -z "$netcast_webproxy_flashblock" ]     && source /mnt/user/cfg/settings
+
 #[ -z "$nc" ]                             && nc="busybox nc"                           # for proxy testing on PC
 [ -z "$nc" ]                              && nc=nc
 [ -z "$awk" ]                             && awk=awk
 [ -z "$tcpsvd" ]                          && tcpsvd=tcpsvd
 
-export proxy_custom_cfgdir proxy_listen_port proxy_log_debug proxy_log_file proxy_wait_time proxy_wait_moretime proxy_connect_port proxy_log_file proxy_inject_file proxy_inject_url proxy_adblock_flt proxy_useragent awk nc tcpsvd
+export proxy_custom_cfgdir proxy_listen_port proxy_log_debug proxy_log_file proxy_wait_time proxy_wait_moretime proxy_connect_port proxy_log_file proxy_inject_file proxy_inject_url proxy_adblock_flt proxy_useragent netcast_webproxy_flashblock awk nc tcpsvd
 
 export id=1
 

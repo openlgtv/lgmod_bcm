@@ -13,7 +13,9 @@
 [ -z "$proxy_inject_file" ]   && proxy_inject_file=/mnt/user/www/inject.js
 [ -z "$proxy_inject_url" ]    && proxy_inject_url="http://127.0.0.1:88/user/inject.js"
 [ -z "$proxy_adblock_flt" ]   && proxy_adblock_flt='doubleclick\.net|emediate\.eu|googleadservices\.com|/adserver\.|/googleads\.|://ads\.|/www/delivery/|media\.richrelevance.com/rrserver/js/|/advertising/|yieldmanager\.com|pagead2\.googlesyndication\.com|hit\.gemius\.pl'
-[ -z "$proxy_useragent" ]     && proxy_useragent="Mozilla/5.0 (X11; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"
+[ -z "$proxy_useragent" ]     && proxy_useragent="Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0"
+
+[ "$netcast_webproxy_flashblock" = "1" ] && proxy_flash_flt="|\.swf" || proxy_flash_flt=""
 
 # For proxy testing on PC
 #[ -z "$nc" ]                 && nc="busybox nc"
@@ -31,8 +33,10 @@ do
     read -t 1 $linex
     if [ "$linex" = "request" ]
     then
-	# Adblock for common ads
-	if [ -n "`echo $request | egrep -i -m 1 '$proxy_adblock_flt'`" ]
+	# Adblock for common ads or flash content
+	# TODO: change parser for content-type answers for flash and media
+	#if [ -n "`echo $request | egrep -i -m 1 '$proxy_adblock_flt'`" ]
+	if [ -n "`echo $request | egrep -i -m 1 '${proxy_adblock_flt}${proxy_flash_flt}'`" ]
 	then
 	    # Log reject if debug >= 1
 	    [ "$proxy_log_debug" -ge "1" ] && echo "REJECT request: $request" >&2
