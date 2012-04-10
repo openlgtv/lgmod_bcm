@@ -12,10 +12,12 @@ ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons.zi
 ilink2="http://addon.vpscript.com/icons.zip"
 ilink3="http://smarttv.net46.net/icons.zip"
 ilink4="http://dl.dropbox.com/u/43758310/icons.zip"
+ilink5="http://smarttv.abcz8.com/icons.zip"
+ilink6="http://smarttv.awardspace.info/icons.xxx"
 #imd5="a3f458d48113421c5a3a131bc5b44864"
 imd5="7c19bece3f7b27cdf9196b07868026f2"
-useragent="Mozilla/5.0 (X11; Linux x86; rv:10.0.2) Gecko/20100101 Firefox/10.0.2"
-ilinks_count=4
+useragent="Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0"
+ilinks_count=6
 unpacked_ok=0
 try_count=0
 
@@ -34,7 +36,9 @@ then
 		0) ilink="$ilink1";;
 		1) ilink="$ilink2";;
 		2) ilink="$ilink3";;
-		*) ilink="$ilink4";;
+		3) ilink="$ilink4";;
+		4) ilink="$ilink5";;
+		*) ilink="$ilink6";;
 	    esac
 	    ihost="`echo $ilink | awk -F/ '{print $3}'`"
 	    # ugly workaround for disabled pings on dl.dropbox.com
@@ -61,5 +65,5 @@ then
 fi
 # That one is not in archive
 [ ! -f "$icons_dir/iptak.png" ] && wget "http://iptak.pl/dodatki/img/logo2.png" -q -c -U "$useragent" -O "$icons_dir/iptak.png"
-cd $cur_dir
+cd "$cur_dir"
 echo "OpenLGTV_BCM-INFO: icons_download.sh: exit"

@@ -287,7 +287,7 @@ function GoToNetCastLinks()
 	{
 	<?
 		links_win_loc="window.location='browser/links.html';"
-		[ "$HTTP_HOST" = "127.0.0.1:88" ] && [ -n "`pgrep -f run3556-proxy`" ] && links_win_loc="window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
+		[ "$HTTP_HOST" != "127.0.0.1:88" ] && [ -n "`pgrep -f run3556-proxy`" ] && links_win_loc="window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/user/netcast/run3556-proxy+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
 		echo "$links_win_loc"
 	?>
 	}
