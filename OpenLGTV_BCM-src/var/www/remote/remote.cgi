@@ -4,6 +4,18 @@
 content-type: text/html
 
 <html>
+<head>
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<!-- META http-equiv="refresh" content="0;url=index.html" -->
+<script language="javascript" type="text/javascript">
+function goBack()
+{
+    //if (!history.back()) { window.location.replace('index.html'); }
+    history.go(-1);
+}
+window.onload=goBack();
+</script>
+</head>
 <body>
 
 <?  
@@ -14,7 +26,7 @@ content-type: text/html
     fi
 ?>
 
-<script language="javascript" type="text/javascript">history.back();</script>
+<!-- script language="javascript" type="text/javascript">history.back();</script -->
 
 </body>
 </html>
