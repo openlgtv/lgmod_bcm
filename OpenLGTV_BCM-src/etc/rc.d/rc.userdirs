@@ -15,7 +15,7 @@ then
     touch /mnt/flash/data/hosts
 fi
 
-mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/lib/opkg
+mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/lib/opkg /tmp/var/lib/cgi-bin
 
 echo "OpenLGTV_BCM-INFO: creating dirs in /tmp/ for logs and /var temporary data"
 #mkdir -p /tmp/var/run /tmp/var/log /tmp/var/service /tmp/var/lib/hwclock /tmp/var/lib/misc /tmp/var/spool/cron

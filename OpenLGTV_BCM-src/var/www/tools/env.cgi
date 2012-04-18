@@ -4,6 +4,7 @@ Content-type: text/html
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
 <HEAD>
+</HEAD>
 <BODY>
 
 <!-- OpenLGTV BCM FileManager by xeros -->
@@ -17,5 +18,4 @@ Content-type: text/html
 ?>
 
 </BODY>
-</HEAD>
 </HTML>
