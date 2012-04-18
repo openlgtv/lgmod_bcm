@@ -66,6 +66,19 @@ Content-type: text/html
     td {
 	//border: 1px black solid;
     }
+    input.uploadhide {
+	position:absolute;
+	left:-1000px;
+	top: -1000px;
+    }
+    input.upload {
+	background-color:#cc0000;
+	font-weight:bold;
+	color:#ffffff;
+	width:37px;
+	height:15px;
+	font-size:7.5px;
+    }
 </style>
 
 <title>CGI FileManager by xeros</title>
@@ -137,6 +150,18 @@ else
 fi
 
 [ "$FORM_movieinforefresh" = "1" ] && echo "var movieInfoRefresh=1;" || echo "var movieInfoRefresh=0;"
+
+colspan=2 # span columns for filemanager
+fnamewidth="43%" # filename field width
+
+if [ "$HTTP_HOST" != "127.0.0.1:88" ]
+then
+    # TODO TODO TODO - parse $lpth to choose between upload.cgix/upload_usb1.cgix/upload_usb2.cgix
+    lupload="<form action='cgi-bin/upload_usb1.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 30px; max-width: 30px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' value='Upload'></td></form>"
+    rupload="<form action='tools/upload.sh' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 30px; max-width: 30px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' value='Upload'></td></form>"
+    colspan=3
+    fnamewidth="33%"
+fi
 
 ?>
 
@@ -565,7 +590,7 @@ function mkdirDialog()
 	    <input type="hidden" name="rpth" value="' + rpth + '"> \
 	    <input type="hidden" name="select" value="' + current + '"> \
 	    <input type="hidden" name="action" value="mkdir"> \
-	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></font>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[\'text\'].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></font>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
 	dialog_displayed = 1;
@@ -603,7 +628,7 @@ function copyDialog()
 	    <input type="hidden" name="select" value="' + current + '"> \
 	    <input type="hidden" name="action" value="copy"> \
 	    <input type="hidden" name="confirm" value="yes"><br/> \
-	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[\'action\'].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
 	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
 	}
@@ -641,7 +666,7 @@ function moveDialog()
 	    <input type="hidden" name="select" value="' + previous + '"> \
 	    <input type="hidden" name="action" value="move"> \
 	    <input type="hidden" name="confirm" value="yes"><br/> \
-	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[\'action\'].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
 	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
 	}
@@ -666,7 +691,7 @@ function renameDialog()
 	    <input type="hidden" name="rpth" value="' + rpth + '"> \
 	    <input type="hidden" name="select" value="' + current + '"> \
 	    <input type="hidden" name="action" value="rename"> \
-	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></font>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[\'text\'].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></font>';
 	newdiv.innerHTML = kb;
 	document.getElementById('txtName').focus();
 	dialog_displayed = 1;
@@ -705,7 +730,7 @@ function deleteDialog()
 	    <input type="hidden" name="select" value="' + previous + '"> \
 	    <input type="hidden" name="action" value="delete"> \
 	    <input type="hidden" name="confirm" value="yes"><br/> \
-	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[0].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:document.forms[\'action\'].submit();"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3"> Cancel</font></span></td></tr></table></form></center></font>';
 	newdiv.innerHTML = kb;
 	dialog_displayed = 1;
 	}
@@ -838,8 +863,10 @@ mountpoints_length="${#mountpoints}"
     # static size to cut path at 77 chars to fit 1280 width on most web browsers that respect monotype font style
     [ "${#lpth}" -gt "77" ] && lpth_crop="${lpth:0:63} ~~ ${lpth:$((${#lpth}-10))}"
     [ "${#rpth}" -gt "77" ] && rpth_crop="${rpth:0:63} ~~ ${rpth:$((${#rpth}-10))}"
-    echo "<thead><tr border='1' height='18px'><td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
-    echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='2'>"
+    #[ "$HTTP_HOST" != "127.0.0.1:88" ] && lupload="<form action='cgi-bin/firmware-upgrade.cgix' method='post' enctype='multipart/form-data' ><td id='lupload' valign='top' bgcolor='yellow' width='1%' style='max-width: 37px;'><input type='button' class='upload' id='pseudobutton' value='Upload' onclick=\"document.getElementById('uploadbutton').click();\"><input type='file' class='uploadhide' name='uploadfile' id='uploadbutton' onmousedown=\"buttonPush('depressed');\" onmouseup=\"buttonPush('normal');\" onmouseout=\"buttonPush('phased');\"></td></form>"
+    #echo "<thead><tr border='1' height='18px'>$lupload<td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
+    echo "<thead><tr border='1' height='18px'>$lupload<td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td>$rupload<td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
+    echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='$colspan'>"
     echo '<Table id="lpanel" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable" id="lpaneltbody">'
     if [ "$lpth" != "" ]
     then
@@ -910,7 +937,7 @@ mountpoints_length="${#mountpoints}"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
-    echo '</tbody></table></td><td valign="top" width="50%" class="panel" colspan="2">'
+    echo "</tbody></table></td><td valign='top' width='50%' class='panel' colspan='$colspan'>"
     echo '<Table id="rpanel" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable" id="rpaneltbody">'
     if [ "$rpth" != "" ]
     then
