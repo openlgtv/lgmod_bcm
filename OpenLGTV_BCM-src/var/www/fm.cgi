@@ -127,6 +127,8 @@ else
     fi
 fi
 
+localhost="127.0.0.1:88"
+
 echo "var side  = '$side';"
 echo "var oside = '$oside';"
 echo "var lpth  = '$lpth';"
@@ -138,7 +140,6 @@ if [ -f "$cpth" ]
 then
     echo "var cpth = '$cpth';"
     echo "var dest='fm-action.cgi?action=play&amp;side=$side&amp;${side}pth=$cpth&amp;${oside}pth=$opth&amp;select=${selected}';"
-    #sleep 1
     echo "window.location.replace(dest);"
 fi
 
@@ -154,9 +155,10 @@ fi
 colspan=2 # span columns for filemanager
 fnamewidth="43%" # filename field width
 
-if [ "$HTTP_HOST" != "127.0.0.1:88" ]
+if [ "$HTTP_HOST" != "$localhost" ]
 then
     # TODO TODO TODO - parse $lpth to choose between upload.cgix/upload_usb1.cgix/upload_usb2.cgix
+    # even better - dynamicly create cgix file with haserl command with custom --upload-dir that calls upload.cgix
     lupload="<form action='cgi-bin/upload_usb1.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 30px; max-width: 30px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' value='Upload'></td></form>"
     rupload="<form action='tools/upload.sh' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 30px; max-width: 30px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' value='Upload'></td></form>"
     colspan=3
@@ -863,7 +865,7 @@ mountpoints_length="${#mountpoints}"
     # static size to cut path at 77 chars to fit 1280 width on most web browsers that respect monotype font style
     [ "${#lpth}" -gt "77" ] && lpth_crop="${lpth:0:63} ~~ ${lpth:$((${#lpth}-10))}"
     [ "${#rpth}" -gt "77" ] && rpth_crop="${rpth:0:63} ~~ ${rpth:$((${#rpth}-10))}"
-    #[ "$HTTP_HOST" != "127.0.0.1:88" ] && lupload="<form action='cgi-bin/firmware-upgrade.cgix' method='post' enctype='multipart/form-data' ><td id='lupload' valign='top' bgcolor='yellow' width='1%' style='max-width: 37px;'><input type='button' class='upload' id='pseudobutton' value='Upload' onclick=\"document.getElementById('uploadbutton').click();\"><input type='file' class='uploadhide' name='uploadfile' id='uploadbutton' onmousedown=\"buttonPush('depressed');\" onmouseup=\"buttonPush('normal');\" onmouseout=\"buttonPush('phased');\"></td></form>"
+    #[ "$HTTP_HOST" != "$localhost" ] && lupload="<form action='cgi-bin/firmware-upgrade.cgix' method='post' enctype='multipart/form-data' ><td id='lupload' valign='top' bgcolor='yellow' width='1%' style='max-width: 37px;'><input type='button' class='upload' id='pseudobutton' value='Upload' onclick=\"document.getElementById('uploadbutton').click();\"><input type='file' class='uploadhide' name='uploadfile' id='uploadbutton' onmousedown=\"buttonPush('depressed');\" onmouseup=\"buttonPush('normal');\" onmouseout=\"buttonPush('phased');\"></td></form>"
     #echo "<thead><tr border='1' height='18px'>$lupload<td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<thead><tr border='1' height='18px'>$lupload<td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td>$rupload<td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='$colspan'>"
