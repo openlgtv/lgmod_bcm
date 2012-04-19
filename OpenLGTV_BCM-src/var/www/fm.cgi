@@ -157,10 +157,8 @@ fnamewidth="43%" # filename field width
 
 if [ "$HTTP_HOST" != "$localhost" ]
 then
-    # TODO TODO TODO - parse $lpth to choose between upload.cgix/upload_usb1.cgix/upload_usb2.cgix
-    # even better - dynamicly create cgix file with haserl command with custom --upload-dir that calls upload.cgix
-    lupload="<form action='cgi-bin/upload_usb1.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 30px; max-width: 30px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' value='Upload'></td></form>"
-    rupload="<form action='tools/upload.sh' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 30px; max-width: 30px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' value='Upload'></td></form>"
+    lupload="<form action='cgi-bin/tmp/lupload.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 29px; max-width: 29px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' value='Upload'></td></form>"
+    rupload="<form action='cgi-bin/tmp/rupload.cgix?upload_dir=$rpth' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 29px; max-width: 29px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' value='Upload'></td></form>"
     colspan=3
     fnamewidth="33%"
 fi
@@ -1006,6 +1004,57 @@ mountpoints_length="${#mountpoints}"
 <script type='text/javascript'>OnLoadSetCurrent();</script>
 <script type='text/javascript'>
 <?
-    echo "document.getElementById('ldf').innerHTML ='`df -h \"$lpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
-    echo "document.getElementById('rdf').innerHTML ='`df -h \"$rpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
+    spaceinfo=`df -P -h "$lpth/" "$rpth/" | tail -n +2 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) */\2\/\1 /g'`
+    # $1 - free/total space, $2 - %, $3 - mount path (can have spaces)
+    lspcinfo=`echo "${spaceinfo}" | head -n 1`
+    rspcinfo=`echo "${spaceinfo}" | tail -n 1`
+    ldf="${lspcinfo%% *}"
+    rdf="${rspcinfo%% *}"
+    lpthmnt="/${lspcinfo#*/*/}"
+    rpthmnt="/${rspcinfo#*/*/}"
+    #echo "document.getElementById('ldf').innerHTML ='`df -h \"$lpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
+    #echo "document.getElementById('rdf').innerHTML ='`df -h \"$rpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
+    echo "document.getElementById('ldf').innerHTML ='$ldf';"
+    echo "document.getElementById('rdf').innerHTML ='$rdf';"
+    if [ "$HTTP_HOST" != "$localhost" ]
+    then
+	lfree="${ldf%/*}"
+	rfree="${rdf%/*}"
+	lfreeq="${lfree/,/}"
+	rfreeq="${rfree/,/}"
+	if [ "${lfree/K/}" != "$lfree" ]
+	then
+	    lmulti="1"
+	    lfreeq="${lfree%,*}"
+	    lfreeq="${lfreeq/K/}"
+	else
+	    [ "$lfreeq" != "$lfree" ] && lmulti="100" || lmulti="1000"
+	    lfreeq="${lfreeq/M/}"
+	    lfreeq="${lfreeq/G/}"
+	    lfreeq="${lfreeq/T/}"
+	fi
+	[ "${lfree/G/}" != "$lfree" ] && lmulti="$lmulti*1000"
+	[ "${lfree/T/}" != "$lfree" ] && lmulti="$lmulti*1000*1024"
+	lfreek="$((${lfreeq}*${lmulti}))"
+	if [ "${rfree/K/}" != "$rfree" ]
+	then
+	    rmulti="1"
+	    rfreeq="${rfree%,*}"
+	    rfreeq="${rfreeq/K/}"
+	else
+	    [ "$rfreeq" != "$rfree" ] && rmulti="100" || rmulti="1000"
+	    rfreeq="${rfreeq/M/}"
+	    rfreeq="${rfreeq/G/}"
+	    rfreeq="${rfreeq/T/}"
+	fi
+	[ "${rfree/G/}" != "$rfree" ] && rmulti="$rmulti*1000"
+	[ "${rfree/T/}" != "$rfree" ] && rmulti="$rmulti*1000*1024"
+	rfreek="$((${rfreeq}*${rmulti}))"
+	[ "$lpthmnt" = "/" ] && lpthmnt="/tmp"
+	[ "$rpthmnt" = "/" ] && rpthmnt="/tmp"
+	#echo "$lfree $lfreek $rfree $rfreek"
+	echo "#!/usr/bin/haserl --upload-limit=$lfreek --upload-dir=$lpthmnt --accept-all /var/www/cgi-bin/upload.cgix" > /var/www/cgi-bin/tmp/lupload.cgix &
+	echo "#!/usr/bin/haserl --upload-limit=$rfreek --upload-dir=$rpthmnt --accept-all /var/www/cgi-bin/upload.cgix" > /var/www/cgi-bin/tmp/rupload.cgix &
+	chmod +x /var/www/cgi-bin/tmp/* &
+    fi
 ?></script>

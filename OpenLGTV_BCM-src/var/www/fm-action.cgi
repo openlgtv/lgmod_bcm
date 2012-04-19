@@ -49,6 +49,14 @@ Content-type: text/html
 	z-index: 99;
 	margin: 1 auto;
     }
+    input.download {
+	background-color:#cc0000;
+	font-weight:bold;
+	color:#ffffff;
+	width:50px;
+	height:15px;
+	font-size:7.5px;
+    }
 </style>
 <title>CGI FileManager by xeros</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -349,11 +357,11 @@ then
     [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"
     [ "${full_spth:0:8}" = "roothttp" ] && full_spth="${full_spth:4}"
     [ "${full_spth_next:0:8}" = "roothttp" ] && full_spth_next="${full_spth_next:4}"
-    if [ "$ext" = "txt" -o "$ext" = "log" -o "$ext" = "ini" -o "$ext" = "info" -o "$ext" = "cfg" -o "$ext" = "conf" ]
+    if [ "$ext" = "cfg" -o "$ext" = "conf" -o "$ext" = "ini" -o "$ext" = "inf" -o "$ext" = "info" -o "$ext" = "log" -o "$ext" = "txt" -o "xml" ]
     then
 	ftype=text
     else
-	if [ "$ext" = "jpg" -o "$ext" = "jpeg" -o "$ext" = "png" -o "$ext" = "gif" ]
+	if [ "$ext" = "gif" -o "$ext" = "jpeg" -o "$ext" = "jpg" -o "$ext" = "png" ]
 	then
 	    ftype=image
 	else
@@ -678,11 +686,14 @@ else
 	if [ "$spth" != "" -a "$spth" != "/" ]
 	then
 	    echo "<center><font size='+4' color='brown'><br><b>Removing: </font><br><br><font size='+3' color='blue'>$spth<br><br>...<br></font>"
-	    rm -r "$spth" 2>&1
-	    if [ "$?" -ne "0" ]
+	    if [ -e "$spth" ]
 	    then
-		echo "<br><br><font color='red' size='+4'><b>ERROR</b></font><br>"
-		error=1
+		rm -r "$spth" 2>&1
+		if [ "$?" -ne "0" ]
+		then
+		    echo "<br><br><font color='red' size='+4'><b>ERROR</b></font><br>"
+		    error=1
+		fi
 	    fi
 	fi
     fi
@@ -705,7 +716,7 @@ fi
 if [ "$action" != "copy" -a "$action" != "move" -a "$action" != "status" ]
 then
     [ "$ftype" != "image" ] && echo -n '</div>'
-    [ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width:'100%'><table width='98%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font></td></tr></table></div>"
+    [ "$ftype" = "text" ] && echo -n "<div style='position: relative; text-align: center; align: center; margin: 0 auto;' width:'100%'><table width='99%' align='center'><tr><td><font color='yellow' size='+1'><b>OpenLGTV BCM FileManager</b> by xeros</font></td><td align='right'><font color='white'>viewed file: </font><font color='#00FF00'>$spth</font>&nbsp;</td><td style='width: 40px;'><input type='button' class='download' id='lpseudobutton' value='Download' onclick=\"window.location='tools/download.cgi?file=$spth';\" ></td></tr></table></div>"
     echo "</BODY></HTML>"
 fi
 #echo "STOP:`date`" >> /tmp/log.log

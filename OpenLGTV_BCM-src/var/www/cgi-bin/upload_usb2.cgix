@@ -1,1 +1,0 @@
-#!/usr/bin/haserl --upload-limit=40000000 --upload-dir=/mnt/usb2/Drive1 --accept-all upload.cgix

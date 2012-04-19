@@ -18,18 +18,20 @@ content-type: text/html
      <? if [ -n "$FORM_uploadfile_name" ]
         then 
 	    ##echo "$FORM_uploadfile_name" > /tmp/file.txt
-	    #echo "$FORM_uploadfile_path $FORM_uploadfile_name FORM_upload_dir $FORM_upload_dir" > /tmp/file.txt
+	    wait_time=8000
+	    ####echo "$FORM_uploadfile_path $FORM_uploadfile_name FORM_upload_dir $FORM_upload_dir" > /tmp/file.txt
 	    #echo "HASERL_UPLOAD_DIR $HASERL_UPLOAD_DIR HASERL_UPLOAD_LIMIT $HASERL_UPLOAD_LIMIT" >> /tmp/file.txt
 	    [ ! -d "$FORM_upload_dir/" ] && mkdir -p "$FORM_upload_dir/"
 	    if [ -d "$FORM_upload_dir/" ]
 	    then
 		mv -f "$HASERL_uploadfile_path" "$FORM_upload_dir/$FORM_uploadfile_name"
 		sync
-		if [ -f $FORM_upload_dir/$FORM_uploadfile_name ]
+		if [ -f "$FORM_upload_dir/$FORM_uploadfile_name" ]
 		then
 		    echo "<style> body { background-color: green; } </style>"
 		    echo "File <b>$FORM_uploadfile_name</b> is uploaded to:<br/><b>$FORM_upload_dir/</b><br/><br/>"
 		    echo "OpenLGTV_BCM-INFO: WebUI: $FORM_upload_dir/$FORM_uploadfile_name uploaded by WebUI..." >> /var/log/OpenLGTV_BCM.log
+		    wait_time=2000
 		else
 		    echo "<style> body { background-color: red; } </style>"
 		    echo "<b>Error! Cannot upload file. Probably path is read only or doesnt exist</b>"
@@ -42,8 +44,8 @@ content-type: text/html
 	    echo "<style> body { background-color: red; } </style>"
 	    echo "This CGI script is for file uploads"
 	fi
-	echo '<br/><br/></font><font size="+1">Going back to previous page...<br/>'
-	echo "<script>setTimeout('history.go(-1)', 5000);</script>"
+	#echo '<br/><br/></font><font size="+1">Going back to previous page...<br/>'
+	echo "<script>setTimeout('history.go(-1)', $wait_time);</script>"
 	?>
 	</center></font>
   </HEAD>

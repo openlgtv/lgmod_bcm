@@ -1,2 +1,0 @@
-#!/usr/bin/haserl --upload-limit=40000000 --upload-dir=/mnt/usb1/Drive1 --accept-all upload.cgix
-# this is workaround for static upload-dir and big files uploads
