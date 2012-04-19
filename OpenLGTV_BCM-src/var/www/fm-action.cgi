@@ -357,7 +357,7 @@ then
     [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"
     [ "${full_spth:0:8}" = "roothttp" ] && full_spth="${full_spth:4}"
     [ "${full_spth_next:0:8}" = "roothttp" ] && full_spth_next="${full_spth_next:4}"
-    if [ "$ext" = "cfg" -o "$ext" = "conf" -o "$ext" = "ini" -o "$ext" = "inf" -o "$ext" = "info" -o "$ext" = "log" -o "$ext" = "txt" -o "xml" ]
+    if [ "$ext" = "cfg" -o "$ext" = "conf" -o "$ext" = "ini" -o "$ext" = "inf" -o "$ext" = "info" -o "$ext" = "log" -o "$ext" = "txt" -o "$ext" = "xml" ]
     then
 	ftype=text
     else

@@ -157,8 +157,8 @@ fnamewidth="43%" # filename field width
 
 if [ "$HTTP_HOST" != "$localhost" ]
 then
-    lupload="<form action='cgi-bin/tmp/lupload.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 29px; max-width: 29px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' value='Upload'></td></form>"
-    rupload="<form action='cgi-bin/tmp/rupload.cgix?upload_dir=$rpth' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 29px; max-width: 29px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' value='Upload'></td></form>"
+    lupload="<form action='cgi-bin/tmp/lupload.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 32px; max-width: 32px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' value='Upload'></td></form>"
+    rupload="<form action='cgi-bin/tmp/rupload.cgix?upload_dir=$rpth' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 32px; max-width: 32px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' value='Upload'></td></form>"
     colspan=3
     fnamewidth="33%"
 fi
@@ -1021,11 +1021,15 @@ mountpoints_length="${#mountpoints}"
 	lfree="${ldf%/*}"
 	rfree="${rdf%/*}"
 	lfreeq="${lfree/,/}"
+	lfreeq="${lfreeq/./}"
 	rfreeq="${rfree/,/}"
+	rfreeq="${rfreeq/./}"
+	#echo "lfree $lfree lfreeq $lfreeq rfree $rfree rfreeq $rfreeq"
 	if [ "${lfree/K/}" != "$lfree" ]
 	then
 	    lmulti="1"
 	    lfreeq="${lfree%,*}"
+	    lfreeq="${lfreeq%.*}"
 	    lfreeq="${lfreeq/K/}"
 	else
 	    [ "$lfreeq" != "$lfree" ] && lmulti="100" || lmulti="1000"
@@ -1040,6 +1044,7 @@ mountpoints_length="${#mountpoints}"
 	then
 	    rmulti="1"
 	    rfreeq="${rfree%,*}"
+	    rfreeq="${rfreeq%.*}"
 	    rfreeq="${rfreeq/K/}"
 	else
 	    [ "$rfreeq" != "$rfree" ] && rmulti="100" || rmulti="1000"
