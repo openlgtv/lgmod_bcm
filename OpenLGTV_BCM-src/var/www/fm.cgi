@@ -260,7 +260,7 @@ else if(document.attachEvent)
     }
 else
     {
-    document.onkeydown = check;
+    document.onkeydown = check(e);
     window.onresize = windowResize;
     }
 
@@ -516,6 +516,7 @@ function check(e)
 			    dialogRemove();
 			    }
 			//Prevent default action
+			e.preventDefault();
 			return false;
 			}
 		else if (key==1001) 

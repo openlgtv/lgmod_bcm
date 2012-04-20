@@ -222,6 +222,7 @@ function check(e)
 			//window.NetCastBack();
 			//lets get back to WebUI instead of closing NetCast service
 			<? [ "$action" != "play" -o "${spth:0:7}" = "http://" ] && echo "history.go(-1);" || echo "backToFM();" ?>
+			e.preventDefault();
 			}
 		else if (key==1001) 
 			{
