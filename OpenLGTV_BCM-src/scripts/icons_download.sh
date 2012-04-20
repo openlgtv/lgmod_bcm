@@ -8,16 +8,19 @@ echo "OpenLGTV_BCM-INFO: icons_download.sh: running..."
 icons_dir="/home/netcast_icons/www"
 #ilink1="http://dl.dropbox.com/u/43758310/smarttv_logos.zip"
 #ilink2="http://smarttv.awardspace.info/smarttv_logos.xxx"
-ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons.zip"
-ilink2="http://addon.vpscript.com/icons.zip"
-ilink3="http://smarttv.net46.net/icons.zip"
-ilink4="http://dl.dropbox.com/u/43758310/icons.zip"
-ilink5="http://smarttv.abcz8.com/icons.zip"
-ilink6="http://smarttv.awardspace.info/icons.xxx"
+##ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons.zip"
+ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons-SVN20120420.zip"
+##ilink2="http://addon.vpscript.com/icons.zip"
+##ilink3="http://smarttv.net46.net/icons.zip"
+##ilink4="http://dl.dropbox.com/u/43758310/icons.zip"
+##ilink5="http://smarttv.abcz8.com/icons.zip"
+##ilink6="http://smarttv.awardspace.info/icons.xxx"
 #imd5="a3f458d48113421c5a3a131bc5b44864"
-imd5="7c19bece3f7b27cdf9196b07868026f2"
+##imd5="7c19bece3f7b27cdf9196b07868026f2"
+imd5="b39ce8eb5f980f705f23127586deef82"
 useragent="Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0"
-ilinks_count=6
+##ilinks_count=6
+ilinks_count=1
 unpacked_ok=0
 try_count=0
 
@@ -63,7 +66,5 @@ then
 	rm -f /tmp/icons.zip
     done
 fi
-# That one is not in archive
-[ ! -f "$icons_dir/iptak.png" ] && wget "http://iptak.pl/dodatki/img/logo2.png" -q -c -U "$useragent" -O "$icons_dir/iptak.png"
 cd "$cur_dir"
 echo "OpenLGTV_BCM-INFO: icons_download.sh: exit"
