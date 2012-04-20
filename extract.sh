@@ -1,9 +1,9 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-beta4 installation script v.1.99 by xeros
+# OpenLGTV BCM 0.5.0-SVN20120420 installation script v.1.99 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
-SKIP_LINES=110
+SKIP_LINES=111
 
 echo "[ OpenLGTV BCM installer ]"
 
@@ -85,7 +85,7 @@ mount -t usbfs   installusbfs  ${CHR}/proc/bus/usb
 mount -t devpts  installdevpts ${CHR}/dev/pts
 mount -t sysfs   installsysfs  ${CHR}/sys
 
-for i in `cat /proc/mounts | awk '{print $2}' | grep -v "^/$" | grep -v "proc" | grep -v "sysfs" | grep -v "devpts"`; do mount --bind $i ${CHR}${i}; done
+for i in `cat /proc/mounts | awk '{print $2}' | grep -v "^/$" | grep -v "proc" | grep -v "sysfs" | grep -v "devpts" | grep -v "/var"`; do mount --bind $i ${CHR}${i}; done
 
 #TODO: use /scripts/install.sh and remove install.sh from zip file - need to add path handling in install.sh
 #chroot "$CHR" "$CHR/scripts/install.sh" "$base/$file_sqf" "$@"
@@ -95,6 +95,7 @@ if [ "$1" = "chroot" ]
 then
     echo "Starting shell inside chrooted (virtual) root filesystem environment..."
     echo "$separator"
+    cat "$CHR/etc/motd"
     /usr/sbin/chroot "$CHR" /bin/sh --login
 else
     echo "Running second part of installer:"
