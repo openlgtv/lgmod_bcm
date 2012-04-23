@@ -9,7 +9,7 @@ Content-type: text/html
 <!-- fm.cgi script for directory tree navigation and invoking operations on fm-action.cgi -->
 <!-- Source code released under GPL License -->
 
-<!-- tested on builtin GTK Browser, Firefox 5-10, Chromium 14 and reKonq 0.7.90 (problems with F5 on reKonq) -->
+<!-- tested on builtin GTK Browser, Firefox 5-11, Chromium 14-18 and reKonq 0.7.90 (problems with F5 on reKonq) -->
 
 <? killall df stat 2>/dev/null & ?>
 
@@ -30,6 +30,10 @@ Content-type: text/html
     }
     table.fulltable, #fulltable {
 	height:690px;
+	table-layout:fixed;
+    }
+    table.lpanel, #lpanel {
+	table-layout:fixed;
     }
     tbody.main, #main {
 	width: 95%;
@@ -52,8 +56,12 @@ Content-type: text/html
     }
     td.filename, #filename {
 	width: 700px;
-	width: 100%;
+	//width: 50px;
+	//width: 100%;
+	//width: 30%;
 	overflow:hidden;
+	text-overflow:ellipsis; //why it doesnt work???
+	//text-overflow:'...';
 	white-space:nowrap;
     }
     td.size, #size {
@@ -90,7 +98,7 @@ Content-type: text/html
 //var filenameSize=(window.innerWidth/2)-255;
 //var filenameSize=(window.innerWidth/2)-200;
 // static value bigger than the needed one is even better - cell width is being resized without need to refresh page
-document.write('<style type="text/css">td.filename {width:800px;}</style>');
+//XXXXXXXXXXX document.write('<style type="text/css">td.filename {width:800px;}</style>');
 
 <?
 
@@ -830,9 +838,10 @@ then
     movieinfo_file="`basename "$FORM_file"`"
     movieinfo_fileimg="${movieinfo}/${movieinfo_file}.jpg"
     echo "<center><b><font size='+4' color='yellow'><br/>Loading movie info for file:<br/><font size='+3'><br/>$movieinfo_file</font></font></b></center>"
-    echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\"" >> "$log_dir/imdb.log"
+    echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\" movieinfo_file=\"$movieinfo_file\"" >> "$log_dir/imdb.log"
     [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> "$log_dir/imdb.log" && sleep 0.5
-    echo -e "<script type='text/javascript'> \n\
+    #[ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$movieinfo_file" outdir="$movieinfo" >> "$log_dir/imdb.log" && sleep 0.5
+    echo -e "<script type='text/javascript'>\n\
 	    document.body.innerHTML = '';"
     if [ -f "$movieinfo_fileimg" ]
     then
@@ -898,6 +907,8 @@ mountpoints_length="${#mountpoints}"
 		lfilename="${lfilename// /&nbsp;}"
 	    fi
 	fi
+	# TEST TEST TEST ONLY for smaller screens - crop filename - how to count filename length width based on browser window width?
+	#lfilename="${lfilename:0:30}"
 	lcontent_3x="${lcontent_2x#*@}" # from 3rd columnt up to end
 	ldate="${lcontent_3x%%@*}"
 	ldate_cut="${ldate%%.*}"
@@ -969,6 +980,8 @@ mountpoints_length="${#mountpoints}"
 		rfilename="${rfilename// /&nbsp;}"
 	    fi
 	fi
+	# TEST TEST TEST ONLY for smaller screens - crop filename
+	#rfilename="${rfilename:0:30}"
 	rcontent_3x="${rcontent_2x#*@}"
 	rdate="${rcontent_3x%%@*}"
 	rdate_cut="${rdate%%.*}"

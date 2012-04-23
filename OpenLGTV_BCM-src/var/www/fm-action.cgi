@@ -358,25 +358,28 @@ then
     [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"
     [ "${full_spth:0:8}" = "roothttp" ] && full_spth="${full_spth:4}"
     [ "${full_spth_next:0:8}" = "roothttp" ] && full_spth_next="${full_spth_next:4}"
-    if [ "$ext" = "cfg" -o "$ext" = "conf" -o "$ext" = "ini" -o "$ext" = "inf" -o "$ext" = "info" -o "$ext" = "log" -o "$ext" = "txt" -o "$ext" = "xml" ]
+    # TODO: improve those checks for /etc, /mnt/user/etc, /mnt/user/cfg, /mnt/user/netcast (opening all files inside as text)
+    [ "${full_spth#root/etc/}" != "${full_spth}" -o "${full_spth#root/mnt/user/etc/}" != "${full_spth}" -o "${full_spth#root/mnt/user/cfg/}" != "${full_spth}" -o "${full_spth#root/mnt/user/netcast/}" != "${full_spth}" ] && ftype=text
+    #case "$full_spth" in # logic here is wrong
+    #	"${full_spth#root/etc/}"|"${full_spth#root/mnt/user/etc/}"|"${full_spth#root/mnt/user/cfg/}"|"${full_spth#root/mnt/user/netcast/}") ftype=test;;
+    #	*) ftype=text;;
+    #esac
+    case "$ext" in
+	cfg|conf|ini|inf|info|log|txt|xml) ftype=text;;
+	gif|jpeg|jpg|png) ftype=image;;
+    esac
+    if [ "$ftype" != "text" -a "$ftype" != "image" ]
     then
-	ftype=text
-    else
-	if [ "$ext" = "gif" -o "$ext" = "jpeg" -o "$ext" = "jpg" -o "$ext" = "png" ]
+	#echo "<script type='text/javascript'>"
+	if [ "$refresh" = "1" ]
 	then
-	    ftype=image
+	    echo "window.timer = setTimeout(\"window.location='$full_spth'\",2000);"
 	else
-	    #echo "<script type='text/javascript'>"
-	    if [ "$refresh" = "1" ]
-	    then
-		echo "window.timer = setTimeout(\"window.location='$full_spth'\",2000);"
-	    else
-		echo "window.timer = setTimeout(\"window.location.replace('$full_spth')\",2000);"
-	    fi
-	    # TODO: heh, what's that for???
-	    echo "setTimeout(\"window.location.replace(window.location.href)\",4000);"
-	    #echo "</script>"
+	    echo "window.timer = setTimeout(\"window.location.replace('$full_spth')\",2000);"
 	fi
+	# TODO: heh, what's that for???
+	echo "setTimeout(\"window.location.replace(window.location.href)\",4000);"
+	#echo "</script>"
     fi
     ############[ "$refresh" = "1" ] && [ "$ftype" = "text" -o "$ftype" = "image" ] && echo "<script type='text/javascript'>var regexp=/timeout=[0-9]*/; setTimeout('window.location.replace(window.location.href.replace(regexp, \"timeout=\"+window.refreshTime))',window.refreshTime);</script>"
 fi

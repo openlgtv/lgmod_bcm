@@ -8,7 +8,8 @@ content-type: text/html
 <HEAD>
 <? 
 pin="`cat /mnt/user/cfg/pin 2>/dev/null`"
-if [ -z "${pin}" ]
+[ -n "$FORM_redirectURL" ] && FORM_auth="$FORM_redirectURL"
+if [ -z "${pin}" -o "${SCRIPT_NAME}" = "/splash.cgi" ]
 then
     if [ -z "${QUERY_STRING}" ]
     then
