@@ -365,7 +365,7 @@ then
     #	*) ftype=text;;
     #esac
     case "$ext" in
-	cfg|conf|ini|inf|info|log|txt|xml) ftype=text;;
+	cfg|conf|ini|inf|info|log|out|txt|xml) ftype=text;;
 	gif|jpeg|jpg|png) ftype=image;;
     esac
     if [ "$ftype" != "text" -a "$ftype" != "image" ]

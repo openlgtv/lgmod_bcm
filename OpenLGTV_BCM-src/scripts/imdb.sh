@@ -1,4 +1,18 @@
 #!/bin/sh
+LOCKDIR="/var/run/imdb.lock"
+# Ugly workaround w LOCKDIR for Haserl bug running the same scripts few times
+if ! mkdir "$LOCKDIR" 2>/dev/null
+then
+    echo "Previous instance of $0 is still running. Exiting..."
+    #sleep 1
+    #while [ "`pgrep -f imdb.sh | grep -v grep | wc -w`" -ge "2" ]
+    #do
+#	sleep 0.2
+    #done
+    exit 2
+fi
+
+#[ "`pgrep -f imdb.sh | wc -w`" -ge "2" ] && echo "ALREADY RUNNING" && exit 2
 [ -z "$1" ] && echo "Usage: $0 /path/to/movie_file_name.mkv [outdir=info_image_dir] [lang=en]" && exit 1
 outdir1=`dirname "$1"`
 filename=`basename "$1"`
@@ -136,3 +150,5 @@ do
     rm -f "${outdir}/${filename}.jpg"
     count="$((${count}+1))"
 done
+
+rmdir "$LOCKDIR"

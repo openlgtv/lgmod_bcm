@@ -9,7 +9,7 @@ Content-type: text/html
 <!-- fm.cgi script for directory tree navigation and invoking operations on fm-action.cgi -->
 <!-- Source code released under GPL License -->
 
-<!-- tested on builtin GTK Browser, Firefox 5-11, Chromium 14-18 and reKonq 0.7.90 (problems with F5 on reKonq) -->
+<!-- tested on builtin GTK Browser 4.0.x-4.1.x, Firefox 5-11, Chromium 14-18 and reKonq 0.7.90-0.8.0 (problems with F5 on reKonq) -->
 
 <? killall df stat 2>/dev/null & ?>
 
@@ -40,7 +40,7 @@ Content-type: text/html
 	height: 95%;
 	overflow-y:auto;
 	overflow-x: hidden;
-	min-height:690px;
+	//min-height:690px;
     }
     tbody.scrollable, #scrollable {
 	display: block;
@@ -52,7 +52,8 @@ Content-type: text/html
 	overflow:hidden;
 	white-space:nowrap;
 	//width:43%;
-	width:40%;
+	//width:40%;
+	width:35%;
 	min-width:300px;
     }
     td.filename, #filename {
@@ -166,8 +167,8 @@ fnamewidth="43%" # filename field width
 
 if [ "$HTTP_HOST" != "$localhost" ]
 then
-    lupload="<form action='cgi-bin/tmp/lupload.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 32px; max-width: 32px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' value='Upload'></td></form>"
-    rupload="<form action='cgi-bin/tmp/rupload.cgix?upload_dir=$rpth' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 32px; max-width: 32px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' value='Upload'></td></form>"
+    lupload="<form action='cgi-bin/tmp/lupload.cgix?upload_dir=$lpth' method='post' enctype='multipart/form-data'><td id='lupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 32px; max-width: 32px;'><input type='button' class='upload' id='lpseudobutton' value='Upload' onclick=\"document.getElementById('luploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('luploadsubmit').click();\" class='uploadhide' name='uploadfile' id='luploadbutton'><input class='uploadhide' id='luploadsubmit' type='submit' onclick='uploadDialog();' value='Upload'></td></form>"
+    rupload="<form action='cgi-bin/tmp/rupload.cgix?upload_dir=$rpth' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 32px; max-width: 32px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' onclick='uploadDialog();' value='Upload'></td></form>"
     colspan=3
     fnamewidth="33%"
 fi
@@ -745,6 +746,21 @@ function deleteDialog()
 	dialog_displayed = 1;
 	}
 
+function uploadDialog()
+	{
+	var newdiv = document.createElement("div");
+	var newdivWidth=716;
+	var newdivHeight=80;
+	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
+	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
+	newdiv.id = "dialogWin";
+	document.body.appendChild(newdiv);
+	var kb = '<br/><FONT color="black" size="+3"><center><b>Uploading file. Please wait...</b></center></font>';
+	newdiv.innerHTML = kb;
+	dialog_displayed = 1;
+	}
+
 function dialogRemove()
 	{
         document.body.removeChild(document.getElementById("dialogWin"));
@@ -824,15 +840,15 @@ document.defaultAction = true;
 <?
 
 # TODO: make error handling with error message
-if [ "$FORM_action" = "mkdir" -a "$cpth" != "" -a "$FORM_txtName" != "" ]
+if [ "$FORM_action" = "mkdir" -a -n "$cpth" -a -n "$FORM_txtName" ]
 then
     mkdir -p "$cpth/$FORM_txtName"
 fi
-if [ "$FORM_action" = "rename" -a "$cpth" != "" -a "$FORM_txtOldName" != "" -a "$FORM_txtName" != "" ]
+if [ "$FORM_action" = "rename" -a -n "$cpth" -a -n "$FORM_txtOldName" -a -n "$FORM_txtName"  ]
 then
     mv "$cpth/$FORM_txtOldName" "$cpth/$FORM_txtName"
 fi
-if [ "$FORM_action" = "movieinfo" -a "$cpth" != "" -a "$FORM_file" != "" ]
+if [ "$FORM_action" = "movieinfo" -a -n "$cpth" -a -n "$FORM_file" ]
 then
     movieinfo="`dirname "$FORM_file"`/.MovieInfo"
     mkdir -p "$movieinfo" > /dev/null 2>&1 || movieinfo="$log_dir/.MovieInfo" && mkdir -p "$movieinfo" > /dev/null 2>&1
@@ -840,7 +856,9 @@ then
     movieinfo_fileimg="${movieinfo}/${movieinfo_file}.jpg"
     echo "<center><b><font size='+4' color='yellow'><br/>Loading movie info for file:<br/><font size='+3'><br/>$movieinfo_file</font></font></b></center>"
     echo "FORM_file=\"$FORM_file\" outdir=\"$movieinfo\" movieinfo_fileimg=\"$movieinfo_fileimg\" movieinfo_file=\"$movieinfo_file\"" >> "$log_dir/imdb.log"
-    [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> "$log_dir/imdb.log" && sleep 0.5
+    #[ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> "$log_dir/imdb.log" && sleep 0.5
+    [ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$FORM_file" outdir="$movieinfo" >> "$log_dir/imdb.log"
+    [ "$?" -eq "2" ] && wait && sleep 0.5 # wait for subprocesses if returned status = 2 (another instance already running)
     #[ ! -f "$movieinfo_fileimg" -o "$FORM_movieinforefresh" = "1" ] && /scripts/imdb.sh "$movieinfo_file" outdir="$movieinfo" >> "$log_dir/imdb.log" && sleep 0.5
     echo -e "<script type='text/javascript'>\n\
 	    document.body.innerHTML = '';"
@@ -879,7 +897,7 @@ mountpoints_length="${#mountpoints}"
     echo "<thead><tr border='1' height='18px'>$lupload<td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td>$rupload<td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='$colspan'>"
     echo '<Table id="lpanel" name="items" class="items" Border="0" cellspacing="0" width="100%"><tbody class="scrollable" id="lpaneltbody">'
-    if [ "$lpth" != "" ]
+    if [ -n "$lpth" ]
     then
 	lpth_up="${lpth%/*}"
 	echo "<tr id=\"tr_l1\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_l1\" href=\"fm.cgi?type=related&amp;side=l&amp;lpth=$lpth_up&amp;rpth=$rpth&amp;select=${FORM_lselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
@@ -889,7 +907,9 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for lcontent in `stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
+    #for lcontent in `stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
+    #for lcontent in `stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
+    for lcontent in `stat -c "%F@%n@%z@%s" "$lpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
     do
 	ltype="${lcontent%%@*}"
 	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
@@ -914,9 +934,10 @@ mountpoints_length="${#mountpoints}"
 	ldate="${lcontent_3x%%@*}"
 	ldate_cut="${ldate%%.*}"
 	lcontent_4x="${lcontent_3x#*@}" # from 4th columnt up to end
-	lperm="${lcontent_4x%%@*}"
-	lcontent_5x="${lcontent_4x#*@}" # from 5th columnt up to end
-	lsize="${lcontent_5x%%@*}"
+	#NOT USED#lperm="${lcontent_4x%%@*}"
+	#NOT USED#lcontent_5x="${lcontent_4x#*@}" # from 5th columnt up to end
+	#NOT USED#lsize="${lcontent_5x%%@*}"
+	lsize="${lcontent_4x%%@*}"
 	if [ "$ltype" = "directory" ]
 	then
 	    limage="dir.png"
@@ -928,7 +949,7 @@ mountpoints_length="${#mountpoints}"
 	    else
 		limage="generic.gif"
 	    fi
-	    if [ "${lfilename_ext}" != "" ]
+	    if [ -n "${lfilename_ext}" ]
 	    then
 		#    avi ) dlink="fm-action.cgi?action=play&side=$side&lpath=$lpth/$lfilename_space&rpath=$rpth&link=$lpth/$lfilename_space";;
 		case "${lfilename_ext}" in
@@ -942,17 +963,19 @@ mountpoints_length="${#mountpoints}"
 	# TODO?: check if file/dir is mountpoint - all methods are slow - paradoxally grep is fastest when the list is long
 	# string length comparision is good for not too long strings matchings - few mount points
 	check_mountpoints="${mountpoints#*$lpth/$lfilename }"
+	#check_mountpoints_len="${#check_mountpoints}"
 	#if [ "${mountpoints#*$lpth/$lfilename }" != "${mountpoints}" ]
 	#if [ -n "`grep \" $lpth/$lfilename \" /proc/mounts`" ]
 	file_color=black
-	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
+	#[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
+	[ "${#check_mountpoints}" -ne "$mountpoints_length" ] && file_color=brown # better performance
 	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$limage\"/></td><td class='filename'><a id=\"link_l${litem_nr}\" href=\"${dlink}&amp;lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
     echo "</tbody></table></td><td valign='top' width='50%' class='panel' colspan='$colspan'>"
     echo '<Table id="rpanel" name="items" class="items" Border=0 cellspacing=0 width="100%"><tbody class="scrollable" id="rpaneltbody">'
-    if [ "$rpth" != "" ]
+    if [ -n "$rpth" ]
     then
 	rpth_up="${rpth%/*}"
 	echo "<tr id=\"tr_r1\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=1;selectItem();\"><td><img src=\"/Images/file_icons/dir.png\"/></td><td class='filename'><a id=\"link_r1\" href=\"fm.cgi?type=related&amp;side=r&amp;rpth=$rpth_up&amp;lpth=$lpth&amp;select=${FORM_rselected}\" target=\"_parent\"><font size='+1'><b>..</b></font><br/></a></td><td class=\"size\" align=\"right\">---&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">---- -- -- ------</td></tr>"
@@ -962,7 +985,9 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    for rcontent in `stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
+    #for rcontent in `stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
+    #for rcontent in `stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
+    for rcontent in `stat -c "%F@%n@%z@%s" "$rpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
     do
 	rtype="${rcontent%%@*}"
 	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
@@ -987,9 +1012,10 @@ mountpoints_length="${#mountpoints}"
 	rdate="${rcontent_3x%%@*}"
 	rdate_cut="${rdate%%.*}"
 	rcontent_4x="${rcontent_3x#*@}"
-	rperm="${rcontent_4x%%@*}"
-	rcontent_5x="${rcontent_4x#*@}"
-	rsize="${rcontent_5x%%@*}"
+	#NOT USED#rperm="${rcontent_4x%%@*}"
+	#NOT USED#rcontent_5x="${rcontent_4x#*@}" # from 5th columnt up to end
+	#NOT USED#rsize="${rcontent_5x%%@*}"
+	rsize="${rcontent_4x%%@*}"
 	if [ "$rtype" = "directory" ]
 	then
 	    rimage="dir.png"
@@ -1004,7 +1030,8 @@ mountpoints_length="${#mountpoints}"
 	dlink="fm.cgi?type=related&amp;side=r&amp;rpth=$rpth/$rfilename_space&amp;lpth=$lpth"
 	file_color=black
 	check_mountpoints="${mountpoints#*$rpth/$rfilename }"
-	[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
+	#[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
+	[ "${#check_mountpoints}" -ne "${mountpoints_length}" ] && file_color=brown
 	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$rimage\"/></td><td class='filename'><a id=\"link_r${ritem_nr}\" href=\"${dlink}&amp;rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
