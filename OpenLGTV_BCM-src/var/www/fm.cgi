@@ -36,7 +36,7 @@ Content-type: text/html
 	table-layout:fixed;
     }
     tbody.main, #main {
-	width: 95%;
+	width: 98%;
 	height: 95%;
 	overflow-y:auto;
 	overflow-x: hidden;
@@ -51,7 +51,8 @@ Content-type: text/html
     td.lpanelpath, .rpanelpath, #lpanelpath, #rpanelpath {
 	overflow:hidden;
 	white-space:nowrap;
-	width:43%;
+	//width:43%;
+	width:40%;
 	min-width:300px;
     }
     td.filename, #filename {
