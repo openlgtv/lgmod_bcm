@@ -11,6 +11,7 @@ icons_dir="/home/netcast_icons/www"
 ##ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons.zip"
 ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons-SVN20120420.zip"
 ##ilink2="http://addon.vpscript.com/icons.zip"
+ilink2="http://addon.vpscript.com/icons-SVN20120420.zip"
 ##ilink3="http://smarttv.net46.net/icons.zip"
 ##ilink4="http://dl.dropbox.com/u/43758310/icons.zip"
 ##ilink5="http://smarttv.abcz8.com/icons.zip"
@@ -20,7 +21,7 @@ ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons-SV
 imd5="b39ce8eb5f980f705f23127586deef82"
 useragent="Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0"
 ##ilinks_count=6
-ilinks_count=1
+ilinks_count=2
 unpacked_ok=0
 try_count=0
 
