@@ -27,7 +27,7 @@ TODO (not everything to be done for 0.5.0):
     * FileManager: add check mark to select multiple files/dirs and handle that in copy/move/delete/play (?)
     * FileManager: add command line or command window (?)
     * insert characters in cursor position in WebUI, Internet Browser and FileManager dialogs, not always at the end of string
-    * update BusyBox to 1.19.4 (or newer) and backport few fixes from master, like "httpd: make byte ranges which start at 0 work too. Closes 4766" and "httpd: fix sendfile of files larger than 2 Gb. Closes 4754"
+    * [ update BusyBox to 1.19.4 (or newer) and backport few fixes from master, like "httpd: make byte ranges which start at 0 work too. Closes 4766" and "httpd: fix sendfile of files larger than 2 Gb. Closes 4754" ] - DONE?
     * udpxy integration for udp:// and rtp:// links
     * update and test scripts chrooted on SmartTV models
     * enable YWE in North American models outside of USA (Canada, Mexico)
@@ -116,6 +116,7 @@ TODO (not everything to be done for 0.5.0):
     * UPDATE: ntfs-3g upgrade to version 2012.1.15
     * UPDATE: tmux upgrade from 1.5 to 1.6
     * UPDATE: dropbear SSH server upgrade from 0.53.1 to 2012.55, with scp progress bar compiled in, updated paths, lowered unauth retries for DoS prevention, and security fix for CVE-2012-0920
+    * UPDATE: busybox upgrade from 1.19.3 to 1.20.0
     * CHANGE: FileManager: last_played.info file is now stored in /tmp instead of played dir location - no need to have write access to mounted shares for slideshow/dir playback
     * CHANGE: FileManager: separate file/dir icons from filenames in table to make better vertical allignment
     * CHANGE: FileManager: coloured (brown) non-local mount points (ie. mounted USB storage partitions, NFS/CIFS network shares)
@@ -136,6 +137,7 @@ TODO (not everything to be done for 0.5.0):
     * CHANGE: use ntpclient instead of ntpd again with timeset.sh script to attempt to adjust time forever, until fist successful set
     * CHANGE: make nanddump backup (with OOB data) for 'total' partition by default
     * CHANGE: reduce Remote Control size but increase buttons size to better fit smartphones/tablets, both with and without touch screens
+    * CHANGE: replace lsof binary with new lsof busybox applet
     * REMOVE: mtdinfo.sh for space reason - it's code is in info.sh already
     * REMOVE: chrt and chat binaries from SmartTV image for space reason - use BusyBox applets instead
     * REMOVE: libmagic.so as it wasn't used now since 'file' was removed
