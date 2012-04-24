@@ -1,0 +1,70 @@
+diff -urdN busybox-1.20.0/applets/applets.c busybox-1.20.0_LG-x/applets/applets.c
+--- busybox-1.20.0/applets/applets.c	2012-04-22 03:33:23.000000000 +0200
++++ busybox-1.20.0_LG-x/applets/applets.c	2012-04-24 14:15:46.417230828 +0200
+@@ -6,6 +6,9 @@
+  *
+  * Licensed under GPLv2, see file LICENSE in this source tree.
+  */
++
++#include <assert.h>
++#include <time.h>
+ #include "busybox.h"
+ 
+ #if ENABLE_BUILD_LIBBUSYBOX
+diff -urdN busybox-1.20.0/Config.in busybox-1.20.0_LG-x/Config.in
+--- busybox-1.20.0/Config.in	2012-04-22 03:33:23.000000000 +0200
++++ busybox-1.20.0_LG-x/Config.in	2012-04-23 07:24:26.000000000 +0200
+@@ -127,6 +127,7 @@
+ config INSTALL_NO_USR
+ 	bool "Don't use /usr"
+ 	default n
++	depends on FEATURE_INSTALLER
+ 	help
+ 	  Disable use of /usr. busybox --install and "make install"
+ 	  will install applets only to /bin and /sbin,
+@@ -709,6 +710,13 @@
+ 
+ endchoice
+ 
++
++config CONFIG_PRINT_TIME
++	bool "Print command with time info"
++	default n
++	help
++	  Print command with time info. This is useful for checking  boottime.
++
+ endmenu
+ 
+ menu 'Installation Options ("make install" behavior)'
+diff -urdN busybox-1.20.0/networking/udhcp/packet.c busybox-1.20.0_LG-x/networking/udhcp/packet.c
+--- busybox-1.20.0/networking/udhcp/packet.c	2012-04-22 03:33:23.000000000 +0200
++++ busybox-1.20.0_LG-x/networking/udhcp/packet.c	2012-04-24 14:15:46.337226676 +0200
+@@ -6,6 +6,8 @@
+  *
+  * Licensed under GPLv2, see file LICENSE in this source tree.
+  */
++#include <time.h>
++
+ #include "common.h"
+ #include "dhcpd.h"
+ #include <netinet/in.h>
+@@ -14,6 +16,7 @@
+ 
+ void FAST_FUNC udhcp_init_header(struct dhcp_packet *packet, char type)
+ {
++	struct timespec ts;
+ 	memset(packet, 0, sizeof(*packet));
+ 	packet->op = BOOTREQUEST; /* if client to a server */
+ 	switch (type) {
+@@ -22,6 +25,11 @@
+ 	case DHCPNAK:
+ 		packet->op = BOOTREPLY; /* if server to client */
+ 	}
++	/* for LG dhcp server
++	 * by LGE. jjab. */
++	clock_gettime(CLOCK_MONOTONIC, &ts);
++	packet->secs = ts.tv_sec;
++
+ 	packet->htype = 1; /* ethernet */
+ 	packet->hlen = 6;
+ 	packet->cookie = htonl(DHCP_MAGIC);
