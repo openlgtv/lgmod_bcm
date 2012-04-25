@@ -88,7 +88,7 @@ log_dir=/var/log/vod/yavido
 list_file="$log_dir/list.html"
 mkdir -p "$log_dir"
 
-useragent="Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"
+useragent="Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0"
 menuLoc="http://lge.yavido.tv/ajax/portal/getPlaylist.php?action=home"
 
 wget -q -U "$useragent" "$menuLoc" -O - | \

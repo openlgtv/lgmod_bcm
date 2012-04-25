@@ -303,14 +303,15 @@ echo "function backToFM(){ window.location.replace('fm.cgi?type=related&amp;side
 if [ "$action" = "play" ]
 then
     # ugly workaround for getting script runned twice - simply kill previous stat command
-    killall stat > /dev/null 2>&1 &
-    ftype="`stat -c '%F' "${spth}"`"
+    killall stat > /dev/null 2>&1 & # INFO: workaround for haserl problem doubling commands execussion
     ext="${spth##*.}"
     [ -n "$ext" ] && ext="`echo $ext | tr [:upper:] [:lower:]`"
     #play_enum="${spth}/last_played.info"
     ##play_enum="$log_dir/last_played.info"
     play_enum_comment="OpenLGTV BCM FileManager: last played file number"
     spth_start="$spth"
+    ftype="`stat -c '%F' "${spth}"`"
+    [ -z "$ftype" ] && ftype="`stat -c '%F' "${spth}"`" # INFO: workaround for stat getting killed for the first time
     echo "QQQ --------------" >> /tmp/log-action.log
     echo "QQQ 1 ftype: $ftype" >> /tmp/log-action.log
     echo "QQQ 1 spth: $spth" >> /tmp/log-action.log
@@ -324,6 +325,7 @@ then
 	then
 	    #content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
 	    content_all=`stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
+	    [ -z "$content_all" ] && content_all=`stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'` # INFO: workaround for empty content_all
 	    echo "QQQ content_all: $content_all" >> /tmp/log-action.log
 	else
 	    spthd="${spth%/*}"
@@ -335,6 +337,9 @@ then
 	fi
 	echo "QQQ 2 spth: $spth" >> /tmp/log-action.log
 	echo "QQQ 2 spthd: $spthd" >> /tmp/log-action.log
+	[ -z "$content_all" ] && echo "history.back();</script></head><body></body></html>" && \
+	    echo "QQQ BAD BAD BAD - empty content_all: $content_all" >> /tmp/log-action.log && \
+	    exit 0 # INFO: empty directory or playlist
 	if [ ! -f "${play_enum}" ]
 	then
 	    echo -e "# $play_enum_comment\n1" > "${play_enum}"
@@ -365,6 +370,9 @@ then
 	echo "QQQ 3 spthd: $spthd" >> /tmp/log-action.log
 	echo "QQQ 3 spth_next: $spth_next" >> /tmp/log-action.log
     fi
+    [ "$refresh" = "1" -a "$spth" = "$spth_start" ] && echo "window.location.replace(window.location.href);</script></head><body></body></html>" && \
+	echo "QQQ BAD BAD BAD - refresh - $spth" >> /tmp/log-action.log && \
+	exit 0 # INFO: workaround for trying to play dir itself
     ext="${spth##*.}"; ext="`echo $ext | tr [:upper:] [:lower:]`"
     [ -n "$spth_next" ] && ext_next="${spth_next##*.}" && ext_next="`echo $ext_next | tr [:upper:] [:lower:]`"
     #[ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "<script type='text/javascript'>window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
