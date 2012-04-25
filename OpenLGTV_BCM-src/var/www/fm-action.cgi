@@ -310,6 +310,11 @@ then
     #play_enum="${spth}/last_played.info"
     ##play_enum="$log_dir/last_played.info"
     play_enum_comment="OpenLGTV BCM FileManager: last played file number"
+    spth_start="$spth"
+    echo "QQQ --------------" >> /tmp/log-action.log
+    echo "QQQ 1 ftype: $ftype" >> /tmp/log-action.log
+    echo "QQQ 1 spth: $spth" >> /tmp/log-action.log
+    echo "QQQ 1 spthd: $spthd" >> /tmp/log-action.log
     if [ "$ftype" = "directory" -o "$ext" = "m3u" -o "$ext" = "pls" ]
     then
 	refresh=1
@@ -319,6 +324,7 @@ then
 	then
 	    #content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
 	    content_all=`stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
+	    echo "QQQ content_all: $content_all" >> /tmp/log-action.log
 	else
 	    spthd="${spth%/*}"
 	    playlist=1
@@ -327,6 +333,8 @@ then
 	    #play_enum="${spth}.info"
 	    spth="${spthd}"
 	fi
+	echo "QQQ 2 spth: $spth" >> /tmp/log-action.log
+	echo "QQQ 2 spthd: $spthd" >> /tmp/log-action.log
 	if [ ! -f "${play_enum}" ]
 	then
 	    echo -e "# $play_enum_comment\n1" > "${play_enum}"
@@ -339,8 +347,13 @@ then
 	    [ "$start_playback" -lt "1" ] && start_playback=1
 	    echo -e "# $play_enum_comment\n$start_playback" > "${play_enum}"
 	fi
+	echo "QQQ dif: $dif" >> /tmp/log-action.log
+	echo "QQQ play_enum: $play_enum" >> /tmp/log-action.log
+	echo "QQQ 1 start_playback: $start_playback" >> /tmp/log-action.log
 	file_num_max="`echo $content_all | wc -w`"
+	echo "QQQ file_num_max: $file_num_max" >> /tmp/log-action.log
 	[ "$start_playback" -gt "$file_num_max" ] && echo -e "# $play_enum_comment\n1" > "${play_enum}" && start_playback=1
+	echo "QQQ 2 start_playback: $start_playback" >> /tmp/log-action.log
 	for content in $content_all
 	do
 	    #[ "$file_num" = "$start_playback" ] && spth="`echo $content | sed 's/\&nbsp;/ /g'`" && break
@@ -348,6 +361,9 @@ then
 	    [ "$file_num" -gt "$start_playback" ] && spth_next="`echo $content | sed 's/\&nbsp;/ /g'`" && break
 	    file_num=$((${file_num}+1))
 	done
+	echo "QQQ 3 spth: $spth" >> /tmp/log-action.log
+	echo "QQQ 3 spthd: $spthd" >> /tmp/log-action.log
+	echo "QQQ 3 spth_next: $spth_next" >> /tmp/log-action.log
     fi
     ext="${spth##*.}"; ext="`echo $ext | tr [:upper:] [:lower:]`"
     [ -n "$spth_next" ] && ext_next="${spth_next##*.}" && ext_next="`echo $ext_next | tr [:upper:] [:lower:]`"
@@ -355,6 +371,9 @@ then
     [ "$refresh" = "1" ] && [ "$ext" = "sh" -o "$ext" = "cgi" -o "$ext" = "htm" -o "$ext" = "html" ] && echo "window.location.replace(window.location.href);</script></head><body></body></html>" && exit 0
     full_spth="$spth"
     full_spth_next="$spth_next"
+    echo "QQQ 4 full_spth: $full_spth" >> /tmp/log-action.log
+    echo "QQQ 4 full_spthd: $full_spthd" >> /tmp/log-action.log
+    echo "QQQ 4 full_spthd_next: $full_spth_next" >> /tmp/log-action.log
     [ -z "$playlist" ] && full_spth="root$spth" && [ -n "$spth_next" ] && full_spth_next="root$spth_next"
     [ "${full_spth:0:8}" = "roothttp" ] && full_spth="${full_spth:4}"
     [ "${full_spth_next:0:8}" = "roothttp" ] && full_spth_next="${full_spth_next:4}"
@@ -364,6 +383,11 @@ then
     #	"${full_spth#root/etc/}"|"${full_spth#root/mnt/user/etc/}"|"${full_spth#root/mnt/user/cfg/}"|"${full_spth#root/mnt/user/netcast/}") ftype=test;;
     #	*) ftype=text;;
     #esac
+    echo "QQQ 5 full_spth: $full_spth" >> /tmp/log-action.log
+    echo "QQQ 5 full_spthd: $full_spthd" >> /tmp/log-action.log
+    echo "QQQ 5 full_spthd_next: $full_spth_next" >> /tmp/log-action.log
+    echo "QQQ ftype: $ftype" >> /tmp/log-action.log
+    echo "QQQ ==============" >> /tmp/log-action.log
     case "$ext" in
 	cfg|conf|ini|inf|info|log|out|txt|xml) ftype=text;;
 	gif|jpeg|jpg|png) ftype=image;;
