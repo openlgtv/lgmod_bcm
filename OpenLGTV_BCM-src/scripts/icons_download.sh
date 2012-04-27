@@ -6,19 +6,9 @@
 echo "OpenLGTV_BCM-INFO: icons_download.sh: running..."
 
 icons_dir="/home/netcast_icons/www"
-#ilink1="http://dl.dropbox.com/u/43758310/smarttv_logos.zip"
-#ilink2="http://smarttv.awardspace.info/smarttv_logos.xxx"
-##ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons.zip"
 ilink1="http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons-SVN20120426.zip"
-##ilink2="http://addon.vpscript.com/icons.zip"
 ilink2="http://addon.vpscript.com/icons-SVN20120426.zip"
-##ilink3="http://smarttv.net46.net/icons.zip"
-##ilink4="http://dl.dropbox.com/u/43758310/icons.zip"
-##ilink5="http://smarttv.abcz8.com/icons.zip"
-##ilink6="http://smarttv.awardspace.info/icons.xxx"
-#imd5="a3f458d48113421c5a3a131bc5b44864"
-##imd5="7c19bece3f7b27cdf9196b07868026f2"
-#imd5="b39ce8eb5f980f705f23127586deef82"
+# TODO: more mirrors
 imd5="422fe11f1151752d716c10c6ca16b999"
 useragent="Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0"
 ##ilinks_count=6
