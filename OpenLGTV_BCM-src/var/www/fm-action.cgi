@@ -67,7 +67,7 @@ Content-type: text/html
 
 #echo "START:`date`" > /tmp/log.log
 
-export log_dir="/tmp/var/log/fm"
+export log_dir="/var/log/fm"
 export log_file="$log_dir/fm.log"
 play_enum="$log_dir/last_played.info"
 [ ! -d "$log_dir"    ] && mkdir -p "$log_dir"
@@ -522,7 +522,10 @@ else
 	    then
 		stats="`grep \"^${pid}#\" ${log_file}`"
 	    else
-		stats="`tail -n1 ${log_file}`"
+		#stats="`tail -n1 ${log_file}`"
+		# INFO: get only not yet completed stats
+		stats="`grep "##$" ${log_file} | tail -n1`"
+		[ -z "$stats" ] && stats="`tail -n1 ${log_file}`"
 		pid="${stats%%\#*}"
 	    fi
 	    FORM_onlystatus=1

@@ -9,7 +9,7 @@ Content-type: text/html
 <!-- fm.cgi script for directory tree navigation and invoking operations on fm-action.cgi -->
 <!-- Source code released under GPL License -->
 
-<!-- tested on builtin GTK Browser 4.0.x-4.1.x, Firefox 5-11, Chromium 14-18 and reKonq 0.7.90-0.8.0 (problems with F5 on reKonq) -->
+<!-- tested on builtin GTK Browser 4.0.x-4.1.x, Firefox 5-12, Chromium 14-18 and reKonq 0.7.90-0.8.0 (problems with F5 on reKonq) -->
 
 <? killall df stat 2>/dev/null & ?>
 
@@ -555,9 +555,13 @@ function ChangeBgColor()
 	// Get your row by finding the TBODY, and find your cell using
 	// childNodes[row].childNodes[col]
 	// ^- that should improve performance comparing to getElementById()
-	document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
+	var trCurrent=document.getElementById('tr_' + side + current);
+	var trNext=document.getElementById('tr_' + nside + next);
+	//document.getElementById('tr_' + side + current).bgColor = '#FFFFFF';
+	if (trCurrent) trCurrent.bgColor = '#FFFFFF';
 	//currentLink.bgColor = '#FFFFFF';
-	document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
+	//document.getElementById('tr_' + nside + next).bgColor = '#D3D3D3';
+	if (trNext) trNext.bgColor = '#D3D3D3';
 	}
 
 function BackSpace()
@@ -577,8 +581,9 @@ function setCurrent(element)
 
 function OnLoadSetCurrent(element)
 	{
-	document.links['link_' + side + current].focus();
-	ChangeBgColor();
+	//document.links['link_' + side + current].focus();
+	//ChangeBgColor();
+	selectItem();
 	windowResize();
 	}
 
@@ -907,13 +912,13 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    #for lcontent in `stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
-    #for lcontent in `stat -c "%F@%n@%z@%A@%s" "$lpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
-    for lcontent in `stat -c "%F@%n@%z@%s" "$lpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
+    #for lcontent in `stat -c "%F@@%n@@%z@@%A@@%s" "$lpth"/* | sort | sed -e "s#@@.*/#@@#g" -e 's# #\&nbsp;#g'`
+    #for lcontent in `stat -c "%F@@%n@@%z@@%A@@%s" "$lpth"/* | sed -e "s#@@.*/#@@#g" -e 's# #\&nbsp;#g' | sort`
+    for lcontent in `stat -c "%F@@%n@@%z@@%s" "$lpth"/* | sed -e "s#@@.*/#@@#g" -e 's# #\&nbsp;#g' | sort`
     do
-	ltype="${lcontent%%@*}"
-	lcontent_2x="${lcontent#*@}" # from 2nd columnt up to end
-	lfilename="${lcontent_2x%%@*}"
+	ltype="${lcontent%%@@*}"
+	lcontent_2x="${lcontent#*@@}" # from 2nd columnt up to end
+	lfilename="${lcontent_2x%%@@*}"
 	lfilename_space="${lfilename//&nbsp;/ }"
 	lfilename_ext_full="${lfilename_space##*.}"
 	lfilename_ext="${lfilename_ext_full:0:5}"
@@ -930,14 +935,14 @@ mountpoints_length="${#mountpoints}"
 	fi
 	# TEST TEST TEST ONLY for smaller screens - crop filename - how to count filename length width based on browser window width?
 	#lfilename="${lfilename:0:30}"
-	lcontent_3x="${lcontent_2x#*@}" # from 3rd columnt up to end
-	ldate="${lcontent_3x%%@*}"
+	lcontent_3x="${lcontent_2x#*@@}" # from 3rd columnt up to end
+	ldate="${lcontent_3x%%@@*}"
 	ldate_cut="${ldate%%.*}"
-	lcontent_4x="${lcontent_3x#*@}" # from 4th columnt up to end
-	#NOT USED#lperm="${lcontent_4x%%@*}"
-	#NOT USED#lcontent_5x="${lcontent_4x#*@}" # from 5th columnt up to end
-	#NOT USED#lsize="${lcontent_5x%%@*}"
-	lsize="${lcontent_4x%%@*}"
+	lcontent_4x="${lcontent_3x#*@@}" # from 4th columnt up to end
+	#NOT USED#lperm="${lcontent_4x%%@@*}"
+	#NOT USED#lcontent_5x="${lcontent_4x#*@@}" # from 5th columnt up to end
+	#NOT USED#lsize="${lcontent_5x%%@@*}"
+	lsize="${lcontent_4x%%@@*}"
 	if [ "$ltype" = "directory" ]
 	then
 	    limage="dir.png"
@@ -985,13 +990,13 @@ mountpoints_length="${#mountpoints}"
     fi
     SIFS="$IFS"
     IFS=$'\n'
-    #for rcontent in `stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sort | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g'`
-    #for rcontent in `stat -c "%F@%n@%z@%A@%s" "$rpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
-    for rcontent in `stat -c "%F@%n@%z@%s" "$rpth"/* | sed -e "s#@.*/#@#g" -e 's# #\&nbsp;#g' | sort`
+    #for rcontent in `stat -c "%F@@%n@@%z@@%A@@%s" "$rpth"/* | sort | sed -e "s#@@.*/#@@#g" -e 's# #\&nbsp;#g'`
+    #for rcontent in `stat -c "%F@@%n@@%z@@%A@@%s" "$rpth"/* | sed -e "s#@@.*/#@@#g" -e 's# #\&nbsp;#g' | sort`
+    for rcontent in `stat -c "%F@@%n@@%z@@%s" "$rpth"/* | sed -e "s#@@.*/#@@#g" -e 's# #\&nbsp;#g' | sort`
     do
-	rtype="${rcontent%%@*}"
-	rcontent_2x="${rcontent#*@}" # from 2nd columnt up to end
-	rfilename="${rcontent_2x%%@*}"
+	rtype="${rcontent%%@@*}"
+	rcontent_2x="${rcontent#*@@}" # from 2nd columnt up to end
+	rfilename="${rcontent_2x%%@@*}"
 	rfilename_space="${rfilename//&nbsp;/ }"
 	rfilename_ext_full="${rfilename_space##*.}"
 	rfilename_ext="${rfilename_ext_full:0:5}"
@@ -1008,14 +1013,14 @@ mountpoints_length="${#mountpoints}"
 	fi
 	# TEST TEST TEST ONLY for smaller screens - crop filename
 	#rfilename="${rfilename:0:30}"
-	rcontent_3x="${rcontent_2x#*@}"
-	rdate="${rcontent_3x%%@*}"
+	rcontent_3x="${rcontent_2x#*@@}"
+	rdate="${rcontent_3x%%@@*}"
 	rdate_cut="${rdate%%.*}"
-	rcontent_4x="${rcontent_3x#*@}"
-	#NOT USED#rperm="${rcontent_4x%%@*}"
-	#NOT USED#rcontent_5x="${rcontent_4x#*@}" # from 5th columnt up to end
-	#NOT USED#rsize="${rcontent_5x%%@*}"
-	rsize="${rcontent_4x%%@*}"
+	rcontent_4x="${rcontent_3x#*@@}"
+	#NOT USED#rperm="${rcontent_4x%%@@*}"
+	#NOT USED#rcontent_5x="${rcontent_4x#*@@}" # from 5th columnt up to end
+	#NOT USED#rsize="${rcontent_5x%%@@*}"
+	rsize="${rcontent_4x%%@@*}"
 	if [ "$rtype" = "directory" ]
 	then
 	    rimage="dir.png"

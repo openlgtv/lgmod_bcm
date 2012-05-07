@@ -49,6 +49,8 @@ TODO (not everything to be done for 0.5.0):
     * FIX: FileManager: attempt to preload next image into web browser cache in slideshow mode to make image change smoother
     * FIX: FileManager: prevent from few times running the same copy/move operation when previous one is not yet completed - also workaround for refreshing page
     * FIX: FileManager: fix images/photos slideshow/preview that sometimes tries to open path without image
+    * FIX: FileManager: handle filenames with '@' (internal field delimiter set as '@@' now)
+    * FIX: FileManager: prevent JS error when last selected item in panel would disappear after deleting or moving
     * FIX: fallback with NTFS partitions remounting as read-only when remounting read-write wont succeed (problems with filesystem)
     * FIX: process /etc/profile in chrooted installer
     * FIX: missing /var/spool symlink for working crontab
@@ -121,6 +123,7 @@ TODO (not everything to be done for 0.5.0):
     * CHANGE: FileManager: separate file/dir icons from filenames in table to make better vertical allignment
     * CHANGE: FileManager: coloured (brown) non-local mount points (ie. mounted USB storage partitions, NFS/CIFS network shares)
     * CHANGE: FileManager: more user friendly metrics for measurements on copy/move progress for size (bytes/KB/MB/GB) and time (hours/minutes/seconds)
+    * CHANGE: FileManager: show last _running_ (not yet completed) processes status on 'status' option call - esier to find if there are _any_ copy/move operation still remaining if there were few operations running at the same time
     * CHANGE: move haserl from /bin to /usr/bin for better CGI portability (compatibility with LGMOD S7)
     * CHANGE: mount options for VFAT/NTFS/EXT3/EXT4 got changed to use at least 'noatime' to make less writes to USB storage and keep permissions on NTFS
     * CHANGE: automount supported by kernel but not RELEASE filesystems on USB storage devices into /mnt/usb{1,2}/Drive{5-8} dirs only to make them visible in media player
