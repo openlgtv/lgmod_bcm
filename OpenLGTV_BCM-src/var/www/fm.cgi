@@ -150,6 +150,7 @@ if [ -f "$cpth" ]
 then
     echo "var cpth = '$cpth';"
     echo "var dest='fm-action.cgi?action=play&amp;side=$side&amp;${side}pth=$cpth&amp;${oside}pth=$opth&amp;select=${selected}';"
+    #echo "var dest='fm-action.cgi?action=play&amp;side=$side&amp;${side}pth=$cpth&amp;${oside}pth=$opth&amp;select='+current;"
     echo "window.location.replace(dest);"
 fi
 
@@ -171,6 +172,9 @@ then
     rupload="<form action='cgi-bin/tmp/rupload.cgix?upload_dir=$rpth' method='post' enctype='multipart/form-data'><td id='rupload' valign='top' align='center' bgcolor='yellow' width='3%' style='min-width: 32px; max-width: 32px;'><input type='button' class='upload' id='rpseudobutton' value='Upload' onclick=\"document.getElementById('ruploadbutton').click();\" ><input type='file' onchange=\"document.getElementById('ruploadsubmit').click();\" class='uploadhide' name='uploadfile' id='ruploadbutton'><input class='uploadhide' id='ruploadsubmit' type='submit' onclick='uploadDialog();' value='Upload'></td></form>"
     colspan=3
     fnamewidth="33%"
+    lochost=0
+else
+    lochost=1
 fi
 
 ?>
@@ -897,7 +901,6 @@ mountpoints_length="${#mountpoints}"
     # static size to cut path at 77 chars to fit 1280 width on most web browsers that respect monotype font style
     [ "${#lpth}" -gt "77" ] && lpth_crop="${lpth:0:63} ~~ ${lpth:$((${#lpth}-10))}"
     [ "${#rpth}" -gt "77" ] && rpth_crop="${rpth:0:63} ~~ ${rpth:$((${#rpth}-10))}"
-    #[ "$HTTP_HOST" != "$localhost" ] && lupload="<form action='cgi-bin/firmware-upgrade.cgix' method='post' enctype='multipart/form-data' ><td id='lupload' valign='top' bgcolor='yellow' width='1%' style='max-width: 37px;'><input type='button' class='upload' id='pseudobutton' value='Upload' onclick=\"document.getElementById('uploadbutton').click();\"><input type='file' class='uploadhide' name='uploadfile' id='uploadbutton' onmousedown=\"buttonPush('depressed');\" onmouseup=\"buttonPush('normal');\" onmouseout=\"buttonPush('phased');\"></td></form>"
     #echo "<thead><tr border='1' height='18px'>$lupload<td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td><td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='43%'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<thead><tr border='1' height='18px'>$lupload<td id='lpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$lpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='ldf' name='ldf'>??/??</span></b></td>$rupload<td id='rpanelpath' valign='top' align='center' bgcolor='yellow' width='$fnamewidth'><b>$rpth_crop/</b></td><td valign='top' align='center' bgcolor='yellow' width='7%' style='min-width:7%;width:7%;max-width:7%;'><b><span id='rdf' name='rdf'>??/??</span></b></td></tr></thead>"
     echo "<tbody id='main'><tr><td valign='top' width='50%' class='panel' colspan='$colspan'>"
@@ -974,7 +977,9 @@ mountpoints_length="${#mountpoints}"
 	file_color=black
 	#[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
 	[ "${#check_mountpoints}" -ne "$mountpoints_length" ] && file_color=brown # better performance
-	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$limage\"/></td><td class='filename'><a id=\"link_l${litem_nr}\" href=\"${dlink}&amp;lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
+	[ "$lochost" -ne 1 ] && limage_td="<a href=\"tools/download.cgi?type=$ltype&amp;file=$lpth/$lfilename_space\"><img src=\"/Images/file_icons/$limage\"/></a>" || limage_td="<img src=\"/Images/file_icons/$limage\"/>"
+	#OK#echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$limage\"/></td><td class='filename'><a id=\"link_l${litem_nr}\" href=\"${dlink}&amp;lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
+	echo "<tr id=\"tr_l${litem_nr}\" onClick=\"javascript:cpth=lpth;opth=rpth;nside='l';next=${litem_nr};selectItem();\"><td>$limage_td</td><td class='filename'><a id=\"link_l${litem_nr}\" href=\"${dlink}&amp;lselected=${litem_nr}\" name=\"$lfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$lfilename</b></font></a></td><td class=\"size\" align=\"right\">$lsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$ldate_cut</td></tr>"
 	litem_nr=$(($litem_nr+1))
     done
     IFS="$SIFS"
@@ -1037,7 +1042,9 @@ mountpoints_length="${#mountpoints}"
 	check_mountpoints="${mountpoints#*$rpth/$rfilename }"
 	#[ "${#check_mountpoints}" != "${mountpoints_length}" ] && file_color=brown
 	[ "${#check_mountpoints}" -ne "${mountpoints_length}" ] && file_color=brown
-	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$rimage\"/></td><td class='filename'><a id=\"link_r${ritem_nr}\" href=\"${dlink}&amp;rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
+	[ "$lochost" -ne 1 ] && rimage_td="<a href=\"tools/download.cgi?type=$rtype&amp;file=$rpth/$rfilename_space\"><img src=\"/Images/file_icons/$rimage\"/></a>" || rimage_td="<img src=\"/Images/file_icons/$rimage\"/>"
+	#OK#echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td><img src=\"/Images/file_icons/$rimage\"/></td><td class='filename'><a id=\"link_r${ritem_nr}\" href=\"${dlink}&amp;rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
+	echo "<tr id=\"tr_r${ritem_nr}\" onClick=\"javascript:cpth=rpth;opth=lpth;nside='r';next=${ritem_nr};selectItem();\"><td>$rimage_td</td><td class='filename'><a id=\"link_r${ritem_nr}\" href=\"${dlink}&amp;rselected=${ritem_nr}\" name=\"$rfilename_space\" target=\"_parent\"><font size='+0' color='$file_color'><b>$rfilename</b></font></a></td><td class=\"size\" align=\"right\">$rsize&nbsp;&nbsp;</td><td align=\"center\" class=\"date\">$rdate_cut</td></tr>"
 	ritem_nr=$(($ritem_nr+1))
     done
     IFS="$SIFS"
@@ -1063,7 +1070,8 @@ mountpoints_length="${#mountpoints}"
     #echo "document.getElementById('rdf').innerHTML ='`df -h \"$rpth/\" | tail -n 1 | sed 's/^[^ ]* *\([^ ]*\) *[^ ]* *\([^ ]*\) *.*/\2\/\1/g'`';"
     echo "document.getElementById('ldf').innerHTML ='$ldf';"
     echo "document.getElementById('rdf').innerHTML ='$rdf';"
-    if [ "$HTTP_HOST" != "$localhost" ]
+    #if [ "$HTTP_HOST" != "$localhost" ]
+    if [ "$lochost" -ne 1 ]
     then
 	lfree="${ldf%/*}"
 	rfree="${rdf%/*}"

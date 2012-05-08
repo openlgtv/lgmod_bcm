@@ -7,15 +7,14 @@ Not resolved (yet) issues: (status as for 0.5.0-beta4):
     * some TS/M2TS (or other malformed videos) files can crash RELEASE when played through FileManager,
     * YWE is not being enabled in other North American countries than US - but can be enabled with netcast_enable_all WebUI option,
     * iPtak service needs extroot to show movie covers (non-JFIF JPEGs are not supported without conversion through jpegtrans from extroot),
-    * some packages from OpenWRT repositories may not work (mostly because of differences in uClibc libs),
+    * some packages from OpenWRT repositories don't work (mostly because of differences in uClibc libs),
     * YWE needs to be run from USB stick/disk on non-US models,
-    * there was no space for real e2fsck, so full error checks on ext3 partitions should be done on disk/stick connected to PC (but basic (journal) recovery at mount time is being performed)
+    * there was no space for real e2fsck, so full error checks on ext3 partitions should be done on disk/stick connected to PC or use extroot (e2fsck landed there), but basic (journal) recovery at mount time is being performed
     * when heavy disk I/O operations where previously performed (like manually done full backup) and then installer gets run there might be not enough memory to perform installation (reboot or switch off/on is required)
     * Flash elements on Internet sites can meaningfully drop performance in Internet Browser
     * Flash elements written for Flash 9 and up don't work at all or don't work properly
     * new 'YouTube in TV' interace is a bit sluggish (but videos are being played at the right framerate, including 1080p videos), starts slowly and exit takes around 10 seconds,
     * 'YouTube in TV' interace sometimes can crash addon_mgr when trying to exit by too many back/exit/other combo button presses
-    * images/photos slideshow/preview in FileManager sometimes tries to open path without image
     * Some USB mouses or keyboard+mouse combo need to copy additional kernel modules - most modules binaries are in addons in SVN and are supported
     * USB keyboards are not supported in web browser
     * Bluetooth HID devices are not supported
@@ -35,7 +34,7 @@ TODO (not everything to be done for 0.5.0):
     * compile gpgme, add public key, prepare some useful (signed) packages (any propositions?) in repository and disable OpenWRT repository by default
     * package repository outside of SVN tree
     * storage for Yahoo Widgets in some NAND flash partitions? some backup partitions?
-    * bring back real e2fsck?
+    * bring back real e2fsck to rootfs?
     * upgrade uClibc?
     * ?
 
@@ -51,6 +50,7 @@ TODO (not everything to be done for 0.5.0):
     * FIX: FileManager: fix images/photos slideshow/preview that sometimes tries to open path without image
     * FIX: FileManager: handle filenames with '@' (internal field delimiter set as '@@' now)
     * FIX: FileManager: prevent JS error when last selected item in panel would disappear after deleting or moving
+    * FIX: FileManager: select previously selected file/dir after end of playback/copy/move/remove actions
     * FIX: fallback with NTFS partitions remounting as read-only when remounting read-write wont succeed (problems with filesystem)
     * FIX: process /etc/profile in chrooted installer
     * FIX: missing /var/spool symlink for working crontab
@@ -83,6 +83,7 @@ TODO (not everything to be done for 0.5.0):
     * ADD: FileManager: handle pause/resume and backward/forward actions for (image) slideshow
     * ADD: FileManager: 'Upload' buttons for remote file uploads possibility
     * ADD: FileManager: 'Download' button in text files viewer to download files as binary
+    * ADD: FileManager: possibility to download any directories (recursively, archived with tar) or files with file/dir image buttons
     * ADD: /mnt/usb{1,2}/Drive{7,8} and /mnt/usb{1,2}/NetShare mount points
     * ADD: continous playback feature to Yavido alternative
     * ADD: /mnt/lg/widevine and /mnt/lg/res/cert mount points from SmartTV models to make successful chrooting of installer image on SmartTV models

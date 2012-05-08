@@ -98,6 +98,7 @@ else
     [ "$action" != "status" ] && export rpthx="`dirname \"$rpth\"`"
     export xselect="$FORM_rselected"
 fi
+[ -n "$FORM_select" ] && xselect="$FORM_select" # override xselect when 'select' form variable was set
 [ "$lpthx" = "/" -o "$lpthx" = "." ] && export lpthx=""
 [ "$rpthx" = "/" -o "$rpthx" = "." ] && export rpthx=""
 
@@ -134,7 +135,7 @@ var timer;
 
 document.onkeydown = check;
 window.onload = OnLoadSetCurrent;
-     
+
 function check(e)
 	{
 	if (!e) var e = window.event;
@@ -324,9 +325,9 @@ then
 	if [ "$ftype" = "directory" ]
 	then
 	    # TODO: parsing 'stat' could be a bit slow with few hundred/thousand files, maybe let's find other way to go through files
-	    #content_all=`busybox stat -c "%F@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
-	    content_all=`stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'`
-	    [ -z "$content_all" ] && content_all=`stat -c "%F@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@//g" -e 's# #\&nbsp;#g'` # INFO: workaround for empty content_all
+	    #content_all=`busybox stat -c "%F@@%n" "$spth"/* | grep "regular file" | grep -v "$play_enum" | sort | sed -e "s/regular file@@//g" -e 's# #\&nbsp;#g'`
+	    content_all=`stat -c "%F@@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@@//g" -e 's# #\&nbsp;#g'`
+	    [ -z "$content_all" ] && content_all=`stat -c "%F@@%n" "$spth"/* | grep "regular file" | sed -e "s/regular file@@//g" -e 's# #\&nbsp;#g'` # INFO: workaround for empty content_all
 	    #DEBUG#echo "QQQ content_all: $content_all" >> /tmp/log-action.log
 	else
 	    spthd="${spth%/*}"

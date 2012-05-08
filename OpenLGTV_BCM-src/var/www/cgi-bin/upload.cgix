@@ -15,6 +15,8 @@ content-type: text/html
 	</style>
     <TITLE>OpenLGTV BCM Firmware Upgrade</TITLE>
      <font size="+2"><center>
+     <br/><br/>
+     <IMG SRC="../../Images/openlgtvbcm_logo.png" ALT="OpenLGTV BCM"/><br/><br/>
      <? if [ -n "$FORM_uploadfile_name" ]
         then 
 	    ##echo "$FORM_uploadfile_name" > /tmp/file.txt
@@ -29,12 +31,12 @@ content-type: text/html
 		if [ -f "$FORM_upload_dir/$FORM_uploadfile_name" ]
 		then
 		    echo "<style> body { background-color: green; } </style>"
-		    echo "File <b>$FORM_uploadfile_name</b> is uploaded to:<br/><b>$FORM_upload_dir/</b><br/><br/>"
+		    echo "File <b>$FORM_uploadfile_name</b> has got uploaded to:<br/><b>$FORM_upload_dir/</b><br/><br/>"
 		    echo "OpenLGTV_BCM-INFO: WebUI: $FORM_upload_dir/$FORM_uploadfile_name uploaded by WebUI..." >> /var/log/OpenLGTV_BCM.log
 		    wait_time=2000
 		else
 		    echo "<style> body { background-color: red; } </style>"
-		    echo "<b>Error! Cannot upload file. Probably path is read only or doesnt exist</b>"
+		    echo "<b>Error! Cannot upload file. Probably path is read only or doesn't exist</b>"
 		fi
 	    else
 		echo "<style> body { background-color: red; } </style>"
@@ -45,7 +47,12 @@ content-type: text/html
 	    echo "This CGI script is for file uploads"
 	fi
 	#echo '<br/><br/></font><font size="+1">Going back to previous page...<br/>'
-	echo "<script>setTimeout('history.go(-1)', $wait_time);</script>"
+	if [ -n "$HTTP_REFERER" ]
+	then
+	    echo "<script>setTimeout('window.location.replace(\"$HTTP_REFERER\")', $wait_time);</script>"
+	else
+	    echo "<script>setTimeout('history.go(-1)', $wait_time);</script>"
+	fi
 	?>
 	</center></font>
   </HEAD>
