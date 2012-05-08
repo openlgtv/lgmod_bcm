@@ -191,7 +191,7 @@ source /etc/rc.d/rc.initd
 
 echo ""
 
-skip_rel_check="yes"
+export skip_rel_check="yes"
 source /etc/rc.d/rc.release
 
 #/bin/sh

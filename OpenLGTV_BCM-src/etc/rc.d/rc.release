@@ -13,7 +13,13 @@ then
     [ -f "$olockfile" ] && rm -f "$olockfile"
 fi
 
-[ -z "$skip_rel_check" ] && [ -n "`pgrep RELEASE`" ] && echo "OpenLGTV_BCM-ERROR: refusing to start OPENRELEASE as (OPEN?)RELEASE is already running" && exit 1
+if [ -z "$skip_rel_check" ]
+then
+    echo "OpenLGTV_BCM-INFO: rc.release: starting check if (OPEN)RELEASE is not running already"
+    [ -n "`pgrep RELEASE`" ] && echo "OpenLGTV_BCM-ERROR: rc.release: refusing to start OPENRELEASE as (OPEN?)RELEASE is already running" && exit 1
+else
+    export skip_rel_check
+fi
 
 if [ "$OPENRELEASE" = "1" -a -f "$olockfile" ]
 then

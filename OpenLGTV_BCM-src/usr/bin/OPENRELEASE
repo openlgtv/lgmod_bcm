@@ -4,7 +4,11 @@
 
 source /etc/rc.d/rc.variables
 
-[ -z "$skip_rel_check" ] && [ -n "`pgrep RELEASE`" ] && echo "OpenLGTV_BCM-ERROR: refusing to start OPENRELEASE as (OPEN?)RELEASE is already running" && exit 1
+if [ -z "$skip_rel_check" ]
+then
+    echo "OpenLGTV_BCM-INFO: OPENRELEASE: starting check if (OPEN)RELEASE is not running already"
+    [ -n "`pgrep RELEASE`" ] && echo "OpenLGTV_BCM-ERROR: OPENRELEASE: refusing to start OPENRELEASE as (OPEN?)RELEASE is already running" && exit 1
+fi
 skip_rel_check=""
 
 config_defined=true
