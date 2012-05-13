@@ -104,7 +104,7 @@ then
 		    [ "$WebUI_MOUNT" != "1" ] && bg="&" && fgbg="background at boot"
 		    #[ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},nounix,noserverino"
 		    mountopts="-o $opt"
-		    [ -n "$fs_type" -a -z "$opt" ] && mountopts="-o `grep "$fs_type" /etc/default/opt | cut -d\| -f2`"
+		    [ -n "$fs_type" -a -z "$opt" ] && mountopts="-o `grep "$fs_type" /etc/default/mountopts | cut -d\| -f2`"
 		    mountcmd="mount -t ${fs_type} ${src} ${full_dst} ${mountopts}"
 		    #[ "$fs_type" = "cifs" ] && mountcmd="mount -t cifs ${src} ${full_dst} -o username=${uname},password=${pass},noserverino"
 		    #[ "$fs_type" = "nfs" ] && mountcmd="mount -t nfs ${src} ${full_dst} -o nolock,soft,intr,rsize=32768,wsize=32768,tcp,timeo=10,rdirplus"
