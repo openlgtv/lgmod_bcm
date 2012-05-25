@@ -137,9 +137,13 @@ useragent="tv_samsung/4"
 #menuLoc="http://files.samsung-tv.webnode.sk/200000160-9d71c9e7e8/pl-tematapodkast.xml"
 menuLoc="http://bit.ly/interpodcast"
 
+# TODO: TESTING WITH: http://playon.unixstorm.org/PLIMS/menu.rss
+
 [ -n "$FORM_url"  ] && url="$FORM_url"   || url="$menuLoc"
 [ -n "$FORM_type" ] && type="$FORM_type" || type="text/xml"
 [ -z "$FORM_url" -a -z "$FORM_col" ] && col=4 && nextcol=2 || nextcol="$col" # let's set 4 columns for index site
+url="${url//_amp_/&}"
+url="${url//_qst_/?}"
 
 maxwidth="$((1200/$col))"
 
@@ -211,6 +215,7 @@ then
 	    feedEnclosure="${feedEnclosure%|/>*}"
 	    feedUrl="${feedEnclosure#*url=\"}"
 	    feedUrl="${feedUrl%%\"|*}"
+	    feedUrl="${feedUrl%%\"*}" # <- NEEDS VERIFICATION IF IT DOESNT MAKE PROBLEMS WITH PREVIOUSLY WORKING URLS
 	    feedUrl="${feedUrl//\"/}"
 	    feedType="${feedEnclosure#*type=\"}"
 	    feedType="${feedType%%\"|*}"
@@ -221,7 +226,15 @@ then
 	    #feedType="unknown"
 	    feedType="text/xml"
 	fi
+	#TEST - encode var separators in url (&?)
+	feedUrl="${feedUrl//\&amp;/_amp_}"
+	feedUrl="${feedUrl//\&/_amp_}"
+	feedUrl="${feedUrl//\?/_qst_}"
+	#echo "feedEnclosure: $feedEnclosure" >> /tmp/log.log
+	#echo "feedUrl: $feedUrl" >> /tmp/log.log
+	#/TEST
 	fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl"
+	#fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl_enc"
 	[ "${feedUrl%.jpg}" != "${feedUrl}" -o  "${feedUrl%.png}" != "${feedUrl}" -o "${feedUrl%.gif}" != "${feedUrl}" ] && fullUrl="../fm-action.cgi?action=play&side=l&lpth=$feedUrl" # view JPEG/PNG/GIF using FileManager
 	if [ -z "$feedThumbnail" ]
 	then
