@@ -1,11 +1,11 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-SVN20120509 installation script v.1.99 by xeros
+# OpenLGTV BCM 0.5.0-SVN20120525 installation script v.1.99 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
 SKIP_LINES=111
 
-echo "[ OpenLGTV BCM installer ]"
+echo "[ OpenLGTV BCM installer by xeros ]"
 
 if [ "$1" = "--help" -o "$1" = "-help" -o "$1" = "-h" -o "$1" = "help" ]
 then

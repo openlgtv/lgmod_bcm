@@ -234,7 +234,7 @@ then
 	#echo "feedUrl: $feedUrl" >> /tmp/log.log
 	#/TEST
 	fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl"
-	#fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl_enc"
+	[ "${feedType}" = "video/mp4" -a "${fullUrl/tvnplayer/}" != "${fullUrl}" ] && fullUrl="http://serv/cgi-bin/tvn_enc.cgi?$feedUrl" # TODO: currently experimental CGI (in python) on external server, need to rewrite encryption code for salt and token generation to port for TV
 	[ "${feedUrl%.jpg}" != "${feedUrl}" -o  "${feedUrl%.png}" != "${feedUrl}" -o "${feedUrl%.gif}" != "${feedUrl}" ] && fullUrl="../fm-action.cgi?action=play&side=l&lpth=$feedUrl" # view JPEG/PNG/GIF using FileManager
 	if [ -z "$feedThumbnail" ]
 	then

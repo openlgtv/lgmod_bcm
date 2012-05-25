@@ -30,6 +30,8 @@ Content-type: text/html
 useragent="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1"
 
 menuLoc="http://tvnplayer.pl"
+# TODO: start from: "http://tvnplayer.pl/api/?platform=Mobile&terminal=Android&format=xml&type=recommended&id=0&limit=50&page=1&sort=newest&m=getItems"
+
 
 if [ -n "$FORM_url" ]
 then
