@@ -236,6 +236,9 @@ then
 	fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl"
 	#NOT NEEDED NOW#[ "${feedType}" = "video/mp4" -a "${fullUrl/tvnplayer/}" != "${fullUrl}" ] && fullUrl="http://serv/cgi-bin/tvn_enc.cgi?$feedUrl" # TODO: currently experimental CGI (in python) on external server, need to rewrite encryption code for salt and token generation to port for TV
 	[ "${feedUrl%.jpg}" != "${feedUrl}" -o  "${feedUrl%.png}" != "${feedUrl}" -o "${feedUrl%.gif}" != "${feedUrl}" ] && fullUrl="../fm-action.cgi?action=play&side=l&lpth=$feedUrl" # view JPEG/PNG/GIF using FileManager
+	#[ "${feedThumbnail/.tif/}" != "${feedThumbnail}" ] && feedThumbnail="" # drop TIFFs
+	[ "${feedThumbnail/37650ae4-8fa7-11e1-b206-0025b511229e/}" != "${feedThumbnail}" ] && feedThumbnail="" # drop this one - buggy jpeg on tvn
+	[ "${feedThumbnail/b982b79a-950d-11e1-86ef-0025b511226e/}" != "${feedThumbnail}" ] && feedThumbnail="" # drop this one - buggy jpeg on tvn
 	if [ -z "$feedThumbnail" ]
 	then
 	    echo "<td><center><a id=\"link$item_nr\" href=\"$fullUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
@@ -248,6 +251,7 @@ then
 	item_nr=$(($item_nr+1))
 	###echo "$content" >> /tmp/log.log
     done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#<img src="/home/scripts/PLIMS/image/\(.*\).jpg">#<div id="menuBTN" class="\1"></div>#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
+    #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#<img src="/home/scripts/PLIMS/image/\(.*\).jpg">#<div id="menuBTN" class="\1"></div>#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'  -e '/redir.atmcdn.pl/ { /\.jpg/ { s#\&amp\;#_amp_#g ; s#\&#_amp_#g ; s#?#_qst_#g ; s#\(src="\)\(.*\.jpg\)#\1../tools/jpeg.sh?\2#g } }' #  experiment with jpeg reencoding using jpegtran
     #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
     #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(/.*jpg"\)#\1 width="150" height="200"#g'
     # TODO: optimize sed code above
