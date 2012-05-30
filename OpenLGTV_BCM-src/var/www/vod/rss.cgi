@@ -234,7 +234,7 @@ then
 	#echo "feedUrl: $feedUrl" >> /tmp/log.log
 	#/TEST
 	fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl"
-	[ "${feedType}" = "video/mp4" -a "${fullUrl/tvnplayer/}" != "${fullUrl}" ] && fullUrl="http://serv/cgi-bin/tvn_enc.cgi?$feedUrl" # TODO: currently experimental CGI (in python) on external server, need to rewrite encryption code for salt and token generation to port for TV
+	#NOT NEEDED NOW#[ "${feedType}" = "video/mp4" -a "${fullUrl/tvnplayer/}" != "${fullUrl}" ] && fullUrl="http://serv/cgi-bin/tvn_enc.cgi?$feedUrl" # TODO: currently experimental CGI (in python) on external server, need to rewrite encryption code for salt and token generation to port for TV
 	[ "${feedUrl%.jpg}" != "${feedUrl}" -o  "${feedUrl%.png}" != "${feedUrl}" -o "${feedUrl%.gif}" != "${feedUrl}" ] && fullUrl="../fm-action.cgi?action=play&side=l&lpth=$feedUrl" # view JPEG/PNG/GIF using FileManager
 	if [ -z "$feedThumbnail" ]
 	then
@@ -250,7 +250,7 @@ then
     done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#<img src="/home/scripts/PLIMS/image/\(.*\).jpg">#<div id="menuBTN" class="\1"></div>#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
     #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
     #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(/.*jpg"\)#\1 width="150" height="200"#g'
-    # TODO: work on sed code above
+    # TODO: optimize sed code above
 
     echo '</tr>'
     echo '</table>'
