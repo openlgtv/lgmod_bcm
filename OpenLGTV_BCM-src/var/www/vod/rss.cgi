@@ -155,21 +155,23 @@ echo "</script></HEAD>"
 type2="${type#*/}"
 log_dir="/var/log/vod/rss"
 log_file="$log_dir/$type2.log"
-rm -f "$log_file" 2>/dev/null
+rm -f "$log_file" 2>/dev/null &
 
 [ ! -d "$log_dir" ] && mkdir -p "$log_dir"
 
 if [ "$type" = "text/xml" ]
 then
     wget -q -U "$useragent" "$url" -O "$log_file"
-    echo '<BODY>'
-    #echo '<center><font size="+3" style="color:yellow;">RSS<br/></font><font size="+1" style="color:yellow;">parser<br/><font size="0" style="color:grey;">by xeros<br/><br/></font>'
-    echo '<center><font size="+1" style="color:yellow;">RSS parser<font size="0" style="color:grey;"><br/>by xeros<br/></font>'
+    echo '<BODY><center>'
+    [ -z "$FORM_url" ] && echo '<font size="+1" style="color:yellow;">RSS parser<font size="0" style="color:grey;"><br/>by xeros<br/></font>'
     echo '<Table id="items" class="items" Border="0" cellspacing="10" cellpadding="1" width="100%">'
     echo '<tr>'
     item_nr=1
+    #content_all=`cat "$log_file" | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}' | egrep "<enclosure|<link"`
+    content_all=`tr -d '\r' < "$log_file" | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}' | egrep "<enclosure|<link"`
     ###rm -f /tmp/log.log /tmp/log2.log 2>/dev/null
-    for content in `cat "$log_file" | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}' | egrep "<enclosure|<link"`
+    #for content in `cat "$log_file" | tr -d '\r' | tr '\n' ' ' | sed -e 's/<item>/\n<item>/g' | grep "<item>" | sed -e 's/\t*//g' -e 's/> *</></g' -e 's/ /|/g' -e 's/<\!\[CDATA\[//g' -e 's/\]\]>//g' | awk -F"</*item>" '{print $2}' | egrep "<enclosure|<link"`
+    for content in $content_all
     do
 	feedTitle="${content#*<title>}"
 	feedTitle="${feedTitle%%</title>*}"
@@ -230,15 +232,11 @@ then
 	feedUrl="${feedUrl//\&amp;/_amp_}"
 	feedUrl="${feedUrl//\&/_amp_}"
 	feedUrl="${feedUrl//\?/_qst_}"
-	#echo "feedEnclosure: $feedEnclosure" >> /tmp/log.log
-	#echo "feedUrl: $feedUrl" >> /tmp/log.log
 	#/TEST
 	fullUrl="rss.cgi?type=$feedType&col=$nextcol&url=$feedUrl"
-	#NOT NEEDED NOW#[ "${feedType}" = "video/mp4" -a "${fullUrl/tvnplayer/}" != "${fullUrl}" ] && fullUrl="http://serv/cgi-bin/tvn_enc.cgi?$feedUrl" # TODO: currently experimental CGI (in python) on external server, need to rewrite encryption code for salt and token generation to port for TV
 	[ "${feedUrl%.jpg}" != "${feedUrl}" -o  "${feedUrl%.png}" != "${feedUrl}" -o "${feedUrl%.gif}" != "${feedUrl}" ] && fullUrl="../fm-action.cgi?action=play&side=l&lpth=$feedUrl" # view JPEG/PNG/GIF using FileManager
-	#[ "${feedThumbnail/.tif/}" != "${feedThumbnail}" ] && feedThumbnail="" # drop TIFFs
-	[ "${feedThumbnail/37650ae4-8fa7-11e1-b206-0025b511229e/}" != "${feedThumbnail}" ] && feedThumbnail="" # drop this one - buggy jpeg on tvn
-	[ "${feedThumbnail/b982b79a-950d-11e1-86ef-0025b511226e/}" != "${feedThumbnail}" ] && feedThumbnail="" # drop this one - buggy jpeg on tvn
+	[ "${feedThumbnail/37650ae4-8fa7-11e1-b206-0025b511229e/}" != "${feedThumbnail}" ] && feedThumbnail="../Images/tmp/unknown.png" # drop this one - CMYK JPEGs are not supported
+	[ "${feedThumbnail/b982b79a-950d-11e1-86ef-0025b511226e/}" != "${feedThumbnail}" ] && feedThumbnail="../Images/tmp/unknown.png" # drop this one - CMYK JPEGs are not supported
 	if [ -z "$feedThumbnail" ]
 	then
 	    echo "<td><center><a id=\"link$item_nr\" href=\"$fullUrl\" target=\"_parent\"><font size='+2'>$feedTitle<br/></font>$feedDescription</a><br/></center></td>"
@@ -250,23 +248,21 @@ then
 	[ "$(($item_nr % $col))" = "0" ] && echo "</tr><tr>"
 	item_nr=$(($item_nr+1))
 	###echo "$content" >> /tmp/log.log
-    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#<img src="/home/scripts/PLIMS/image/\(.*\).jpg">#<div id="menuBTN" class="\1"></div>#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
+    done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#<img src="/home/scripts/PLIMS/image/\(.*\).jpg">#<div id="menuBTN" class="\1"></div>#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g' -e 's/\(target="_parent">\)<br\/>\(<img\)/\1\2/g'
     #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#<img src="/home/scripts/PLIMS/image/\(.*\).jpg">#<div id="menuBTN" class="\1"></div>#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'  -e '/redir.atmcdn.pl/ { /\.jpg/ { s#\&amp\;#_amp_#g ; s#\&#_amp_#g ; s#?#_qst_#g ; s#\(src="\)\(.*\.jpg\)#\1../tools/jpeg.sh?\2#g } }' #  experiment with jpeg reencoding using jpegtran
     #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(src="\)\(.*jpg"\)#\1../tools/jpeg.sh?\2#g'
     #done | tr '|' ' ' | sed -e 's/\(<img\)/<br\/>\1/gI' -e 's/ type=[A-Za-z0-9/]*//g' -e 's/\(&\)amp;#/\1#/g' -e 's#/>\(" target\)#\1#g' -e 's#<br[^>]*>\(<.r[^>]*>\)<br[^>]*>#\1#gI' -e 's#\(<br[^>]*>\)<br[^>]*>#\1#gI' -e "s#text/xml\(.*\)127.0.0.1:82/.*/you.cgi#video/youtube\1$HTTP_HOST/vod/you.sh#g" -e 's#/home/scripts/PLIMS/image/#../Images/tmp/image/#g' -e '/iptak.pl/ s#\(/.*jpg"\)#\1 width="150" height="200"#g'
     # TODO: optimize sed code above
-
     echo '</tr>'
     echo '</table>'
-    echo '</center>'
-    echo '</BODY>'
 else
     echo "<meta HTTP-EQUIV='REFRESH' content=\"1; url=$url\">"
     echo '<BODY bgcolor="black">'
     echo "Loading URL: $url ..."
-    echo '</center>'
-    echo '</BODY>'
 fi
+[ -z "$content_all" ] && echo "<br>No videos available in selected category"
 
 ?>
+</center>
+</BODY>
 </HTML>
