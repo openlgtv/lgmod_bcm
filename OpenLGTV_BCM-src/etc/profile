@@ -34,4 +34,10 @@ alias halt='[ -e "/tmp/openrelease.in" ] && echo "ka 01 00" >> /tmp/openrelease.
 alias brw="/mnt/browser/run3556"
 alias stg="/mnt/addon/stagecraft/bin/stagecraft"
 
+showmsg() {
+    [ -n "$1" ] && msg1="${1// /%20}"
+    [ -n "$2" ] && msg2="${2// /%20}"
+    /mnt/browser/run3556 "http://127.0.0.1:88/tools/showmsg.cgi?msg1=$msg1&msg2=$msg2"
+}
+
 [ -f /mnt/user/etc/profile ] && source /mnt/user/etc/profile

@@ -144,6 +144,7 @@ menuLoc="http://bit.ly/interpodcast"
 [ -z "$FORM_url" -a -z "$FORM_col" ] && col=4 && nextcol=2 || nextcol="$col" # let's set 4 columns for index site
 url="${url//_amp_/&}"
 url="${url//_qst_/?}"
+url="${url// /%20}"
 
 maxwidth="$((1200/$col))"
 
@@ -162,6 +163,7 @@ rm -f "$log_file" 2>/dev/null &
 if [ "$type" = "text/xml" ]
 then
     wget -q -U "$useragent" "$url" -O "$log_file"
+    echo "wget -q -U \"$useragent\" \"$url\" -O \"$log_file\"" > /tmp/log.log
     echo '<BODY><center>'
     [ -z "$FORM_url" ] && echo '<font size="+1" style="color:yellow;">RSS parser<font size="0" style="color:grey;"><br/>by xeros<br/></font>'
     echo '<Table id="items" class="items" Border="0" cellspacing="10" cellpadding="1" width="100%">'
@@ -255,12 +257,12 @@ then
     # TODO: optimize sed code above
     echo '</tr>'
     echo '</table>'
+    [ -z "$content_all" ] && echo "<p>No items available in selected category</p>"
 else
     echo "<meta HTTP-EQUIV='REFRESH' content=\"1; url=$url\">"
     echo '<BODY bgcolor="black">'
     echo "Loading URL: $url ..."
 fi
-[ -z "$content_all" ] && echo "<br>No videos available in selected category"
 
 ?>
 </center>
