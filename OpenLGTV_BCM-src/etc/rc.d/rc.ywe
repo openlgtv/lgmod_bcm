@@ -13,36 +13,37 @@
 	    export OpenLGTV_BCM_USB="`cat /tmp/usbdir`/OpenLGTV_BCM"
 	fi
     fi
-    export ywedir_usb=$OpenLGTV_BCM_USB/ywe
-    export ywedatadir_usb=$OpenLGTV_BCM_USB/ywedata
+    export ywedir_usb="$OpenLGTV_BCM_USB/ywe"
+    export ywedatadir_usb="$OpenLGTV_BCM_USB/ywedata"
     if [ ! -d "/mnt/user/ywe/samsung" ]
     then
 	mkdir -p /mnt/user/ywe/samsung
     fi
-    if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" -a ! -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
+    ywetgz=`ls $OpenLGTV_BCM_USB/ywe*.tar.gz 2>/dev/null | tail -1`
+    if [ ! -d "$ywedir" -a ! -d "$ywedir_usb" -a ! -f "$ywetgz" ]
     then
 	echo "OpenLGTV_BCM-INFO: no available Yahoo Widgets Engine dirs - /mnt/addon/ywe or $OpenLGTV_BCM_USB/ywe - skipping YWE configuration..."
     else
-	if [ -f "$OpenLGTV_BCM_USB/ywe.tar.gz" ]
+	if [ -f "$ywetgz" ]
 	then
-	    echo "OpenLGTV_BCM-INFO: found $OpenLGTV_BCM_USB/ywe.tar.gz file - trying use it as Yahoo Widgets Engine..."
+	    echo "OpenLGTV_BCM-INFO: found $ywetgz file - trying use it as Yahoo Widgets Engine..."
 	    curr_dir=`pwd`
-	    cd $OpenLGTV_BCM_USB/
-	    echo "OpenLGTV_BCM-INFO: unpacking $OpenLGTV_BCM_USB/ywe.tar.gz file"
-	    tar xzvf "$OpenLGTV_BCM_USB/ywe.tar.gz" -C "$OpenLGTV_BCM_USB"
+	    cd "$OpenLGTV_BCM_USB/"
+	    echo "OpenLGTV_BCM-INFO: unpacking $ywetgz file"
+	    tar xzvf "$ywetgz" -C "$OpenLGTV_BCM_USB"
 	    if [ "$?" -ne "0" ]
 	    then
-		echo "OpenLGTV_BCM-WARN: unpacking of $OpenLGTV_BCM_USB/ywe.tar.gz haven't succeed"
+		echo "OpenLGTV_BCM-WARN: unpacking of $ywetgz haven't succeed"
 	    else
-		echo "OpenLGTV_BCM-INFO: unpacking finished, removing $OpenLGTV_BCM_USB/ywe.tar.gz file"
-		rm -f "$OpenLGTV_BCM_USB/ywe.tar.gz"
+		echo "OpenLGTV_BCM-INFO: unpacking finished, removing $ywetgz file"
+		rm -f "$ywetgz"
 	    fi
-	    cd $curr_dir
+	    cd "$curr_dir"
 	fi
 	if [ -d "$ywedir_usb" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: found Yahoo Widgets Engine dir in $OpenLGTV_BCM_USB/ywe - setting it as ywedir..."
-	    export ywedir=$ywedir_usb
+	    export ywedir="$ywedir_usb"
 	    export ywedir_on_usb=1
 	    # lets try to kill konfabulator as on US models it running at start in background
 	    killall konfabulator > /dev/null 2>&1
@@ -50,7 +51,7 @@
 	if [ -d "$ywedir_usb" -a ! -d "$ywedatadir_usb" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: creating Yahoo Widgets Engine data dir in $ywedatadir_usb..."
-	    mkdir -p $ywedatadir_usb
+	    mkdir -p "$ywedatadir_usb"
 	fi
 	if [ -d "$ywedatadir_usb" ]
 	then
@@ -63,9 +64,9 @@
 	    if [ ! -f "$OpenLGTV_BCM_USB/ywedata.ext3.img" -a ! -f "$ywedatadir_usb/Preferences.db" -a "$USB_DIR_FS" = "vfat" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: not found Yahoo Widgets Data image file - $OpenLGTV_BCM_USB/ywedata.ext3.img and ywedata dir is not populated yet, so creating 128MB image file on USB storage device..."
-		dd if=/dev/zero of=$OpenLGTV_BCM_USB/ywedata.ext3.img bs=1024 count=131072
+		dd if=/dev/zero of="$OpenLGTV_BCM_USB/ywedata.ext3.img" bs=1024 count=131072
 		echo "OpenLGTV_BCM-INFO: creating EXT3 filesystem on Yahoo Widgets Data image file - $OpenLGTV_BCM_USB/ywedata.ext3.img..."
-		mke2fs -F -j $OpenLGTV_BCM_USB/ywedata.ext3.img
+		mke2fs -F -j "$OpenLGTV_BCM_USB/ywedata.ext3.img"
 	    fi
 	    echo "OpenLGTV_BCM-INFO: trying to kill konfabulator again if its process exits - it might have respawned (you may ignore error about process not exits)..."
 	    killall konfabulator
@@ -89,7 +90,7 @@
 	    if [ -f "$ywedir/config-oem.xml" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine config copy - $ywedir/config-oem.xml..."
-		cat $ywedir/config-oem.xml > /mnt/user/ywe/config-oem.xml
+		cat "$ywedir/config-oem.xml" > /mnt/user/ywe/config-oem.xml
 		chmod 644 /mnt/user/ywe/config-oem.xml
 	    fi
 	fi
@@ -98,7 +99,7 @@
 	    if [ -f "$ywedir/bin/konfabulator.sh" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: making Yahoo Widgets Engine startup script copy - $ywedir/bin/konfabulator.sh..."
-		cat $ywedir/bin/konfabulator.sh > /mnt/user/ywe/konfabulator.sh
+		cat "$ywedir/bin/konfabulator.sh" > /mnt/user/ywe/konfabulator.sh
 		chmod 755 /mnt/user/ywe/konfabulator.sh
 	    fi
 	fi
@@ -115,10 +116,10 @@
 	if [ -f "/mnt/user/ywe/config-oem.xml" -a -f "/mnt/user/ywe/konfabulator.sh" ]
 	then
 	    echo "OpenLGTV_BCM-INFO: using links to Yahoo Widgets Engine configs on addon partition..."
-	    umount -f $ywedir/config-oem.xml 2>/dev/null
-	    umount -f $ywedir/bin/konfabulator.sh 2>/dev/null
-	    mount --bind /mnt/user/ywe/config-oem.xml              $ywedir/config-oem.xml
-	    mount --bind /mnt/user/ywe/konfabulator.sh             $ywedir/bin/konfabulator.sh
+	    umount -f "$ywedir/config-oem.xml" 2>/dev/null
+	    umount -f "$ywedir/bin/konfabulator.sh" 2>/dev/null
+	    mount --bind /mnt/user/ywe/config-oem.xml              "$ywedir/config-oem.xml"
+	    mount --bind /mnt/user/ywe/konfabulator.sh             "$ywedir/bin/konfabulator.sh"
 	fi
 	if [ "$samsung_ywe" != "0" ]
 	then
@@ -126,7 +127,7 @@
 	    then
 		deviceid=$RANDOM
 		echo "OpenLGTV_BCM-INFO: generating Yahoo Widgets Engine device id: $deviceid in /mnt/user/ywe/deviceid..."
-		echo $deviceid > /mnt/user/ywe/deviceid
+		echo "$deviceid" > /mnt/user/ywe/deviceid
 	    fi
 	    if [ ! -f "/mnt/user/ywe/samsung/config-oem.xml" ]
 	    then
@@ -158,10 +159,10 @@
 	    if [ -f "/mnt/user/ywe/samsung/config-oem.xml" -a -f "/mnt/user/ywe/samsung/konfabulator.sh" -a -d "$ywedir" ]
 	    then
 		echo "OpenLGTV_BCM-INFO: mounting Yahoo Widgets Engine with configs for Samsung Widgets (from /mnt/user/ywe/samsung) replacing LG Widgets in path: $ywedir ..."
-		umount -f $ywedir/config-oem.xml 2>/dev/null
-		umount -f $ywedir/bin/konfabulator.sh 2>/dev/null
-		mount --bind /mnt/user/ywe/samsung/config-oem.xml      $ywedir/config-oem.xml
-		mount --bind /mnt/user/ywe/samsung/konfabulator.sh     $ywedir/bin/konfabulator.sh
+		umount -f "$ywedir/config-oem.xml" 2>/dev/null
+		umount -f "$ywedir/bin/konfabulator.sh" 2>/dev/null
+		mount --bind /mnt/user/ywe/samsung/config-oem.xml      "$ywedir/config-oem.xml"
+		mount --bind /mnt/user/ywe/samsung/konfabulator.sh     "$ywedir/bin/konfabulator.sh"
 	    fi
 	    if [ "$ywedir_on_usb" = "1" -a ! -h "$ywedir_usb/lib/libKonfabulator.so.0" ]
 	    then
