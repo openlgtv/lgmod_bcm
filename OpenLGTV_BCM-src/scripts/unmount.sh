@@ -2,6 +2,8 @@
 # OpenLGTV BCM unmount.sh script by xeros
 # Source code released under GPL License
 
+umnt_bg=0
+[ "$1" = "-bg" ] && umnt_bg=1 && shift
 what="$1"
 what_pre="$1"
 [ -z "$what" ] && what=" /" && matched=1
@@ -29,7 +31,12 @@ do
 	done
     fi
     echo "OpenLGTV_BCM-INFO: Unmount script: unmounting \"$dst\""
-    umount -f -r "$dst"
+    if [ "$umnt_bg" -eq 1 ]
+    then
+	umount -f -r "$dst" &
+    else
+	umount -f -r "$dst"
+    fi
 done
 
 sync

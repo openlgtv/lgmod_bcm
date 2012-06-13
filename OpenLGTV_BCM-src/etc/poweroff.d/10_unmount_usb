@@ -1,2 +1,2 @@
 #!/bin/sh
-/scripts/unmount.sh /dev/sd
+/scripts/unmount.sh -bg /dev/sd
