@@ -1,7 +1,18 @@
 #!/bin/sh
+iecho(){ echo "OpenLGTV_BCM-INFO: ${scriptname}: $@"; }
+wecho(){ echo "OpenLGTV_BCM-WARN: ${scriptname}: $@"; }
+eecho(){ echo "OpenLGTV_BCM-ERROR: ${scriptname}: $@"; }
 
 showmsg() {
-    [ -n "$1" ] && msg1="${1// /%20}"
-    [ -n "$2" ] && msg2="${2// /%20}"
-    /mnt/browser/run3556 "http://127.0.0.1:88/tools/showmsg.cgi?msg1=${msg1}&msg2=${msg2}&${3// /%20}&${4// /%20}&${5// /%20}&${6// /%20}&${7// /%20}&${8// /%20}&${9// /%20}" > /dev/null 2>&1
+    [ -n "$1" ] && msg1="$1" && shift
+    [ -n "$1" ] && msg2="$1" && shift
+    for argv in $@
+    do
+	url_args="&$argv"
+    done
+    url="http://127.0.0.1:88/tools/showmsg.cgi?msg1=${msg1}&msg2=${msg2}${url_args}"
+    echo /mnt/browser/run3556 "${url// /%20}"
+    # > /dev/null 2>&1
 }
+
+scriptname="`basename $0`"
