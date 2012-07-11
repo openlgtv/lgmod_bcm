@@ -12,6 +12,12 @@ magic_clean=377377377377
 [ -f "/mnt/user/etc/vars" ] && source /mnt/user/etc/vars
 [ -z "$country_model" -o -z "$platform" ] && source /etc/rc.d/rc.platform
 
+if [ -f "/var/run/dont_kill_lginit.lock" ]
+then
+    echo "OpenLGTV_BCM-WARN: refusing to erase lginit partitions as /var/run/dont_kill_lginit.lock lockfile exists"
+    exit 0
+fi
+
 if [ -n "`grep -m 1 '^mtd4:.*lginit' /proc/mtd`" ]
 then
     [ -z "$country_model" -o "$platform" != "GP2B" ] && echo "OpenLGTV_BCM-WARN: detected platform: ${platform}, country_model: ${country_model}, not touching lginit" && exit 1

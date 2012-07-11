@@ -75,6 +75,7 @@ do
 		sleep 2
 		# check free ram
 		addfreemem=20480
+		bigepk_size=115
 		currfreemem=`free | grep -m 1 Mem | awk '{print $4}'`
 		currbuffmem=`free | grep -m 1 Mem | awk '{print $6}'`
 		curravailmem=$(($currfreemem + $currbuffmem))
@@ -92,6 +93,11 @@ do
 			echo 3 > /proc/sys/vm/drop_caches
 			sleep 1
 			echo "OpenLGTV_BCM-WARN: rc.usb: free memory after dropped caches: $((`free | grep -m 1 Mem | awk '{print $4}'`/1024))"
+		    fi
+		    if [ "$epk_size" -gt "$bigepk_size" ]
+		    then
+			echo "OpenLGTV_BCM-WARN: rc.usb: epak \"${epak}\" size is: ${epk_size}MB so it might overwrite OpenLGTV BCM - preventing from OpenLGTV BCM re-enable after flashing"
+			touch /var/run/dont_kill_lginit.lock
 		    fi
 		done
 	    fi
