@@ -41,7 +41,7 @@ do
 	    then
 		rel_stdin="/tmp/openrelease.in"
 	    fi
-	    [ "$IRkey" != "" ] && openrel_action=`grep -m1 "^${IRkey}" "$openrelease_keymap" | sed -e "s/^$IRkey *= *//g" -e 's/"//g'`
+	    [ "$IRkey" != "" ] && openrel_action=`grep -m1 "^${IRkey} *=" "$openrelease_keymap" | sed -e "s/^$IRkey *= *//g" -e 's/"//g'`
 	    if [ "${openrel_action:0:2}" = "K_" ]
 	    then
 		if [ "${openrel_action:0:3}" = "K_X" ]
