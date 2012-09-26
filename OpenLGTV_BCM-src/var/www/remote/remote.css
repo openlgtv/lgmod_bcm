@@ -1,0 +1,77 @@
+/*
+Darko Bunic
+http://www.redips.net/
+Sep, 2012.
+*/
+
+/* main container */
+#main {
+	margin: 0 auto;
+	width: 220px;
+	background-color: #151515;
+	padding: 20px 5px;
+	/* round corners */
+	border-radius: 10px; /* Opera, Chrome */
+	-moz-border-radius: 10px; /* FF */
+}
+
+/* color for OpenLGTV text */
+#title {
+	color: white;
+}
+
+/* define default style for buttons */
+input {
+	width: 65px;
+	height: 25px;
+	border-width: 1px;
+	/* round corners */
+	border-radius: 4px; /* Opera, Chrome */
+	-moz-border-radius: 4px; /* FF */
+}
+
+/* red button */
+.red {
+	background-color: red;
+}
+
+/* green button */
+.green {
+	background-color: green;
+}
+
+/* blue button */
+.blue {
+	background-color: blue;
+}
+
+/* yellow */
+.yellow {
+	background-color: yellow;
+}
+
+/* lightBlue */
+.lightBlue {
+	background-color: lightBlue;
+}
+
+/* power button */
+.power {
+	width: 33px;
+	height: 33px;
+	margin-left: 5px;
+	/* round corners */
+	border-radius: 15px; /* Opera, Chrome */
+	-moz-border-radius: 15px; /* FF */
+}
+
+/* width for buttons (when four buttons are in a row) */
+.four {
+	width: 48px;
+	height: 20px;
+}
+
+/* vertical sections */
+.mt {
+/* 	margin-top: 15px; */
+}
