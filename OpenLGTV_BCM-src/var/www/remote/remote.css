@@ -9,7 +9,8 @@ Sep, 2012.
 	margin: 0 auto;
 	width: 220px;
 	background-color: #151515;
-	padding: 20px 5px;
+	/* padding: 20px 5px; */
+	padding: 5px 5px;
 	/* round corners */
 	border-radius: 10px; /* Opera, Chrome */
 	-moz-border-radius: 10px; /* FF */

@@ -31,18 +31,25 @@ remote.init = function () {
 	// define reference to title
 	remote.title = document.getElementById('title');
 	// scale page to fit width on vertical view on mobile devices
-	if (window.innerHeight > window.innerWidth) {
+	if (screen.height > screen.width) {
 		var wScale = window.innerWidth/240;
 		var metas = document.getElementsByTagName('meta');
 		var i;
 		for (i=0; i<metas.length; i++) {
 			if (metas[i].name == "viewport") {
-				metas[i].content = 'width=240; initial-scale='+wScale+'; maximum-scale='+wScale+'; minimum-scale=1.0;';
+				//metas[i].content = 'width='+window.innerWidth;
+				//metas[i].content = 'width='+window.innerWidth+'; target-densitydpi=device-dpi; initial-scale='+wScale+'; maximum-scale='+wScale+'; minimum-scale=1.0;';
+				//metas[i].content = 'width=device-width; target-densitydpi=device-dpi; initial-scale='+wScale+'; maximum-scale='+wScale+'; minimum-scale=1.0;';
+				metas[i].content = 'initial-scale='+wScale+'; maximum-scale='+wScale+'; minimum-scale=1.0;';
 			}
 		}
-		// TODO: fix scroll to center by default
-		window.scrollTo((document.body.offsetWidth-document.documentElement.offsetWidth)/2,0);
+		// scroll to center by default
+		//window.scrollTo((document.body.offsetWidth-document.documentElement.offsetWidth)/2,0);
+		window.scrollTo(document.documentElement.offsetWidth/4,0);
 	};
+	//alert(window.innerWidth+'x'+window.innerHeight);
+	//alert(screen.width+'x'+screen.height);
+	//alert(document.body.offsetWidth+'x'+document.documentElement.offsetWidth)
 };
 
 
