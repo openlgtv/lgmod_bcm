@@ -4,6 +4,11 @@ http://www.redips.net/
 Sep, 2012.
 */
 
+#body {
+	margin: 0 auto;
+	width: 240px;
+}
+
 /* main container */
 #main {
 	margin: 0 auto;

@@ -11,6 +11,11 @@
 <script type="text/javascript">
 <!--
 
+// TODO: separate links by countries into CSV files
+//       and replace this HTML with CGI script that would sort icons
+//       based on country/language chosen in TV menu as first ones, then the rest of icons
+//       and add missing icons
+
 var col = 6; //number of 'cells' in a row
 var row = 6; //number of rows to jump with channel up/down
 var current;
@@ -126,9 +131,9 @@ document.defaultAction = true;
 	<td align="center"><a id="c6" onKeyPress="javascript:setCurrent(this);return false" href='../vod/rss.cgi?type=text/xml&col=5&url=http://playon.unixstorm.org/PLIMS/iptak.rss' target='_parent'><img src="Images/tmp/iptak.png" width="200" border=2></a></td>
 </tr>
 <tr>
-	<td align="center"><a id="c7" onKeyPress="javascript:setCurrent(this);return false" href='http://netcast.app.uol.com.br/' target='_parent'><img src="Images/tmp/uol.jpg" border=2></a></td>
-	<td align="center"><a id="c8" onKeyPress="javascript:setCurrent(this);return false" href='http://terratvlg.terra.com.br/' target='_parent'><img src="Images/tmp/terracombr.png" border=2></a></td>
-	<td align="center"><a id="c9" onKeyPress="javascript:setCurrent(this);return false" href='http://bbtv.bazuca.com/' target='_parent'><img src="Images/tmp/bazuca.png" border=2></a></td>
+	<td align="center"><a id="c7" onKeyPress="javascript:setCurrent(this);return false" href='../vod/yavido.cgi' target='_parent'><img src="Images/tmp/yavido.png" border=2></a></td>
+	<td align="center"><a id="c8" onKeyPress="javascript:setCurrent(this);return false" href='http://netcast.app.uol.com.br/' target='_parent'><img src="Images/tmp/uol.jpg" border=2></a></td>
+	<td align="center"><a id="c9" onKeyPress="javascript:setCurrent(this);return false" href='http://terratvlg.terra.com.br/' target='_parent'><img src="Images/tmp/terracombr.png" border=2></a></td>
 	<td align="center"><a id="c10" onKeyPress="javascript:setCurrent(this);return false" href='http://www.emol.com/LG/' target='_parent'><img src="Images/tmp/emol.png" border=2></a></td>
 	<td align="center"><a id="c11" onKeyPress="javascript:setCurrent(this);return false" href='http://terratvlg.terra.cl/' target='_parent'><img src="Images/tmp/terracl.png" border=2></a></td>
 	<td align="center"><a id="c12" onKeyPress="javascript:setCurrent(this);return false" href='http://c-tv.orange.pl/' target='_parent'><img src="Images/tmp/orangepl.png" border=2></a></td>
@@ -313,8 +318,8 @@ document.defaultAction = true;
 	<td align="center"><a id="c145" onKeyPress="javascript:setCurrent(this);return false" href='http://tv.bibc.com/lg/cn_en/cn_en.xhtml' target='_parent'><img src="Images/tmp/cartoon_network.png" border=2></a></td>
 	<td align="center"><a id="c146" onKeyPress="javascript:setCurrent(this);return false" href='http://tv.bibc.com/lg/cn_de/cn_de.xhtml' target='_parent'><img src="Images/tmp/cartoon_network_de.png" border=2></a></td>
 	<td align="center"><a id="c147" onKeyPress="javascript:setCurrent(this);return false" href='http://tv.bibc.com/lg/hit_en/hit_en.xhtml' target='_parent'><img src="Images/tmp/hit_en.png" border=2></a></td>
-	<td align="center"><a id="c148" onKeyPress="javascript:setCurrent(this);return false" href='http://tv.bibc.com/lg/bo365_en/bo365_en.xhtml' target='_parent'><img src="Images/tmp/bo365.png" border=2></a></td>
-	<td align="center"><a id="c149" onKeyPress="javascript:setCurrent(this);return false" href='http://lg.hybridtv.myspass.de/lg/' target='_parent'><img src="Images/tmp/myspass.png" border=2></a></td>
+	<td align="center"><a id="c148" onKeyPress="javascript:setCurrent(this);return false" href='http://tv.bibc.com/lg/cnn_id/cnn_id.xhtml' target='_parent'><img src="Images/tmp/cnnid.png" border=2><!-- ADD ICON --></a></td>
+	<td align="center"><a id="c149" onKeyPress="javascript:setCurrent(this);return false" href='http://tv.bibc.com/lg/bo365_en/bo365_en.xhtml' target='_parent'><img src="Images/tmp/bo365.png" border=2></a></td>
 	<td align="center"><a id="c150" onKeyPress="javascript:setCurrent(this);return false" href='http://stb.dvdfly.ch/dvdfly_portal/lgtv' target='_parent'><img src="Images/tmp/dvdfly.png" border=2></a></td>
 </tr>
 <tr>
@@ -408,8 +413,25 @@ document.defaultAction = true;
 <tr>
 	<td align="center"><a id="c217" onKeyPress="javascript:setCurrent(this);return false" href='http://www.3deecentral.com/' target='_parent'><img src="Images/tmp/3deecentral.png" border=2></a></td>
 	<td align="center"><a id="c218" onKeyPress="javascript:setCurrent(this);return false" href='http://www.thekaraokechannel.com/tv' target='_parent'><img src="Images/tmp/thekaraokechannel.png" border=2></a></td>
-	<td align="center"><a id="c219" onKeyPress="javascript:setCurrent(this);return false" href='http://www.viewster.tv/viewster_v2/lge.html' target='_parent'><img src="Images/tmp/viewster2.png" border=2></a></td>
-	<td align="center"><a id="c220" onKeyPress="javascript:setCurrent(this);return false" href='../vod/yavido.cgi' target='_parent'><img src="Images/tmp/yavido.png" border=2></a></td>
+	<td align="center"><a id="c219" onKeyPress="javascript:setCurrent(this);return false" href='http://www.viewster.tv/viewster_v3/lge.html' target='_parent'><img src="Images/tmp/viewster2.png" border=2></a></td>
+	<td align="center"><a id="c220" onKeyPress="javascript:setCurrent(this);return false" href='http://ce.ustream.tv:80/netcast/' target='_parent'><img src="Images/tmp/ustream.png" border=2><!-- ADD ICON --></a></td>
+	<td align="center"><a id="c221" onKeyPress="javascript:setCurrent(this);return false" href='http://lg-app.rhapsody.com' target='_parent'><img src="Images/tmp/rhapsody.png" border=2><!-- ADD ICON --></a></td>
+	<td align="center"><a id="c222" onKeyPress="javascript:setCurrent(this);return false" href='http://bbtv.bazuca.com/' target='_parent'><img src="Images/tmp/bazuca.png" border=2></a></td>
+</tr>
+<tr>
+	<td align="center"><a id="c223" onKeyPress="javascript:setCurrent(this);return false" href='http://qabbtv.lg.bazuca.com/country/CR' target='_parent'><img src="Images/tmp/bazuca.png" border=2><!-- ADD SEPARATE ICONS --></a></td>
+	<td align="center"><a id="c224" onKeyPress="javascript:setCurrent(this);return false" href='http://qabbtv.lg.bazuca.com/country/GT' target='_parent'><img src="Images/tmp/bazuca.png" border=2></a></td>
+	<td align="center"><a id="c225" onKeyPress="javascript:setCurrent(this);return false" href='http://qabbtv.lg.bazuca.com/country/MX' target='_parent'><img src="Images/tmp/bazuca.png" border=2></a></td>
+	<td align="center"><a id="c226" onKeyPress="javascript:setCurrent(this);return false" href='http://qabbtv.lg.bazuca.com/country/HV' target='_parent'><img src="Images/tmp/bazuca.png" border=2></a></td>
+	<td align="center"><a id="c227" onKeyPress="javascript:setCurrent(this);return false" href='http://qabbtv.lg.bazuca.com/country/SV' target='_parent'><img src="Images/tmp/bazuca.png" border=2></a></td>
+	<td align="center"><a id="c228" onKeyPress="javascript:setCurrent(this);return false" href='http://qabbtv.lg.bazuca.com/country/PA' target='_parent'><img src="Images/tmp/bazuca.png" border=2></a></td>
+</tr>
+	<td align="center"><a id="c229" onKeyPress="javascript:setCurrent(this);return false" href='http://sundaytv-prev.terra.com.mx/LG' target='_parent'><img src="Images/tmp/sundaytvmx.png" border=2><!-- ADD ICON --></a></td>
+	<td align="center"><a id="c230" onKeyPress="javascript:setCurrent(this);return false" href='http://qt2-ph.kpopzone.lgappstv.com' target='_parent'><img src="Images/tmp/kpopzone.png" border=2><!-- ADD ICON --></a></td>
+	<td align="center"><a id="c231" onKeyPress="javascript:setCurrent(this);return false" href='http://connected.redbull.tv/lg/home.php' target='_parent'><img src="Images/tmp/redbull.png" border=2><!-- ADD ICON --></a></td>
+	<td align="center"><a id="c232" onKeyPress="javascript:setCurrent(this);return false" href='http://lg.hybridtv.myspass.de/lg/' target='_parent'><img src="Images/tmp/myspass.png" border=2></a></td>
+	<td align="center"><a id="c233" onKeyPress="javascript:setCurrent(this);return false" href='http://hbogo.pl/lg/' target='_parent'><img src="Images/tmp/hbogo.png" border=2><!-- ADD ICON --></a></td>
+<tr>
 </tr>
 </table>
 </center>
