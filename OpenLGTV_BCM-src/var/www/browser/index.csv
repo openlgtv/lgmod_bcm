@@ -7,8 +7,8 @@ POL|TVNPlayer.pl Alternative|../vod/rss.cgi?type=text/xml&col=4&url=http://playo
 ALL|NetPlayer Alternative|../vod/rss.cgi|Images/tmp/netplayer.png|
 POL|iPtak.pl Alternative|../vod/rss.cgi?type=text/xml&col=5&url=http://playon.unixstorm.org/PLIMS/iptak.rss|Images/tmp/iptak.png|
 ALL|Yavido Alternative|../vod/yavido.cgi|Images/tmp/yavido.png|
-ALL|UOL|http://netcast.app.uol.com.br/|Images/tmp/uol.jpg|
-ALL|Terra BR|http://terratvlg.terra.com.br/|Images/tmp/terracombr.png|
+BRA|UOL|http://netcast.app.uol.com.br/|Images/tmp/uol.jpg|
+BRA|Terra BR|http://terratvlg.terra.com.br/|Images/tmp/terracombr.png|
 ALL|EMOL|http://www.emol.com/LG/|Images/tmp/emol.png|
 ALL|Terra CL|http://terratvlg.terra.cl/|Images/tmp/terracl.png|
 POL|Orange PL|http://c-tv.orange.pl/|Images/tmp/orangepl.png|
@@ -27,10 +27,10 @@ ALL|IRT|http://tv-html.irt.de/|Images/tmp/irt.png|
 ALL|FunSpot|http://cdn.lge.funspot.tv/index.html|Images/tmp/funspot.png|
 ALL|ViewSter|http://www.viewster.tv/lg/index.html|Images/tmp/viewster.png|
 ALL|VTuner|http://lg.vtuner.com/setupapp/lg/index.html|Images/tmp/vtuner.png|
-ALL|Terra ES|http://www.terra.es/lg/|Images/tmp/terraes.png|
-ALL|Terra|http://lg.terra.tv/|Images/tmp/terra.png|
+SPA|Terra ES|http://www.terra.es/lg/|Images/tmp/terraes.png|
+SPA|Terra|http://lg.terra.tv/|Images/tmp/terra.png|
 ALL|O2|http://lgtv.o2active.cz/|Images/tmp/o2.png|
-ALL|Antena 3|http://www.antena3.com/lg/|Images/tmp/antena3.png|
+SPA|Antena 3|http://www.antena3.com/lg/|Images/tmp/antena3.png|
 ALL|MiniWeb|http://lg.miniweb.tv/mms/client/lg/netcast/|Images/tmp/miniweb.png|
 ALL|MTHAI|http://www.mthai.com/netcast/|Images/tmp/mthai.png|
 ALL|DETIK|http://nettv.detik.com/lg/stable/|Images/tmp/detik.png|
@@ -45,7 +45,7 @@ RUS|TV Gateway RU|http://lg.tvgateway.ru/|Images/tmp/tvgateway.png|
 RUS|Yandex RU|http://hw.yandex.ru/lg|Images/tmp/yandex.png|
 ALL|Yahoo AU|http://au.tv.yahoo.com/plus7/iptv/justadded/lg/hd720/|Images/tmp/yahooau.png|
 ALL|Chili TV|http://chili-lg-tv.microgenesismedia.com|Images/tmp/chili.png|
-ALL|EL TIEMPO|http://www.eltiempo.com/BBTVLG/|Images/tmp/eltiempo.png|
+SPA|EL TIEMPO|http://www.eltiempo.com/BBTVLG/|Images/tmp/eltiempo.png|
 BRA|IG|http://lgtv.ig.com.br/|Images/tmp/igcombr.png|
 ALL|Lanacion|http://tv.lanacion.com/|Images/tmp/lanacion.png|
 ALL|Prensa|http://lge.prensa.com/|Images/tmp/prensa.png|
@@ -53,7 +53,7 @@ ALL|Peru|http://lgtv.peru.com/|Images/tmp/peru.png|
 ALL|MixPlay|http://tv.mixplay.tv/|Images/tmp/mixplay.png|
 BRA|NetMovies|http://lg.netmovies.com.br|Images/tmp/netmovies.png|
 ALL|Canal RCN|http://canalrcnlg.tv/|Images/tmp/canalrcn.png|
-ALL|Saraiva|http://www.LojaSaraivaLG.truetechmedia.com.br/|Images/tmp/saraiva.png|
+BRA|Saraiva|http://www.LojaSaraivaLG.truetechmedia.com.br/|Images/tmp/saraiva.png|
 ARG|Terra AR|http://terratvlg.terra.com.ar/|Images/tmp/terracomar.png|
 ALL|Terra CO|http://terratvlg.terra.com.co/|Images/tmp/terracomco.png|
 MEX|Terra MX|http://terratvlg.terra.com.mx/|Images/tmp/terracommx.png|
@@ -67,12 +67,12 @@ ALL|MapCity|http://lgdtv.mapcity.com|Images/tmp/mapcity.png|
 ALL|MNET TV|http://smarttv.mnet.com/lg|Images/tmp/mnettv.png|
 ALL|Play Y|http://lgtv.playy.co.kr/ |Images/tmp/playy.png|
 ALL|HeadWeb|http://lg.headweb.com/ |Images/tmp/headweb.png|
-ALL|TV3|http://www.tv3.cat/pprogrames/iptv/lghtml/iptv.jsp|Images/tmp/tv3.png|
-ALL|Wuaki|http://lgtv.wuaki.tv|Images/tmp/wuaki.png|
-ALL|RedKaraoke|http://www.redkaraoke.es/tv/lg|Images/tmp/redkaraoke.png|
+SPA|TV3|http://www.tv3.cat/pprogrames/iptv/lghtml/iptv.jsp|Images/tmp/tv3.png|
+SPA|Wuaki|http://lgtv.wuaki.tv|Images/tmp/wuaki.png|
+SPA|RedKaraoke|http://www.redkaraoke.es/tv/lg|Images/tmp/redkaraoke.png|
 POL|Ipla|http://tv.ipla.pl/lg/|Images/tmp/iplapl.png|
 POL|Allegro|http://tv.allegro.pl/|Images/tmp/allegro.png|
-ALL|Info Meteo|http://lge.infometeo.es/|Images/tmp/infometeo.png|
+SPA|Info Meteo|http://lge.infometeo.es/|Images/tmp/infometeo.png|
 ALL|The Scynthians|http://www.thescythians.com/netcast|Images/tmp/thescythians.png|
 ALL|HKBN|http://www.hkbn.net/tv/lg/home/index.html|Images/tmp/hkbn.png|
 ALL|Parents Kingdom|http://www.parents-kingdom.com/LG|Images/tmp/parentskingdom.png|
@@ -141,7 +141,7 @@ HUN|VideoTar|http://videotar.mtv.hu/videoportal/lg/index.html|Images/tmp/videota
 HUN|Origo|http://lgtv.origo.hu/|Images/tmp/origo.png|
 ALL|Allocine|http://lg.wiztivi.com/lg-allocine-frontend/dojoroot/app/pages/lg/index.jsp?lang=fr|Images/tmp/allocine.png|
 ALL|Canal Play|http://b01-demodev01.wiztivi.com/lg-cplus-catchuptv-frontend/dojoroot/app/pages/lg/index.jsp|Images/tmp/canalplay.png|
-ALL|LOS 40|http://tv.los40.com/lge/|Images/tmp/los40.png|
+SPA|LOS 40|http://tv.los40.com/lge/|Images/tmp/los40.png|
 KOR|MBC KR|http://lgsmarttv.mbcmedia.net/lgst/|Images/tmp/mbc_kr.png|
 ALL|Cine 21|http://lgtv.cine21.com/|Images/tmp/cine21.png|
 ALL|Cartoon Network|http://tv.bibc.com/lg/cn_en/cn_en.xhtml|Images/tmp/cartoon_network.png|
@@ -150,9 +150,9 @@ ALL|HIT|http://tv.bibc.com/lg/hit_en/hit_en.xhtml|Images/tmp/hit_en.png|
 ALL|CNN ID|http://tv.bibc.com/lg/cnn_id/cnn_id.xhtml|Images/tmp/cnnid.png|
 ALL|BO365|http://tv.bibc.com/lg/bo365_en/bo365_en.xhtml|Images/tmp/bo365.png|
 ALL|DVD Fly|http://stb.dvdfly.ch/dvdfly_portal/lgtv|Images/tmp/dvdfly.png|
-ALL|El Pais|http://lge.elpais.com/|Images/tmp/elpais.png|
-ALL|AS|http://lge.as.com/|Images/tmp/as_com.png|
-ALL|La Sexta|http://www.lasexta.com/lg|Images/tmp/lasexta.png|
+SPA|El Pais|http://lge.elpais.com/|Images/tmp/elpais.png|
+SPA|AS|http://lge.as.com/|Images/tmp/as_com.png|
+SPA|La Sexta|http://www.lasexta.com/lg|Images/tmp/lasexta.png|
 HUN|Sanoma Online|http://lg.sanomaonline.hu|Images/tmp/sanomaonline.png|
 ALL|Sportal|http://sportal.bg/lg|Images/tmp/sportal.png|
 ALL|Com FM|http://lg.preprod.wiztivi.com/lg-comfm-frontend/dojoroot/app/pages/lg/index.jsp|Images/tmp/comfm.png|
