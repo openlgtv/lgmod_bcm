@@ -1,6 +1,7 @@
 #country code|service name|icon image|[overlay image]
 # TODO: fix country assignments, sort
 ALL|YouTube in TV|http://www.youtube.com/leanbacklite|Images/tmp/youtube.png|
+POL|WebPlayer|http://playon.unixstorm.org/webplayer/|Images/tmp/webplayer.png|
 POL|Ipla Alternative|../vod/ipla.cgi|Images/tmp/iplapl.png|
 POL|TVP.PL Alternative|../vod/tvp.cgi|Images/tmp/tvppl.png|
 POL|TVNPlayer.pl Alternative|../vod/rss.cgi?type=text/xml&col=4&url=http://playon.unixstorm.org/PLIMS/tvn.php|Images/tmp/tvnpl.png|
