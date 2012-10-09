@@ -19,6 +19,7 @@ content-type: text/html
 //       and replace this HTML with CGI script that would sort icons
 //       based on country/language chosen in TV menu as first ones, then the rest of icons
 //       and add missing icons
+//       - add keypad
 
 <?
     export col=6
@@ -38,6 +39,8 @@ content-type: text/html
 ?>
 var current;
 var next;
+var dialog_displayed = 0;
+var dialog_win;
 document.onkeydown = check;
 //window.onload = OnLoadSetCurrent;
 
@@ -88,13 +91,33 @@ function check(e)
 			//Prevent scrolling
 			return false;
 			}
-		else if (key==461) 
+		else if (key==406|key==118)
 			{
-			//the back button on the remote control have been pressed
-			//NetCastBack API
-			//window.NetCastBack();
-			history.go(-1);
-			//window.location='../browser.cgi';
+			//the BLUE button on the remote control or F7 have been pressed
+			//Open directory creation dialog
+			if (dialog_displayed==0)
+			    gotoDialog();
+			else
+			    removeDialog();
+			e.preventDefault();
+			return false;
+			}
+		else if (key==461|key==27) 
+			{
+			//the BACK button on the remote control or ESC have been pressed
+			if (dialog_displayed==0)
+			    {
+			    //NetCastBack API
+			    //window.NetCastBack();
+			    //lets get back to previous page instead of closing NetCast service
+			    history.go(-1);
+			    //window.location='../browser.cgi';
+			    }
+			else
+			    dialogRemove();
+			//Prevent default action
+			e.preventDefault();
+			return false;
 			}
 		else if (key==1001) 
 			{
@@ -116,6 +139,35 @@ function OnLoadSetCurrent()
 	current = 1;
 	document.links['c1'].focus();
 	}
+
+function gotoDialog()
+	{
+	var newdiv = document.createElement("div");
+	var newdivWidth=716;
+	var newdivHeight=176;
+	var newdivLeft=(window.innerWidth/2)-(newdivWidth/2)-10;
+	var newdivTop=(window.innerHeight/2)-(newdivHeight/2)-5;
+	newdiv.setAttribute('style', 'background: #efef00; position:absolute; padding:20px 10px 0 10px; top:' + newdivTop + 'px; left:' + newdivLeft + 'px; width:' + newdivWidth + 'px; height:' + newdivHeight + 'px; border:2px solid black;');
+	newdiv.id = "dialogWin";
+	document.body.appendChild(newdiv);
+	var kb = '<FONT color="black" style="color:black;" size="+3"> \
+	    <center><b>Type URL to go to:</b></center><br/> \
+	    <!-- form id="text" name="text" action="fm.cgi" method="GET" --> \
+	    <input id="txtName" name="txtName" type="textarea" style="width:710px"> \
+	    <!-- input type="hidden" name="page" value="' + row + '" --> \
+	    <table width="100%"><tr valign="middle"><td align="right" valign="middle"><span onClick="javascript:window.location=document.getElementById(\'txtName\').value;"><img src="/Images/Keyboard/ok_button.png" border="0" /><font size="+3" style="color:black;"> OK</font></span></td><td align="center" valign="middle"><span onClick="javascript:dialogRemove();"><img src="/Images/Keyboard/back_button.png" border="0" /><font size="+3" style="color:black;"> Cancel</font></span></td></tr></table><!-- /form --></font>';
+	newdiv.innerHTML = kb;
+	document.getElementById('txtName').focus();
+	dialog_displayed = 1;
+	}
+
+function dialogRemove()
+	{
+        document.body.removeChild(document.getElementById("dialogWin"));
+	dialog_displayed = 0;
+	dialog_win = '';
+	OnLoadSetCurrent();
+        }
 
 document.defaultAction = true;
 

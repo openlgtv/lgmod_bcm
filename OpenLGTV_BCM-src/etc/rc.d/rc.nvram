@@ -21,7 +21,10 @@ F=nvram; FX="/home/backup"; FF="${FX}/${F}"
 	h=$(hexdump -vs1330 -n13 -e'"%_p"' /tmp/${F})
 	touch "$cmn/model.${h%%.*}"  "$usr/model.${h%%.*}";  # expose model name
 	h=$(hexdump -vs674 -n16 -e'"%_p"' /tmp/${F})
-	touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # and serial
+	touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # serial
+	h=$(hexdump -vs1712 -n3 -e'"%_p"' /tmp/${F})
+	h="${h:2:1}${h:1:1}${h:0:1}"
+	touch "$cmn/lang.${h%%.*}" "$usr/lang.${h%%.*}";     # and lang
 	f=$f.gz; [ -f $f ] && break;
 	iecho "backup: $f"
 	cat /tmp/$F | gzip -1 > $f; sync; break
