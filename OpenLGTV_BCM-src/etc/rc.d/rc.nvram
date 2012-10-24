@@ -17,15 +17,15 @@ F=nvram; FX="/home/backup"; FF="${FX}/${F}"
 	#f=$f.gz; [ -f $f ] && continue; # TODO: force new backup if different
 	[ -d "${FX}" ] || mkdir -p "${FX}"
 	f=$f.gz; [ -f $f -a "$uver" = "$ver" ] && break;
-	cmn=/mnt/lg/cmn_data; usr=/mnt/user
-	h=$(hexdump -vs1330 -n13 -e'"%_p"' /tmp/${F})
+	cmn=/mnt/lg/cmn_data; usr=/mnt/user; tF=/tmp/${F}
+	h=$(hexdump -vs1330 -n13 -e'"%_p"' $tF)
 	touch "$cmn/model.${h%%.*}"  "$usr/model.${h%%.*}";  # expose model name
-	h=$(hexdump -vs674 -n16 -e'"%_p"' /tmp/${F})
+	h=$(hexdump -vs674 -n16 -e'"%_p"' $tF)
 	touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # serial
-	h=$(hexdump -vs1712 -n3 -e'"%_p"' /tmp/${F})
+	h=$(hexdump -vs1712 -n3 -e'"%_p"' $tF)
 	h="${h:2:1}${h:1:1}${h:0:1}"
 	touch "$cmn/lang.${h%%.*}" "$usr/lang.${h%%.*}";     # and lang
-	f=$f.gz; [ -f $f ] && break;
+	[ -f $f ] && break;
 	iecho "backup: $f"
 	cat /tmp/$F | gzip -1 > $f; sync; break
 done; }
