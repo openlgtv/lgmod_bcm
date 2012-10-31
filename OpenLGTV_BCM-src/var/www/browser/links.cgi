@@ -55,8 +55,8 @@ function check(e)
 <?
     if [ "$GET_page" != "" ]
     then
-	echo "			case 33: window.location.replace('links.cgi?page=$page_prev'); break; //ch up"
-	echo "			case 34: window.location.replace('links.cgi?page=$page_next'); break; //ch down"
+	echo "			case 33: window.location.replace('links.cgi?page=$page_prev'); return false; break; //ch up"
+	echo "			case 34: window.location.replace('links.cgi?page=$page_next'); return false; break; //ch down"
     else
         echo "			case 33: next = (1*current) - (row*col); break; //ch up"
 	echo "			case 34: next = (1*current) + (row*col); break; //ch down"
