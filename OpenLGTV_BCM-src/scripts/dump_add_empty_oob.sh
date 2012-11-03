@@ -6,17 +6,25 @@
 
 # DO NOT FLASH SUCH CONVERTED IMAGES
 
+data_block_size=2048
+oob_block_size=64
+
 ifile=$1
 ofile=$ifile.with_empty_oob
-ibs=2048
-obs=2112
-size=`wc -c $ifile | awk '{print $1}'`
+[ ! -f "$ifile" ] && echo "ERROR: missing input file: $1" && exit 1
+ibs=$data_block_size
+obs=$(($data_block_size+$oob_block_size))
+size=`wc -c $ifile | cut -d' ' -f1`
 nblocks=$(($size/$ibs))
-for i in `seq 0 $(($nblocks-1))`
+[ -f "$ofile" ] && rm -f $ofile
+i=0
+while [ "$i" -lt "$nblocks" ]
 do
     dd if=$ifile ibs=$ibs skip=$i count=1 >> $ofile
-    for i in `seq 8`
+    blocks=$((${oob_block_size}/8))
+    for i in `seq $blocks`
     do
 	printf '\xff\xff\xff\xff\xff\xff\xff\xff' >> $ofile
     done
+    i=$(($i+1))
 done
