@@ -1,7 +1,7 @@
 /**
  * \file nvram-edit.c
  *
- * OpenLGTV BCM NVRAM editor by xeros, version 0.0.4
+ * OpenLGTV BCM NVRAM editor by xeros, version 0.0.5
  * Source code released under GPL License
  *
  * Default input file:  /tmp/nvram     (can be changed with -f /path/to/nvram_file parameter)
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
 {
 
     printf("Broadcom platform based LG Digital TV NVRAM editor\n");
-    printf("Version 0.0.4 by xeros (openlgtv.org.ru) 07.08.2011\n\n");
+    printf("Version 0.0.5 by xeros (openlgtv.org.ru) 04.11.2012\n\n");
 
     crc_t crc;
 
@@ -410,14 +410,11 @@ printf(" NVMDRV_TOTAL_SIZE : \t\t 0x%x \t %i \t %i\n", get_size(NVMDRV_TOTAL_SIZ
     char* num4 = substring(buffer, 0, 2);
     
     printf("\n");
-    printf("Read CRC:         %x %x %x %x\n", *num1a, *num2a, *num3a, *num4a);
-    printf("Calculated CRC:   %s %s %s %s\n", num1, num2, num3, num4);
     char crc1[9], crc2[9];
-    int ret  = sprintf(crc1, "%x%x%x%x", *num1a, *num2a, *num3a, *num4a);
+    int ret  = sprintf(crc1, "%02x%02x%02x%02x", *num1a, *num2a, *num3a, *num4a);
     int ret2 = sprintf(crc2, "%s%s%s%s", num1, num2, num3, num4);
-    //printf("Read CRC:         %s\n", crc1);
-    //printf("Calculated CRC:   %s\n", crc2);
-    //printf("ret, ret2: %i, %i\n",ret,ret2);
+    printf("Read CRC:         %s\n", crc1);
+    printf("Calculated CRC:   %s\n", crc2);
     if (strcmp(crc1, crc2))
     {
 	printf("\nChecksum is WRONG!\n\n");
