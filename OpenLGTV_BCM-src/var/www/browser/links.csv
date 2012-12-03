@@ -1,5 +1,21 @@
 #country code|service name|icon image|[overlay image]
 # TODO: fix country assignments, sort
+# //ESP or SPA?
+#AU: AUS AU7 NZL
+#EU: ALB ARM AUT AZE BIH BEL BGR CHE CYP CZE DEU DNK DZA EST ESP EU7 FIN FRA GBR GEO GRC HRV HUN IRL ISL ITA KGZ KAZ LTU LUX LVA MAR MNE MKD NLD NOR POL PRT ROU SRB RUS SWE SVN SVK TUN TUR UKR UZB
+#ID: IDN ID7
+#IL: ISR IL7 PSE
+#IR: IRN IR7
+#MY: MYS MY7
+#SG: SGP SG7
+#VN: VNM VN7
+#XB: ARE AFG AGO BFA BHR BEN COD CAF COG CIV CMR CPV DJI EGY ETH GAB GHA GMB GIN GNQ IND IRQ JOR KEN KWT LBN LBR LBY MLI MMR MRT MWI NGA OMN PAK QAT RWA SAU SDN SLE SEN SYR TGO THA TZA UGA XB7 YEM ZAF ZMB
+#ZA: ZAF ZA7
+#US: CAN US7 MEX USA PHL SVL GTM HND DOM?
+#US: CAN CRI DOM GTM HND MEX PAN PHL SLV USA US7 VEN?
+#BR: ARG BOL BRA BR7 CHL CRI ECU NIC PER PRY URY VEN
+#KR: KOR KR7
+
 ALL|YouTube in TV|http://www.youtube.com/leanbacklite|Images/tmp/youtube.png|
 POL|WebPlayer|http://playon.unixstorm.org/webplayer/|Images/tmp/webplayer.png|
 POL|Ipla Alternative|../vod/ipla.cgi|Images/tmp/iplapl.png|
@@ -10,121 +26,128 @@ POL|iPtak.pl Alternative|../vod/rss.cgi?type=text/xml&col=5&url=http://playon.un
 ALL|Yavido Alternative|../vod/yavido.cgi|Images/tmp/yavido.png|
 BRA|UOL|http://netcast.app.uol.com.br/|Images/tmp/uol.jpg|
 BRA|Terra BR|http://terratvlg.terra.com.br/|Images/tmp/terracombr.png|
-ALL|EMOL|http://www.emol.com/LG/|Images/tmp/emol.png|
-ALL|Terra CL|http://terratvlg.terra.cl/|Images/tmp/terracl.png|
+SPA|EMOL|http://www.emol.com/LG/|Images/tmp/emol.png|
+CIL|Terra CL|http://terratvlg.terra.cl/|Images/tmp/terracl.png|
 POL|Orange PL|http://c-tv.orange.pl/|Images/tmp/orangepl.png|
-ALL|NTOM|http://sports.ntom.co.kr/|Images/tmp/ntom.png|
-ALL|SAPO|http://lg.tv.sapo.pt|Images/tmp/sapo.png|
-ALL|MEO|http://lg.meo.tv.sapo.pt|Images/tmp/meo.png|
-ALL|SF Anytime|https://nettv.sfanytime.com/|Images/tmp/sfanytime.png|
+KOR|NTOM|http://sports.ntom.co.kr/|Images/tmp/ntom.png|
+PRT|SAPO|http://lg.tv.sapo.pt|Images/tmp/sapo.png|
+PRT|MEO|http://lg.meo.tv.sapo.pt|Images/tmp/meo.png|
+DNK,FIN,NOR,SWE|SF Anytime|https://nettv.sfanytime.com/|Images/tmp/sfanytime.png|
 ALL|Facebook|http://facebook.lg.funspot.tv/index.php|Images/tmp/facebook.png|
 ALL|Twitter|http://twitter.lg.funspot.tv/index.php|Images/tmp/twitter.png|
-ALL|NTOM|http://lge.ntom.co.kr/|Images/tmp/ntom.png|
-ALL|BBC iPlayer|http://idcp.iplaydev.extdev.bbc.co.uk/iplayer/bigscreen?avui=tv&avvp=ssl&avkb=mc,B:461|Images/tmp/bbc.png|
-ALL|BBC iPlayer|http://www.bbc.co.uk/iplayer/bigscreen?avui=tv&avvp=ssl&avkb=mc,B:461|Images/tmp/bbc.png|
+KOR|NTOM|http://lge.ntom.co.kr/|Images/tmp/ntom.png|
+GBR,ALL|BBC iPlayer|http://idcp.iplaydev.extdev.bbc.co.uk/iplayer/bigscreen?avdn=LG.TV-2010&avui=tv&avvp=ssl&avkb=mc,B:461&avrt=html4&avst=on|Images/tmp/bbc.png|
+GBR,ALL|BBC iPlayer|http://www.bbc.co.uk/iplayer/bigscreen?avdn=LG.TV-2010&avui=tv&avvp=ssl&avkb=mc,B:461&avrt=html4&avst=on|Images/tmp/bbc.png|
 ALL|Google Maps|file:///mnt/addon/browser/contents/GoogleMap/GoogleMap.html|Images/tmp/gmaps.gif|
 DEU|Tages Schau|http://www.tagesschau.de/cetv/|Images/tmp/tagesschau.png|
-ALL|IRT|http://tv-html.irt.de/|Images/tmp/irt.png|
+DEU|IRT|http://tv-html.irt.de/|Images/tmp/irt.png|
 ALL|FunSpot|http://cdn.lge.funspot.tv/index.html|Images/tmp/funspot.png|
 ALL|ViewSter|http://www.viewster.tv/lg/index.html|Images/tmp/viewster.png|
 ALL|VTuner|http://lg.vtuner.com/setupapp/lg/index.html|Images/tmp/vtuner.png|
 SPA|Terra ES|http://www.terra.es/lg/|Images/tmp/terraes.png|
 SPA|Terra|http://lg.terra.tv/|Images/tmp/terra.png|
-ALL|O2|http://lgtv.o2active.cz/|Images/tmp/o2.png|
+CZE|O2|http://lgtv.o2active.cz/|Images/tmp/o2.png|
 SPA|Antena 3|http://www.antena3.com/lg/|Images/tmp/antena3.png|
-ALL|MiniWeb|http://lg.miniweb.tv/mms/client/lg/netcast/|Images/tmp/miniweb.png|
-ALL|MTHAI|http://www.mthai.com/netcast/|Images/tmp/mthai.png|
-ALL|DETIK|http://nettv.detik.com/lg/stable/|Images/tmp/detik.png|
-ALL|ALJAZEERA|http://apps.aljazeera.net/lge/|Images/tmp/aljazeera.png|
-ALL|SHE|http://tv.she.com/LG/final/index.html|Images/tmp/she.png|
-ALL|ViaSat|http://lg.tv.viasatondemand.se|Images/tmp/viasat.png|
-ALL|RTL NL|http://www.rtl.nl/service/gemist/device/lg|Images/tmp/rtlnl.png|
-ALL|AceTrax|http://lgtv.acetrax.com/|Images/tmp/acetrax.png|
-ALL|VideoLand|http://tv.videolandondemand.com/lge/|Images/tmp/videoland.png|
+#ALL|MiniWeb|http://lg.miniweb.tv/mms/client/lg/netcast/|Images/tmp/miniweb.png|
+THA,TWN|MTHAI|http://www.mthai.com/netcast/|Images/tmp/mthai.png|
+IDN|DETIK|http://nettv.detik.com/lg/stable/|Images/tmp/detik.png|
+ALL|ALJAZEERA|http://apps.aljazeera.net/lge/index.php|Images/tmp/aljazeera.png|
+CHN|SHE|http://tv.she.com/LG/final/index.html|Images/tmp/she.png|
+DNK,FIN,NOR,SWE|ViaSat|http://lg.tv.viasatondemand.se|Images/tmp/viasat.png|
+NLD|RTL NL|http://www.rtl.nl/service/gemist/device/lg|Images/tmp/rtlnl.png|
+AUT,CHE,ALL,IRL,ITA,ALL|AceTrax|http://lgtv.acetrax.com/|Images/tmp/acetrax.png|
+BEL,NLD|VideoLand|http://tv.videolandondemand.com/lge/|Images/tmp/videoland.png|
 RUS|Karaoke RU|http://lg.karaoke.ru/|Images/tmp/karaokeru.png|
 RUS|TV Gateway RU|http://lg.tvgateway.ru/|Images/tmp/tvgateway.png|
-RUS|Yandex RU|http://hw.yandex.ru/lg|Images/tmp/yandex.png|
-ALL|Yahoo AU|http://au.tv.yahoo.com/plus7/iptv/justadded/lg/hd720/|Images/tmp/yahooau.png|
-ALL|Chili TV|http://chili-lg-tv.microgenesismedia.com|Images/tmp/chili.png|
+KAZ,RUS|Yandex RU|http://hw.yandex.ru/lg|Images/tmp/yandex.png|
+AUS,AU7,NZL,ALL|Yahoo AU|http://au.tv.yahoo.com/plus7/iptv/justadded/lg/hd720/|Images/tmp/yahooau.png|
+#ALL|Chili TV|http://chili-lg-tv.microgenesismedia.com|Images/tmp/chili.png|
+ITA|Chili TV|https://lg.chili-tv.it|Images/tmp/chili.png|
 COL|EL TIEMPO|http://www.eltiempo.com/BBTVLG/|Images/tmp/eltiempo.png|
 BRA|IG|http://lgtv.ig.com.br/|Images/tmp/igcombr.png|
-ALL|Lanacion|http://tv.lanacion.com/|Images/tmp/lanacion.png|
-ALL|Prensa|http://lge.prensa.com/|Images/tmp/prensa.png|
+BRA|Lanacion|http://tv.lanacion.com/|Images/tmp/lanacion.png|
+PAN|Prensa|http://lge.prensa.com/|Images/tmp/prensa.png|
 ALL|Peru|http://lgtv.peru.com/|Images/tmp/peru.png|
 ALL|MixPlay|http://tv.mixplay.tv/|Images/tmp/mixplay.png|
 BRA|NetMovies|http://lg.netmovies.com.br|Images/tmp/netmovies.png|
 ALL|Canal RCN|http://canalrcnlg.tv/|Images/tmp/canalrcn.png|
 BRA|Saraiva|http://www.LojaSaraivaLG.truetechmedia.com.br/|Images/tmp/saraiva.png|
-ARG|Terra AR|http://terratvlg.terra.com.ar/|Images/tmp/terracomar.png|
+ARG,URY|Terra AR|http://terratvlg.terra.com.ar/|Images/tmp/terracomar.png|
 ALL|Terra CO|http://terratvlg.terra.com.co/|Images/tmp/terracomco.png|
 MEX|Terra MX|http://terratvlg.terra.com.mx/|Images/tmp/terracommx.png|
 ALL|Terra PE|http://terratvlg.terra.com.pe/|Images/tmp/terracompe.png|
 ALL|Terra PA|http://terratvlg.terra.com.pa/|Images/tmp/terracompa.png|
 ALL|Terra VE|http://terratvlg.terra.com.ve/|Images/tmp/terracomve.png|
-ALL|The Nation|http://www.nationchannel.com/lg/pages/homelist.php|Images/tmp/thenation.png|
+THA|The Nation|http://www.nationchannel.com/lg/pages/homelist.php|Images/tmp/thenation.png|
 ALL|Zapak|http://lg.zapak.com/|Images/tmp/zapak.png|
 ALL|TVN|http://www.tvn.cl/lg/pruebas|Images/tmp/tvn.png|
 ALL|MapCity|http://lgdtv.mapcity.com|Images/tmp/mapcity.png|
-ALL|MNET TV|http://smarttv.mnet.com/lg|Images/tmp/mnettv.png|
-ALL|Play Y|http://lgtv.playy.co.kr/ |Images/tmp/playy.png|
-ALL|HeadWeb|http://lg.headweb.com/ |Images/tmp/headweb.png|
-SPA|TV3|http://www.tv3.cat/pprogrames/iptv/lghtml/iptv.jsp|Images/tmp/tv3.png|
+KOR|MNET TV|http://smarttv.mnet.com/lg|Images/tmp/mnettv.png|
+KOR|Play Y|http://lgtv.playy.co.kr/|Images/tmp/playy.png|
+DNK,FIN,NOR,SWE|HeadWeb|http://lg.headweb.com/ |Images/tmp/headweb.png|
+#SPA|TV3|http://www.tv3.cat/pprogrames/iptv/lghtml/iptv.jsp|Images/tmp/tv3.png|
+SPA|TV3|http://www.tv3.cat/iptv/lg/index.html|Images/tmp/tv3.png|
 SPA|Wuaki|http://lgtv.wuaki.tv|Images/tmp/wuaki.png|
 SPA|RedKaraoke|http://www.redkaraoke.es/tv/lg|Images/tmp/redkaraoke.png|
 POL|Ipla|http://tv.ipla.pl/lg/|Images/tmp/iplapl.png|
+POL|Ipla|http://tv.ipla.pl/lgtvdrm/|Images/tmp/iplapl.png|
+POL|Ipla|http://tv.ipla.pl/lgtvdrm/index.php?project=2|Images/tmp/iplapl.png|
+POL|Ipla|http://tv.ipla.pl/lgtvdrm/index.php?project=3|Images/tmp/iplapl.png|
 POL|Allegro|http://tv.allegro.pl/|Images/tmp/allegro.png|
 SPA|Info Meteo|http://lge.infometeo.es/|Images/tmp/infometeo.png|
 ALL|The Scynthians|http://www.thescythians.com/netcast|Images/tmp/thescythians.png|
 ALL|HKBN|http://www.hkbn.net/tv/lg/home/index.html|Images/tmp/hkbn.png|
 ALL|Parents Kingdom|http://www.parents-kingdom.com/LG|Images/tmp/parentskingdom.png|
 ALL|Newera Digital TV|http://www.neweradigital.net/web/LG|Images/tmp/neweradigital.png|
-ALL|CNET|http://www.cbsinteractive.com.au/iptv/lg/netcast/cnet/|Images/tmp/cnet.png|
-ALL|Hungama|http://lg.hungama.com/ |Images/tmp/hungama.png|
+AUS,AU7,NLZ,SGP,PHL,ALL|CNET|http://www.cbsinteractive.com.au/iptv/lg/netcast/cnet/|Images/tmp/cnet.png|
+IND,ALL|Hungama|http://lg.hungama.com/|Images/tmp/hungama.png|
 ALL|Bollywood Hungama|http://akm-lg.bollywoodhungama.com/|Images/tmp/bollywoodhungama.png|
 ALL|MYTV|http://lg.mytv.tvb.hk|Images/tmp/mytv.png|
 ALL|RTHK|http://iptv.rthk.hk/lg|Images/tmp/rthk.png|
 ALL|ESPN Star|http://www.espnstar.tv/lg-app-source/ESPNLG/index.html|Images/tmp/espnstar.png|
-AUS|ABC iView|http://www.abc.net.au/iview/api/lg/|Images/tmp/abc-iview.png|
-ALL|Walla|http://video.walla.co.il/?w=//1666172/@item.v9.lg|Images/tmp/walla.png|
-ALL|Seemorgh|http://netcast.seemorgh.com/pages/p1.php|Images/tmp/seemorgh.png|
-ALL|Khabar|http://www.khabaronline.ir/lge/mainpage.aspx|Images/tmp/khabar.png|
+AUS,AU7,NZL,ALL|ABC iView|http://www.abc.net.au/iview/api/lg/|Images/tmp/abc-iview.png|
+ISR|Walla|http://video.walla.co.il/?w=//1666172/@item.v9.lg|Images/tmp/walla.png|
+IRN|Seemorgh|http://netcast.seemorgh.com/pages/p1.php|Images/tmp/seemorgh.png|
+IRN|Khabar|http://www.khabaronline.ir/lge/mainpage.aspx|Images/tmp/khabar.png|
 ALL|Carwale|http://lgtv.carwale.com/index.aspx|Images/tmp/carwale.png|
 ALL|India Times|http://lgtv.indiatimes.com/|Images/tmp/indiatimes.png|
 ALL|Shopppening|http://www.shoppening.com/LGSmartTV/|Images/tmp/shoppening.png|
 HUN|Port HU|http://port.hu/smarttv_lg_test/|Images/tmp/port.png|
-ALL|Snimka|http://www.snimka.bg/tv|Images/tmp/snimka.png|
-ALL|Index HR|http://www.index.hr/lge/final/|Images/tmp/indexhr.png|
-ALL|Domino Magazin|http://www.dominomagazin.com/tv_qa|Images/tmp/domino.png|
+BGR|Snimka BG|http://www.snimka.bg/tv|Images/tmp/snimka.png|
+HRV|Index HR|http://www.index.hr/lge/final/|Images/tmp/indexhr.png|
+SRB|Domino Magazin|http://www.dominomagazin.com/tv_qa|Images/tmp/domino.png|
 ALL|iConcerts|http://www.iconcerts.com/?q=lgtv|Images/tmp/iconcerts.png|
 ALL|CineTrailer|http://nettv.cinetrailer.tv/lg/|Images/tmp/cinetrailer.png|
-ALL|Stream CZ|http://www.stream.cz/?m=lg&a=list|Images/tmp/streamcz.png|
-ALL|CTK|http://lge.cn.cz|Images/tmp/ctk.png|
+CZE,SVK|Stream CZ|http://www.stream.cz/?m=lg&a=list|Images/tmp/streamcz.png|
+CZE,SVK|CTK|http://lge.cn.cz|Images/tmp/ctk.png|
 ALL|Aupeo|http://www.aupeo.com/opera_widget/lg.html|Images/tmp/aupeo.png|
 DEU|Kino DE|http://koops.e-media.de/lg/|Images/tmp/kinode.png|
 DEU|TV Movie|http://tvmovie.itv1.xooz.de/|Images/tmp/tvmovie.png|
-DEU|QTOM|http://qtom.nettv.kbia.de/|Images/tmp/qtom.png|
+#DEU|QTOM|http://qtom.nettv.kbia.de/|Images/tmp/qtom.png|
+DEU,ALL|QTOM|http://lg.qtom.tv/|Images/tmp/qtom.png|
 ALL|Woomi|https://lg.live.miniweb.tv/clients/lg/index.xhtml|Images/tmp/woomi.png|
 ALL|AutoCar|http://lg.autocar.co.uk|Images/tmp/autocar.png|
 ALL|Stuff|http://lg.stuff.tv|Images/tmp/stuff.png|
-ALL|NCT|http://tivi.nhaccuatui.com/lg/|Images/tmp/nct.png|
+VNM|NCT|http://tivi.nhaccuatui.com/lg/|Images/tmp/nct.png|
 ALL|GameAnalyser|http://bptv.Bigpond.com/lgnrl|Images/tmp/gameanalyser.png|
 ALL|AP|http://lgwidget.ap.org|Images/tmp/ap.png|
 ALL|NBA|http://www.nba.com/mobile/apps/2010/connected/lg/|Images/tmp/nba.png|
 ALL|iPlay|http://tv.iplay.com/LG/|Images/tmp/ipla_com.png|
 ALL|Napster|http://api.napster.com/apps/lg/|Images/tmp/napster.png|
-ALL|Hulu|https://secure.hulu.com/htv/lg/1.0/prod/html/index.html|Images/tmp/hulu.png|
-ALL|TV Azteca|http://www.tvazteca.com/lg/|Images/tmp/azteca.png|
+USA,ALL|Hulu|https://secure.hulu.com/htv/lg/1.0/prod/html/index.html|Images/tmp/hulu.png|
+MEX,VEN|TV Azteca|http://www.tvazteca.com/lg/|Images/tmp/azteca.png|
 ALL|Tvolution|http://tvolucion.esmas.com/widgets/lg/|Images/tmp/tvolucion.png|
 ALL|TOU TV|http://lg.tou.tv/index.html|Images/tmp/toutv.png|
 RUS|Gastronom|http://lg.gastronom.ru|Images/tmp/gastronom.png|
 RUS|Fidel|http://lgtv.api.fidel.ru/index.html|Images/tmp/fidel.png|
 RUS|JV RU|http://www.jv.ru/netcast/monorail_video.php|Images/tmp/jvru.png|
-RUS|Tvigle|http://lg.dev.tvigle.ru/|Images/tmp/tvigle.png|
+RUS,UKR|Tvigle|http://lg.dev.tvigle.ru/|Images/tmp/tvigle.png|
 RUS|RU TV|http://lg.rutv.ru|Images/tmp/rutv.png|
-RUS|Omlet|http://dev.omlet.ru/lg2|Images/tmp/omlet.png|
+#RUS|MTS Omlet|http://dev.omlet.ru/lg2|Images/tmp/omlet.png|
+RUS|MTS Omlet|http://tv2.omlet.ru/tv/lg|Images/tmp/omlet.png|
 ALL|River Plate|http://broadcast.cariverplate.com/|Images/tmp/riverplate.png|
 ALL|Boca Juniors|http://broadcast.bocajuniorsonline.com/|Images/tmp/bocajuniors.png|
-ARG|LG AR|http://www.lgnetcast.com.ar/|Images/tmp/lgar.png|
+ARG,URY|LG AR|http://www.lgnetcast.com.ar/|Images/tmp/lgar.png|
 BRA|MTV BR|http://webcast.mtv.uol.com.br/lg|Images/tmp/mtvbr.png|
 BRA|Caras|http://lge.caras.com.br/|Images/tmp/caras.png|
 BRA|TOP TVZ|http://toptvz.com.br/tvlg|Images/tmp/toptvz.png|
@@ -132,33 +155,37 @@ ALL|Caracol TV|http://apps.caracoltv.co/lg/qa/|Images/tmp/caracoltv.png|
 ALL|Etisalat|http://prod.lg.etisalatmediagroup.com/|Images/tmp/etisalat.png|
 USA|Kaskus|http://api-lg.kaskus.us/|Images/tmp/kaskus.png|
 ALL|Liputan 6|http://tv.liputan6.com/lg|Images/tmp/liputan6.png|
-ALL|iWanTV|http://iwantv.com.ph/LGTest/index.html|Images/tmp/iwantv.png|
-ALL|ITIran|http://itiran.com/smarttv|Images/tmp/itiran.png|
+PHL|iWanTV|http://iwantv.com.ph/LGTest/index.html|Images/tmp/iwantv.png|
+IRN|ITIran|http://itiran.com/smarttv|Images/tmp/itiran.png|
 ALL|NRJ|http://lg.wiztivi.com/lg-nrj-frontend/index.jsp|Images/tmp/nrj.png|
 ALL|Yavido|http://lge.yavido.tv|Images/tmp/yavido.png|
 POL|Gazeta PL|http://gazeta.lg.xlogic.pl|Images/tmp/gazeta.png|
-ALL|TV4|http://frontend.eu.ericssonmediafabric.com/TV4_LG|Images/tmp/TV4_LG.png|
-HUN|VideoTar|http://videotar.mtv.hu/videoportal/lg/index.html|Images/tmp/videotar.png|
+SWE|TV4|http://frontend.eu.ericssonmediafabric.com/TV4_LG|Images/tmp/TV4_LG.png|
+HUN|MTV HU|http://videotar.mtv.hu/videoportal/lg/index.html|Images/tmp/videotar.png|
 HUN|Origo|http://lgtv.origo.hu/|Images/tmp/origo.png|
-ALL|Allocine|http://lg.wiztivi.com/lg-allocine-frontend/dojoroot/app/pages/lg/index.jsp?lang=fr|Images/tmp/allocine.png|
+FRA|Allocine|http://lg.wiztivi.com/lg-allocine-frontend/dojoroot/app/pages/lg/index.jsp?lang=fr|Images/tmp/allocine.png|
 ALL|Canal Play|http://b01-demodev01.wiztivi.com/lg-cplus-catchuptv-frontend/dojoroot/app/pages/lg/index.jsp|Images/tmp/canalplay.png|
-SPA|LOS 40|http://tv.los40.com/lge/|Images/tmp/los40.png|
+#SPA|LOS 40|http://tv.los40.com/lge/|Images/tmp/los40.png|
+SPA|LOS 40|http://lge.los40.com|Images/tmp/los40.png|
 KOR|MBC KR|http://lgsmarttv.mbcmedia.net/lgst/|Images/tmp/mbc_kr.png|
 ALL|Cine 21|http://lgtv.cine21.com/|Images/tmp/cine21.png|
 ALL|Cartoon Network|http://tv.bibc.com/lg/cn_en/cn_en.xhtml|Images/tmp/cartoon_network.png|
 DEU|Cartoon Network DE|http://tv.bibc.com/lg/cn_de/cn_de.xhtml|Images/tmp/cartoon_network_de.png|
+NZL|Cartoon Network NZ|http://tv.bibc.com/lg/cn_nz/cn_nz.xhtml|Images/tmp/cartoon_network_nz.png|
 ALL|HIT|http://tv.bibc.com/lg/hit_en/hit_en.xhtml|Images/tmp/hit_en.png|
 ALL|CNN ID|http://tv.bibc.com/lg/cnn_id/cnn_id.xhtml|Images/tmp/cnnid.png|
 ALL|BO365|http://tv.bibc.com/lg/bo365_en/bo365_en.xhtml|Images/tmp/bo365.png|
-ALL|DVD Fly|http://stb.dvdfly.ch/dvdfly_portal/lgtv|Images/tmp/dvdfly.png|
+CHE|DVD Fly|http://stb.dvdfly.ch/dvdfly_portal/lgtv|Images/tmp/dvdfly.png|
 SPA|El Pais|http://lge.elpais.com/|Images/tmp/elpais.png|
 SPA|AS|http://lge.as.com/|Images/tmp/as_com.png|
 SPA|La Sexta|http://www.lasexta.com/lg|Images/tmp/lasexta.png|
 HUN|Sanoma Online|http://lg.sanomaonline.hu|Images/tmp/sanomaonline.png|
-ALL|Sportal|http://sportal.bg/lg|Images/tmp/sportal.png|
-ALL|Com FM|http://lg.preprod.wiztivi.com/lg-comfm-frontend/dojoroot/app/pages/lg/index.jsp|Images/tmp/comfm.png|
-ALL|Kamo HR|http://kamo.hr/pls/w/smarttv_lg_test.program|Images/tmp/kamo_hr.png|
-ALL|Port RS|http://port.rs/smarttv_lg_test|Images/tmp/port_rs.png|
+BGR|Sportal BG|http://sportal.bg/lg|Images/tmp/sportal.png|
+FRA|Com FM|http://lg.preprod.wiztivi.com/lg-comfm-frontend/dojoroot/app/pages/lg/index.jsp|Images/tmp/comfm.png|
+HRV|Kamo HR|http://kamo.hr/pls/w/smarttv_lg_test.program|Images/tmp/kamo_hr.png|
+#ALL|Kamo HR|http://port.hr/pls/w/smarttv_lg_test.program|Images/tmp/kamo_hr.png|
+#ALL|Kamo HR|http://kamo.hr/smarttv_lg_test|Images/tmp/kamo_hr.png|
+SRB|Port RS|http://port.rs/smarttv_lg_test|Images/tmp/port_rs.png|
 ALL|CTC|http://ctc.ctcmediatv.ru/|Images/tmp/ctc.png|
 ALL|GisMeteo|http://3bd122c5.gismeteo.ru/|Images/tmp/gismeteo.png|
 RUS|InfoX|http://lge.infox.ru/tv1/|Images/tmp/infox.png|
@@ -168,41 +195,41 @@ RUS|TV Rain|http://lgtv.tvrain.ru/|Images/tmp/tvrain.png|
 RUS|Tvigle|http://lg.tvigle.ru/|Images/tmp/tvigle.png|
 BRA|eBAND|http://videos2.band.com.br/lg/index.html|Images/tmp/eband.png|
 ALL|CDF|http://test.lg.ztreaming.com/|Images/tmp/cdf_cl.png|
-ALL|Buien Radar|http://buienradar.24imedia.tv|Images/tmp/buienradar.png|
+NLD|Buien Radar|http://buienradar.24imedia.tv|Images/tmp/buienradar.png|
 ALL|FCCE|http://fcce.24imedia.tv/|Images/tmp/fcce.png|
 ALL|TED|http://ted.24imedia.tv|Images/tmp/ted.png|
-ALL|TomTom|http://tomtom.24imedia.tv|Images/tmp/tomtom.png|
-ALL|TVGids|http://tvgids.24imedia.tv|Images/tmp/tvgids.png|
-ALL|BigPond TV|http://bptvapps.bigpond.com/lglive/|Images/tmp/bigpondtv.png|
+DEU,CHE,FRA,GBR,LUX,NLD,SWE,ALL|TomTom|http://tomtom.24imedia.tv/lg/|Images/tmp/tomtom.png|
+AUS,ALL|TVGids|http://tvgids.24imedia.tv|Images/tmp/tvgids.png|
+AUS,ALL|BigPond TV|http://bptvapps.bigpond.com/lglive/|Images/tmp/bigpondtv.png|
 ALL|BigPond|http://bptv.bigpond.com/lg|Images/tmp/bigpond.gif|
-ALL|BlinkBox|https://www.blinkbox.com/widget|Images/tmp/blinkbox.png|
+GBR,ALL|BlinkBox|https://www.blinkbox.com/widget|Images/tmp/blinkbox.png|
 ALL|GoldIran|http://netcast.goldiran.ir/|Images/tmp/goldiran.png|
 ALL|BMB|http://www.beethovenmb.com/|Images/tmp/bmb.png|
-ALL|Ole|http://lg.ole.com.ar/|Images/tmp/ole.png|
+ARG,URY|Ole|http://lg.ole.com.ar/|Images/tmp/ole.png|
 ALL|ABN AMRO|http://abntv.24imedia.tv/|Images/tmp/abnamro.png|
 ALL|DFT TV|http://dfttv.24imedia.tv/|Images/tmp/dft.png|
 ALL|Tunin FM|http://tuninfm.24imedia.tv/|Images/tmp/tuninfm.png|
 ALL|Hotels Thailand|http://www.hotelsthailand.com/lg_smarttv/index.php|Images/tmp/hotelsthailand.png|
 ALL|Sportal RS|http://sportal.rs/lg/news.php|Images/tmp/sportalrs.png|
-ALL|Wtter AT|http://www.wetter.at/lg-netcast|Images/tmp/wetterat.png|
-DEU|Die Presse|http://diepresse.com/bigscreen/|Images/tmp/diepresse.png|
-ALL|The Jakarta Post|http://lgtv.thejakartapost.com/|Images/tmp/thejakartapost.png|
+AUT|Wtter AT|http://www.wetter.at/lg-netcast|Images/tmp/wetterat.png|
+AUT,DEU|Die Presse|http://diepresse.com/bigscreen/|Images/tmp/diepresse.png|
+IDN|The Jakarta Post|http://lgtv.thejakartapost.com/|Images/tmp/thejakartapost.png|
 ALL|The Star|http://sites.thestar.com.my/lgnetcast/|Images/tmp/thestar.png|
 ALL|ADN Stream|http://lgtv.adnstream.tv/|Images/tmp/adnstream.png|
 RUS|Yota Play|http://lge.yotaplay.ru/|Images/tmp/yotaplay.png|
 DEU|MaxDome|http://mini.maxdome.de/lg/index.html|Images/tmp/maxdome.png|
-ALL|Wealth TV 3D|http://wealthtv.com/tv/lg/3d/|Images/tmp/wealthtv3d.png|
-ALL|Degusta|http://netcast-panama.guiadegusta.com/|Images/tmp/degusta.png|
+BOL,PRY,ALL|Wealth TV 3D|http://wealthtv.com/tv/lg/3d/|Images/tmp/wealthtv3d.png|
+PAN|Degusta|http://netcast-panama.guiadegusta.com/|Images/tmp/degusta.png|
 ALL|Mega CL|http://www.mega.cl/lg/testing/|Images/tmp/megacl.png|
 RUS|Russia RU|http://www.russia.ru/lg/|Images/tmp/russiaru.png|
 ALL|Wikalenda|http://www.wikalenda.com/lg/main|Images/tmp/wikalenda.png|
 BRA|Terra VideoStore|http://videostore.terra.com.br/LG|Images/tmp/terra_vstore.png|
 ALL|UCTV FM|http://210.50.199.71:8014/|Images/tmp/uctvfm.png|
-ALL|NDTV|http://apps.ndtv.com/tv/lg/|Images/tmp/ndtv.png|
+IND,ALL|NDTV|http://apps.ndtv.com/tv/lg/|Images/tmp/ndtv.png|
 ALL|Daily Motion|http://iptv-app.dailymotion.com/dm-front-lg/|Images/tmp/dailymotion.png|
-ALL|VNexpress|http://lgtv.vnexpress.net|Images/tmp/vnexpress.png|
-ALL|IT News|http://itn.itv2.xooz.de|Images/tmp/itnnews.png|
-ALL|CNBC|http://www.cnbcasia.com/NetcastTV|Images/tmp/cnbc.png|
+VNM|VNexpress|http://lgtv.vnexpress.net|Images/tmp/vnexpress.png|
+GBR,ALL|IT News|http://itn.itv2.xooz.de|Images/tmp/itnnews.png|
+SGP,PHL,ALL|CNBC|http://www.cnbcasia.com/NetcastTV|Images/tmp/cnbc.png|
 ALL|CPN|http://www.cpn.com.hk/video/LG_List.asp|Images/tmp/cpn.png|
 POL|Ipla PL|http://tv.ipla.pl/lg-preview/|Images/tmp/iplapl.png|
 ALL|AccuWeather|http://lgtv.accu-weather.com/lg/tv2/default.aspx|Images/tmp/accuweather.png|
@@ -233,4 +260,86 @@ MEX|SundayTV MX|http://sundaytv-prev.terra.com.mx/LG|Images/tmp/sundaytvmx.png|
 ALL|KPopZone|http://qt2-ph.kpopzone.lgappstv.com|Images/tmp/kpopzone.png|
 ALL|RedBull|http://connected.redbull.tv/lg/home.php|Images/tmp/redbull.png|
 DEU|MySpass|http://lg.hybridtv.myspass.de/lg/|Images/tmp/myspass.png|
-POL|HBO GO|http://hbogo.pl/lg/|Images/tmp/hbogo.png|
+#
+ALL|Canal Play|http://canal.wiztivi.com/lg-canalpluscplay-frontend/dojoroot/app/pages/lg/index.jsp?lang=fr|Images/tmp/canalplay.png|
+ALL|NOS|http://connectedtvcms.nos.nl/connected-tv/lg_europe/index.html|Images/tmp/nos.png|
+ALL|Cubo Musica|http://device.cubovision.it/client/ctv/cubomusica/lg/|Images/tmp/cubomusica.png|
+ALL|Deagostini|http://dws.deagostini.it/3p/prj/lgtv/|Images/tmp/deagostini.png|
+ALL|EXH|http://exh.lg.rutv.ru|Images/tmp/exh.png|
+ALL|FDJ|http://fdj.wiztivi.com/default-fdj-frontend|Images/tmp/fdj.png|
+ALL|Megogo|http://files.megogo.net/lg/pages/home.html|Images/tmp/megogo.png|
+ALL|Megogo HD|http://lg-app-hd.megogo.net|Images/tmp/megogohd.png|
+ALL|GPUpdate|http://gpupdate.24imedia.tv/lg/|Images/tmp/gpupdate.png|
+ALL|Informer|http://informer.ubr.ua/lg/|Images/tmp/informer.png|
+PRT|ZON|http://internettv.zon.pt|Images/tmp/zonpt.png|
+ALL|Bild DE|http://json.bild.de/tv/LG/|Images/tmp/bildde.png|
+KAZ,RUS|Kiwi|http://kiwi.kz/lgtv|Images/tmp/kiwikz.png|
+ALL|TengriNews|http://lgapp.tengrinews.kz|Images/tmp/tengrinews.png|
+UKR|ITop MIR TV|http://lg.itop.net/air-ui-4g|Images/tmp/itop.png|
+ALL|Meloman|http://lg.meloman.kz|Images/tmp/meloman.png|
+ALL|OLL TV|http://lg.oll.tv|Images/tmp/olltv.png|
+ALL|Pathe Thuis|http://lg.pathe-thuis.nl/|Images/tmp/pathethuis.png|
+ALL|Spox|http://lg.spox.stage.nettv.bitwerft.com|Images/tmp/spox.png|
+ALL|1 Internet|http://lgtv.1internet.tv|Images/tmp/1internet.png|
+LVA|Izzi|http://lgtv.izzi.lv|Images/tmp/izzi.png|
+ALL|Videa|http://lgtv.videa.hu|Images/tmp/videa.png|
+ALL|7sur7|http://lg.twcapps.com/7sur7/|Images/tmp/7sur7.png|
+BEL|De Morgen|http://lg.twcapps.com/demorgen/|Images/tmp/demorgen.png|
+ALL|HLN|http://lg.twcapps.com/hln/|Images/tmp/hln.png|
+BEL|NetLog|http://lg.twcapps.com/netlog/|Images/tmp/netlog.png|
+ALL|Cine Ala De Mande|http://lg.wiztivi.com/lg-cinealademande-frontend/dojoroot/app/pages/lg/index.jsp|Images/tmp/cinealademande.png|
+ALL|COM FM|http://lg.wiztivi.com/lg-comfm-frontend/dojoroot/app/pages/lg/index.jsp|Images/tmp/comfm.png|
+ALL|LEquipe|http://lg.wiztivi.com/lg-lequipe-frontend/|Images/tmp/lequipe.png|
+FRA|Univers Cine|http://lg.wiztivi.com/lg-universcine-frontend/|Images/tmp/universcine.png|
+ALL|Zatoo|http://lg.zattoo.com|Images/tmp/zatoo.png|
+RUS|Zoomby|http://lg.zoomby.ru/lg.pl|Images/tmp/zoomby.png|
+ALL|Meta|http://meta.ua/smarttv/lg/|Images/tmp/metaua.png|
+ALL|Meteo|http://meteo.dotscreen.com/2.0/lg.html?utm_source=LGE&amp;utm_medium=premium&amp;utm_campaign=V2|Images/tmp/meteo.png|
+ALL|Mon Quotidien|http://monquotidien.tv.dotscreen.com|Images/tmp/monquotidien.png|
+ALL|NOS|http://nos.24imedia.tv/lg|Images/tmp/nos.png|
+ALL|NUNA.tv|http://nuna.srv1.nrmmh.tv|Images/tmp/nunatv.png|
+ALL|SundayTV PE|http://pe.videostore-hlg.terra.com/LG/|Images/tmp/sundaytvpe.png|
+ALL|4 Play|http://portal.eu.ericssonmediafabric.com/TV4_LG/index_lg.html|Images/tmp/4play.png|
+ALL|Port CZ|http://port.cz/smarttv_lg_test|Images/tmp/portcz.png|
+ALL|Port RO|http://port.cz/smarttv_lg_test|Images/tmp/portro.png|
+ALL|Port SK|http://port.cz/smarttv_lg_test|Images/tmp/portsk.png|
+ALL|FilmoTV|https://lg2.filmotv.fr/|Images/tmp/filmotvfr.png|
+ALL|24TV|http://smarttv.24tv.ua/lg/|Images/tmp/24tvua.png|
+ALL|Kajgana|http://smarttv.kajgana.com/|Images/tmp/kajgana.png|
+ALL|Now RU|http://smarttv.now.ru|Images/tmp/nowru.png|
+ALL|SmulWeb|http://smulweb.24imedia.tv/lg|Images/tmp/smulweb.png|
+ALL|SpoBox|http://spobox.srv1.nrmmh.tv|Images/tmp/spobox.png|
+ALL|DigitalContertHall|http://tv.digitalconcerthall.com/lg|Images/tmp/digitalconcerthall.png|
+LTU|SS.LT|http://tv.ss.lt|Images/tmp/sslt.png|
+LVA|SS.LV|http://tv.ss.lv/|Images/tmp/sslv.png|
+ALL|Vatager|http://vantager.ru/?user=AT.LT-LG.TV|Images/tmp/vantager.png|
+ALL|CTC|http://videomore.ru/lg/ctc/index.html|Images/tmp/ctc.png|
+ALL|Dom|http://videomore.ru/lg/dom/index.html|Images/tmp/dom.png|
+ALL|Peterz|http://videomore.ru/lg/peretz/index.html|Images/tmp/peterz.png|
+ALL|Videomore|http://videomore.ru/lg/videomore/index.html|Images/tmp/videomore.png|
+ALL|IVI Music|http://vitrinalg.music.ivi.ru|Images/tmp/ivimusic.png|
+GBR,ALL|LoveFilm|http://watchnow.lovefilm.com/lg|Images/tmp/lovefilm.png|
+AUT|Laola1 TV|http://webat3.laola1.at/LG_tv/dev|Images/tmp/laola1tv.png|
+FRA|France TV|http://webservices.francetelevisions.fr/tvconnect/appli_lg/hub/index_lg.html|Images/tmp/francetv.png|
+RUS|Divan TV|http://wr.divan.tv/|Images/tmp/divantv.png|
+ITA|Corriere|http://www.corriere.it/testNetTv/index.xhtml|Images/tmp/corriere.png|
+EST|Delfi EE|http://www.delfi.ee/lg/|Images/tmp/delfiee.png|
+LTU|Delfi LT|http://www.delfi.lt/lg/|Images/tmp/delfilt.png|
+LVA|Delfi LV|http://www.delfi.lv/lg/|Images/tmp/delfilv.png|
+ALL|DVD-Forum AT|http://www.dvd-forum.at/lg|Images/tmp/dvdforumat.png|
+ALL|EuroNews|http://www.euronews.com/_partners/lg/lg.html|Images/tmp/euronews.png|
+ALL|HBO GO HU|http://www.hbogo.hu/lgnew|Images/tmp/hbogohu.png|
+ALL|HBO GO PL|http://www.hbogo.pl/lg|Images/tmp/hbogopl.png|
+ALL|KTK KZ|http://www.ktk.kz/smarttv/lg|Images/tmp/ktkkz.png|
+ALL|LG App Store|http://www.lgappstv.com/appspc/eic_comming_soon.html|Images/tmp/lgappstv.png|
+ALL|Live Sport TV|http://www.performgroup.com/ptvFlash/lg/livesporttv/index_1654_091111.html|Images/tmp/livesporttv.png|
+DEU|Live Sport TV DE|http://www.performgroup.com/ptvFlash/lg/livesporttv/index_de.html|Images/tmp/livesporttvde.png|
+SPA|Live Sport TV ES|http://www.performgroup.com/ptvFlash/lg/livesporttv/index_es.html|Images/tmp/livesporttves.png|
+FRA|Live Sport TV FR|http://www.performgroup.com/ptvFlash/lg/livesporttv/index_fr.html|Images/tmp/livesporttvfr.png|
+ITA|Live Sport TV IT|http://www.performgroup.com/ptvFlash/lg/livesporttv/index_it.html|Images/tmp/livesporttvit.png|
+ALL|Museum Purescreens HD|http://www.purescreens.com/EXTERNAL/lg/index.html|Images/tmp/museumpurescreenshd.png|
+ALL|Relevant|http://www.relevant.at|Images/tmp/relevant.png|
+ALL|Shopping Plus|http://www.shoppingplus.lv/smart_tv/|Images/tmp/shoppingplus.png|
+ALL|Vantager|http://www.vantager.ru/?user=TV.NET|Images/tmp/vantager.png|
+ALL|Index|http://xl.index.hu/ujcimlap|Images/tmp/indexhu.png|
+ALL|JetStyle|http://ya-web.jetstyle.ru/lg|Images/tmp/jetstyleru.png|
