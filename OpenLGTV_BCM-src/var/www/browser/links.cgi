@@ -201,9 +201,11 @@ document.defaultAction = true;
     id=1
     head=1000
     tail=1000
+    links_file=/var/www/browser/links.csv
+    [ -f "/mnt/user/etc/lang" ] && lang="`cat /mnt/user/etc/lang`" || lang=NONE
     [ "$GET_page" != "" ] && export head="$(($col*$row*$GET_page))" && export tail="$(($col*$row))"
     SIFS="$IFS" IFS=$'\n'
-    for item in `grep -v "^#" /var/www/browser/links.csv | head -n "$head" | tail -n "$tail"`
+    for item in `( grep "^[^#|]*$lang[^|]*|" "$links_file"; grep "^[^#|]*ALL[^|]*|" "$links_file"; egrep -v "^#|^[^\|]*$|^[^#\|]*$lang[^\|]*\||^[^#\|]*ALL[^\|]*\|" "$links_file" ) | head -n "$head" | tail -n "$tail"`
     do
 	it_lang="${item%%|*}" item="${item#*|}"
 	it_name="${item%%|*}" item="${item#*|}"
