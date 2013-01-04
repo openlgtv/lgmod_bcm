@@ -11,23 +11,25 @@ scriptname="`basename $0`"
 [ -z "$mtd_nvram" ] && mtd_nvram="`grep -m 1 \"nvram\" /proc/mtd | sed -e 's/mtd\(..\):.*/\1/g'`"
 F=nvram; FX="/home/backup"; FF="${FX}/${F}"
 { for f in $FF; do
+	iecho "Reading NVRAM..."
 	h=$(hexdump -n64 -e'"%_c"' /dev/mtd${mtd_nvram})
-	[ "$h" = $'377*' ] && { wecho "backup: empty"; break; }
+	[ "$h" = $'377*' ] && { wecho "NVRAM backup is empty, skipping configuration"; break; }
 	cat /dev/mtd$mtd_nvram > /tmp/${F}
 	#f=$f.gz; [ -f $f ] && continue; # TODO: force new backup if different
 	[ -d "${FX}" ] || mkdir -p "${FX}"
-	f=$f.gz; [ -f $f -a "$uver" = "$ver" ] && break;
+	f=$f.gz
+	#[ -f $f -a "$uver" = "$ver" ] && break;
 	cmn=/mnt/lg/cmn_data; usr=/mnt/user; tF=/tmp/${F}
 	h=$(hexdump -vs1330 -n13 -e'"%_p"' $tF)
-	touch "$cmn/model.${h%%.*}"  "$usr/model.${h%%.*}";  # expose model name
+	# TODO: update info.sh for model and serial when it will get changed here
+	[ -f "$cmn/model.${h%%.*}" -a -f "$usr/model.${h%%.*}" ] || touch "$cmn/model.${h%%.*}"  "$usr/model.${h%%.*}";  # expose model name
 	h=$(hexdump -vs674 -n16 -e'"%_p"' $tF)
-	touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # serial
+	[ -f "$cmn/serial.${h%%.*}" -a -f "$usr/serial.${h%%.*}" ] || touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # serial
 	h=$(hexdump -vs1712 -n3 -e'"%_p"' $tF)
 	h="${h:2:1}${h:1:1}${h:0:1}"
-	touch "$cmn/lang.${h%%.*}" "$usr/lang.${h%%.*}";     # and lang
+	[ -z "`grep "${h%%.*}" "$usr/etc/lang" 2>/dev/null`" ] && echo "${h%%.*}" > "$usr/etc/lang";     # and lang
 	[ -f $f ] && break;
-	iecho "backup: $f"
-	cat /tmp/$F | gzip -1 > $f; sync; break
+	iecho "Making NVRAM backup: $f"; cat /tmp/$F | gzip -1 > $f; sync; break;
 done; }
 # >/dev/kmsg 2>&1
 
