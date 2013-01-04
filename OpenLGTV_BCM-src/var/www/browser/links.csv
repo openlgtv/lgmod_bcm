@@ -90,9 +90,11 @@ SPA|TV3|http://www.tv3.cat/iptv/lg/index.html|Images/tmp/tv3.png|
 SPA|Wuaki|http://lgtv.wuaki.tv|Images/tmp/wuaki.png|
 SPA|RedKaraoke|http://www.redkaraoke.es/tv/lg|Images/tmp/redkaraoke.png|
 POL|Ipla|http://tv.ipla.pl/lg/|Images/tmp/iplapl.png|
-POL|Ipla|http://tv.ipla.pl/lgtvdrm/|Images/tmp/iplapl.png|
-POL|Ipla|http://tv.ipla.pl/lgtvdrm/index.php?project=2|Images/tmp/iplapl.png|
-POL|Ipla|http://tv.ipla.pl/lgtvdrm/index.php?project=3|Images/tmp/iplapl.png|
+#POL|Ipla|http://tv.ipla.pl/lgtvdrm/|Images/tmp/iplapl.png|
+#Ipla Film
+#POL|Ipla|http://tv.ipla.pl/lgtvdrm/index.php?project=2|Images/tmp/iplapl.png|
+#Ipla Sport
+#POL|Ipla|http://tv.ipla.pl/lgtvdrm/index.php?project=3|Images/tmp/iplapl.png|
 POL|Allegro|http://tv.allegro.pl/|Images/tmp/allegro.png|
 SPA|Info Meteo|http://lge.infometeo.es/|Images/tmp/infometeo.png|
 ALL|The Scynthians|http://www.thescythians.com/netcast|Images/tmp/thescythians.png|
@@ -231,7 +233,7 @@ VNM|VNexpress|http://lgtv.vnexpress.net|Images/tmp/vnexpress.png|
 GBR,ALL|IT News|http://itn.itv2.xooz.de|Images/tmp/itnnews.png|
 SGP,PHL,ALL|CNBC|http://www.cnbcasia.com/NetcastTV|Images/tmp/cnbc.png|
 ALL|CPN|http://www.cpn.com.hk/video/LG_List.asp|Images/tmp/cpn.png|
-POL|Ipla PL|http://tv.ipla.pl/lg-preview/|Images/tmp/iplapl.png|
+#POL|Ipla PL|http://tv.ipla.pl/lg-preview/|Images/tmp/iplapl.png|
 ALL|AccuWeather|http://lgtv.accu-weather.com/lg/tv2/default.aspx|Images/tmp/accuweather.png|
 FRA|Orange FR|http://connectedtv-1870b.orange.fr|Images/tmp/orange.png|
 ALL|MAJOR CINEPLEX|http://www.majorcineplex.com/lgsmarttv/templates/|Images/tmp/majorcineplex.png|
