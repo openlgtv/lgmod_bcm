@@ -84,9 +84,10 @@ function GoToNetCastLinks()
 	<?
 		if [ -n "`pgrep -f run3556-proxy`" -a "$HTTP_HOST" = "127.0.0.1:88" ]
 		then
-		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.html&run=Run&qUser=&qPassw=';"
+		    # TODO: add ?page=1 to links.cgi, but encoded
+		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.cgi&run=Run&qUser=&qPassw=';"
 		else
-		    echo "window.location='links.html';"
+		    echo "window.location='links.html?page=1';"
 		fi
 	?>
 	}
@@ -162,7 +163,7 @@ function check(e)
 		else if (key==457|key==413) 
 			{
 			//the INFO or STOP button on the remote control have been pressed
-			//window.location='links.html';
+			//window.location='links.cgi?page=1';
 			GoToNetCastLinks();
 			}
 		else if (key==461) 
