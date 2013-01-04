@@ -5,10 +5,14 @@
 
 # TODO: limit space? more actions?
 
-MODEL=`echo /mnt/lg/user/model.*`
-SERIAL=`echo /mnt/lg/user/serial.*`
-[ -f "$MODEL"  ] && MODEL="${MODEL#*model.}"    || MODEL=''
-[ -f "$SERIAL" ] && SERIAL="${SERIAL#*serial.}" || SERIAL=''
+MODEL_NEW=/mnt/user/etc/model
+SERIAL_NEW=/mnt/user/etc/serial
+MODEL_OLD=`echo /mnt/lg/user/model.*`
+SERIAL_OLD=`echo /mnt/lg/user/serial.*`
+[ -z "$MODEL"  -a -f "$MODEL_NEW" ] && MODEL="`cat "$MODEL_NEW"`"
+[ -z "$SERIAL" -a -f "$SERIAL_NEW" ] && SERIAL="`cat "$SERIAL_NEW"`"
+[ -z "$MODEL"  ] && [ -f "$MODEL_OLD"  ] && MODEL="${MODEL_OLD#*model.}"
+[ -z "$SERIAL" ] && [ -f "$SERIAL_OLD" ] && SERIAL="${SERIAL_OLD#*serial.}"
 export tftproot=/tmp/tftproot
 tdir="$SERIAL"
 [ -z "$tdir"   ] && tdir="$MODEL"

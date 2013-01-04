@@ -1,7 +1,7 @@
 #!/bin/sh
 # Source code released under GPL License
 # rcS for Saturn7 by mmm4m5m
-# modified for OpenLGTV BCM by xeros
+# modified for OpenLGTV BCM as rc.nvram by xeros
 
 iecho(){ echo "OpenLGTV_BCM-INFO: ${scriptname}: $*"; } # TODO: add such functions for INFO, ERROR, WARNING to upper level scripts
 wecho(){ echo "OpenLGTV_BCM-WARN: ${scriptname}: $*"; }
@@ -17,19 +17,20 @@ F=nvram; FX="/home/backup"; FF="${FX}/${F}"
 	cat /dev/mtd$mtd_nvram > /tmp/${F}
 	#f=$f.gz; [ -f $f ] && continue; # TODO: force new backup if different
 	[ -d "${FX}" ] || mkdir -p "${FX}"
-	f=$f.gz
+	f="$f.gz"
 	#[ -f $f -a "$uver" = "$ver" ] && break;
 	cmn=/mnt/lg/cmn_data; usr=/mnt/user; tF=/tmp/${F}
 	h=$(hexdump -vs1330 -n13 -e'"%_p"' $tF)
-	# TODO: update info.sh for model and serial when it will get changed here
 	[ -f "$cmn/model.${h%%.*}" -a -f "$usr/model.${h%%.*}" ] || touch "$cmn/model.${h%%.*}"  "$usr/model.${h%%.*}";  # expose model name
+	[ -z "`grep "${h%%.*}" "$usr/etc/model" 2>/dev/null`"  ] && echo "${h%%.*}" > "$usr/etc/model";
 	h=$(hexdump -vs674 -n16 -e'"%_p"' $tF)
-	[ -f "$cmn/serial.${h%%.*}" -a -f "$usr/serial.${h%%.*}" ] || touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # serial
+	#[ -f "$cmn/serial.${h%%.*}" -a -f "$usr/serial.${h%%.*}" ] || touch "$cmn/serial.${h%%.*}" "$usr/serial.${h%%.*}"; # serial
+	[ -z "`grep "${h%%.*}" "$usr/etc/serial" 2>/dev/null`" ] && echo "${h%%.*}" > "$usr/etc/serial"; # serial
 	h=$(hexdump -vs1712 -n3 -e'"%_p"' $tF)
 	h="${h:2:1}${h:1:1}${h:0:1}"
-	[ -z "`grep "${h%%.*}" "$usr/etc/lang" 2>/dev/null`" ] && echo "${h%%.*}" > "$usr/etc/lang";     # and lang
-	[ -f $f ] && break;
-	iecho "Making NVRAM backup: $f"; cat /tmp/$F | gzip -1 > $f; sync; break;
+	[ -z "`grep "${h%%.*}" "$usr/etc/lang" 2>/dev/null`"   ] && echo "${h%%.*}" > "$usr/etc/lang";     # and lang
+	[ -f "$f" ] && break;
+	iecho "Making NVRAM backup: $f"; cat "/tmp/$F" | gzip -1 > "$f"; sync; break;
 done; }
 # >/dev/kmsg 2>&1
 
