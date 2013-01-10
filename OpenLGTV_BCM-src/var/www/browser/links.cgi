@@ -211,6 +211,9 @@ document.defaultAction = true;
 	it_name="${item%%|*}" item="${item#*|}"
 	it_url="${item%%|*}"  item="${item#*|}"
 	it_icon="${item%%|*}" item="${item#*|}"
+	it_icon_f="${it_icon##*/}"
+	# TODO: make icons download url switchable between stable and trunk versions
+	[ ! -f "/var/www/browser/$it_icon" ] && wget -q "http://svn.openlgtv.org.ru/OpenLGTV_BCM/trunk/addons/images/www/icons/$it_icon_f" -O "/var/www/browser/$it_icon"
 	it_overlay="${item%%|*}"
 	[ "$it_overlay" != "" ] && it_icon="$it_overlay\" style=\"background:url($it_icon)"
 	#echo "$it_lang $it_name $it_url $it_icon $it_overlay"
