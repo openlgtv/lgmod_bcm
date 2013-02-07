@@ -202,10 +202,15 @@ document.defaultAction = true;
     head=1000
     tail=1000
     links_file=/var/www/browser/links.csv
+    custom_links_file=/mnt/user/www/links.csv
     [ -f "/mnt/user/etc/lang" ] && lang="`cat /mnt/user/etc/lang`" || lang=NONE
     [ "$GET_page" != "" ] && export head="$(($col*$row*$GET_page))" && export tail="$(($col*$row))"
     SIFS="$IFS" IFS=$'\n'
-    for item in `( grep "^[^#|]*$lang[^|]*|" "$links_file"; grep "^[^#|]*ALL[^|]*|" "$links_file"; egrep -v "^#|^[^\|]*$|^[^#\|]*$lang[^\|]*\||^[^#\|]*ALL[^\|]*\|" "$links_file" ) | head -n "$head" | tail -n "$tail"`
+    for item in `( [ -f "$custom_links_file" ] && egrep -v "^#|^$" "$custom_links_file ; \
+			grep "^[^#|]*$lang[^|]*|" "$links_file"; \
+			grep "^[^#|]*ALL[^|]*|" "$links_file"; \
+			egrep -v "^#|^[^\|]*$|^[^#\|]*$lang[^\|]*\||^[^#\|]*ALL[^\|]*\|" "$links_file" ) | \
+	head -n "$head" | tail -n "$tail"`
     do
 	it_lang="${item%%|*}" item="${item#*|}"
 	it_name="${item%%|*}" item="${item#*|}"
