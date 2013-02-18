@@ -13,19 +13,35 @@ then
 fi
 
 #[ "`pgrep -f imdb.sh | wc -w`" -ge "2" ] && echo "ALREADY RUNNING" && exit 2
-[ -z "$1" ] && echo "Usage: $0 /path/to/movie_file_name.mkv [outdir=info_image_dir] [lang=en]" && exit 1
+[ -z "$1" ] && echo "Usage: $0 /path/to/movie_file_name.mkv [outdir=info_image_dir] [lang=en] [source=imdb]" && exit 1
 outdir1=`dirname "$1"`
 filename=`basename "$1"`
 [ -f "/mnt/user/cfg/lang" ] && lang="&lang=`cat /mnt/user/cfg/lang`"
+[ -f "/mnt/user/cfg/movieinfo_provider" ] && provider="&source=`cat /mnt/user/cfg/movieinfo_provider`"
+
+#Variables (taken from http://playon.unixstorm.org/imdb.php):
+#- lang: 'de', 'es', 'fr', 'it', 'pl'
+#- source: 'screenrush', 'filmstarts', 'sensacine', 'beyazperde', 'allocine', 'tmdb'
+#          (by default IMDB is being used, but currently forced to screenrush because of problems with IMDB API)
+
+#English: screenrush.co.uk
+#French:  allocine.fr
+#German:  filmstarts.de
+#Spanish: sensacine.com
+#Turkish: beyazperde.com
 
 # command line
 argc=0
 for argv in "$@"
 do
-    [ "${argv#outdir=}" != "$argv" ] && outdir="${argv#outdir=}"
-    [ "${argv#lang=}"   != "$argv" ] && lang="&lang=${argv#lang=}"
+    [ "${argv#outdir=}"   != "$argv" ] && outdir="${argv#outdir=}"
+    [ "${argv#lang=}"     != "$argv" ] && lang="&lang=${argv#lang=}"
+    [ "${argv#provider=}" != "$argv" ] && provider="&source=${argv#provider=}"
     argc=$(($argc+1))
 done
+
+# TODO: force screenrush instead of IMDB if nothing else was choosen (workaround for IMDB problems)
+[ -z "$provider" ] && provider="&source=screenrush"
 
 [ -n "$outdir1" -a -n "$outdir" -a "${outdir:0:1}" != "/" ] && outdir="${outdir1}/${outdir}"
 [ -z "$outdir" ] && outdir="$outdir1"
@@ -143,7 +159,7 @@ do
     name="${name:2}"
     #url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=yes${lang}&name=${name}"
     #url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=y&box=dvd&font=tahoma&genres=y&post=y&tagline=y&time=hours${lang}&name=${name}"
-    url="http://playon.unixstorm.org/IMDB/movie_beta.php?source=screenrush&mode=sheet&backdrop=y&box=dvd&font=tahoma&genres=y&post=y&tagline=y&time=hours${lang}&name=${name}"
+    url="http://playon.unixstorm.org/IMDB/movie_beta.php?source=screenrush&mode=sheet&backdrop=y&box=dvd&font=tahoma&genres=y&post=y&tagline=y&time=hours${lang}${provider}&name=${name}"
     #echo "URL: $url"
     wget -q "$url" -O "${outdir}/${filename}.jpg"
     size=`stat -c '%s' "${outdir}/${filename}.jpg" 2>/dev/null || echo 0`
