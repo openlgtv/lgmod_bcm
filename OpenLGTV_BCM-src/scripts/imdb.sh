@@ -142,7 +142,8 @@ for name in ${try//-/+}
 do
     name="${name:2}"
     #url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=yes${lang}&name=${name}"
-    url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=y&box=dvd&font=tahoma&genres=y&post=y&tagline=y&time=hours${lang}&name=${name}"
+    #url="http://playon.unixstorm.org/IMDB/movie.php?mode=sheet&backdrop=y&box=dvd&font=tahoma&genres=y&post=y&tagline=y&time=hours${lang}&name=${name}"
+    url="http://playon.unixstorm.org/IMDB/movie_beta.php?source=screenrush&mode=sheet&backdrop=y&box=dvd&font=tahoma&genres=y&post=y&tagline=y&time=hours${lang}&name=${name}"
     #echo "URL: $url"
     wget -q "$url" -O "${outdir}/${filename}.jpg"
     size=`stat -c '%s' "${outdir}/${filename}.jpg" 2>/dev/null || echo 0`
