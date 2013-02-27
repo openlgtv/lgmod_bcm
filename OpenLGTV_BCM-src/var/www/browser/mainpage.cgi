@@ -60,7 +60,8 @@ function CreateBookmark() {
 		{ 
 		if (Bookmark['a' + i].Address.length != 0) 
 			{ 
-			var imageSrc = "http://open.thumbshots.org/image.aspx?url=" + Bookmark['a' + i].Address;
+			//var imageSrc = "http://open.thumbshots.org/image.aspx?url=" + Bookmark['a' + i].Address;
+			var imageSrc = "http://images.thumbshots.com/image.aspx?cid=MOhxVQYY%2fd8%3d&v=1&w=150&url=" + Bookmark['a' + i].Address;
 			// TODO: try to get rid of few document.getElementById() method calls
 			document.getElementById('img' + i).src = imageSrc;
 			var linkURL = Bookmark['a' + i].Address;
