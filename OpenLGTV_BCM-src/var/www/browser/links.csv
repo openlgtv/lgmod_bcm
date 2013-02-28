@@ -17,7 +17,7 @@
 #KR: KOR KR7
 
 ALL|YouTube in TV|http://www.youtube.com/leanbacklite|Images/tmp/youtube.png|
-#POL|WebPlayer|http://playon.unixstorm.org/webplayer/|Images/tmp/webplayer.png|
+POL|WebPlayer|http://playon.unixstorm.org/webplayer/|Images/tmp/webplayer.png|
 POL|Ipla Alternative|../vod/ipla.cgi|Images/tmp/iplapl.png|
 POL|TVP.PL Alternative|../vod/tvp.cgi|Images/tmp/tvppl.png|
 POL|TVNPlayer.pl Alternative|../vod/rss.cgi?type=text/xml&col=4&url=http://playon.unixstorm.org/PLIMS/tvn.php|Images/tmp/tvnpl.png|
@@ -265,8 +265,8 @@ DEU|MySpass|http://lg.hybridtv.myspass.de/lg/|Images/tmp/myspass.png|
 #
 ALL|Canal Play|http://canal.wiztivi.com/lg-canalpluscplay-frontend/dojoroot/app/pages/lg/index.jsp?lang=fr|Images/tmp/canalplay.png|
 ALL|NOS|http://connectedtvcms.nos.nl/connected-tv/lg_europe/index.html|Images/tmp/nos.png|
-ALL|Cubo Musica|http://device.cubovision.it/client/ctv/cubomusica/lg/|Images/tmp/cubomusica.png|
-ALL|Deagostini|http://dws.deagostini.it/3p/prj/lgtv/|Images/tmp/deagostini.png|
+ITA,ALL|Cubo Musica|http://device.cubovision.it/client/ctv/cubomusica/lg/|Images/tmp/cubomusica.png|
+ITA|Deagostini|http://dws.deagostini.it/3p/prj/lgtv/|Images/tmp/deagostini.png|
 ALL|EXH|http://exh.lg.rutv.ru|Images/tmp/exh.png|
 ALL|FDJ|http://fdj.wiztivi.com/default-fdj-frontend|Images/tmp/fdj.png|
 ALL|Megogo|http://files.megogo.net/lg/pages/home.html|Images/tmp/megogo.png|
