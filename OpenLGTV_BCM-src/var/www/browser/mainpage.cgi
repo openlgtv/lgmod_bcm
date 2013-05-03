@@ -88,7 +88,7 @@ function GoToNetCastLinks()
 		    # TODO: add ?page=1 to links.cgi, but encoded
 		    echo "window.location='http://$HTTP_HOST/home.cgi?qURL=/mnt/browser/run3556+http://$HTTP_HOST/browser/links.cgi&run=Run&qUser=&qPassw=';"
 		else
-		    echo "window.location='links.html?page=1';"
+		    echo "window.location='links.cgi?page=1';"
 		fi
 	?>
 	}

@@ -186,7 +186,8 @@ else
 	    item_nr=$(($item_nr+1))
 	done
     else
-	    for content in `egrep -i '\"date\"|\"video|\"thumb|\"url\"|\"title\"|\{|\}' $log_file | sed -e 's/: {//g' -e 's/},//g' | tr '\n' ' ' | tr '{}' '\n' | egrep -i "/movies/|/category/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's#http://#http//#g'`
+	    #for content in `egrep -i '\"date\"|\"video|\"thumb|\"url\"|\"title\"|\{|\}' $log_file | sed -e 's/: {//g' -e 's/},//g' | tr '\n' ' ' | tr '{}' '\n' | egrep -i "/movies/|/category/" | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's#http://#http//#g'`
+	    for content in `egrep -i '\"date\"|\"video|\"thumb|\"url\"|\"title\"|\{|\}' $log_file | sed -e 's/: {//g' -e 's/},//g' | tr '\n' ' ' | sed 's/\("date":\)/\n\1/g' | sed -e 's/  */ /g' -e 's/\" /\"/g' -e 's/ \"/\"/g' -e 's/ /\#\#/g' -e 's#http://#http//#g' | grep '"thumb'`
 	    do
 		echo "$content" >> /tmp/content.log
 		contentDate="${content#*\"date\":\"}"

@@ -23,7 +23,7 @@ content-type: text/html
 
 <?
     export col=6
-    //export row=6
+    #export row=6
     export row=8
     export max_pages=6 # 6*8*6=288
 
