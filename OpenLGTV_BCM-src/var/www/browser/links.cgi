@@ -206,7 +206,7 @@ document.defaultAction = true;
     [ -f "/mnt/user/etc/lang" ] && lang="`cat /mnt/user/etc/lang`" || lang=NONE
     [ "$GET_page" != "" ] && export head="$(($col*$row*$GET_page))" && export tail="$(($col*$row))"
     SIFS="$IFS" IFS=$'\n'
-    for item in `( [ -f "$custom_links_file" ] && egrep -v "^#|^$" "$custom_links_file ; \
+    for item in `( [ -f "$custom_links_file" ] && egrep -v "^#|^$" "$custom_links_file" ; \
 			grep "^[^#|]*$lang[^|]*|" "$links_file"; \
 			grep "^[^#|]*ALL[^|]*|" "$links_file"; \
 			egrep -v "^#|^[^\|]*$|^[^#\|]*$lang[^\|]*\||^[^#\|]*ALL[^\|]*\|" "$links_file" ) | \
