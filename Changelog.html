@@ -24,7 +24,6 @@ TODO (not everything to be done for 0.5.0):
     * FileManager: add subtitles loading and audio tracks change possibility in played videos (?)
     * FileManager: add check mark to select multiple files/dirs and handle that in copy/move/delete/play (?)
     * FileManager: add command line or command window (?)
-    * rewrite of links.html as CGI to load links from separate CSV files and sort dependency on selected country/language
     * option in settings to choose links.html from remote server or local file
     * another Remote Control rewrite? - most likely as CGI to generate buttons on the fly + button for switching actions
     * add support for 'SmartTV-addon' packages
@@ -38,7 +37,7 @@ TODO (not everything to be done for 0.5.0):
     * compile gpgme, add public key, prepare some useful (signed) packages (any propositions?) in repository and disable OpenWRT repository by default
     * package repository outside of SVN tree
     * storage for Yahoo Widgets in some NAND flash partitions? some backup partitions?
-    * bring back real e2fsck to rootfs?
+    * bring back real e2fsck to rootfs? (it is currently on extroot and just a dummy on rootfs)
     * upgrade uClibc?
     * ?
 
@@ -65,6 +64,7 @@ TODO (not everything to be done for 0.5.0):
     * UPDATE: list of rejected IP addresses
     * CHANGE: support for versioned ywe*.tar.gz files instead ywe.tar.gz filename only, with support for ywedata.tar.gz archives
     * CHANGE: Remote Control web page rewriten by dbunic
+    * CHANGE: rewrite of links.html as CGI to load links from separate CSV files and sort dependency on selected country/language
 
 0.5.0-rc1 [2012.05.09]:
     * FIX: FileManager: copy/move/erase actions when mouse was used for file/dir navigation
