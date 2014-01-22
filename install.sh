@@ -53,6 +53,8 @@ do
     argc=$(($argc+1))
 done
 
+[ ! -e "/etc/ver" ] && echo "ERROR: Supported LG TV was not detected!" && exit 1
+
 if [ "$chrooted" != "1" ]
 then
     dir=`dirname $0`
@@ -169,7 +171,7 @@ then
     fi
 fi
 
-echo "OpenLGTV BCM 0.5.0-SVN20130503 installation script for $platform platform by xeros" | tee -a $log
+echo "OpenLGTV BCM 0.5.0-SVN20140122 installation script for $platform platform by xeros" | tee -a $log
 
 ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 sleep 1

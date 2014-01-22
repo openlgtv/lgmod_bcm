@@ -50,6 +50,7 @@ rm -f $ofile2011.sqf $ofile2011.md5 $ofile2011.sha1 $ofile2011.zip
 mksquashfs squashfs-root-2011 $ofile2011.sqf $squashfs2011_opts
 osize=`wc -c $ofile.sqf | awk '{print $1}'`
 osize2011=`wc -c $ofile2011.sqf | awk '{print $1}'`
+q=""
 if [ "$osize" -gt "$size" ]
 then
     echo "ERROR: Partition image for GP2B is too big for flashing by $(($osize-$size)) bytes."
@@ -63,10 +64,13 @@ else
 	for i in `seq $abytes`
 	do
 	    printf '\xff' >> $ofile.sqf
+	    [ "$(($i%1024))" = 0 ] && q="${q}." && echo -n -e "\r[$(($i*100/$abytes))%] $q"
 	done
+	echo
     fi
     echo "OpenLGTV BCM installation package for GP2B is generated"
 fi
+q=""
 if [ "$osize2011" -gt "$size2011" ]
 then
     echo "ERROR: Partition image for GP3B is too big for flashing by $(($osize2011-$size2011)) bytes."
@@ -80,6 +84,7 @@ else
 	for i in `seq $abytes`
 	do
 	    printf '\xff' >> $ofile2011.sqf
+	    [ "$(($i%1024))" = 0 ] && q="${q}." && echo -n -e "\r[$(($i*100/$abytes))%] $q"
 	done
     fi
     echo "OpenLGTV BCM installation package for GP3B is generated"
