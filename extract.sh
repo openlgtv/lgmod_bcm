@@ -1,9 +1,9 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-SVN20130503 installation script v.1.99 by xeros
+# OpenLGTV BCM 0.5.0-SVN20140122 installation script v.1.99.1 by xeros
 # Based on extract.sh code from LGMOD S7 by mmm4m5m
 # Source code released under GPL License
 
-SKIP_LINES=111
+SKIP_LINES=117
 
 echo "[ OpenLGTV BCM installer by xeros ]"
 
@@ -32,6 +32,12 @@ export base="/tmp/${basef%.tar.sh}"
 export file_sqf="${basef%.tar.sh}.sqf"
 #export separator="----------------------------------------------------------------"
 export separator="------------------------------------------------------------------------------"
+
+[ ! -e "/proc/mounts" ] && echo "OpenLGTV BCM installer: main system mounts..." && mount -t proc /proc && echo
+[ -z "`grep sysfs /proc/mounts`"  ] && mount -t sysfs sysfs /sys
+[ -z "`grep usbfs /proc/mounts`"  ] && mount -t usbfs usbfs /proc/bus/usb
+[ -z "`grep devpts /proc/mounts`" ] && mount -t devpts devpts /dev/pts
+[ -z "`grep /tmp /proc/mounts`"   ] && mount -t ramfs tmp /tmp
 
 [ -d "$base" ] && rm -rf $base
 

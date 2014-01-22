@@ -14,9 +14,14 @@ then
 	country_model=US
 	platform=GP2B
     else
-	echo "OpenLGTV_BCM-INFO: setting country_model to KR - recognised Korean 2010 BCM BCM3549 (GP2B) model"
-	country_model=KR
-	platform=GP2B
+	if [ -n "`grep -m 1 \"^mtd10.*fsidata\" /proc/mtd`" ]
+	then
+	else
+	    echo "OpenLGTV_BCM-INFO: setting country_model to JA - recognised Japan 2010 BCM BCM3549 (GP2B) model"
+	    # TODO: support for JAPAN ???
+	    country_model=JA
+	    platform=GP2B
+	fi
     fi
 else
     if [ "$mtd_count" -gt "49" ]

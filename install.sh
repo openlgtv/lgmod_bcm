@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-SVN20130503 installation script v.1.99 by xeros
+# OpenLGTV BCM 0.5.0-SVN20140122 installation script v.1.99.1 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -28,8 +28,9 @@ installer="$0"
 # forced rebooting option disabled for manual upgrade/installations
 #rebooting=0
 
-ver=0.5.0-SVN20130503
+ver=0.5.0-SVN20140122
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
+supported_rootfs_ver_japan="V1.00.51 Jul 15 2010"   # TODO TODO TODO
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
 development=1
 
@@ -114,6 +115,12 @@ rootfs_bck="/home/backup/rootfs.bck"
 
 # variable should be initiated by extract.sh before chrooting
 [ "$chrooted" != "1" ] && ver_installed=`cat /etc/ver2 2>/dev/null`
+
+[ ! -e "/proc/mounts" ] && echo "OpenLGTV BCM installer: main system mounts..." && mount -t proc /proc && echo
+[ -z "`grep sysfs /proc/mounts`"  ] && mount -t sysfs sysfs /sys
+[ -z "`grep usbfs /proc/mounts`"  ] && mount -t usbfs usbfs /proc/bus/usb
+[ -z "`grep devpts /proc/mounts`" ] && mount -t devpts devpts /dev/pts
+[ -z "`grep /tmp /proc/mounts`"   ] && mount -t ramfs tmp /tmp
 
 if [ -f "/tmp/usbdir" ]
 then
@@ -368,12 +375,27 @@ fi
 [ -n "$info" ] && /scripts/info.sh $info_arg $infolog
 
 # Safety checks for supported rootfs version and partitions numbers
-if [ "$current_rootfs_ver" != "$supported_rootfs_ver" ]
+if [ "$current_rootfs_ver" = "$supported_rootfs_ver_japan" ]
 then
-    echo "ERROR: found NOT SUPPORTED yet TV model (unknown rootfs version)!" | tee -a $log
-    echo "Please give firmware dump to OpenLGTV BCM devs to make support for yours TV" | tee -a $log
-    echo "OpenLGTV BCM is not installed and no changes have been made to yours TV" | tee -a $log
-    exit 1
+    echo "   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING" | tee -a $log
+    echo "      OpenLGTV BCM was completely NOT TESTED with this TV model" | tee -a $log
+    echo "      Support for this firmware type is completely EXPERIMENTAL" | tee -a $log
+    echo "Are you ABSOLUTELY SURE that you want to install it on your TV? (YES/NO)" | tee -a $log
+    answer=NO
+    read answer
+    if [ "$answer" != "YES" ]
+    then
+        echo "OK, not flashing" | tee -a $log
+        exit 1
+    fi
+else
+    if [ "$current_rootfs_ver" != "$supported_rootfs_ver" ]
+    then
+	echo "ERROR: found NOT SUPPORTED yet TV model (unknown rootfs version)!" | tee -a $log
+	echo "Please give firmware dump to OpenLGTV BCM devs to make support for yours TV" | tee -a $log
+	echo "OpenLGTV BCM is not installed and no changes have been made to yours TV" | tee -a $log
+	exit 1
+    fi
 fi
 if [ -z "`cat /proc/mtd | grep ^mtd$mtd_rootfs: | grep rootfs`" ]
 then

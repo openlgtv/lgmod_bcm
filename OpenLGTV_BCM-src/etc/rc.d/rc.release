@@ -6,6 +6,9 @@
 olockfile="/mnt/user/lock/openrelease-try.lock"
 olockfile_prepare="/mnt/user/lock/openrelease-try-prepare.lock"
 
+RELEASE="/lg/lgapp/RELEASE"
+JA_RELEASE="/mnt/apl/bin/dtv.bin"
+
 if [ "$1" = "restart" ]
 then
     echo "OpenLGTV_BCM-WARN: rc.release: trying to restart (OPEN)RELEASE - TV might reboot"
@@ -61,9 +64,16 @@ then
 	[ -f "$olockfile_prepare" -a -f "$olockfile" ] && rm -f "$olockfile_prepare"
     fi
 else
-    echo "OpenLGTV_BCM-INFO: setting RELEASE to start"
-    rname="RELEASE"
-    RELEASE_cmd="/lg/lgapp/RELEASE 0"
+    if [ -f "$JA_RELEASE" -a ! -e "$RELEASE" ]
+    then
+	rname="$JA_RELEASE"
+	RELEASE_cmd="$JA_RELEASE 0"
+	#TODO: /mnt/apl/bin/dtv_shellcall.bin ?????
+    else
+	rname="RELEASE"
+	RELEASE_cmd="/lg/lgapp/RELEASE 0"
+    fi
+    echo "OpenLGTV_BCM-INFO: setting $rname to start"
     skip_rel_check=""
 fi
 
