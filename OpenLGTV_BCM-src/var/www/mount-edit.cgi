@@ -175,7 +175,7 @@ fi
 					<? [ "$FORM_type" = "etherwake" ] && echo "Name:" || echo "URL:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-				    <input id="txtURL" name="qURL" type="textarea" style="width:750px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $src ?>"/>
+				    <input id="txtURL" name="qURL" type="textarea" style="width:750px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value='<? echo "$src" ?>'/>
 				</div>
 			</div>
 			<div id="txtUserParent" style="background-color:white;height:40px; font-size:16px;">
@@ -183,7 +183,7 @@ fi
 					<? [ "$FORM_type" = "etherwake" ] && echo "IP address:" || echo "Username:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtUser" name="qUser" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $uname ?>"/>
+					<input id="txtUser" name="qUser" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value='<? echo "$uname" ?>'/>
 				</div>
 			</div>
 			<div id="txtPasswParent" style="background-color:white;height:40px; font-size:16px;">
@@ -191,7 +191,7 @@ fi
 					<? [ "$FORM_type" = "etherwake" ] && echo "MAC:" || echo "Password:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtPassw" name="qPassw" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pass ?>"/>
+					<input id="txtPassw" name="qPassw" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value='<? echo "$pass" ?>'/>
 				</div>
 			</div>
 			<div id="txtPathParent" style="background-color:white;height:40px; font-size:16px;">
@@ -199,7 +199,7 @@ fi
 					<? [ "$FORM_type" = "etherwake" ] && echo "Password:" || echo "Mount path:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtPath" name="qPath" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $dst ?>"/>
+					<input id="txtPath" name="qPath" type="textarea" style="width:500px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value='<? echo "$dst" ?>'/>
 				</div>
 			</div>
 			<? [ "$FORM_type" = "etherwake" ] && echo "<!--" ?>
@@ -208,7 +208,7 @@ fi
 					<? echo "Tries/Pings:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtPin" name="qPin" type="textarea" style="width:50px; text-align: center;" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $pings ?>"/>
+					<input id="txtPin" name="qPin" type="textarea" style="width:50px; text-align: center;" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value='<? echo "$pings" ?>'/>
 				</div>
 			</div>
 			<div id="txtOptsParent" style="background-color:white;height:40px; font-size:16px;">
@@ -216,7 +216,7 @@ fi
 					<? echo "Options:" ?>
 				</div>
 				<div style="position: relative; left: 100px; top: -22px;">
-					<input id="txtOpts" name="qOpts" type="textarea" style="width:750px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value="<? echo $opt ?>"/>
+					<input id="txtOpts" name="qOpts" type="textarea" style="width:750px" onFocus='javascript:PageElements[currElementIndex].focused=true;' onBlur='javascript:PageElements[currElementIndex].focused=false;' value='<? echo "$opt" ?>'/>
 				</div>
 			</div>
 			<div id="radio1Parent" style="background-color:white;height:40px; font-size:16px;">
