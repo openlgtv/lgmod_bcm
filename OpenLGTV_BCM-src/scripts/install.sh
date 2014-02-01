@@ -1,5 +1,5 @@
 #!/bin/sh
-# OpenLGTV BCM 0.5.0-SVN20140122 installation script v.1.99.1 by xeros
+# OpenLGTV BCM 0.5.0-SVN20140201 installation script v.1.99.1 by xeros
 # Source code released under GPL License
 
 # it needs $file.sqf and $file.sha1 files in the same dir as this script
@@ -28,7 +28,7 @@ installer="$0"
 # forced rebooting option disabled for manual upgrade/installations
 #rebooting=0
 
-ver=0.5.0-SVN20140122
+ver=0.5.0-SVN20140201
 supported_rootfs_ver="V1.00.51 Mar 01 2010"
 supported_rootfs_ver_japan="V1.00.51 Jul 15 2010"   # TODO TODO TODO
 supported_rootfs_ver2011="V1.00.18 Jan 10 2011"
@@ -52,6 +52,8 @@ do
     [ "${argv#image=}" != "$argv" ] && ver="`basename ${argv#image=} | sed 's/OpenLGTV_BCM-v//' | sed 's/\.sqf//'`" && dir="`dirname ${argv#image=}`"
     argc=$(($argc+1))
 done
+
+[ ! -e "/etc/ver" ] && echo "ERROR: Supported LG TV was not detected!" && exit 1
 
 if [ "$chrooted" != "1" ]
 then
@@ -169,7 +171,7 @@ then
     fi
 fi
 
-echo "OpenLGTV BCM 0.5.0-SVN20140122 installation script for $platform platform by xeros" | tee -a $log
+echo "OpenLGTV BCM 0.5.0-SVN20140201 installation script for $platform platform by xeros" | tee -a $log
 
 ntpclient -h pool.ntp.org -s -c 1 > /dev/null 2>&1 &
 sleep 1

@@ -4,6 +4,7 @@
 # Source code released under GPL License
 
 # TODO: Test CIFS - especially with username/password having spaces or non-acsii characters
+# TODO: if current way wont work then use "tr" to replace spaces with \040
 
 ndrvtab=/mnt/user/cfg/ndrvtab
 usbinit_wait_time=15
